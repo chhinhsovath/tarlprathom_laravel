@@ -1,0 +1,62 @@
+# Application
+/node_modules
+/public/hot
+/public/storage
+/storage/*.key
+/vendor
+.env
+.env.backup
+.phpunit.result.cache
+Homestead.json
+Homestead.yaml
+npm-debug.log
+yarn-error.log
+/.idea
+/.vscode
+.DS_Store
+*.log
+/public/build
+
+# Laravel specific
+bootstrap/cache/
+storage/app/
+storage/framework/
+storage/logs/
+.env.local
+.env.production
+
+# IDE
+*.swp
+*.swo
+*~
+.project
+.idea/
+.vscode/
+nbproject/
+.vagrant/
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Testing
+.phpunit.result.cache
+.phpunit.cache/
+coverage/
+.coverage
+
+# Composer
+composer.phar
+/vendor/
+
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Laravel Mix / Vite
+/public/css/
+/public/js/
+/public/mix-manifest.json
+/public/hot
+/public/build
