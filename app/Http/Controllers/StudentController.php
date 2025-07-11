@@ -10,6 +10,7 @@ use App\Exports\StudentsExport;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Storage;
 
 class StudentController extends Controller
 {
@@ -30,23 +31,23 @@ class StudentController extends Controller
         }
 
         // Add search functionality
-        if ($request->has('search')) {
+        if ($request->filled('search')) {
             $search = $request->get('search');
             $query->where('name', 'like', "%{$search}%");
         }
 
         // Add school filter
-        if ($request->has('school_id')) {
+        if ($request->filled('school_id')) {
             $query->where('school_id', $request->get('school_id'));
         }
 
         // Add grade filter
-        if ($request->has('grade') && $request->get('grade') !== '') {
+        if ($request->filled('grade')) {
             $query->where('grade', $request->get('grade'));
         }
 
         // Add gender filter
-        if ($request->has('gender') && $request->get('gender') !== '') {
+        if ($request->filled('gender')) {
             $query->where('gender', $request->get('gender'));
         }
 
@@ -83,6 +84,13 @@ class StudentController extends Controller
         // If teacher, ensure they can only add students to their own school
         if ($request->user()->isTeacher()) {
             $validated['school_id'] = $request->user()->school_id;
+        }
+
+        // Handle photo upload
+        if ($request->hasFile('photo')) {
+            $photo = $request->file('photo');
+            $path = $photo->store('students/photos', 'public');
+            $validated['photo'] = $path;
         }
 
         $student = Student::create($validated);
@@ -134,6 +142,18 @@ class StudentController extends Controller
             $validated['school_id'] = $request->user()->school_id;
         }
 
+        // Handle photo upload
+        if ($request->hasFile('photo')) {
+            // Delete old photo if exists
+            if ($student->photo) {
+                Storage::disk('public')->delete($student->photo);
+            }
+            
+            $photo = $request->file('photo');
+            $path = $photo->store('students/photos', 'public');
+            $validated['photo'] = $path;
+        }
+
         $student->update($validated);
 
         return redirect()->route('students.index')
@@ -146,6 +166,11 @@ class StudentController extends Controller
     public function destroy(Student $student)
     {
         $this->authorize('delete', $student);
+
+        // Delete photo if exists
+        if ($student->photo) {
+            Storage::disk('public')->delete($student->photo);
+        }
 
         $student->delete();
 

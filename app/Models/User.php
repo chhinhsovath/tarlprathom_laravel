@@ -25,6 +25,10 @@ class User extends Authenticatable
         'school_id',
         'phone',
         'is_active',
+        'profile_photo',
+        'sex',
+        'telephone',
+        'holding_classes',
     ];
 
     /**

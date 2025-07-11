@@ -7,6 +7,10 @@ use App\Http\Controllers\MentoringVisitController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LanguageController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\SchoolController;
+use App\Http\Controllers\SettingController;
+use App\Http\Controllers\HelpController;
 use Illuminate\Support\Facades\Route;
 
 // Language switching
@@ -66,6 +70,23 @@ Route::middleware('auth')->group(function () {
     Route::get('/reports/my-mentoring', [ReportController::class, 'myMentoring'])->name('reports.my-mentoring');
     Route::get('/reports/school-visits', [ReportController::class, 'schoolVisits'])->name('reports.school-visits');
     Route::get('/reports/export/{type}', [ReportController::class, 'export'])->name('reports.export');
+    
+    // Admin Routes
+    Route::middleware(['auth'])->group(function () {
+        // User Management
+        Route::resource('users', UserController::class);
+        
+        // School Management
+        Route::resource('schools', SchoolController::class);
+        
+        // Settings
+        Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
+        Route::post('/settings', [SettingController::class, 'update'])->name('settings.update');
+    });
+    
+    // Help & Support
+    Route::get('/help', [HelpController::class, 'index'])->name('help.index');
+    Route::get('/about', [HelpController::class, 'about'])->name('about');
 });
 
 require __DIR__.'/auth.php';

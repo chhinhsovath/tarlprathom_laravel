@@ -23,10 +23,10 @@ class StoreStudentRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'sex' => 'required|in:M,F',
-            'age' => 'required|integer|min:5|max:18',
-            'class' => 'required|string|max:50',
+            'grade' => 'required|integer|min:1|max:6',
+            'gender' => 'required|in:male,female',
             'school_id' => 'required|exists:schools,id',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120', // 5MB max
         ];
     }
 
@@ -38,10 +38,12 @@ class StoreStudentRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'sex.in' => 'The sex field must be either M (Male) or F (Female).',
-            'age.min' => 'The student must be at least 5 years old.',
-            'age.max' => 'The student must be no more than 18 years old.',
+            'gender.in' => 'The gender field must be either male or female.',
+            'grade.min' => 'The grade must be at least 1.',
+            'grade.max' => 'The grade must be no more than 6.',
             'school_id.exists' => 'The selected school does not exist.',
+            'photo.image' => 'The file must be an image.',
+            'photo.max' => 'The photo may not be greater than 5MB.',
         ];
     }
 }

@@ -76,6 +76,9 @@
                             <thead class="bg-gray-50">
                                 <tr>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        {{ __('Photo') }}
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         {{ __('Name') }}
                                     </th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -95,6 +98,21 @@
                             <tbody class="bg-white divide-y divide-gray-200">
                                 @forelse ($students as $student)
                                     <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                @if($student->photo)
+                                                    <div class="h-12 w-12 flex-shrink-0 overflow-hidden rounded-full">
+                                                        <img src="{{ Storage::url($student->photo) }}" alt="{{ $student->name }}" class="h-full w-full object-cover ring-2 ring-gray-200" style="height: 48px; width: 48px; object-fit: cover;">
+                                                    </div>
+                                                @else
+                                                    <div class="h-12 w-12 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0 ring-2 ring-gray-200">
+                                                        <svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                                        </svg>
+                                                    </div>
+                                                @endif
+                                            </div>
+                                        </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="text-sm font-medium text-gray-900">
                                                 {{ $student->name }}
@@ -128,7 +146,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="5" class="px-6 py-4 text-center text-gray-500">
+                                        <td colspan="6" class="px-6 py-4 text-center text-gray-500">
                                             {{ __('No students found.') }}
                                         </td>
                                     </tr>

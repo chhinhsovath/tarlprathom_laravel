@@ -18,9 +18,11 @@ class Student extends Model
         'name',
         'sex',
         'gender',
+        'grade',
         'age',
         'class',
         'school_id',
+        'photo',
     ];
 
     /**
