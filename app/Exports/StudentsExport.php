@@ -3,13 +3,18 @@
 namespace App\Exports;
 
 use App\Models\Student;
+use Illuminate\Http\Request;
+use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromQuery;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
-use Maatwebsite\Excel\Concerns\Exportable;
-use Illuminate\Http\Request;
+use Maatwebsite\Excel\Concerns\WithStyles;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Font;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class StudentsExport implements FromQuery, WithHeadings, WithMapping
+class StudentsExport implements FromQuery, ShouldAutoSize, WithHeadings, WithMapping, WithStyles
 {
     use Exportable;
 
@@ -62,7 +67,7 @@ class StudentsExport implements FromQuery, WithHeadings, WithMapping
             'Parent/Guardian Name',
             'Contact Number',
             'Created At',
-            'Updated At'
+            'Updated At',
         ];
     }
 
@@ -79,7 +84,37 @@ class StudentsExport implements FromQuery, WithHeadings, WithMapping
             $student->parent_name ?? '',
             $student->contact_number ?? '',
             $student->created_at->format('Y-m-d H:i:s'),
-            $student->updated_at->format('Y-m-d H:i:s')
+            $student->updated_at->format('Y-m-d H:i:s'),
         ];
+    }
+
+    public function styles(Worksheet $sheet)
+    {
+        // Apply Hanuman font to the entire sheet
+        $sheet->getParent()->getDefaultStyle()->getFont()->setName('Hanuman');
+
+        // Style the header row
+        $sheet->getStyle('A1:K1')->applyFromArray([
+            'font' => [
+                'name' => 'Hanuman',
+                'bold' => true,
+                'size' => 12,
+            ],
+            'alignment' => [
+                'horizontal' => Alignment::HORIZONTAL_CENTER,
+                'vertical' => Alignment::VERTICAL_CENTER,
+            ],
+        ]);
+
+        // Apply font to all data cells
+        $highestRow = $sheet->getHighestRow();
+        $sheet->getStyle('A2:K'.$highestRow)->applyFromArray([
+            'font' => [
+                'name' => 'Hanuman',
+                'size' => 11,
+            ],
+        ]);
+
+        return $sheet;
     }
 }

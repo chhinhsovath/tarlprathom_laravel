@@ -26,6 +26,7 @@ class UpdateStudentRequest extends FormRequest
             'grade' => 'required|integer|min:1|max:6',
             'gender' => 'required|in:male,female',
             'school_id' => 'required|exists:schools,id',
+            'class_id' => 'nullable|exists:classes,id',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120', // 5MB max
         ];
     }

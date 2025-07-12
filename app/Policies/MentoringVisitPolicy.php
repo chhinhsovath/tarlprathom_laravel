@@ -4,7 +4,6 @@ namespace App\Policies;
 
 use App\Models\MentoringVisit;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class MentoringVisitPolicy
 {
@@ -24,15 +23,15 @@ class MentoringVisitPolicy
         if ($user->isAdmin() || $user->isViewer()) {
             return true;
         }
-        
+
         if ($user->isMentor() && $mentoringVisit->mentor_id === $user->id) {
             return true;
         }
-        
+
         if ($user->isTeacher() && $mentoringVisit->teacher_id === $user->id) {
             return true;
         }
-        
+
         return false;
     }
 
@@ -52,12 +51,12 @@ class MentoringVisitPolicy
         if ($user->isAdmin()) {
             return true;
         }
-        
+
         if ($user->isMentor() && $mentoringVisit->mentor_id === $user->id) {
             // Mentors can only update their own visits within 7 days
             return $mentoringVisit->visit_date->diffInDays(now()) <= 7;
         }
-        
+
         return false;
     }
 

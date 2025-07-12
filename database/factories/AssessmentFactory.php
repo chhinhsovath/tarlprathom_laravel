@@ -13,13 +13,13 @@ class AssessmentFactory extends Factory
     public function definition()
     {
         $subject = $this->faker->randomElement(['khmer', 'math']);
-        
+
         if ($subject === 'khmer') {
             $levels = ['Beginner', 'Letter Reader', 'Word Level', 'Paragraph Reader', 'Story Reader', 'Comp. 1', 'Comp. 2'];
         } else {
             $levels = ['Beginner', '1-Digit', '2-Digit', 'Subtraction', 'Division', 'Word Problem'];
         }
-        
+
         return [
             'student_id' => Student::factory(),
             'subject' => $subject,
@@ -34,6 +34,7 @@ class AssessmentFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             $levels = ['Beginner', 'Letter Reader', 'Word Level', 'Paragraph Reader', 'Story Reader', 'Comp. 1', 'Comp. 2'];
+
             return [
                 'subject' => 'khmer',
                 'level' => $this->faker->randomElement($levels),
@@ -45,6 +46,7 @@ class AssessmentFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             $levels = ['Beginner', '1-Digit', '2-Digit', 'Subtraction', 'Division', 'Word Problem'];
+
             return [
                 'subject' => 'math',
                 'level' => $this->faker->randomElement($levels),

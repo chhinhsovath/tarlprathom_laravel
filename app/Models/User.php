@@ -72,6 +72,29 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the classes taught by the teacher.
+     */
+    public function teachingClasses()
+    {
+        return $this->hasMany(SchoolClass::class, 'teacher_id');
+    }
+
+    /**
+     * Get all students through the classes the teacher teaches.
+     */
+    public function studentsInClasses()
+    {
+        return $this->hasManyThrough(
+            Student::class,
+            SchoolClass::class,
+            'teacher_id', // Foreign key on classes table
+            'class_id',   // Foreign key on students table
+            'id',         // Local key on users table
+            'id'          // Local key on classes table
+        );
+    }
+
+    /**
      * Get the assessments conducted by the user.
      */
     public function assessments()

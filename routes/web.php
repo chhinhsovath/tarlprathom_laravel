@@ -1,25 +1,21 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\StudentController;
 use App\Http\Controllers\AssessmentController;
-use App\Http\Controllers\MentoringVisitController;
-use App\Http\Controllers\ReportController;
+use App\Http\Controllers\ClassController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\HelpController;
 use App\Http\Controllers\LanguageController;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\MentoringVisitController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SchoolController;
 use App\Http\Controllers\SettingController;
-use App\Http\Controllers\HelpController;
+use App\Http\Controllers\StudentController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 // Language switching
 Route::get('/language/{locale}', [LanguageController::class, 'switch'])->name('language.switch');
-
-// Test locale
-Route::get('/test-locale', function() {
-    return view('test-locale');
-});
 
 // Public routes
 Route::get('/', [AssessmentController::class, 'publicResults'])->name('public.assessment-results');
@@ -33,32 +29,35 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    
+
     // Dashboard API endpoints
     Route::get('/api/dashboard/stats', [DashboardController::class, 'getStats'])->name('api.dashboard.stats');
     Route::get('/api/dashboard/overall-results', [DashboardController::class, 'getOverallResults'])->name('api.dashboard.overall-results');
     Route::get('/api/dashboard/results-by-school', [DashboardController::class, 'getResultsBySchool'])->name('api.dashboard.results-by-school');
-    
+
     // Student Management Routes
     Route::resource('students', StudentController::class);
     Route::get('/students/export', [StudentController::class, 'export'])->name('students.export');
-    Route::get('/students/import', function() {
+    Route::get('/students/import', function () {
         return view('students.import');
     })->name('students.import')->middleware('role:admin,teacher');
-    
+
+    // Classes Management
+    Route::resource('classes', ClassController::class);
+
     // Assessment Routes
     Route::resource('assessments', AssessmentController::class)->only(['index', 'create', 'store', 'show']);
     Route::get('/assessments/export', [AssessmentController::class, 'export'])->name('assessments.export');
     Route::post('/api/assessments/save-student', [AssessmentController::class, 'saveStudentAssessment'])->name('api.assessments.save-student');
     Route::post('/api/assessments/submit-all', [AssessmentController::class, 'submitAllAssessments'])->name('api.assessments.submit-all');
-    
+
     // Mentoring Visit Routes
     Route::get('/mentoring', [MentoringVisitController::class, 'index'])->name('mentoring.index');
     Route::get('/mentoring/export', [MentoringVisitController::class, 'export'])->name('mentoring.export');
     Route::get('/mentoring/create', [MentoringVisitController::class, 'create'])->name('mentoring.create');
     Route::post('/mentoring', [MentoringVisitController::class, 'store'])->name('mentoring.store');
     Route::get('/mentoring/{mentoringVisit}', [MentoringVisitController::class, 'show'])->name('mentoring.show');
-    
+
     // Reports Routes
     Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
     Route::get('/reports/student-performance', [ReportController::class, 'studentPerformance'])->name('reports.student-performance');
@@ -70,20 +69,20 @@ Route::middleware('auth')->group(function () {
     Route::get('/reports/my-mentoring', [ReportController::class, 'myMentoring'])->name('reports.my-mentoring');
     Route::get('/reports/school-visits', [ReportController::class, 'schoolVisits'])->name('reports.school-visits');
     Route::get('/reports/export/{type}', [ReportController::class, 'export'])->name('reports.export');
-    
+
     // Admin Routes
     Route::middleware(['auth'])->group(function () {
         // User Management
         Route::resource('users', UserController::class);
-        
+
         // School Management
         Route::resource('schools', SchoolController::class);
-        
+
         // Settings
         Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
         Route::post('/settings', [SettingController::class, 'update'])->name('settings.update');
     });
-    
+
     // Help & Support
     Route::get('/help', [HelpController::class, 'index'])->name('help.index');
     Route::get('/about', [HelpController::class, 'about'])->name('about');

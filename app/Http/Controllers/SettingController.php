@@ -10,8 +10,8 @@ class SettingController extends Controller
     public function index()
     {
         // Check if user is admin
-        if (!auth()->user()->isAdmin()) {
-            abort(403, 'Unauthorized action.');
+        if (! auth()->user()->isAdmin()) {
+            abort(403, __('Unauthorized action.'));
         }
         $settings = [
             'app_name' => config('app.name'),
@@ -27,8 +27,8 @@ class SettingController extends Controller
     public function update(Request $request)
     {
         // Check if user is admin
-        if (!auth()->user()->isAdmin()) {
-            abort(403, 'Unauthorized action.');
+        if (! auth()->user()->isAdmin()) {
+            abort(403, __('Unauthorized action.'));
         }
         $validated = $request->validate([
             'app_name' => ['required', 'string', 'max:255'],
@@ -43,6 +43,6 @@ class SettingController extends Controller
         Cache::put('settings', $validated, now()->addYears(1));
 
         return redirect()->route('settings.index')
-            ->with('success', 'Settings updated successfully.');
+            ->with('success', __('Settings updated successfully.'));
     }
 }

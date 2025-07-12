@@ -22,7 +22,6 @@ class School extends Model
         'school_code',
     ];
 
-
     /**
      * Get the students for the school.
      */
@@ -53,5 +52,13 @@ class School extends Model
     public function users()
     {
         return $this->hasMany(User::class);
+    }
+
+    /**
+     * Get the classes for the school.
+     */
+    public function classes()
+    {
+        return $this->hasMany(SchoolClass::class);
     }
 }

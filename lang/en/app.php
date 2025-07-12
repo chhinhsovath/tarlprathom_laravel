@@ -11,7 +11,7 @@ return [
     'Profile' => 'Profile',
     'Log Out' => 'Log Out',
     'Language' => 'Language',
-    
+
     // Stats
     'Total Students' => 'Total Students',
     'Total Assessments' => 'Total Assessments',
@@ -21,7 +21,7 @@ return [
     'Schools Visited' => 'Schools Visited',
     'Teachers Mentored' => 'Teachers Mentored',
     'Average Score' => 'Average Score',
-    
+
     // Students
     'Add New Student' => 'Add New Student',
     'Search' => 'Search',
@@ -45,12 +45,12 @@ return [
     'Save' => 'Save',
     'Update' => 'Update',
     'Cancel' => 'Cancel',
-    
+
     // Roles
     'Admin' => 'Admin',
     'Teacher' => 'Teacher',
     'Mentor' => 'Mentor',
-    
+
     // Reports
     'Reports & Analytics' => 'Reports & Analytics',
     'Overview of your TaRL program performance and insights' => 'Overview of your TaRL program performance and insights',

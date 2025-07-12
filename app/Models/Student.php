@@ -22,6 +22,8 @@ class Student extends Model
         'age',
         'class',
         'school_id',
+        'teacher_id',
+        'class_id',
         'photo',
     ];
 
@@ -33,6 +35,21 @@ class Student extends Model
         return $this->belongsTo(School::class);
     }
 
+    /**
+     * Get the teacher that the student belongs to.
+     */
+    public function teacher()
+    {
+        return $this->belongsTo(User::class, 'teacher_id');
+    }
+
+    /**
+     * Get the class that the student belongs to.
+     */
+    public function schoolClass()
+    {
+        return $this->belongsTo(SchoolClass::class, 'class_id');
+    }
 
     /**
      * Get the assessments for the student.
@@ -41,6 +58,4 @@ class Student extends Model
     {
         return $this->hasMany(Assessment::class);
     }
-
-
 }

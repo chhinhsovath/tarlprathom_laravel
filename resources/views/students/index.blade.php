@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="py-12">
+    <div class="py-6">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
@@ -22,7 +22,7 @@
                                 <div>
                                     <select name="school_id" class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                                         <option value="">{{ __('All Schools') }}</option>
-                                        @foreach(App\Models\School::orderBy('school_name')->get() as $school)
+                                        @foreach($schools as $school)
                                             <option value="{{ $school->id }}" {{ request('school_id') == $school->id ? 'selected' : '' }}>
                                                 {{ $school->school_name }}
                                             </option>
@@ -30,6 +30,16 @@
                                     </select>
                                 </div>
                             @endif
+                            <div>
+                                <select name="class_id" class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                    <option value="">{{ __('All Classes') }}</option>
+                                    @foreach($classes as $class)
+                                        <option value="{{ $class->id }}" {{ request('class_id') == $class->id ? 'selected' : '' }}>
+                                            {{ $class->full_name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
                             <div>
                                 <select name="grade" class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                                     <option value="">{{ __('All Grades') }}</option>
@@ -51,7 +61,7 @@
                                 <button type="submit" class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
                                     {{ __('Search') }}
                                 </button>
-                                @if(request('search') || request('school_id') || request('grade') || request('gender'))
+                                @if(request('search') || request('school_id') || request('grade') || request('gender') || request('class_id'))
                                     <a href="{{ route('students.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-300 border border-transparent rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest hover:bg-gray-400 focus:bg-gray-400 active:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition ease-in-out duration-150">
                                         {{ __('Clear') }}
                                     </a>
@@ -62,7 +72,10 @@
                                     </a>
                                 @endcan
                                 @can('viewAny', App\Models\Student::class)
-                                    <a href="{{ route('students.export') }}?{{ request()->getQueryString() }}" class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 focus:bg-green-700 active:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                    <a href="{{ route('students.export') }}?{{ request()->getQueryString() }}" class="export-btn inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 focus:bg-green-700 active:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                        </svg>
                                         {{ __('Export to Excel') }}
                                     </a>
                                 @endcan
@@ -79,16 +92,30 @@
                                         {{ __('Photo') }}
                                     </th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        {{ __('Name') }}
+                                        <x-sortable-header column="name" :current-sort="$sortField" :current-order="$sortOrder">
+                                            {{ __('Name') }}
+                                        </x-sortable-header>
                                     </th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        {{ __('Grade') }}
+                                        <x-sortable-header column="grade" :current-sort="$sortField" :current-order="$sortOrder">
+                                            {{ __('Grade') }}
+                                        </x-sortable-header>
                                     </th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        {{ __('Class') }}
+                                    </th>
+                                    @if(!auth()->user()->isTeacher())
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        {{ __('Teacher') }}
+                                    </th>
+                                    @endif
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         {{ __('School') }}
                                     </th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        {{ __('Gender') }}
+                                        <x-sortable-header column="gender" :current-sort="$sortField" :current-order="$sortOrder">
+                                            {{ __('Gender') }}
+                                        </x-sortable-header>
                                     </th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         {{ __('Actions') }}
@@ -121,6 +148,14 @@
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="text-sm text-gray-900">{{ $student->grade }}</div>
                                         </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900">{{ $student->schoolClass ? $student->schoolClass->name : ($student->class ?? 'N/A') }}</div>
+                                        </td>
+                                        @if(!auth()->user()->isTeacher())
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900">{{ $student->teacher ? $student->teacher->name : 'N/A' }}</div>
+                                        </td>
+                                        @endif
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="text-sm text-gray-900">{{ $student->school->school_name ?? 'N/A' }}</div>
                                         </td>

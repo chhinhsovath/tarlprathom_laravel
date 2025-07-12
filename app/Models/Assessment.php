@@ -40,5 +40,4 @@ class Assessment extends Model
     {
         return $this->belongsTo(Student::class);
     }
-
 }

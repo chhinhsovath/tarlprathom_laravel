@@ -4,19 +4,21 @@ namespace App\Http\Controllers;
 
 use App\Models\School;
 use App\Models\User;
-use App\Models\Student;
+use App\Traits\Sortable;
 use Illuminate\Http\Request;
 
 class SchoolController extends Controller
 {
+    use Sortable;
+
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
         // Check if user is admin
-        if (!auth()->user()->isAdmin()) {
-            abort(403, 'Unauthorized action.');
+        if (! auth()->user()->isAdmin()) {
+            abort(403, __('Unauthorized action.'));
         }
         $query = School::withCount(['users', 'students']);
 
@@ -25,15 +27,18 @@ class SchoolController extends Controller
             $search = $request->get('search');
             $query->where(function ($q) use ($search) {
                 $q->where('school_name', 'like', "%{$search}%")
-                  ->orWhere('school_code', 'like', "%{$search}%")
-                  ->orWhere('province', 'like', "%{$search}%")
-                  ->orWhere('district', 'like', "%{$search}%");
+                    ->orWhere('school_code', 'like', "%{$search}%")
+                    ->orWhere('province', 'like', "%{$search}%")
+                    ->orWhere('district', 'like', "%{$search}%");
             });
         }
 
-        $schools = $query->orderBy('school_name')->paginate(20);
+        // Apply sorting
+        $sortData = $this->applySorting($query, $request, ['school_name', 'school_code', 'province', 'district', 'created_at'], 'school_name');
 
-        return view('schools.index', compact('schools'));
+        $schools = $query->paginate(20)->withQueryString();
+
+        return view('schools.index', array_merge(compact('schools'), $sortData));
     }
 
     /**
@@ -42,9 +47,10 @@ class SchoolController extends Controller
     public function create()
     {
         // Check if user is admin
-        if (!auth()->user()->isAdmin()) {
-            abort(403, 'Unauthorized action.');
+        if (! auth()->user()->isAdmin()) {
+            abort(403, __('Unauthorized action.'));
         }
+
         return view('schools.create');
     }
 
@@ -54,8 +60,8 @@ class SchoolController extends Controller
     public function store(Request $request)
     {
         // Check if user is admin
-        if (!auth()->user()->isAdmin()) {
-            abort(403, 'Unauthorized action.');
+        if (! auth()->user()->isAdmin()) {
+            abort(403, __('Unauthorized action.'));
         }
         $validated = $request->validate([
             'school_name' => ['required', 'string', 'max:255'],
@@ -68,7 +74,7 @@ class SchoolController extends Controller
         School::create($validated);
 
         return redirect()->route('schools.index')
-            ->with('success', 'School created successfully.');
+            ->with('success', __('School created successfully.'));
     }
 
     /**
@@ -77,8 +83,8 @@ class SchoolController extends Controller
     public function show(School $school)
     {
         // Check if user is admin
-        if (!auth()->user()->isAdmin()) {
-            abort(403, 'Unauthorized action.');
+        if (! auth()->user()->isAdmin()) {
+            abort(403, __('Unauthorized action.'));
         }
         $school->loadCount(['users', 'students']);
         $teachers = $school->users()->where('role', 'teacher')->get();
@@ -94,9 +100,10 @@ class SchoolController extends Controller
     public function edit(School $school)
     {
         // Check if user is admin
-        if (!auth()->user()->isAdmin()) {
-            abort(403, 'Unauthorized action.');
+        if (! auth()->user()->isAdmin()) {
+            abort(403, __('Unauthorized action.'));
         }
+
         return view('schools.edit', compact('school'));
     }
 
@@ -106,12 +113,12 @@ class SchoolController extends Controller
     public function update(Request $request, School $school)
     {
         // Check if user is admin
-        if (!auth()->user()->isAdmin()) {
-            abort(403, 'Unauthorized action.');
+        if (! auth()->user()->isAdmin()) {
+            abort(403, __('Unauthorized action.'));
         }
         $validated = $request->validate([
             'school_name' => ['required', 'string', 'max:255'],
-            'school_code' => ['required', 'string', 'max:255', 'unique:schools,school_code,' . $school->id],
+            'school_code' => ['required', 'string', 'max:255', 'unique:schools,school_code,'.$school->id],
             'province' => ['required', 'string', 'max:255'],
             'district' => ['required', 'string', 'max:255'],
             'cluster' => ['nullable', 'string', 'max:255'],
@@ -120,7 +127,7 @@ class SchoolController extends Controller
         $school->update($validated);
 
         return redirect()->route('schools.index')
-            ->with('success', 'School updated successfully.');
+            ->with('success', __('School updated successfully.'));
     }
 
     /**
@@ -129,18 +136,18 @@ class SchoolController extends Controller
     public function destroy(School $school)
     {
         // Check if user is admin
-        if (!auth()->user()->isAdmin()) {
-            abort(403, 'Unauthorized action.');
+        if (! auth()->user()->isAdmin()) {
+            abort(403, __('Unauthorized action.'));
         }
         // Check if school has associated users or students
         if ($school->users()->exists() || $school->students()->exists()) {
             return redirect()->route('schools.index')
-                ->with('error', 'Cannot delete school with associated users or students.');
+                ->with('error', __('Cannot delete school with associated users or students.'));
         }
 
         $school->delete();
 
         return redirect()->route('schools.index')
-            ->with('success', 'School deleted successfully.');
+            ->with('success', __('School deleted successfully.'));
     }
 }

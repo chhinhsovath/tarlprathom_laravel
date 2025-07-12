@@ -2,18 +2,21 @@
 
 namespace App\Livewire;
 
-use App\Models\Student;
 use App\Models\Assessment;
-use App\Models\School;
 use App\Models\MentoringVisit;
-use Livewire\Component;
+use App\Models\School;
+use App\Models\Student;
 use Illuminate\Support\Facades\DB;
+use Livewire\Component;
 
 class ChartComponent extends Component
 {
     public $chartType = 'studentsBySchool';
+
     public $filterSchool = null;
+
     public $filterDateFrom = null;
+
     public $filterDateTo = null;
 
     public function mount()
@@ -51,7 +54,7 @@ class ChartComponent extends Component
                 'label' => 'Students',
                 'data' => $data->pluck('count')->toArray(),
                 'backgroundColor' => ['#4F46E5', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6'],
-            ]]
+            ]],
         ];
     }
 
@@ -74,16 +77,16 @@ class ChartComponent extends Component
                 'label' => 'Assessments',
                 'data' => $data->pluck('count')->toArray(),
                 'backgroundColor' => ['#4F46E5', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899'],
-            ]]
+            ]],
         ];
     }
 
     private function getMentoringTrendData()
     {
         $data = MentoringVisit::select(
-                DB::raw('DATE_FORMAT(visit_date, "%Y-%m") as month'),
-                DB::raw('count(*) as count')
-            )
+            DB::raw('DATE_FORMAT(visit_date, "%Y-%m") as month'),
+            DB::raw('count(*) as count')
+        )
             ->whereBetween('visit_date', [$this->filterDateFrom, $this->filterDateTo])
             ->groupBy('month')
             ->orderBy('month')
@@ -97,7 +100,7 @@ class ChartComponent extends Component
                 'borderColor' => '#4F46E5',
                 'tension' => 0.1,
                 'fill' => false,
-            ]]
+            ]],
         ];
     }
 
@@ -116,7 +119,7 @@ class ChartComponent extends Component
                     ->avg('score') ?? 0;
                 $data[] = round($avg, 2);
             }
-            
+
             $datasets[] = [
                 'label' => ucfirst($subject),
                 'data' => $data,
@@ -127,7 +130,7 @@ class ChartComponent extends Component
 
         return [
             'labels' => ['Baseline', 'Midline', 'Endline'],
-            'datasets' => $datasets
+            'datasets' => $datasets,
         ];
     }
 

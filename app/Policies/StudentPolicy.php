@@ -4,7 +4,6 @@ namespace App\Policies;
 
 use App\Models\Student;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class StudentPolicy
 {
@@ -24,15 +23,15 @@ class StudentPolicy
         if ($user->isAdmin() || $user->isViewer()) {
             return true;
         }
-        
+
         if ($user->isTeacher() && $user->school_id === $student->school_id) {
             return true;
         }
-        
+
         if ($user->isMentor()) {
             return true;
         }
-        
+
         return false;
     }
 
@@ -52,11 +51,11 @@ class StudentPolicy
         if ($user->isAdmin()) {
             return true;
         }
-        
+
         if ($user->isTeacher() && $user->school_id === $student->school_id) {
             return true;
         }
-        
+
         return false;
     }
 

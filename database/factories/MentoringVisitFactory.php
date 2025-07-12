@@ -16,7 +16,7 @@ class MentoringVisitFactory extends Factory
         $school = School::factory()->create();
         $teacher = User::factory()->teacher()->create(['school_id' => $school->id]);
         $mentor = User::factory()->mentor()->create();
-        
+
         return [
             'school_id' => $school->id,
             'teacher_id' => $teacher->id,
@@ -34,7 +34,7 @@ class MentoringVisitFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'photo' => 'mentoring-visits/' . $this->faker->uuid() . '.jpg',
+                'photo' => 'mentoring-visits/'.$this->faker->uuid().'.jpg',
             ];
         });
     }

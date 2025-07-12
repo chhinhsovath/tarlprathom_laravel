@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\StudentsExport;
 use App\Http\Requests\StoreStudentRequest;
 use App\Http\Requests\UpdateStudentRequest;
-use App\Models\Student;
 use App\Models\School;
-use App\Exports\StudentsExport;
-use Illuminate\Http\Request;
+use App\Models\SchoolClass;
+use App\Models\Student;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
 
 class StudentController extends Controller
 {
@@ -23,11 +24,16 @@ class StudentController extends Controller
     {
         $this->authorize('viewAny', Student::class);
 
-        $query = Student::with('school');
+        $query = Student::with(['school', 'teacher', 'schoolClass']);
+        $user = $request->user();
 
-        // Filter by school for teachers
-        if ($request->user()->isTeacher()) {
-            $query->where('school_id', $request->user()->school_id);
+        // Filter based on user role
+        if ($user->isTeacher()) {
+            // Teachers can only see their own students
+            $query->where('teacher_id', $user->id);
+        } elseif (! $user->isAdmin()) {
+            // Non-admin users can only see students from their school
+            $query->where('school_id', $user->school_id);
         }
 
         // Add search functionality
@@ -36,8 +42,8 @@ class StudentController extends Controller
             $query->where('name', 'like', "%{$search}%");
         }
 
-        // Add school filter
-        if ($request->filled('school_id')) {
+        // Add school filter (only for admins)
+        if ($request->filled('school_id') && $user->isAdmin()) {
             $query->where('school_id', $request->get('school_id'));
         }
 
@@ -51,9 +57,44 @@ class StudentController extends Controller
             $query->where('gender', $request->get('gender'));
         }
 
-        $students = $query->orderBy('name')->paginate(20);
+        // Add class filter
+        if ($request->filled('class_id')) {
+            $query->where('class_id', $request->get('class_id'));
+        }
 
-        return view('students.index', compact('students'));
+        // Add sorting
+        $sortField = $request->get('sort', 'name');
+        $sortOrder = $request->get('order', 'asc');
+
+        // Validate sort field
+        $allowedSorts = ['name', 'grade', 'gender', 'created_at'];
+        if (! in_array($sortField, $allowedSorts)) {
+            $sortField = 'name';
+        }
+
+        // Validate sort order
+        if (! in_array($sortOrder, ['asc', 'desc'])) {
+            $sortOrder = 'asc';
+        }
+
+        $students = $query->orderBy($sortField, $sortOrder)->paginate(20)->withQueryString();
+
+        // Get schools for filter dropdown (only for admins)
+        $schools = $user->isAdmin() ? School::orderBy('school_name')->get() : collect();
+
+        // Get classes for filter dropdown
+        $classes = SchoolClass::query()
+            ->when($user->isTeacher(), function ($q) use ($user) {
+                $q->where('teacher_id', $user->id);
+            })
+            ->when(! $user->isAdmin() && ! $user->isTeacher(), function ($q) use ($user) {
+                $q->where('school_id', $user->school_id);
+            })
+            ->orderBy('grade_level')
+            ->orderBy('name')
+            ->get();
+
+        return view('students.index', compact('students', 'schools', 'classes', 'sortField', 'sortOrder'));
     }
 
     /**
@@ -62,16 +103,28 @@ class StudentController extends Controller
     public function create()
     {
         $this->authorize('create', Student::class);
+        $user = auth()->user();
 
         // Get schools for dropdown
-        $schools = School::orderBy('school_name')->get();
-
-        // If teacher, only show their school
-        if (auth()->user()->isTeacher()) {
-            $schools = School::where('id', auth()->user()->school_id)->get();
+        if ($user->isAdmin()) {
+            $schools = School::orderBy('school_name')->get();
+        } else {
+            $schools = School::where('id', $user->school_id)->get();
         }
 
-        return view('students.create', compact('schools'));
+        // Get classes for dropdown
+        $classes = SchoolClass::query()
+            ->when($user->isTeacher(), function ($q) use ($user) {
+                $q->where('teacher_id', $user->id);
+            })
+            ->when(! $user->isAdmin() && ! $user->isTeacher(), function ($q) use ($user) {
+                $q->where('school_id', $user->school_id);
+            })
+            ->orderBy('grade_level')
+            ->orderBy('name')
+            ->get();
+
+        return view('students.create', compact('schools', 'classes'));
     }
 
     /**
@@ -80,10 +133,20 @@ class StudentController extends Controller
     public function store(StoreStudentRequest $request)
     {
         $validated = $request->validated();
+        $user = $request->user();
 
-        // If teacher, ensure they can only add students to their own school
-        if ($request->user()->isTeacher()) {
-            $validated['school_id'] = $request->user()->school_id;
+        // If teacher, ensure they can only add students to their own school and assign to themselves
+        if ($user->isTeacher()) {
+            $validated['school_id'] = $user->school_id;
+            $validated['teacher_id'] = $user->id;
+
+            // Verify the class belongs to this teacher
+            if (isset($validated['class_id'])) {
+                $class = SchoolClass::find($validated['class_id']);
+                if (! $class || $class->teacher_id !== $user->id) {
+                    abort(403, 'Invalid class selection.');
+                }
+            }
         }
 
         // Handle photo upload
@@ -118,16 +181,28 @@ class StudentController extends Controller
     public function edit(Student $student)
     {
         $this->authorize('update', $student);
+        $user = auth()->user();
 
         // Get schools for dropdown
-        $schools = School::orderBy('school_name')->get();
-
-        // If teacher, only show their school
-        if (auth()->user()->isTeacher()) {
-            $schools = School::where('id', auth()->user()->school_id)->get();
+        if ($user->isAdmin()) {
+            $schools = School::orderBy('school_name')->get();
+        } else {
+            $schools = School::where('id', $user->school_id)->get();
         }
 
-        return view('students.edit', compact('student', 'schools'));
+        // Get classes for dropdown
+        $classes = SchoolClass::query()
+            ->when($user->isTeacher(), function ($q) use ($user) {
+                $q->where('teacher_id', $user->id);
+            })
+            ->when(! $user->isAdmin() && ! $user->isTeacher(), function ($q) use ($user) {
+                $q->where('school_id', $user->school_id);
+            })
+            ->orderBy('grade_level')
+            ->orderBy('name')
+            ->get();
+
+        return view('students.edit', compact('student', 'schools', 'classes'));
     }
 
     /**
@@ -148,7 +223,7 @@ class StudentController extends Controller
             if ($student->photo) {
                 Storage::disk('public')->delete($student->photo);
             }
-            
+
             $photo = $request->file('photo');
             $path = $photo->store('students/photos', 'public');
             $validated['photo'] = $path;
@@ -185,6 +260,6 @@ class StudentController extends Controller
     {
         $this->authorize('viewAny', Student::class);
 
-        return Excel::download(new StudentsExport($request), 'students_' . date('Y-m-d_H-i-s') . '.xlsx');
+        return Excel::download(new StudentsExport($request), 'students_'.date('Y-m-d_H-i-s').'.xlsx');
     }
 }

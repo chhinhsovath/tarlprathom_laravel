@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use App\Models\Student;
 use App\Models\School;
+use App\Models\Student;
+use Illuminate\Database\Seeder;
 
 class StudentsTableSeeder extends Seeder
 {
@@ -15,14 +15,14 @@ class StudentsTableSeeder extends Seeder
     {
         // Get first school or create one
         $school = School::first();
-        if (!$school) {
+        if (! $school) {
             $school = School::create([
                 'name' => 'Primary School 1',
                 'district' => 'District 1',
-                'province' => 'Province 1'
+                'province' => 'Province 1',
             ]);
         }
-        
+
         // Sample Khmer names for students
         $students = [
             ['name' => 'សុភា', 'gender' => 'male'],
@@ -41,7 +41,7 @@ class StudentsTableSeeder extends Seeder
             ['name' => 'ចន្ទ្រា', 'gender' => 'female'],
             ['name' => 'សុរិយា', 'gender' => 'male'],
         ];
-        
+
         foreach ($students as $studentData) {
             Student::create([
                 'name' => $studentData['name'],
@@ -49,7 +49,7 @@ class StudentsTableSeeder extends Seeder
                 'sex' => $studentData['gender'],
                 'gender' => $studentData['gender'],
                 'age' => rand(8, 12),
-                'class' => '3A'
+                'class' => '3A',
             ]);
         }
     }

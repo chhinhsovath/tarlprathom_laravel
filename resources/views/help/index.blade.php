@@ -29,15 +29,15 @@
                         <div class="space-y-3">
                             <details class="group">
                                 <summary class="cursor-pointer text-sm font-medium text-gray-900 hover:text-indigo-600">{{ __('How do I log in?') }}</summary>
-                                <p class="mt-2 text-sm text-gray-600 pl-4">{{ __('Use your email and password provided by your administrator. If you forgot your password, click "Forgot Password" on the login page.') }}</p>
+                                <p class="mt-2 text-sm text-gray-600 pl-4">{{ __('Use your email and password provided by your administrator. If you forgot your password, click \'Forgot Password\' on the login page.') }}</p>
                             </details>
                             <details class="group">
                                 <summary class="cursor-pointer text-sm font-medium text-gray-900 hover:text-indigo-600">{{ __('How do I change my password?') }}</summary>
-                                <p class="mt-2 text-sm text-gray-600 pl-4">{{ __('Go to your profile by clicking your name in the top right corner, then select "Change Password".') }}</p>
+                                <p class="mt-2 text-sm text-gray-600 pl-4">{{ __('Go to your profile by clicking your name in the top right corner, then select \'Change Password\'.') }}</p>
                             </details>
                             <details class="group">
                                 <summary class="cursor-pointer text-sm font-medium text-gray-900 hover:text-indigo-600">{{ __('How do I update my profile?') }}</summary>
-                                <p class="mt-2 text-sm text-gray-600 pl-4">{{ __('Click on your name in the top right corner and select "My Profile". You can update your information and upload a profile photo.') }}</p>
+                                <p class="mt-2 text-sm text-gray-600 pl-4">{{ __('Click on your name in the top right corner and select \'My Profile\'. You can update your information and upload a profile photo.') }}</p>
                             </details>
                         </div>
                     </div>
@@ -55,7 +55,7 @@
                         <div class="space-y-3">
                             <details class="group">
                                 <summary class="cursor-pointer text-sm font-medium text-gray-900 hover:text-indigo-600">{{ __('How do I add a new student?') }}</summary>
-                                <p class="mt-2 text-sm text-gray-600 pl-4">{{ __('Go to Students menu and click "Add New Student". Fill in all required information and click Save.') }}</p>
+                                <p class="mt-2 text-sm text-gray-600 pl-4">{{ __('Go to Students menu and click \'Add New Student\'. Fill in all required information and click Save.') }}</p>
                             </details>
                             <details class="group">
                                 <summary class="cursor-pointer text-sm font-medium text-gray-900 hover:text-indigo-600">{{ __('How do I upload student photos?') }}</summary>
@@ -81,7 +81,7 @@
                         <div class="space-y-3">
                             <details class="group">
                                 <summary class="cursor-pointer text-sm font-medium text-gray-900 hover:text-indigo-600">{{ __('How do I create an assessment?') }}</summary>
-                                <p class="mt-2 text-sm text-gray-600 pl-4">{{ __('Go to Assessments menu and click "Create Assessment". Select students and enter their scores for each subject.') }}</p>
+                                <p class="mt-2 text-sm text-gray-600 pl-4">{{ __('Go to Assessments menu and click \'Create Assessment\'. Select students and enter their scores for each subject.') }}</p>
                             </details>
                             <details class="group">
                                 <summary class="cursor-pointer text-sm font-medium text-gray-900 hover:text-indigo-600">{{ __('What are the assessment cycles?') }}</summary>
@@ -111,7 +111,7 @@
                             </details>
                             <details class="group">
                                 <summary class="cursor-pointer text-sm font-medium text-gray-900 hover:text-indigo-600">{{ __('How do I export reports?') }}</summary>
-                                <p class="mt-2 text-sm text-gray-600 pl-4">{{ __('Most reports have an "Export" button that allows you to download data in Excel format.') }}</p>
+                                <p class="mt-2 text-sm text-gray-600 pl-4">{{ __('Most reports have an \'Export\' button that allows you to download data in Excel format.') }}</p>
                             </details>
                             <details class="group">
                                 <summary class="cursor-pointer text-sm font-medium text-gray-900 hover:text-indigo-600">{{ __('Can I filter report data?') }}</summary>

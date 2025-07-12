@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use App\Models\School;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rules;
 
 class UserController extends Controller
 {
@@ -17,8 +17,8 @@ class UserController extends Controller
     public function index(Request $request)
     {
         // Check if user is admin
-        if (!auth()->user()->isAdmin()) {
-            abort(403, 'Unauthorized action.');
+        if (! auth()->user()->isAdmin()) {
+            abort(403, __('Unauthorized action.'));
         }
         $query = User::with('school');
 
@@ -27,7 +27,7 @@ class UserController extends Controller
             $search = $request->get('search');
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%");
+                    ->orWhere('email', 'like', "%{$search}%");
             });
         }
 
@@ -46,10 +46,25 @@ class UserController extends Controller
             $query->where('is_active', $request->get('is_active'));
         }
 
-        $users = $query->orderBy('name')->paginate(20);
+        // Add sorting
+        $sortField = $request->get('sort', 'name');
+        $sortOrder = $request->get('order', 'asc');
+
+        // Validate sort field
+        $allowedSorts = ['name', 'email', 'role', 'created_at'];
+        if (! in_array($sortField, $allowedSorts)) {
+            $sortField = 'name';
+        }
+
+        // Validate sort order
+        if (! in_array($sortOrder, ['asc', 'desc'])) {
+            $sortOrder = 'asc';
+        }
+
+        $users = $query->orderBy($sortField, $sortOrder)->paginate(20)->withQueryString();
         $schools = School::orderBy('school_name')->get();
 
-        return view('users.index', compact('users', 'schools'));
+        return view('users.index', compact('users', 'schools', 'sortField', 'sortOrder'));
     }
 
     /**
@@ -58,10 +73,11 @@ class UserController extends Controller
     public function create()
     {
         // Check if user is admin
-        if (!auth()->user()->isAdmin()) {
-            abort(403, 'Unauthorized action.');
+        if (! auth()->user()->isAdmin()) {
+            abort(403, __('Unauthorized action.'));
         }
         $schools = School::orderBy('school_name')->get();
+
         return view('users.create', compact('schools'));
     }
 
@@ -71,8 +87,8 @@ class UserController extends Controller
     public function store(Request $request)
     {
         // Check if user is admin
-        if (!auth()->user()->isAdmin()) {
-            abort(403, 'Unauthorized action.');
+        if (! auth()->user()->isAdmin()) {
+            abort(403, __('Unauthorized action.'));
         }
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
@@ -101,7 +117,7 @@ class UserController extends Controller
         User::create($validated);
 
         return redirect()->route('users.index')
-            ->with('success', 'User created successfully.');
+            ->with('success', __('User created successfully.'));
     }
 
     /**
@@ -110,10 +126,11 @@ class UserController extends Controller
     public function show(User $user)
     {
         // Check if user is admin
-        if (!auth()->user()->isAdmin()) {
-            abort(403, 'Unauthorized action.');
+        if (! auth()->user()->isAdmin()) {
+            abort(403, __('Unauthorized action.'));
         }
         $user->load('school');
+
         return view('users.show', compact('user'));
     }
 
@@ -123,10 +140,11 @@ class UserController extends Controller
     public function edit(User $user)
     {
         // Check if user is admin
-        if (!auth()->user()->isAdmin()) {
-            abort(403, 'Unauthorized action.');
+        if (! auth()->user()->isAdmin()) {
+            abort(403, __('Unauthorized action.'));
         }
         $schools = School::orderBy('school_name')->get();
+
         return view('users.edit', compact('user', 'schools'));
     }
 
@@ -136,12 +154,12 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         // Check if user is admin
-        if (!auth()->user()->isAdmin()) {
-            abort(403, 'Unauthorized action.');
+        if (! auth()->user()->isAdmin()) {
+            abort(403, __('Unauthorized action.'));
         }
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $user->id],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,'.$user->id],
             'password' => ['nullable', 'confirmed', Rules\Password::defaults()],
             'role' => ['required', 'in:admin,mentor,teacher,viewer'],
             'school_id' => ['nullable', 'exists:schools,id'],
@@ -167,7 +185,7 @@ class UserController extends Controller
             if ($user->profile_photo) {
                 Storage::disk('public')->delete($user->profile_photo);
             }
-            
+
             $photo = $request->file('profile_photo');
             $path = $photo->store('users/photos', 'public');
             $validated['profile_photo'] = $path;
@@ -176,7 +194,7 @@ class UserController extends Controller
         $user->update($validated);
 
         return redirect()->route('users.index')
-            ->with('success', 'User updated successfully.');
+            ->with('success', __('User updated successfully.'));
     }
 
     /**
@@ -185,13 +203,13 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         // Check if user is admin
-        if (!auth()->user()->isAdmin()) {
-            abort(403, 'Unauthorized action.');
+        if (! auth()->user()->isAdmin()) {
+            abort(403, __('Unauthorized action.'));
         }
         // Prevent deleting yourself
         if ($user->id === auth()->id()) {
             return redirect()->route('users.index')
-                ->with('error', 'You cannot delete your own account.');
+                ->with('error', __('You cannot delete your own account.'));
         }
 
         // Delete photo if exists
@@ -202,6 +220,6 @@ class UserController extends Controller
         $user->delete();
 
         return redirect()->route('users.index')
-            ->with('success', 'User deleted successfully.');
+            ->with('success', __('User deleted successfully.'));
     }
 }

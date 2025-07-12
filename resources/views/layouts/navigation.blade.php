@@ -28,6 +28,12 @@
                     </x-nav-link>
                     @endif
                     
+                    @if(auth()->user()->role === 'admin' || (auth()->user()->role === 'teacher' && auth()->user()->teachingClasses()->exists()))
+                    <x-nav-link :href="route('classes.index')" :active="request()->routeIs('classes.*')">
+                        {{ __('Classes') }}
+                    </x-nav-link>
+                    @endif
+                    
                     @if(auth()->user()->role === 'admin' || auth()->user()->role === 'mentor')
                     <x-nav-link :href="route('mentoring.index')" :active="request()->routeIs('mentoring.*')">
                         {{ __('Mentoring') }}
@@ -193,6 +199,12 @@
             @if(auth()->user()->role === 'admin' || auth()->user()->role === 'teacher')
             <x-responsive-nav-link :href="route('students.index')" :active="request()->routeIs('students.*')">
                 {{ __('Students') }}
+            </x-responsive-nav-link>
+            @endif
+            
+            @if(auth()->user()->role === 'admin' || (auth()->user()->role === 'teacher' && auth()->user()->teachingClasses()->exists()))
+            <x-responsive-nav-link :href="route('classes.index')" :active="request()->routeIs('classes.*')">
+                {{ __('Classes') }}
             </x-responsive-nav-link>
             @endif
             

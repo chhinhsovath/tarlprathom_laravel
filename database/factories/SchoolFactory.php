@@ -12,10 +12,10 @@ class SchoolFactory extends Factory
     public function definition()
     {
         $provinces = ['Phnom Penh', 'Siem Reap', 'Battambang', 'Kampong Cham', 'Kandal'];
-        
+
         return [
-            'school_name' => $this->faker->company() . ' Primary School',
-            'address' => $this->faker->streetAddress() . ', ' . $this->faker->randomElement($provinces),
+            'school_name' => $this->faker->company().' Primary School',
+            'address' => $this->faker->streetAddress().', '.$this->faker->randomElement($provinces),
         ];
     }
 }

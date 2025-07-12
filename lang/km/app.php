@@ -11,7 +11,7 @@ return [
     'Profile' => 'ប្រវត្តិរូប',
     'Log Out' => 'ចាកចេញ',
     'Language' => 'ភាសា',
-    
+
     // Stats
     'Total Students' => 'សិស្សសរុប',
     'Total Assessments' => 'ការវាយតម្លៃសរុប',
@@ -21,7 +21,7 @@ return [
     'Schools Visited' => 'សាលារៀនដែលបានទស្សនា',
     'Teachers Mentored' => 'គ្រូដែលបានណែនាំ',
     'Average Score' => 'ពិន្ទុមធ្យម',
-    
+
     // Students
     'Add New Student' => 'បន្ថែមសិស្សថ្មី',
     'Search' => 'ស្វែងរក',
@@ -45,12 +45,12 @@ return [
     'Save' => 'រក្សាទុក',
     'Update' => 'ធ្វើបច្ចុប្បន្នភាព',
     'Cancel' => 'បោះបង់',
-    
+
     // Roles
     'Admin' => 'អ្នកគ្រប់គ្រង',
     'Teacher' => 'គ្រូបង្រៀន',
     'Mentor' => 'អ្នកណែនាំ',
-    
+
     // Reports
     'Reports & Analytics' => 'របាយការណ៍ និងការវិភាគ',
     'Overview of your TaRL program performance and insights' => 'ទិដ្ឋភាពទូទៅនៃដំណើរការ និងការយល់ដឹងអំពីកម្មវិធី TaRL របស់អ្នក',

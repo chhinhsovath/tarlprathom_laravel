@@ -44,6 +44,20 @@
                             <x-input-error class="mt-2" :messages="$errors->get('gender')" />
                         </div>
 
+                        <!-- Class -->
+                        <div>
+                            <x-input-label for="class_id" :value="__('Class')" />
+                            <select id="class_id" name="class_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                <option value="">{{ __('Select Class') }}</option>
+                                @foreach($classes as $class)
+                                    <option value="{{ $class->id }}" {{ old('class_id') == $class->id ? 'selected' : '' }}>
+                                        {{ $class->full_name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            <x-input-error class="mt-2" :messages="$errors->get('class_id')" />
+                        </div>
+
                         <!-- School -->
                         @if($schools->count() > 1)
                             <div>

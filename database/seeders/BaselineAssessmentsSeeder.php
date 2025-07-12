@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\Assessment;
 use App\Models\Student;
+use Illuminate\Database\Seeder;
 
 class BaselineAssessmentsSeeder extends Seeder
 {
@@ -14,26 +14,26 @@ class BaselineAssessmentsSeeder extends Seeder
     public function run(): void
     {
         $students = Student::all();
-        
+
         // Assessment levels
         $khmerLevels = ['Beginner', 'Letter Reader', 'Word Level', 'Paragraph Reader', 'Story Reader', 'Comp. 1', 'Comp. 2'];
         $mathLevels = ['Beginner', '1-Digit', '2-Digit', 'Subtraction', 'Division', 'Word Problem'];
-        
+
         foreach ($students as $index => $student) {
             // Create baseline assessment for Khmer
             // Assign levels based on index to have variety
             $levelIndex = $index % count($khmerLevels);
             $level = $khmerLevels[$levelIndex];
-            
+
             Assessment::create([
                 'student_id' => $student->id,
                 'subject' => 'khmer',
                 'cycle' => 'baseline',
                 'level' => $level,
                 'score' => rand(0, 100),
-                'assessed_at' => now()->subDays(rand(1, 30))
+                'assessed_at' => now()->subDays(rand(1, 30)),
             ]);
-            
+
             // Also create baseline for Math
             $mathLevelIndex = $index % count($mathLevels);
             Assessment::create([
@@ -42,10 +42,10 @@ class BaselineAssessmentsSeeder extends Seeder
                 'cycle' => 'baseline',
                 'level' => $mathLevels[$mathLevelIndex],
                 'score' => rand(0, 100),
-                'assessed_at' => now()->subDays(rand(1, 30))
+                'assessed_at' => now()->subDays(rand(1, 30)),
             ]);
         }
-        
-        echo "Created baseline assessments for " . $students->count() . " students.\n";
+
+        echo 'Created baseline assessments for '.$students->count()." students.\n";
     }
 }

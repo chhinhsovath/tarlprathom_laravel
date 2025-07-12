@@ -1,0 +1,66 @@
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Dependencies
+node_modules/
+vendor/node_modules/
+
+# Development
+.env
+.env.local
+.env.testing
+.vscode/
+.idea/
+.phpunit.result.cache
+.php-cs-fixer.cache
+
+# Tests
+tests/
+phpunit.xml
+.phpunit.cache/
+
+# Build files
+npm-debug.log
+yarn-error.log
+hot
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Documentation
+README.md
+CLAUDE.md
+DEPLOYMENT.md
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.swp
+*.log
+
+# Development scripts
+deploy-to-php81.sh
+
+# Storage (will be created on server)
+storage/app/public/*
+storage/logs/*
+storage/framework/cache/data/*
+storage/framework/sessions/*
+storage/framework/views/*
+
+# Public test files
+public/phpinfo.php
+public/phpversion.php
+public/check-requirements.php
+public/server-check.php
+
+# Composer dev dependencies
+composer.lock
+
+# NPM/Yarn lock files (server doesn't need these)
+package-lock.json
+yarn.lock

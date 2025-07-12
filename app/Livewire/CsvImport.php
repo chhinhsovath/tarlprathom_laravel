@@ -2,31 +2,39 @@
 
 namespace App\Livewire;
 
-use App\Models\Student;
 use App\Models\School;
-use Livewire\Component;
-use Livewire\WithFileUploads;
+use App\Models\Student;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use League\Csv\Reader;
+use Livewire\Component;
+use Livewire\WithFileUploads;
 
 class CsvImport extends Component
 {
     use WithFileUploads;
 
     public $csvFile;
+
     public $school_id;
+
     public $preview = [];
+
     public $headers = [];
+
     public $mapping = [
         'name' => null,
         'sex' => null,
         'age' => null,
         'class' => null,
     ];
+
     public $showMapping = false;
+
     public $importProgress = 0;
+
     public $importTotal = 0;
+
     public $importErrors = [];
 
     protected $rules = [
@@ -53,26 +61,28 @@ class CsvImport extends Component
             $path = $this->csvFile->getRealPath();
             $csv = Reader::createFromPath($path, 'r');
             $csv->setHeaderOffset(0);
-            
+
             $this->headers = $csv->getHeader();
             $records = $csv->getRecords();
-            
+
             $this->preview = [];
             $count = 0;
             foreach ($records as $record) {
-                if ($count >= 5) break;
+                if ($count >= 5) {
+                    break;
+                }
                 $this->preview[] = $record;
                 $count++;
             }
-            
+
             $this->showMapping = true;
             $this->autoMapFields();
-            
+
         } catch (\Exception $e) {
             $this->dispatch('swal:modal', [
                 'type' => 'error',
                 'title' => 'Error',
-                'text' => 'Failed to read CSV file: ' . $e->getMessage(),
+                'text' => 'Failed to read CSV file: '.$e->getMessage(),
             ]);
         }
     }
@@ -110,7 +120,7 @@ class CsvImport extends Component
             $path = $this->csvFile->getRealPath();
             $csv = Reader::createFromPath($path, 'r');
             $csv->setHeaderOffset(0);
-            
+
             $records = $csv->getRecords();
             $this->importTotal = iterator_count($csv->getRecords());
             $this->importProgress = 0;
@@ -123,7 +133,7 @@ class CsvImport extends Component
                     $data = [
                         'name' => $record[$this->mapping['name']] ?? '',
                         'sex' => strtolower($record[$this->mapping['sex']] ?? ''),
-                        'age' => (int)($record[$this->mapping['age']] ?? 0),
+                        'age' => (int) ($record[$this->mapping['age']] ?? 0),
                         'class' => $record[$this->mapping['class']] ?? '',
                         'school_id' => $this->school_id,
                     ];
@@ -138,27 +148,27 @@ class CsvImport extends Component
                     ]);
 
                     if ($validator->fails()) {
-                        $this->importErrors[] = "Row " . ($offset + 2) . ": " . implode(', ', $validator->errors()->all());
+                        $this->importErrors[] = 'Row '.($offset + 2).': '.implode(', ', $validator->errors()->all());
                     } else {
                         Student::create($data);
                     }
 
                     $this->importProgress++;
-                    
+
                 } catch (\Exception $e) {
-                    $this->importErrors[] = "Row " . ($offset + 2) . ": " . $e->getMessage();
+                    $this->importErrors[] = 'Row '.($offset + 2).': '.$e->getMessage();
                 }
             }
 
             DB::commit();
 
             $successCount = $this->importProgress - count($this->importErrors);
-            
+
             $this->dispatch('swal:modal', [
                 'type' => 'success',
                 'title' => 'Import Complete',
-                'text' => "Successfully imported {$successCount} students. " . 
-                         (count($this->importErrors) > 0 ? count($this->importErrors) . " errors occurred." : ""),
+                'text' => "Successfully imported {$successCount} students. ".
+                         (count($this->importErrors) > 0 ? count($this->importErrors).' errors occurred.' : ''),
             ]);
 
             if (count($this->importErrors) === 0) {
@@ -186,12 +196,12 @@ class CsvImport extends Component
 
         $filename = 'student_import_template.csv';
         $handle = fopen('php://temp', 'r+');
-        
+
         fputcsv($handle, $headers);
         foreach ($sample as $row) {
             fputcsv($handle, $row);
         }
-        
+
         rewind($handle);
         $content = stream_get_contents($handle);
         fclose($handle);
