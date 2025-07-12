@@ -1,0 +1,130 @@
+[
+  {
+    "text": "គម្រោង TaRL",
+    "href": "http://127.0.0.1:8001/dashboard"
+  },
+  {
+    "text": "ផ្ទាំងគ្រប់គ្រង",
+    "href": "http://127.0.0.1:8001/dashboard"
+  },
+  {
+    "text": "ការវាយតម្លៃ",
+    "href": "http://127.0.0.1:8001/assessments"
+  },
+  {
+    "text": "សិស្ស",
+    "href": "http://127.0.0.1:8001/students"
+  },
+  {
+    "text": "ថ្នាក់រៀន",
+    "href": "http://127.0.0.1:8001/classes"
+  },
+  {
+    "text": "ការណែនាំ",
+    "href": "http://127.0.0.1:8001/mentoring"
+  },
+  {
+    "text": "របាយការណ៍",
+    "href": "http://127.0.0.1:8001/reports"
+  },
+  {
+    "text": "English",
+    "href": "http://127.0.0.1:8001/language/en"
+  },
+  {
+    "text": "ភាសាខ្មែរ",
+    "href": "http://127.0.0.1:8001/language/km"
+  },
+  {
+    "text": "ប្រវត្តិរូបរបស់ខ្ញុំ",
+    "href": "http://127.0.0.1:8001/profile"
+  },
+  {
+    "text": "ប្តូរពាក្យសម្ងាត់",
+    "href": "http://127.0.0.1:8001/profile#password-update"
+  },
+  {
+    "text": "គ្រប់គ្រងអ្នកប្រើប្រាស់",
+    "href": "http://127.0.0.1:8001/users"
+  },
+  {
+    "text": "គ្រប់គ្រងសាលារៀន",
+    "href": "http://127.0.0.1:8001/schools"
+  },
+  {
+    "text": "ការកំណត់",
+    "href": "http://127.0.0.1:8001/settings"
+  },
+  {
+    "text": "ជំនួយ និងការគាំទ្រ",
+    "href": "http://127.0.0.1:8001/help"
+  },
+  {
+    "text": "អំពី",
+    "href": "http://127.0.0.1:8001/about"
+  },
+  {
+    "text": "ផ្ទាំងគ្រប់គ្រង",
+    "href": "http://127.0.0.1:8001/dashboard"
+  },
+  {
+    "text": "ការវាយតម្លៃ",
+    "href": "http://127.0.0.1:8001/assessments"
+  },
+  {
+    "text": "សិស្ស",
+    "href": "http://127.0.0.1:8001/students"
+  },
+  {
+    "text": "ថ្នាក់រៀន",
+    "href": "http://127.0.0.1:8001/classes"
+  },
+  {
+    "text": "ការណែនាំ",
+    "href": "http://127.0.0.1:8001/mentoring"
+  },
+  {
+    "text": "របាយការណ៍",
+    "href": "http://127.0.0.1:8001/reports"
+  },
+  {
+    "text": "EN",
+    "href": "http://127.0.0.1:8001/language/en"
+  },
+  {
+    "text": "KM",
+    "href": "http://127.0.0.1:8001/language/km"
+  },
+  {
+    "text": "ប្រវត្តិរូបរបស់ខ្ញុំ",
+    "href": "http://127.0.0.1:8001/profile"
+  },
+  {
+    "text": "ប្តូរពាក្យសម្ងាត់",
+    "href": "http://127.0.0.1:8001/profile#password-update"
+  },
+  {
+    "text": "គ្រប់គ្រងអ្នកប្រើប្រាស់",
+    "href": "http://127.0.0.1:8001/users"
+  },
+  {
+    "text": "គ្រប់គ្រងសាលារៀន",
+    "href": "http://127.0.0.1:8001/schools"
+  },
+  {
+    "text": "ការកំណត់",
+    "href": "http://127.0.0.1:8001/settings"
+  },
+  {
+    "text": "ជំនួយ និងការគាំទ្រ",
+    "href": "http://127.0.0.1:8001/help"
+  },
+  {
+    "text": "អំពី",
+    "href": "http://127.0.0.1:8001/about"
+  },
+  {
+    "text": "ចាកចេញ",
+    "href": "http://127.0.0.1:8001/logout"
+  }
+]

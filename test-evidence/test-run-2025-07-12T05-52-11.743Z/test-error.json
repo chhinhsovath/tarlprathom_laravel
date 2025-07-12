@@ -1,0 +1,5 @@
+{
+  "error": "page.waitForTimeout is not a function",
+  "stack": "TypeError: page.waitForTimeout is not a function\n    at runTests (file:///Users/user/Desktop/apps/tarlprathom_laravel/test-after-downgrade.js:142:24)",
+  "timestamp": "2025-07-12T05:53:26.314Z"
+}

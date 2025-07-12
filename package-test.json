@@ -1,0 +1,12 @@
+{
+  "name": "laravel-tarl-tests",
+  "version": "1.0.0",
+  "description": "Automated tests for Laravel TaRL application",
+  "scripts": {
+    "test": "node test-after-downgrade.js",
+    "test:headless": "HEADLESS=true node test-after-downgrade.js"
+  },
+  "devDependencies": {
+    "puppeteer": "^21.0.0"
+  }
+}

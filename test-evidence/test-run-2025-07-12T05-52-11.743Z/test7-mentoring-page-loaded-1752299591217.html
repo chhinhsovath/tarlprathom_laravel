@@ -1,0 +1,1127 @@
+<!DOCTYPE html><html lang="km"><head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="csrf-token" content="DdcQcTTrpRF7wvUaGxmyhFfawn2N30NF6nXBURFJ">
+
+        <title>TaRL Project</title>
+
+        <!-- Fonts -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+        <link href="https://fonts.googleapis.com/css2?family=Hanuman:wght@100;300;400;700;900&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+
+        <!-- Scripts -->
+        <script defer="" src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+        <link rel="preload" as="style" href="http://127.0.0.1:8001/build/assets/app-LnqkgjvU.css"><link rel="modulepreload" href="http://127.0.0.1:8001/build/assets/app-DNxiirP_.js"><link rel="stylesheet" href="http://127.0.0.1:8001/build/assets/app-LnqkgjvU.css"><script type="module" src="http://127.0.0.1:8001/build/assets/app-DNxiirP_.js"></script>        
+        <style>
+            .loading-spinner {
+                display: inline-block;
+                width: 20px;
+                height: 20px;
+                border: 3px solid rgba(0, 0, 0, .1);
+                border-radius: 50%;
+                border-top-color: #3B82F6;
+                animation: spin 1s ease-in-out infinite;
+            }
+            
+            @keyframes spin {
+                to { transform: rotate(360deg); }
+            }
+            
+            .loading-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: rgba(0, 0, 0, 0.5);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 9999;
+            }
+            
+            .loading-overlay .loading-content {
+                background: white;
+                padding: 20px;
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                gap: 15px;
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            }
+            
+            .loading-overlay .loading-spinner {
+                width: 30px;
+                height: 30px;
+            }
+            
+            .btn-loading {
+                position: relative;
+                color: transparent !important;
+            }
+            
+            .btn-loading .loading-spinner {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                border-color: rgba(255, 255, 255, .3);
+                border-top-color: white;
+            }
+            
+            .loading {
+                position: relative;
+                pointer-events: none;
+                opacity: 0.7;
+            }
+            
+            .loading::after {
+                content: '';
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 20px;
+                height: 20px;
+                border: 3px solid rgba(0, 0, 0, .1);
+                border-radius: 50%;
+                border-top-color: #3B82F6;
+                animation: spin 1s ease-in-out infinite;
+            }
+            
+            /* Page transition overlay */
+            .page-transition-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: rgba(255, 255, 255, 0.95);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 9998;
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+            }
+            
+            .page-transition-overlay.active {
+                opacity: 1;
+                visibility: visible;
+            }
+            
+            .page-transition-content {
+                text-align: center;
+            }
+            
+            .page-transition-spinner {
+                width: 50px;
+                height: 50px;
+                border: 4px solid rgba(59, 130, 246, 0.2);
+                border-top-color: #3B82F6;
+                border-radius: 50%;
+                animation: spin 1s linear infinite;
+                margin: 0 auto 20px;
+            }
+            
+            .page-transition-text {
+                font-size: 16px;
+                color: #374151;
+                font-weight: 500;
+            }
+            
+            /* Fade animation for page content */
+            body.page-transitioning {
+                overflow: hidden;
+            }
+            
+            body.page-transitioning main {
+                opacity: 0.3;
+                transition: opacity 0.3s ease-in-out;
+            }
+        </style>
+    <style>:root{--swal2-outline: 0 0 0 3px rgba(100, 150, 200, 0.5);--swal2-container-padding: 0.625em;--swal2-backdrop: rgba(0, 0, 0, 0.4);--swal2-backdrop-transition: background-color 0.1s;--swal2-width: 32em;--swal2-padding: 0 0 1.25em;--swal2-border: none;--swal2-border-radius: 0.3125rem;--swal2-background: white;--swal2-color: #545454;--swal2-show-animation: swal2-show 0.3s;--swal2-hide-animation: swal2-hide 0.15s forwards;--swal2-icon-zoom: 1;--swal2-icon-animations: true;--swal2-title-padding: 0.8em 1em 0;--swal2-html-container-padding: 1em 1.6em 0.3em;--swal2-input-border: 1px solid #d9d9d9;--swal2-input-border-radius: 0.1875em;--swal2-input-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.06), 0 0 0 3px transparent;--swal2-input-background: transparent;--swal2-input-transition: border-color 0.2s, box-shadow 0.2s;--swal2-input-hover-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.06), 0 0 0 3px transparent;--swal2-input-focus-border: 1px solid #b4dbed;--swal2-input-focus-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.06), 0 0 0 3px $swal2-outline-color;--swal2-progress-step-background: #add8e6;--swal2-validation-message-background: #f0f0f0;--swal2-validation-message-color: #666;--swal2-footer-border-color: #eee;--swal2-footer-background: transparent;--swal2-footer-color: inherit;--swal2-close-button-position: initial;--swal2-close-button-inset: auto;--swal2-close-button-font-size: 2.5em;--swal2-close-button-color: #ccc;--swal2-close-button-transition: color 0.2s, box-shadow 0.2s;--swal2-close-button-outline: initial;--swal2-close-button-box-shadow: inset 0 0 0 3px transparent;--swal2-close-button-focus-box-shadow: inset var(--swal2-outline);--swal2-close-button-hover-transform: none;--swal2-actions-justify-content: center;--swal2-actions-width: auto;--swal2-actions-margin: 1.25em auto 0;--swal2-actions-padding: 0;--swal2-actions-border-radius: 0;--swal2-actions-background: transparent;--swal2-action-button-transition: background-color 0.2s, box-shadow 0.2s;--swal2-action-button-hover: black 10%;--swal2-action-button-active: black 10%;--swal2-confirm-button-box-shadow: none;--swal2-confirm-button-border-radius: 0.25em;--swal2-confirm-button-background-color: #7066e0;--swal2-confirm-button-color: #fff;--swal2-deny-button-box-shadow: none;--swal2-deny-button-border-radius: 0.25em;--swal2-deny-button-background-color: #dc3741;--swal2-deny-button-color: #fff;--swal2-cancel-button-box-shadow: none;--swal2-cancel-button-border-radius: 0.25em;--swal2-cancel-button-background-color: #6e7881;--swal2-cancel-button-color: #fff;--swal2-toast-show-animation: swal2-toast-show 0.5s;--swal2-toast-hide-animation: swal2-toast-hide 0.1s forwards;--swal2-toast-border: none;--swal2-toast-box-shadow: 0 0 1px hsl(0deg 0% 0% / 0.075), 0 1px 2px hsl(0deg 0% 0% / 0.075), 1px 2px 4px hsl(0deg 0% 0% / 0.075), 1px 3px 8px hsl(0deg 0% 0% / 0.075), 2px 4px 16px hsl(0deg 0% 0% / 0.075)}[data-swal2-theme=dark]{--swal2-dark-theme-black: #19191a;--swal2-dark-theme-white: #e1e1e1;--swal2-background: var(--swal2-dark-theme-black);--swal2-color: var(--swal2-dark-theme-white);--swal2-footer-border-color: #555;--swal2-input-background: color-mix(in srgb, var(--swal2-dark-theme-black), var(--swal2-dark-theme-white) 10%);--swal2-validation-message-background: color-mix( in srgb, var(--swal2-dark-theme-black), var(--swal2-dark-theme-white) 10% );--swal2-validation-message-color: var(--swal2-dark-theme-white)}@media(prefers-color-scheme: dark){[data-swal2-theme=auto]{--swal2-dark-theme-black: #19191a;--swal2-dark-theme-white: #e1e1e1;--swal2-background: var(--swal2-dark-theme-black);--swal2-color: var(--swal2-dark-theme-white);--swal2-footer-border-color: #555;--swal2-input-background: color-mix(in srgb, var(--swal2-dark-theme-black), var(--swal2-dark-theme-white) 10%);--swal2-validation-message-background: color-mix( in srgb, var(--swal2-dark-theme-black), var(--swal2-dark-theme-white) 10% );--swal2-validation-message-color: var(--swal2-dark-theme-white)}}body.swal2-shown:not(.swal2-no-backdrop,.swal2-toast-shown){overflow:hidden}body.swal2-height-auto{height:auto !important}body.swal2-no-backdrop .swal2-container{background-color:rgba(0,0,0,0) !important;pointer-events:none}body.swal2-no-backdrop .swal2-container .swal2-popup{pointer-events:all}body.swal2-no-backdrop .swal2-container .swal2-modal{box-shadow:0 0 10px var(--swal2-backdrop)}body.swal2-toast-shown .swal2-container{box-sizing:border-box;width:360px;max-width:100%;background-color:rgba(0,0,0,0);pointer-events:none}body.swal2-toast-shown .swal2-container.swal2-top{inset:0 auto auto 50%;transform:translateX(-50%)}body.swal2-toast-shown .swal2-container.swal2-top-end,body.swal2-toast-shown .swal2-container.swal2-top-right{inset:0 0 auto auto}body.swal2-toast-shown .swal2-container.swal2-top-start,body.swal2-toast-shown .swal2-container.swal2-top-left{inset:0 auto auto 0}body.swal2-toast-shown .swal2-container.swal2-center-start,body.swal2-toast-shown .swal2-container.swal2-center-left{inset:50% auto auto 0;transform:translateY(-50%)}body.swal2-toast-shown .swal2-container.swal2-center{inset:50% auto auto 50%;transform:translate(-50%, -50%)}body.swal2-toast-shown .swal2-container.swal2-center-end,body.swal2-toast-shown .swal2-container.swal2-center-right{inset:50% 0 auto auto;transform:translateY(-50%)}body.swal2-toast-shown .swal2-container.swal2-bottom-start,body.swal2-toast-shown .swal2-container.swal2-bottom-left{inset:auto auto 0 0}body.swal2-toast-shown .swal2-container.swal2-bottom{inset:auto auto 0 50%;transform:translateX(-50%)}body.swal2-toast-shown .swal2-container.swal2-bottom-end,body.swal2-toast-shown .swal2-container.swal2-bottom-right{inset:auto 0 0 auto}@media print{body.swal2-shown:not(.swal2-no-backdrop,.swal2-toast-shown){overflow-y:scroll !important}body.swal2-shown:not(.swal2-no-backdrop,.swal2-toast-shown)>[aria-hidden=true]{display:none}body.swal2-shown:not(.swal2-no-backdrop,.swal2-toast-shown) .swal2-container{position:static !important}}div:where(.swal2-container){display:grid;position:fixed;z-index:1060;inset:0;box-sizing:border-box;grid-template-areas:"top-start     top            top-end" "center-start  center         center-end" "bottom-start  bottom-center  bottom-end";grid-template-rows:minmax(min-content, auto) minmax(min-content, auto) minmax(min-content, auto);height:100%;padding:var(--swal2-container-padding);overflow-x:hidden;transition:var(--swal2-backdrop-transition);-webkit-overflow-scrolling:touch}div:where(.swal2-container).swal2-backdrop-show,div:where(.swal2-container).swal2-noanimation{background:var(--swal2-backdrop)}div:where(.swal2-container).swal2-backdrop-hide{background:rgba(0,0,0,0) !important}div:where(.swal2-container).swal2-top-start,div:where(.swal2-container).swal2-center-start,div:where(.swal2-container).swal2-bottom-start{grid-template-columns:minmax(0, 1fr) auto auto}div:where(.swal2-container).swal2-top,div:where(.swal2-container).swal2-center,div:where(.swal2-container).swal2-bottom{grid-template-columns:auto minmax(0, 1fr) auto}div:where(.swal2-container).swal2-top-end,div:where(.swal2-container).swal2-center-end,div:where(.swal2-container).swal2-bottom-end{grid-template-columns:auto auto minmax(0, 1fr)}div:where(.swal2-container).swal2-top-start>.swal2-popup{align-self:start}div:where(.swal2-container).swal2-top>.swal2-popup{grid-column:2;place-self:start center}div:where(.swal2-container).swal2-top-end>.swal2-popup,div:where(.swal2-container).swal2-top-right>.swal2-popup{grid-column:3;place-self:start end}div:where(.swal2-container).swal2-center-start>.swal2-popup,div:where(.swal2-container).swal2-center-left>.swal2-popup{grid-row:2;align-self:center}div:where(.swal2-container).swal2-center>.swal2-popup{grid-column:2;grid-row:2;place-self:center center}div:where(.swal2-container).swal2-center-end>.swal2-popup,div:where(.swal2-container).swal2-center-right>.swal2-popup{grid-column:3;grid-row:2;place-self:center end}div:where(.swal2-container).swal2-bottom-start>.swal2-popup,div:where(.swal2-container).swal2-bottom-left>.swal2-popup{grid-column:1;grid-row:3;align-self:end}div:where(.swal2-container).swal2-bottom>.swal2-popup{grid-column:2;grid-row:3;place-self:end center}div:where(.swal2-container).swal2-bottom-end>.swal2-popup,div:where(.swal2-container).swal2-bottom-right>.swal2-popup{grid-column:3;grid-row:3;place-self:end end}div:where(.swal2-container).swal2-grow-row>.swal2-popup,div:where(.swal2-container).swal2-grow-fullscreen>.swal2-popup{grid-column:1/4;width:100%}div:where(.swal2-container).swal2-grow-column>.swal2-popup,div:where(.swal2-container).swal2-grow-fullscreen>.swal2-popup{grid-row:1/4;align-self:stretch}div:where(.swal2-container).swal2-no-transition{transition:none !important}div:where(.swal2-container)[popover]{width:auto;border:0}div:where(.swal2-container) div:where(.swal2-popup){display:none;position:relative;box-sizing:border-box;grid-template-columns:minmax(0, 100%);width:var(--swal2-width);max-width:100%;padding:var(--swal2-padding);border:var(--swal2-border);border-radius:var(--swal2-border-radius);background:var(--swal2-background);color:var(--swal2-color);font-family:inherit;font-size:1rem;container-name:swal2-popup}div:where(.swal2-container) div:where(.swal2-popup):focus{outline:none}div:where(.swal2-container) div:where(.swal2-popup).swal2-loading{overflow-y:hidden}div:where(.swal2-container) div:where(.swal2-popup).swal2-draggable{cursor:grab}div:where(.swal2-container) div:where(.swal2-popup).swal2-draggable div:where(.swal2-icon){cursor:grab}div:where(.swal2-container) div:where(.swal2-popup).swal2-dragging{cursor:grabbing}div:where(.swal2-container) div:where(.swal2-popup).swal2-dragging div:where(.swal2-icon){cursor:grabbing}div:where(.swal2-container) h2:where(.swal2-title){position:relative;max-width:100%;margin:0;padding:var(--swal2-title-padding);color:inherit;font-size:1.875em;font-weight:600;text-align:center;text-transform:none;word-wrap:break-word;cursor:initial}div:where(.swal2-container) div:where(.swal2-actions){display:flex;z-index:1;box-sizing:border-box;flex-wrap:wrap;align-items:center;justify-content:var(--swal2-actions-justify-content);width:var(--swal2-actions-width);margin:var(--swal2-actions-margin);padding:var(--swal2-actions-padding);border-radius:var(--swal2-actions-border-radius);background:var(--swal2-actions-background)}div:where(.swal2-container) div:where(.swal2-loader){display:none;align-items:center;justify-content:center;width:2.2em;height:2.2em;margin:0 1.875em;animation:swal2-rotate-loading 1.5s linear 0s infinite normal;border-width:.25em;border-style:solid;border-radius:100%;border-color:#2778c4 rgba(0,0,0,0) #2778c4 rgba(0,0,0,0)}div:where(.swal2-container) button:where(.swal2-styled){margin:.3125em;padding:.625em 1.1em;transition:var(--swal2-action-button-transition);border:none;box-shadow:0 0 0 3px rgba(0,0,0,0);font-weight:500}div:where(.swal2-container) button:where(.swal2-styled):not([disabled]){cursor:pointer}div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-confirm){border-radius:var(--swal2-confirm-button-border-radius);background:initial;background-color:var(--swal2-confirm-button-background-color);box-shadow:var(--swal2-confirm-button-box-shadow);color:var(--swal2-confirm-button-color);font-size:1em}div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-confirm):hover{background-color:color-mix(in srgb, var(--swal2-confirm-button-background-color), var(--swal2-action-button-hover))}div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-confirm):active{background-color:color-mix(in srgb, var(--swal2-confirm-button-background-color), var(--swal2-action-button-active))}div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-deny){border-radius:var(--swal2-deny-button-border-radius);background:initial;background-color:var(--swal2-deny-button-background-color);box-shadow:var(--swal2-deny-button-box-shadow);color:var(--swal2-deny-button-color);font-size:1em}div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-deny):hover{background-color:color-mix(in srgb, var(--swal2-deny-button-background-color), var(--swal2-action-button-hover))}div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-deny):active{background-color:color-mix(in srgb, var(--swal2-deny-button-background-color), var(--swal2-action-button-active))}div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-cancel){border-radius:var(--swal2-cancel-button-border-radius);background:initial;background-color:var(--swal2-cancel-button-background-color);box-shadow:var(--swal2-cancel-button-box-shadow);color:var(--swal2-cancel-button-color);font-size:1em}div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-cancel):hover{background-color:color-mix(in srgb, var(--swal2-cancel-button-background-color), var(--swal2-action-button-hover))}div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-cancel):active{background-color:color-mix(in srgb, var(--swal2-cancel-button-background-color), var(--swal2-action-button-active))}div:where(.swal2-container) button:where(.swal2-styled):focus-visible{outline:none;box-shadow:var(--swal2-action-button-focus-box-shadow)}div:where(.swal2-container) button:where(.swal2-styled)[disabled]:not(.swal2-loading){opacity:.4}div:where(.swal2-container) button:where(.swal2-styled)::-moz-focus-inner{border:0}div:where(.swal2-container) div:where(.swal2-footer){margin:1em 0 0;padding:1em 1em 0;border-top:1px solid var(--swal2-footer-border-color);background:var(--swal2-footer-background);color:var(--swal2-footer-color);font-size:1em;text-align:center;cursor:initial}div:where(.swal2-container) .swal2-timer-progress-bar-container{position:absolute;right:0;bottom:0;left:0;grid-column:auto !important;overflow:hidden;border-bottom-right-radius:var(--swal2-border-radius);border-bottom-left-radius:var(--swal2-border-radius)}div:where(.swal2-container) div:where(.swal2-timer-progress-bar){width:100%;height:.25em;background:rgba(0,0,0,.2)}div:where(.swal2-container) img:where(.swal2-image){max-width:100%;margin:2em auto 1em;cursor:initial}div:where(.swal2-container) button:where(.swal2-close){position:var(--swal2-close-button-position);inset:var(--swal2-close-button-inset);z-index:2;align-items:center;justify-content:center;width:1.2em;height:1.2em;margin-top:0;margin-right:0;margin-bottom:-1.2em;padding:0;overflow:hidden;transition:var(--swal2-close-button-transition);border:none;border-radius:var(--swal2-border-radius);outline:var(--swal2-close-button-outline);background:rgba(0,0,0,0);color:var(--swal2-close-button-color);font-family:monospace;font-size:var(--swal2-close-button-font-size);cursor:pointer;justify-self:end}div:where(.swal2-container) button:where(.swal2-close):hover{transform:var(--swal2-close-button-hover-transform);background:rgba(0,0,0,0);color:#f27474}div:where(.swal2-container) button:where(.swal2-close):focus-visible{outline:none;box-shadow:var(--swal2-close-button-focus-box-shadow)}div:where(.swal2-container) button:where(.swal2-close)::-moz-focus-inner{border:0}div:where(.swal2-container) div:where(.swal2-html-container){z-index:1;justify-content:center;margin:0;padding:var(--swal2-html-container-padding);overflow:auto;color:inherit;font-size:1.125em;font-weight:normal;line-height:normal;text-align:center;word-wrap:break-word;word-break:break-word;cursor:initial}div:where(.swal2-container) input:where(.swal2-input),div:where(.swal2-container) input:where(.swal2-file),div:where(.swal2-container) textarea:where(.swal2-textarea),div:where(.swal2-container) select:where(.swal2-select),div:where(.swal2-container) div:where(.swal2-radio),div:where(.swal2-container) label:where(.swal2-checkbox){margin:1em 2em 3px}div:where(.swal2-container) input:where(.swal2-input),div:where(.swal2-container) input:where(.swal2-file),div:where(.swal2-container) textarea:where(.swal2-textarea){box-sizing:border-box;width:auto;transition:var(--swal2-input-transition);border:var(--swal2-input-border);border-radius:var(--swal2-input-border-radius);background:var(--swal2-input-background);box-shadow:var(--swal2-input-box-shadow);color:inherit;font-size:1.125em}div:where(.swal2-container) input:where(.swal2-input).swal2-inputerror,div:where(.swal2-container) input:where(.swal2-file).swal2-inputerror,div:where(.swal2-container) textarea:where(.swal2-textarea).swal2-inputerror{border-color:#f27474 !important;box-shadow:0 0 2px #f27474 !important}div:where(.swal2-container) input:where(.swal2-input):hover,div:where(.swal2-container) input:where(.swal2-file):hover,div:where(.swal2-container) textarea:where(.swal2-textarea):hover{box-shadow:var(--swal2-input-hover-box-shadow)}div:where(.swal2-container) input:where(.swal2-input):focus,div:where(.swal2-container) input:where(.swal2-file):focus,div:where(.swal2-container) textarea:where(.swal2-textarea):focus{border:var(--swal2-input-focus-border);outline:none;box-shadow:var(--swal2-input-focus-box-shadow)}div:where(.swal2-container) input:where(.swal2-input)::placeholder,div:where(.swal2-container) input:where(.swal2-file)::placeholder,div:where(.swal2-container) textarea:where(.swal2-textarea)::placeholder{color:#ccc}div:where(.swal2-container) .swal2-range{margin:1em 2em 3px;background:var(--swal2-background)}div:where(.swal2-container) .swal2-range input{width:80%}div:where(.swal2-container) .swal2-range output{width:20%;color:inherit;font-weight:600;text-align:center}div:where(.swal2-container) .swal2-range input,div:where(.swal2-container) .swal2-range output{height:2.625em;padding:0;font-size:1.125em;line-height:2.625em}div:where(.swal2-container) .swal2-input{height:2.625em;padding:0 .75em}div:where(.swal2-container) .swal2-file{width:75%;margin-right:auto;margin-left:auto;background:var(--swal2-input-background);font-size:1.125em}div:where(.swal2-container) .swal2-textarea{height:6.75em;padding:.75em}div:where(.swal2-container) .swal2-select{min-width:50%;max-width:100%;padding:.375em .625em;background:var(--swal2-input-background);color:inherit;font-size:1.125em}div:where(.swal2-container) .swal2-radio,div:where(.swal2-container) .swal2-checkbox{align-items:center;justify-content:center;background:var(--swal2-background);color:inherit}div:where(.swal2-container) .swal2-radio label,div:where(.swal2-container) .swal2-checkbox label{margin:0 .6em;font-size:1.125em}div:where(.swal2-container) .swal2-radio input,div:where(.swal2-container) .swal2-checkbox input{flex-shrink:0;margin:0 .4em}div:where(.swal2-container) label:where(.swal2-input-label){display:flex;justify-content:center;margin:1em auto 0}div:where(.swal2-container) div:where(.swal2-validation-message){align-items:center;justify-content:center;margin:1em 0 0;padding:.625em;overflow:hidden;background:var(--swal2-validation-message-background);color:var(--swal2-validation-message-color);font-size:1em;font-weight:300}div:where(.swal2-container) div:where(.swal2-validation-message)::before{content:"!";display:inline-block;width:1.5em;min-width:1.5em;height:1.5em;margin:0 .625em;border-radius:50%;background-color:#f27474;color:#fff;font-weight:600;line-height:1.5em;text-align:center}div:where(.swal2-container) .swal2-progress-steps{flex-wrap:wrap;align-items:center;max-width:100%;margin:1.25em auto;padding:0;background:rgba(0,0,0,0);font-weight:600}div:where(.swal2-container) .swal2-progress-steps li{display:inline-block;position:relative}div:where(.swal2-container) .swal2-progress-steps .swal2-progress-step{z-index:20;flex-shrink:0;width:2em;height:2em;border-radius:2em;background:#2778c4;color:#fff;line-height:2em;text-align:center}div:where(.swal2-container) .swal2-progress-steps .swal2-progress-step.swal2-active-progress-step{background:#2778c4}div:where(.swal2-container) .swal2-progress-steps .swal2-progress-step.swal2-active-progress-step~.swal2-progress-step{background:var(--swal2-progress-step-background);color:#fff}div:where(.swal2-container) .swal2-progress-steps .swal2-progress-step.swal2-active-progress-step~.swal2-progress-step-line{background:var(--swal2-progress-step-background)}div:where(.swal2-container) .swal2-progress-steps .swal2-progress-step-line{z-index:10;flex-shrink:0;width:2.5em;height:.4em;margin:0 -1px;background:#2778c4}div:where(.swal2-icon){position:relative;box-sizing:content-box;justify-content:center;width:5em;height:5em;margin:2.5em auto .6em;zoom:var(--swal2-icon-zoom);border:.25em solid rgba(0,0,0,0);border-radius:50%;border-color:#000;font-family:inherit;line-height:5em;cursor:default;user-select:none}div:where(.swal2-icon) .swal2-icon-content{display:flex;align-items:center;font-size:3.75em}div:where(.swal2-icon).swal2-error{border-color:#f27474;color:#f27474}div:where(.swal2-icon).swal2-error .swal2-x-mark{position:relative;flex-grow:1}div:where(.swal2-icon).swal2-error [class^=swal2-x-mark-line]{display:block;position:absolute;top:2.3125em;width:2.9375em;height:.3125em;border-radius:.125em;background-color:#f27474}div:where(.swal2-icon).swal2-error [class^=swal2-x-mark-line][class$=left]{left:1.0625em;transform:rotate(45deg)}div:where(.swal2-icon).swal2-error [class^=swal2-x-mark-line][class$=right]{right:1em;transform:rotate(-45deg)}@container swal2-popup style(--swal2-icon-animations:true){div:where(.swal2-icon).swal2-error.swal2-icon-show{animation:swal2-animate-error-icon .5s}div:where(.swal2-icon).swal2-error.swal2-icon-show .swal2-x-mark{animation:swal2-animate-error-x-mark .5s}}div:where(.swal2-icon).swal2-warning{border-color:#f8bb86;color:#f8bb86}@container swal2-popup style(--swal2-icon-animations:true){div:where(.swal2-icon).swal2-warning.swal2-icon-show{animation:swal2-animate-error-icon .5s}div:where(.swal2-icon).swal2-warning.swal2-icon-show .swal2-icon-content{animation:swal2-animate-i-mark .5s}}div:where(.swal2-icon).swal2-info{border-color:#3fc3ee;color:#3fc3ee}@container swal2-popup style(--swal2-icon-animations:true){div:where(.swal2-icon).swal2-info.swal2-icon-show{animation:swal2-animate-error-icon .5s}div:where(.swal2-icon).swal2-info.swal2-icon-show .swal2-icon-content{animation:swal2-animate-i-mark .8s}}div:where(.swal2-icon).swal2-question{border-color:#87adbd;color:#87adbd}@container swal2-popup style(--swal2-icon-animations:true){div:where(.swal2-icon).swal2-question.swal2-icon-show{animation:swal2-animate-error-icon .5s}div:where(.swal2-icon).swal2-question.swal2-icon-show .swal2-icon-content{animation:swal2-animate-question-mark .8s}}div:where(.swal2-icon).swal2-success{border-color:#a5dc86;color:#a5dc86}div:where(.swal2-icon).swal2-success [class^=swal2-success-circular-line]{position:absolute;width:3.75em;height:7.5em;border-radius:50%}div:where(.swal2-icon).swal2-success [class^=swal2-success-circular-line][class$=left]{top:-0.4375em;left:-2.0635em;transform:rotate(-45deg);transform-origin:3.75em 3.75em;border-radius:7.5em 0 0 7.5em}div:where(.swal2-icon).swal2-success [class^=swal2-success-circular-line][class$=right]{top:-0.6875em;left:1.875em;transform:rotate(-45deg);transform-origin:0 3.75em;border-radius:0 7.5em 7.5em 0}div:where(.swal2-icon).swal2-success .swal2-success-ring{position:absolute;z-index:2;top:-0.25em;left:-0.25em;box-sizing:content-box;width:100%;height:100%;border:.25em solid rgba(165,220,134,.3);border-radius:50%}div:where(.swal2-icon).swal2-success .swal2-success-fix{position:absolute;z-index:1;top:.5em;left:1.625em;width:.4375em;height:5.625em;transform:rotate(-45deg)}div:where(.swal2-icon).swal2-success [class^=swal2-success-line]{display:block;position:absolute;z-index:2;height:.3125em;border-radius:.125em;background-color:#a5dc86}div:where(.swal2-icon).swal2-success [class^=swal2-success-line][class$=tip]{top:2.875em;left:.8125em;width:1.5625em;transform:rotate(45deg)}div:where(.swal2-icon).swal2-success [class^=swal2-success-line][class$=long]{top:2.375em;right:.5em;width:2.9375em;transform:rotate(-45deg)}@container swal2-popup style(--swal2-icon-animations:true){div:where(.swal2-icon).swal2-success.swal2-icon-show .swal2-success-line-tip{animation:swal2-animate-success-line-tip .75s}div:where(.swal2-icon).swal2-success.swal2-icon-show .swal2-success-line-long{animation:swal2-animate-success-line-long .75s}div:where(.swal2-icon).swal2-success.swal2-icon-show .swal2-success-circular-line-right{animation:swal2-rotate-success-circular-line 4.25s ease-in}}[class^=swal2]{-webkit-tap-highlight-color:rgba(0,0,0,0)}.swal2-show{animation:var(--swal2-show-animation)}.swal2-hide{animation:var(--swal2-hide-animation)}.swal2-noanimation{transition:none}.swal2-scrollbar-measure{position:absolute;top:-9999px;width:50px;height:50px;overflow:scroll}.swal2-rtl .swal2-close{margin-right:initial;margin-left:0}.swal2-rtl .swal2-timer-progress-bar{right:0;left:auto}.swal2-toast{box-sizing:border-box;grid-column:1/4 !important;grid-row:1/4 !important;grid-template-columns:min-content auto min-content;padding:1em;overflow-y:hidden;border:var(--swal2-toast-border);background:var(--swal2-background);box-shadow:var(--swal2-toast-box-shadow);pointer-events:all}.swal2-toast>*{grid-column:2}.swal2-toast h2:where(.swal2-title){margin:.5em 1em;padding:0;font-size:1em;text-align:initial}.swal2-toast .swal2-loading{justify-content:center}.swal2-toast input:where(.swal2-input){height:2em;margin:.5em;font-size:1em}.swal2-toast .swal2-validation-message{font-size:1em}.swal2-toast div:where(.swal2-footer){margin:.5em 0 0;padding:.5em 0 0;font-size:.8em}.swal2-toast button:where(.swal2-close){grid-column:3/3;grid-row:1/99;align-self:center;width:.8em;height:.8em;margin:0;font-size:2em}.swal2-toast div:where(.swal2-html-container){margin:.5em 1em;padding:0;overflow:initial;font-size:1em;text-align:initial}.swal2-toast div:where(.swal2-html-container):empty{padding:0}.swal2-toast .swal2-loader{grid-column:1;grid-row:1/99;align-self:center;width:2em;height:2em;margin:.25em}.swal2-toast .swal2-icon{grid-column:1;grid-row:1/99;align-self:center;width:2em;min-width:2em;height:2em;margin:0 .5em 0 0}.swal2-toast .swal2-icon .swal2-icon-content{display:flex;align-items:center;font-size:1.8em;font-weight:bold}.swal2-toast .swal2-icon.swal2-success .swal2-success-ring{width:2em;height:2em}.swal2-toast .swal2-icon.swal2-error [class^=swal2-x-mark-line]{top:.875em;width:1.375em}.swal2-toast .swal2-icon.swal2-error [class^=swal2-x-mark-line][class$=left]{left:.3125em}.swal2-toast .swal2-icon.swal2-error [class^=swal2-x-mark-line][class$=right]{right:.3125em}.swal2-toast div:where(.swal2-actions){justify-content:flex-start;height:auto;margin:0;margin-top:.5em;padding:0 .5em}.swal2-toast button:where(.swal2-styled){margin:.25em .5em;padding:.4em .6em;font-size:1em}.swal2-toast .swal2-success{border-color:#a5dc86}.swal2-toast .swal2-success [class^=swal2-success-circular-line]{position:absolute;width:1.6em;height:3em;border-radius:50%}.swal2-toast .swal2-success [class^=swal2-success-circular-line][class$=left]{top:-0.8em;left:-0.5em;transform:rotate(-45deg);transform-origin:2em 2em;border-radius:4em 0 0 4em}.swal2-toast .swal2-success [class^=swal2-success-circular-line][class$=right]{top:-0.25em;left:.9375em;transform-origin:0 1.5em;border-radius:0 4em 4em 0}.swal2-toast .swal2-success .swal2-success-ring{width:2em;height:2em}.swal2-toast .swal2-success .swal2-success-fix{top:0;left:.4375em;width:.4375em;height:2.6875em}.swal2-toast .swal2-success [class^=swal2-success-line]{height:.3125em}.swal2-toast .swal2-success [class^=swal2-success-line][class$=tip]{top:1.125em;left:.1875em;width:.75em}.swal2-toast .swal2-success [class^=swal2-success-line][class$=long]{top:.9375em;right:.1875em;width:1.375em}@container swal2-popup style(--swal2-icon-animations:true){.swal2-toast .swal2-success.swal2-icon-show .swal2-success-line-tip{animation:swal2-toast-animate-success-line-tip .75s}.swal2-toast .swal2-success.swal2-icon-show .swal2-success-line-long{animation:swal2-toast-animate-success-line-long .75s}}.swal2-toast.swal2-show{animation:var(--swal2-toast-show-animation)}.swal2-toast.swal2-hide{animation:var(--swal2-toast-hide-animation)}@keyframes swal2-show{0%{transform:scale(0.7)}45%{transform:scale(1.05)}80%{transform:scale(0.95)}100%{transform:scale(1)}}@keyframes swal2-hide{0%{transform:scale(1);opacity:1}100%{transform:scale(0.5);opacity:0}}@keyframes swal2-animate-success-line-tip{0%{top:1.1875em;left:.0625em;width:0}54%{top:1.0625em;left:.125em;width:0}70%{top:2.1875em;left:-0.375em;width:3.125em}84%{top:3em;left:1.3125em;width:1.0625em}100%{top:2.8125em;left:.8125em;width:1.5625em}}@keyframes swal2-animate-success-line-long{0%{top:3.375em;right:2.875em;width:0}65%{top:3.375em;right:2.875em;width:0}84%{top:2.1875em;right:0;width:3.4375em}100%{top:2.375em;right:.5em;width:2.9375em}}@keyframes swal2-rotate-success-circular-line{0%{transform:rotate(-45deg)}5%{transform:rotate(-45deg)}12%{transform:rotate(-405deg)}100%{transform:rotate(-405deg)}}@keyframes swal2-animate-error-x-mark{0%{margin-top:1.625em;transform:scale(0.4);opacity:0}50%{margin-top:1.625em;transform:scale(0.4);opacity:0}80%{margin-top:-0.375em;transform:scale(1.15)}100%{margin-top:0;transform:scale(1);opacity:1}}@keyframes swal2-animate-error-icon{0%{transform:rotateX(100deg);opacity:0}100%{transform:rotateX(0deg);opacity:1}}@keyframes swal2-rotate-loading{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}@keyframes swal2-animate-question-mark{0%{transform:rotateY(-360deg)}100%{transform:rotateY(0)}}@keyframes swal2-animate-i-mark{0%{transform:rotateZ(45deg);opacity:0}25%{transform:rotateZ(-25deg);opacity:.4}50%{transform:rotateZ(15deg);opacity:.8}75%{transform:rotateZ(-5deg);opacity:1}100%{transform:rotateX(0);opacity:1}}@keyframes swal2-toast-show{0%{transform:translateY(-0.625em) rotateZ(2deg)}33%{transform:translateY(0) rotateZ(-2deg)}66%{transform:translateY(0.3125em) rotateZ(2deg)}100%{transform:translateY(0) rotateZ(0deg)}}@keyframes swal2-toast-hide{100%{transform:rotateZ(1deg);opacity:0}}@keyframes swal2-toast-animate-success-line-tip{0%{top:.5625em;left:.0625em;width:0}54%{top:.125em;left:.125em;width:0}70%{top:.625em;left:-0.25em;width:1.625em}84%{top:1.0625em;left:.75em;width:.5em}100%{top:1.125em;left:.1875em;width:.75em}}@keyframes swal2-toast-animate-success-line-long{0%{top:1.625em;right:1.375em;width:0}65%{top:1.25em;right:.9375em;width:0}84%{top:.9375em;right:0;width:1.125em}100%{top:.9375em;right:.1875em;width:1.375em}}</style></head>
+    <body class="font-sans antialiased">
+        <div class="min-h-screen bg-gray-100">
+            <nav x-data="{ open: false }" class="bg-white">
+    <!-- Primary Navigation Menu -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+            <div class="flex">
+                <!-- Logo -->
+                <div class="shrink-0 flex items-center">
+                    <a href="http://127.0.0.1:8001/dashboard" class="text-xl font-bold text-gray-800">
+                        គម្រោង TaRL
+                    </a>
+                </div>
+
+                <!-- Navigation Links -->
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <a class="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out" href="http://127.0.0.1:8001/dashboard">
+    ផ្ទាំងគ្រប់គ្រង
+</a>
+                    
+                                        <a class="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out" href="http://127.0.0.1:8001/assessments">
+    ការវាយតម្លៃ
+</a>
+                                        
+                                        <a class="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out" href="http://127.0.0.1:8001/students">
+    សិស្ស
+</a>
+                                        
+                                        <a class="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out" href="http://127.0.0.1:8001/classes">
+    ថ្នាក់រៀន
+</a>
+                                        
+                                        <a class="inline-flex items-center px-1 pt-1 border-b-2 border-indigo-400 text-sm font-medium leading-5 text-gray-900 focus:outline-none focus:border-indigo-700 transition duration-150 ease-in-out" href="http://127.0.0.1:8001/mentoring">
+    ការណែនាំ
+</a>
+                                        
+                    <a class="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out" href="http://127.0.0.1:8001/reports">
+    របាយការណ៍
+</a>
+                </div>
+            </div>
+
+            <!-- Settings Dropdown -->
+            <div class="hidden sm:flex sm:items-center sm:ms-6 space-x-4">
+                <!-- Language Switcher -->
+                <div class="relative inline-block text-left">
+    <div>
+        <button type="button" class="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" id="language-menu-button" aria-expanded="false" aria-haspopup="true" onclick="toggleLanguageMenu()">
+                            <img src="https://flagcdn.com/w20/kh.png" alt="Khmer" class="w-5 h-3 mr-2">
+                ភាសាខ្មែរ
+                        <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+            </svg>
+        </button>
+    </div>
+
+    <div class="hidden origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-50" id="language-menu" role="menu" aria-orientation="vertical" aria-labelledby="language-menu-button" tabindex="-1">
+        <div class="py-1" role="none">
+            <a href="http://127.0.0.1:8001/language/en" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 " role="menuitem" tabindex="-1">
+                <img src="https://flagcdn.com/w20/gb.png" alt="English" class="w-5 h-3 mr-3">
+                English
+                            </a>
+            <a href="http://127.0.0.1:8001/language/km" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 bg-gray-100" role="menuitem" tabindex="-1">
+                <img src="https://flagcdn.com/w20/kh.png" alt="Khmer" class="w-5 h-3 mr-3">
+                ភាសាខ្មែរ
+                                    <svg class="ml-auto h-5 w-5 text-indigo-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                    </svg>
+                            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleLanguageMenu() {
+        const menu = document.getElementById('language-menu');
+        const button = document.getElementById('language-menu-button');
+        const isHidden = menu.classList.contains('hidden');
+        
+        if (isHidden) {
+            menu.classList.remove('hidden');
+            button.setAttribute('aria-expanded', 'true');
+        } else {
+            menu.classList.add('hidden');
+            button.setAttribute('aria-expanded', 'false');
+        }
+    }
+
+    // Close the dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+        const menu = document.getElementById('language-menu');
+        const button = document.getElementById('language-menu-button');
+        
+        if (!button.contains(event.target) && !menu.contains(event.target)) {
+            menu.classList.add('hidden');
+            button.setAttribute('aria-expanded', 'false');
+        }
+    });
+</script>                
+                <div class="relative" x-data="{ open: false }" @click.outside="open = false" @close.stop="open = false">
+    <div @click="open = ! open">
+        <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
+                            <!-- Profile Photo -->
+                                                            <div class="h-8 w-8 rounded-full overflow-hidden mr-2 flex-shrink-0">
+                                    <img src="/storage/users/photos/tShlheXYXIyQganxfgTf8Q382JOTNBzM1xmJG2A8.jpg" alt="Admin User" class="h-full w-full object-cover" style="height: 32px; width: 32px; object-fit: cover;">
+                                </div>
+                                                        
+                            <div>
+                                <div>Admin User</div>
+                                <div class="text-xs text-gray-400">អ្នកគ្រប់គ្រង</div>
+                            </div>
+
+                            <div class="ms-1">
+                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                                </svg>
+                            </div>
+                        </button>
+    </div>
+
+    <div x-show="open" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95" class="absolute z-50 mt-2 w-56 rounded-md shadow-lg ltr:origin-top-right rtl:origin-top-left end-0" style="display: none;" @click="open = false">
+        <div class="rounded-md ring-1 ring-black ring-opacity-5 bg-white">
+            <!-- User Info Section -->
+                        <div class="px-4 py-3">
+                            <p class="text-sm font-semibold text-gray-900">Admin User</p>
+                            <p class="text-xs text-gray-500 truncate">admin@tarlconnect.com</p>
+                        </div>
+                        
+                        <div class="border-t border-gray-100"></div>
+                        
+                        <!-- Profile Links -->
+                        <div class="px-2 py-2">
+                            <a href="http://127.0.0.1:8001/profile" class="flex items-center px-3 py-2 text-sm text-gray-700 rounded-md hover:bg-gray-100 transition-colors duration-150">
+                                <svg class="w-4 h-4 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                </svg>
+                                ប្រវត្តិរូបរបស់ខ្ញុំ
+                            </a>
+                            
+                            <a href="http://127.0.0.1:8001/profile#password-update" class="flex items-center px-3 py-2 text-sm text-gray-700 rounded-md hover:bg-gray-100 transition-colors duration-150">
+                                <svg class="w-4 h-4 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path>
+                                </svg>
+                                ប្តូរពាក្យសម្ងាត់
+                            </a>
+                        </div>
+                        
+                        <!-- Admin Only Links -->
+                                                    <div class="border-t border-gray-100"></div>
+                            <div class="px-2 py-2">
+                                <p class="px-3 py-1 text-xs font-semibold text-gray-400 uppercase tracking-wider">ការគ្រប់គ្រង</p>
+                                
+                                <a href="http://127.0.0.1:8001/users" class="flex items-center px-3 py-2 text-sm text-gray-700 rounded-md hover:bg-gray-100 transition-colors duration-150">
+                                    <svg class="w-4 h-4 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                                    </svg>
+                                    គ្រប់គ្រងអ្នកប្រើប្រាស់
+                                </a>
+                                
+                                <a href="http://127.0.0.1:8001/schools" class="flex items-center px-3 py-2 text-sm text-gray-700 rounded-md hover:bg-gray-100 transition-colors duration-150">
+                                    <svg class="w-4 h-4 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                                    </svg>
+                                    គ្រប់គ្រងសាលារៀន
+                                </a>
+                                
+                                <a href="http://127.0.0.1:8001/settings" class="flex items-center px-3 py-2 text-sm text-gray-700 rounded-md hover:bg-gray-100 transition-colors duration-150">
+                                    <svg class="w-4 h-4 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    </svg>
+                                    ការកំណត់
+                                </a>
+                            </div>
+                                                
+                        <!-- Help & Support -->
+                        <div class="border-t border-gray-100"></div>
+                        <div class="px-2 py-2">
+                            <a href="http://127.0.0.1:8001/help" class="flex items-center px-3 py-2 text-sm text-gray-700 rounded-md hover:bg-gray-100 transition-colors duration-150">
+                                <svg class="w-4 h-4 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                ជំនួយ និងការគាំទ្រ
+                            </a>
+                            
+                            <a href="http://127.0.0.1:8001/about" class="flex items-center px-3 py-2 text-sm text-gray-700 rounded-md hover:bg-gray-100 transition-colors duration-150">
+                                <svg class="w-4 h-4 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                អំពី
+                            </a>
+                        </div>
+
+                        <!-- Sign Out -->
+                        <div class="border-t border-gray-100"></div>
+                        <div class="px-2 py-2">
+                            <form method="POST" action="http://127.0.0.1:8001/logout">
+                                <input type="hidden" name="_token" value="DdcQcTTrpRF7wvUaGxmyhFfawn2N30NF6nXBURFJ" autocomplete="off">                                <button type="submit" class="flex items-center w-full px-3 py-2 text-sm text-gray-700 rounded-md hover:bg-red-50 hover:text-red-600 transition-colors duration-150">
+                                    <svg class="w-4 h-4 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                                    </svg>
+                                    ចាកចេញ
+                                </button>
+                            </form>
+                        </div>
+        </div>
+    </div>
+</div>
+            </div>
+
+            <!-- Hamburger -->
+            <div class="-me-2 flex items-center sm:hidden">
+                <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
+                    <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                        <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        <path :class="{'hidden': ! open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Responsive Navigation Menu -->
+    <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
+        <div class="pt-2 pb-3 space-y-1">
+            <a class="block w-full ps-3 pe-4 py-2 border-l-4 border-transparent text-start text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out" href="http://127.0.0.1:8001/dashboard">
+    ផ្ទាំងគ្រប់គ្រង
+</a>
+            
+                        <a class="block w-full ps-3 pe-4 py-2 border-l-4 border-transparent text-start text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out" href="http://127.0.0.1:8001/assessments">
+    ការវាយតម្លៃ
+</a>
+                        
+                        <a class="block w-full ps-3 pe-4 py-2 border-l-4 border-transparent text-start text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out" href="http://127.0.0.1:8001/students">
+    សិស្ស
+</a>
+                        
+                        <a class="block w-full ps-3 pe-4 py-2 border-l-4 border-transparent text-start text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out" href="http://127.0.0.1:8001/classes">
+    ថ្នាក់រៀន
+</a>
+                        
+                        <a class="block w-full ps-3 pe-4 py-2 border-l-4 border-indigo-400 text-start text-base font-medium text-indigo-700 bg-indigo-50 focus:outline-none focus:text-indigo-800 focus:bg-indigo-100 focus:border-indigo-700 transition duration-150 ease-in-out" href="http://127.0.0.1:8001/mentoring">
+    ការណែនាំ
+</a>
+                        
+            <a class="block w-full ps-3 pe-4 py-2 border-l-4 border-transparent text-start text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out" href="http://127.0.0.1:8001/reports">
+    របាយការណ៍
+</a>
+        </div>
+
+        <!-- Responsive Settings Options -->
+        <div class="pt-4 pb-1 border-t border-gray-200">
+            <div class="px-4">
+                <div class="font-medium text-base text-gray-800">Admin User</div>
+                <div class="font-medium text-sm text-gray-500">admin@tarlconnect.com</div>
+                <div class="text-xs text-gray-400 mt-1">អ្នកគ្រប់គ្រង</div>
+            </div>
+
+            <!-- Language Switcher in Mobile Menu -->
+            <div class="px-4 mt-3">
+                <div class="text-xs text-gray-400 mb-2">ភាសា</div>
+                <div class="flex space-x-2">
+                    <a href="http://127.0.0.1:8001/language/en" class="flex-1 flex items-center justify-center px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50">
+                        <img src="https://flagcdn.com/w20/gb.png" alt="English" class="w-5 h-3 mr-2">
+                        EN
+                    </a>
+                    <a href="http://127.0.0.1:8001/language/km" class="flex-1 flex items-center justify-center px-3 py-2 border border-indigo-500 bg-indigo-50 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50">
+                        <img src="https://flagcdn.com/w20/kh.png" alt="Khmer" class="w-5 h-3 mr-2">
+                        KM
+                    </a>
+                </div>
+            </div>
+
+            <div class="mt-3 space-y-1">
+                <a class="block w-full ps-3 pe-4 py-2 border-l-4 border-transparent text-start text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out" href="http://127.0.0.1:8001/profile">
+    <svg class="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                    </svg>
+                    ប្រវត្តិរូបរបស់ខ្ញុំ
+</a>
+                
+                <a class="block w-full ps-3 pe-4 py-2 border-l-4 border-transparent text-start text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out" href="http://127.0.0.1:8001/profile#password-update">
+    <svg class="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path>
+                    </svg>
+                    ប្តូរពាក្យសម្ងាត់
+</a>
+                
+                                    <div class="border-t border-gray-200 my-2"></div>
+                    <a class="block w-full ps-3 pe-4 py-2 border-l-4 border-transparent text-start text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out" href="http://127.0.0.1:8001/users">
+    <svg class="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                        </svg>
+                        គ្រប់គ្រងអ្នកប្រើប្រាស់
+</a>
+                    
+                    <a class="block w-full ps-3 pe-4 py-2 border-l-4 border-transparent text-start text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out" href="http://127.0.0.1:8001/schools">
+    <svg class="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                        </svg>
+                        គ្រប់គ្រងសាលារៀន
+</a>
+                    
+                    <a class="block w-full ps-3 pe-4 py-2 border-l-4 border-transparent text-start text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out" href="http://127.0.0.1:8001/settings">
+    <svg class="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        ការកំណត់
+</a>
+                                
+                <div class="border-t border-gray-200 my-2"></div>
+                <a class="block w-full ps-3 pe-4 py-2 border-l-4 border-transparent text-start text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out" href="http://127.0.0.1:8001/help">
+    <svg class="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    ជំនួយ និងការគាំទ្រ
+</a>
+                
+                <a class="block w-full ps-3 pe-4 py-2 border-l-4 border-transparent text-start text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out" href="http://127.0.0.1:8001/about">
+    <svg class="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    អំពី
+</a>
+
+                <!-- Authentication -->
+                <div class="border-t border-gray-200 my-2"></div>
+                <form method="POST" action="http://127.0.0.1:8001/logout">
+                    <input type="hidden" name="_token" value="DdcQcTTrpRF7wvUaGxmyhFfawn2N30NF6nXBURFJ" autocomplete="off">                    <a class="block w-full ps-3 pe-4 py-2 border-l-4 border-transparent text-start text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out text-red-600" href="http://127.0.0.1:8001/logout" onclick="event.preventDefault();
+                                        this.closest('form').submit();">
+    <svg class="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                        </svg>
+                        ចាកចេញ
+</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</nav>
+
+            <!-- Page Heading -->
+            
+            <!-- Page Content -->
+            <main>
+                <div class="py-6">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 bg-white border-b border-gray-200">
+                    <!-- Header with Action Button -->
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-lg font-medium text-gray-900">ការទស្សនាណែនាំ</h3>
+                                                <a href="http://127.0.0.1:8001/mentoring/create" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700">
+                            កត់ត្រាការទស្សនា
+                        </a>
+                                            </div>
+
+                    <!-- Search and Filters -->
+                    <form method="GET" action="http://127.0.0.1:8001/mentoring" class="mb-6">
+                        <div class="flex flex-wrap gap-4">
+                            <div class="flex-1 min-w-[200px]">
+                                <input type="text" name="search" value="" placeholder="ស្វែងរកតាមគ្រូ អ្នកណែនាំ សាលារៀន ឬកំណត់ចំណាំ..." class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                            </div>
+                                                        <div>
+                                <select name="school_id" class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                    <option value="">សាលាទាំងអស់</option>
+                                                                            <option value="12">
+                                            កណ្តាលស្ទឹង
+                                        </option>
+                                                                            <option value="20">
+                                            ខ្ចៅ
+                                        </option>
+                                                                            <option value="15">
+                                            តាគ្រក់
+                                        </option>
+                                                                            <option value="4">
+                                            ត្រែង
+                                        </option>
+                                                                            <option value="30">
+                                            ទួលបី
+                                        </option>
+                                                                            <option value="28">
+                                            ទួលវិហារ
+                                        </option>
+                                                                            <option value="9">
+                                            នាងពួន
+                                        </option>
+                                                                            <option value="7">
+                                            បាដាក
+                                        </option>
+                                                                            <option value="2">
+                                            បឹងខ្ទុម
+                                        </option>
+                                                                            <option value="1">
+                                            ផ្លូវមាស
+                                        </option>
+                                                                            <option value="8">
+                                            ពេជ្រចង្វា
+                                        </option>
+                                                                            <option value="24">
+                                            ព្រែកកុយ
+                                        </option>
+                                                                            <option value="19">
+                                            ព្រែកត្រឡោក
+                                        </option>
+                                                                            <option value="11">
+                                            ព្រៃអំពរ
+                                        </option>
+                                                                            <option value="13">
+                                            ភ្ជាវ
+                                        </option>
+                                                                            <option value="5">
+                                            មាសពិទូគីឡូ៣៨
+                                        </option>
+                                                                            <option value="22">
+                                            រការអារ
+                                        </option>
+                                                                            <option value="29">
+                                            រាយប៉ាយ
+                                        </option>
+                                                                            <option value="18">
+                                            វត្តចាស់
+                                        </option>
+                                                                            <option value="27">
+                                            សាខា១
+                                        </option>
+                                                                            <option value="25">
+                                            សាខា២
+                                        </option>
+                                                                            <option value="10">
+                                            ស៊ិនតុ
+                                        </option>
+                                                                            <option value="6">
+                                            សុវត្ថិភាពកុម៉ាតស៊ុ
+                                        </option>
+                                                                            <option value="17">
+                                            ស្ដៅ
+                                        </option>
+                                                                            <option value="16">
+                                            ស្ដៅលើ
+                                        </option>
+                                                                            <option value="14">
+                                            ស្វាយស
+                                        </option>
+                                                                            <option value="21">
+                                            ស្វាយស្រណោះ
+                                        </option>
+                                                                            <option value="26">
+                                            អន្ទង់ស
+                                        </option>
+                                                                            <option value="3">
+                                            អូរដា
+                                        </option>
+                                                                            <option value="23">
+                                            អូរស្វាយ
+                                        </option>
+                                                                    </select>
+                            </div>
+                                                        <div>
+                                <input type="date" name="from_date" value="" placeholder="From Date" class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                            </div>
+                            <div>
+                                <input type="date" name="to_date" value="" placeholder="To Date" class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                            </div>
+                            <div class="flex gap-2">
+                                <button type="submit" class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                    ស្វែងរក
+                                </button>
+                                                                <a href="http://127.0.0.1:8001/mentoring/export?" class="export-btn inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 focus:bg-green-700 active:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                    </svg>
+                                    នាំចេញទៅ Excel
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+
+                    <!-- Visits Table -->
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        <a href="http://127.0.0.1:8001/mentoring?sort=visit_date&amp;order=asc" class="flex items-center space-x-1 text-gray-700 hover:text-gray-900 transition-colors duration-150">
+    <span>កាលបរិច្ឆេទ</span>
+    <span class="text-gray-400 text-gray-700">↓</span>
+</a>                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        <a href="http://127.0.0.1:8001/mentoring?sort=school_id&amp;order=asc" class="flex items-center space-x-1 text-gray-700 hover:text-gray-900 transition-colors duration-150">
+    <span>សាលា</span>
+    <span class="text-gray-400 ">↕</span>
+</a>                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        <a href="http://127.0.0.1:8001/mentoring?sort=teacher_id&amp;order=asc" class="flex items-center space-x-1 text-gray-700 hover:text-gray-900 transition-colors duration-150">
+    <span>គ្រូបង្រៀន</span>
+    <span class="text-gray-400 ">↕</span>
+</a>                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        <a href="http://127.0.0.1:8001/mentoring?sort=mentor_id&amp;order=asc" class="flex items-center space-x-1 text-gray-700 hover:text-gray-900 transition-colors duration-150">
+    <span>អ្នកណែនាំ</span>
+    <span class="text-gray-400 ">↕</span>
+</a>                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        <a href="http://127.0.0.1:8001/mentoring?sort=score&amp;order=asc" class="flex items-center space-x-1 text-gray-700 hover:text-gray-900 transition-colors duration-150">
+    <span>ពិន្ទុ</span>
+    <span class="text-gray-400 ">↕</span>
+</a>                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        សកម្មភាព
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        2025-07-10
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        ត្រែង
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        Teacher One
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        Mentor Two
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                                             bg-red-100 text-red-800
+                                            ">
+                                            %
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <a href="http://127.0.0.1:8001/mentoring/5" class="text-indigo-600 hover:text-indigo-900">
+                                            មើល
+                                        </a>
+                                    </td>
+                                </tr>
+                                                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        2025-07-09
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        មាសពិទូគីឡូ៣៨
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        Teacher Two
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        Mentor One
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                                             bg-red-100 text-red-800
+                                            ">
+                                            %
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <a href="http://127.0.0.1:8001/mentoring/7" class="text-indigo-600 hover:text-indigo-900">
+                                            មើល
+                                        </a>
+                                    </td>
+                                </tr>
+                                                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        2025-07-05
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        ផ្លូវមាស
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        Teacher Two
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        Mentor Two
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                                             bg-red-100 text-red-800
+                                            ">
+                                            %
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <a href="http://127.0.0.1:8001/mentoring/9" class="text-indigo-600 hover:text-indigo-900">
+                                            មើល
+                                        </a>
+                                    </td>
+                                </tr>
+                                                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        2025-06-28
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        ផ្លូវមាស
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        Teacher Two
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        Mentor One
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                                             bg-red-100 text-red-800
+                                            ">
+                                            %
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <a href="http://127.0.0.1:8001/mentoring/2" class="text-indigo-600 hover:text-indigo-900">
+                                            មើល
+                                        </a>
+                                    </td>
+                                </tr>
+                                                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        2025-06-28
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        ផ្លូវមាស
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        Teacher One
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        Mentor One
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                                             bg-red-100 text-red-800
+                                            ">
+                                            %
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <a href="http://127.0.0.1:8001/mentoring/8" class="text-indigo-600 hover:text-indigo-900">
+                                            មើល
+                                        </a>
+                                    </td>
+                                </tr>
+                                                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        2025-06-26
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        សុវត្ថិភាពកុម៉ាតស៊ុ
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        Teacher One
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        Mentor Two
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                                             bg-red-100 text-red-800
+                                            ">
+                                            %
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <a href="http://127.0.0.1:8001/mentoring/1" class="text-indigo-600 hover:text-indigo-900">
+                                            មើល
+                                        </a>
+                                    </td>
+                                </tr>
+                                                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        2025-06-26
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        ផ្លូវមាស
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        Teacher Two
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        Mentor Two
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                                             bg-red-100 text-red-800
+                                            ">
+                                            %
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <a href="http://127.0.0.1:8001/mentoring/6" class="text-indigo-600 hover:text-indigo-900">
+                                            មើល
+                                        </a>
+                                    </td>
+                                </tr>
+                                                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        2025-06-21
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        សុវត្ថិភាពកុម៉ាតស៊ុ
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        Teacher Two
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        Mentor Two
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                                             bg-red-100 text-red-800
+                                            ">
+                                            %
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <a href="http://127.0.0.1:8001/mentoring/4" class="text-indigo-600 hover:text-indigo-900">
+                                            មើល
+                                        </a>
+                                    </td>
+                                </tr>
+                                                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        2025-06-13
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        មាសពិទូគីឡូ៣៨
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        Teacher One
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        Mentor Two
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                                             bg-red-100 text-red-800
+                                            ">
+                                            %
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <a href="http://127.0.0.1:8001/mentoring/10" class="text-indigo-600 hover:text-indigo-900">
+                                            មើល
+                                        </a>
+                                    </td>
+                                </tr>
+                                                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        2025-06-12
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        សុវត្ថិភាពកុម៉ាតស៊ុ
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        Teacher Two
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        Mentor Two
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                                             bg-red-100 text-red-800
+                                            ">
+                                            %
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <a href="http://127.0.0.1:8001/mentoring/3" class="text-indigo-600 hover:text-indigo-900">
+                                            មើល
+                                        </a>
+                                    </td>
+                                </tr>
+                                                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                                    </div>
+            </div>
+        </div>
+    </div>
+            </main>
+        </div>
+        
+        <!-- Global Loading Overlay -->
+        <div id="globalLoadingOverlay" class="loading-overlay" style="display: none;">
+            <div class="loading-content">
+                <div class="loading-spinner"></div>
+                <span id="loadingText">កំពុងផ្ទុក...</span>
+            </div>
+        </div>
+        
+        <!-- Page Transition Overlay -->
+        <div id="pageTransitionOverlay" class="page-transition-overlay">
+            <div class="page-transition-content">
+                <div class="page-transition-spinner"></div>
+                <div class="page-transition-text">កំពុងផ្ទុកទំព័រ...</div>
+            </div>
+        </div>
+        
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script>
+            // Global loading functions
+            window.showLoading = function(text) {
+                const overlay = document.getElementById('globalLoadingOverlay');
+                const loadingText = document.getElementById('loadingText');
+                if (text) {
+                    loadingText.textContent = text;
+                } else {
+                    loadingText.textContent = 'កំពុងផ្ទុក...';
+                }
+                overlay.style.display = 'flex';
+            };
+            
+            window.hideLoading = function() {
+                const overlay = document.getElementById('globalLoadingOverlay');
+                overlay.style.display = 'none';
+            };
+            
+            // Button loading helper
+            window.setButtonLoading = function(button, loading = true) {
+                const $button = $(button);
+                if (loading) {
+                    $button.prop('disabled', true).addClass('btn-loading');
+                    if (!$button.find('.loading-spinner').length) {
+                        $button.append('<div class="loading-spinner"></div>');
+                    }
+                } else {
+                    $button.prop('disabled', false).removeClass('btn-loading');
+                    $button.find('.loading-spinner').remove();
+                }
+            };
+            
+            // Global AJAX setup
+            $(document).ready(function() {
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+                
+                // Global error handler
+                $(document).ajaxError(function(event, jqXHR, ajaxSettings, thrownError) {
+                    hideLoading();
+                    if (jqXHR.status === 419) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'សម័យកាលបានផុតកំណត់',
+                            text: 'សូមផ្ទុកទំព័រឡើងវិញ ហើយព្យាយាមម្តងទៀត។',
+                            confirmButtonText: 'ផ្ទុកឡើងវិញ'
+                        }).then(() => {
+                            window.location.reload();
+                        });
+                    }
+                });
+                
+                // Handle export button clicks (high priority to prevent conflicts)
+                $(document).on('click.export', '.export-btn', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation(); // Prevent page transition from triggering
+                    
+                    const $btn = $(this);
+                    const url = $btn.attr('href') || $btn.data('url');
+                    const buttonText = $btn.html();
+                    
+                    // Show loading state
+                    setButtonLoading($btn, true);
+                    showLoading('កំពុងរៀបចំការនាំចេញ...');
+                    
+                    // Create a temporary form for file download
+                    const form = $('<form>', {
+                        method: 'GET',
+                        action: url,
+                        class: 'no-transition' // Prevent page transition on this form
+                    });
+                    
+                    // Trigger download
+                    $('body').append(form);
+                    form.submit();
+                    form.remove();
+                    
+                    // Hide loading after a delay
+                    setTimeout(() => {
+                        hideLoading();
+                        setButtonLoading($btn, false);
+                        
+                        // Show success message
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'ការនាំចេញបានចាប់ផ្តើម',
+                            text: 'ឯកសាររបស់អ្នកកំពុងត្រូវបានទាញយក។',
+                            timer: 3000,
+                            showConfirmButton: false
+                        });
+                    }, 2000);
+                    
+                    return false; // Extra safety to prevent any other handlers
+                });
+                
+                // Page transition handler
+                function showPageTransition() {
+                    $('body').addClass('page-transitioning');
+                    $('#pageTransitionOverlay').addClass('active');
+                }
+                
+                function hidePageTransition() {
+                    $('body').removeClass('page-transitioning');
+                    $('#pageTransitionOverlay').removeClass('active');
+                }
+                
+                // Handle all link clicks for page transitions
+                $(document).on('click', 'a[href]:not([href^="#"]):not([href^="javascript:"]):not([target="_blank"]):not(.export-btn):not([download])', function(e) {
+                    // Double-check it's not an export button
+                    if ($(this).hasClass('export-btn')) {
+                        return;
+                    }
+                    
+                    const href = $(this).attr('href');
+                    
+                    // Skip if it's an external link
+                    if (href.startsWith('http') && !href.includes(window.location.host)) {
+                        return;
+                    }
+                    
+                    // Skip if it's a logout link (handled by form submission)
+                    if (href.includes('logout')) {
+                        return;
+                    }
+                    
+                    // Skip if preventDefault was already called
+                    if (e.isDefaultPrevented()) {
+                        return;
+                    }
+                    
+                    // Show page transition
+                    e.preventDefault();
+                    showPageTransition();
+                    
+                    // Navigate after a short delay for animation
+                    setTimeout(() => {
+                        window.location.href = href;
+                    }, 300);
+                });
+                
+                // Handle form submissions
+                $(document).on('submit', 'form:not(.no-transition)', function(e) {
+                    // Skip AJAX forms
+                    if ($(this).data('ajax') || $(this).hasClass('ajax-form')) {
+                        return;
+                    }
+                    
+                    // Show transition for regular form submissions
+                    showPageTransition();
+                });
+                
+                // Handle browser back/forward buttons
+                window.addEventListener('pageshow', function(event) {
+                    if (event.persisted) {
+                        hidePageTransition();
+                    }
+                });
+                
+                // Hide transition when page is fully loaded
+                $(window).on('load', function() {
+                    hidePageTransition();
+                });
+                
+                // Also hide on document ready as fallback
+                $(document).ready(function() {
+                    setTimeout(() => {
+                        hidePageTransition();
+                    }, 100);
+                });
+            });
+        </script>
+            
+
+</body></html>
