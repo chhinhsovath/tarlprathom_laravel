@@ -49,11 +49,19 @@ class AssessmentController extends Controller
 
         $query = Assessment::with(['student', 'student.school']);
 
-        // Filter by school for teachers
-        if ($request->user()->isTeacher()) {
-            $query->whereHas('student', function ($q) use ($request) {
-                $q->where('school_id', $request->user()->school_id);
-            });
+        // Apply access restrictions based on user role
+        $user = $request->user();
+        $accessibleSchoolIds = $user->getAccessibleSchoolIds();
+
+        if (! $user->isAdmin()) {
+            if (empty($accessibleSchoolIds)) {
+                // If no schools are accessible, return no results
+                $query->whereRaw('1 = 0');
+            } else {
+                $query->whereHas('student', function ($q) use ($accessibleSchoolIds) {
+                    $q->whereIn('school_id', $accessibleSchoolIds);
+                });
+            }
         }
 
         // Search by student name
@@ -64,11 +72,14 @@ class AssessmentController extends Controller
             });
         }
 
-        // Filter by school (for admin/mentor)
+        // Filter by school (only if user has access)
         if ($request->filled('school_id')) {
-            $query->whereHas('student', function ($q) use ($request) {
-                $q->where('school_id', $request->get('school_id'));
-            });
+            $schoolId = $request->get('school_id');
+            if ($user->isAdmin() || $user->canAccessSchool($schoolId)) {
+                $query->whereHas('student', function ($q) use ($schoolId) {
+                    $q->where('school_id', $schoolId);
+                });
+            }
         }
 
         // Filter by grade
@@ -112,10 +123,16 @@ class AssessmentController extends Controller
 
         $assessments = $query->paginate(20)->withQueryString();
 
-        // Get schools for filter dropdown (admin/mentor only)
+        // Get schools for filter dropdown (based on access)
         $schools = [];
-        if ($request->user()->isAdmin() || $request->user()->isMentor()) {
+        if ($request->user()->isAdmin()) {
             $schools = School::orderBy('school_name')->get();
+        } elseif ($request->user()->isMentor()) {
+            if (empty($accessibleSchoolIds)) {
+                $schools = collect([]);  // Empty collection if no schools accessible
+            } else {
+                $schools = School::whereIn('id', $accessibleSchoolIds)->orderBy('school_name')->get();
+            }
         }
 
         return view('assessments.index', compact('assessments', 'schools') + $sortData);
@@ -131,13 +148,19 @@ class AssessmentController extends Controller
             abort(403);
         }
 
-        // Get students for the teacher's school/class
+        // Get students based on access
         $user = $request->user();
+        $accessibleSchoolIds = $user->getAccessibleSchoolIds();
         $studentsQuery = Student::with('school');
 
-        // If teacher, only show students from their school
-        if ($user->isTeacher()) {
-            $studentsQuery->where('school_id', $user->school_id);
+        // Apply access restrictions
+        if (! $user->isAdmin()) {
+            if (empty($accessibleSchoolIds)) {
+                // If no schools are accessible, return no results
+                $studentsQuery->whereRaw('1 = 0');
+            } else {
+                $studentsQuery->whereIn('school_id', $accessibleSchoolIds);
+            }
         }
 
         // Get the subject and cycle
@@ -192,26 +215,27 @@ class AssessmentController extends Controller
     {
         $validated = $request->validated();
 
-        // If teacher, verify the student belongs to their school
-        if ($request->user()->isTeacher()) {
-            $student = Student::findOrFail($validated['student_id']);
-            if ($student->school_id !== $request->user()->school_id) {
-                abort(403, 'You can only assess students from your own school.');
-            }
+        // Verify user can access this student
+        $user = $request->user();
+        $student = Student::findOrFail($validated['student_id']);
+
+        if (! $user->isAdmin() && ! $user->canAccessStudent($student->id)) {
+            abort(403, 'You can only assess students from your accessible schools.');
         }
 
         // Check if assessment period is active for the school (only for non-admins)
-        if (!$request->user()->isAdmin()) {
+        if (! $request->user()->isAdmin()) {
             $student = Student::findOrFail($validated['student_id']);
             $school = $student->school;
-            if (!$school->isAssessmentPeriodActive($validated['cycle'])) {
+            if (! $school->isAssessmentPeriodActive($validated['cycle'])) {
                 $status = $school->getAssessmentPeriodStatus($validated['cycle']);
-                $message = match($status) {
+                $message = match ($status) {
                     'not_set' => 'Assessment dates have not been set for this school.',
                     'upcoming' => 'Assessment period has not started yet for this school.',
                     'expired' => 'Assessment period has ended for this school.',
                     default => 'Assessment is not available at this time.'
                 };
+
                 return redirect()->back()->with('error', $message);
             }
         }
@@ -229,11 +253,12 @@ class AssessmentController extends Controller
     {
         // Check if user can view this assessment
         $user = auth()->user();
+        $assessment->load(['student']);
 
-        if ($user->isAdmin() || $user->isViewer() || $user->isMentor()) {
+        if ($user->isAdmin() || $user->isViewer()) {
             // These roles can view all assessments
-        } elseif ($user->isTeacher() && $assessment->student->school_id === $user->school_id) {
-            // Teachers can view assessments of students from their school
+        } elseif ($user->canAccessStudent($assessment->student_id)) {
+            // User can view if they have access to the student
         } else {
             abort(403);
         }
@@ -266,11 +291,31 @@ class AssessmentController extends Controller
             $labels = [__('Beginner'), __('1-Digit'), __('2-Digit'), __('Subtraction'), __('Division')];
         }
 
-        // Get assessment counts by level
-        $levelCounts = Assessment::select('level', DB::raw('count(*) as count'))
+        // Get assessment counts by level (filtered by access)
+        $user = auth()->user();
+        $query = Assessment::select('level', DB::raw('count(*) as count'))
             ->where('subject', $subject)
-            ->whereNotNull('level')
-            ->groupBy('level')
+            ->whereNotNull('level');
+
+        // Apply access restrictions
+        if ($user && ! $user->isAdmin()) {
+            // User is authenticated but not admin - apply school restrictions
+            $accessibleSchoolIds = $user->getAccessibleSchoolIds();
+            if (! empty($accessibleSchoolIds)) {
+                $query->whereHas('student', function ($q) use ($accessibleSchoolIds) {
+                    $q->whereIn('school_id', $accessibleSchoolIds);
+                });
+            } else {
+                // User has no accessible schools - return no results
+                $query->whereRaw('1 = 0');
+            }
+        } elseif (! $user) {
+            // No user authenticated - this is a public view
+            // You can optionally restrict public view to certain schools or show all
+            // For now, showing all data for public view
+        }
+
+        $levelCounts = $query->groupBy('level')
             ->pluck('count', 'level')
             ->toArray();
 
@@ -290,15 +335,49 @@ class AssessmentController extends Controller
             ]],
         ];
 
-        // Get cycle data
-        $cycleData = Assessment::select('cycle', DB::raw('count(DISTINCT student_id) as count'))
-            ->where('subject', $subject)
-            ->groupBy('cycle')
+        // Get cycle data (filtered by access)
+        $cycleQuery = Assessment::select('cycle', DB::raw('count(DISTINCT student_id) as count'))
+            ->where('subject', $subject);
+
+        // Apply same access restrictions
+        if ($user && ! $user->isAdmin()) {
+            // User is authenticated but not admin - apply school restrictions
+            $accessibleSchoolIds = $user->getAccessibleSchoolIds();
+            if (! empty($accessibleSchoolIds)) {
+                $cycleQuery->whereHas('student', function ($q) use ($accessibleSchoolIds) {
+                    $q->whereIn('school_id', $accessibleSchoolIds);
+                });
+            } else {
+                // User has no accessible schools - return no results
+                $cycleQuery->whereRaw('1 = 0');
+            }
+        } elseif (! $user) {
+            // No user authenticated - this is a public view
+            // For now, showing all data for public view
+        }
+
+        $cycleData = $cycleQuery->groupBy('cycle')
             ->pluck('count', 'cycle')
             ->toArray();
 
-        $cycleData['total'] = Assessment::where('subject', $subject)
-            ->distinct('student_id')
+        $totalQuery = Assessment::where('subject', $subject);
+        if ($user && ! $user->isAdmin()) {
+            // User is authenticated but not admin - apply school restrictions
+            $accessibleSchoolIds = $user->getAccessibleSchoolIds();
+            if (! empty($accessibleSchoolIds)) {
+                $totalQuery->whereHas('student', function ($q) use ($accessibleSchoolIds) {
+                    $q->whereIn('school_id', $accessibleSchoolIds);
+                });
+            } else {
+                // User has no accessible schools - return no results
+                $totalQuery->whereRaw('1 = 0');
+            }
+        } elseif (! $user) {
+            // No user authenticated - this is a public view
+            // For now, showing all data for public view
+        }
+
+        $cycleData['total'] = $totalQuery->distinct('student_id')
             ->count('student_id');
 
         return response()->json([
@@ -340,16 +419,17 @@ class AssessmentController extends Controller
         }
 
         // Check if assessment period is active for the school (only for non-admins)
-        if (!auth()->user()->isAdmin()) {
+        if (! auth()->user()->isAdmin()) {
             $school = $student->school;
-            if (!$school->isAssessmentPeriodActive($validated['cycle'])) {
+            if (! $school->isAssessmentPeriodActive($validated['cycle'])) {
                 $status = $school->getAssessmentPeriodStatus($validated['cycle']);
-                $message = match($status) {
+                $message = match ($status) {
                     'not_set' => 'Assessment dates have not been set for this school.',
                     'upcoming' => 'Assessment period has not started yet for this school.',
                     'expired' => 'Assessment period has ended for this school.',
                     default => 'Assessment is not available at this time.'
                 };
+
                 return response()->json(['success' => false, 'message' => $message], 422);
             }
         }
@@ -429,14 +509,14 @@ class AssessmentController extends Controller
     public function selectStudents(Request $request)
     {
         $user = $request->user();
-        
+
         // Check if user can select students (admin or teacher)
-        if (!in_array($user->role, ['admin', 'teacher'])) {
+        if (! in_array($user->role, ['admin', 'teacher'])) {
             abort(403);
         }
 
         $assessmentType = $request->get('type', 'midline');
-        if (!in_array($assessmentType, ['midline', 'endline'])) {
+        if (! in_array($assessmentType, ['midline', 'endline'])) {
             $assessmentType = 'midline';
         }
 
@@ -446,9 +526,9 @@ class AssessmentController extends Controller
         if ($user->isTeacher()) {
             // Teachers can only select their own students
             $query->where('school_id', $user->school_id)
-                  ->whereHas('class', function ($q) use ($user) {
-                      $q->where('teacher_id', $user->id);
-                  });
+                ->whereHas('class', function ($q) use ($user) {
+                    $q->where('teacher_id', $user->id);
+                });
         } elseif ($user->isAdmin()) {
             // Admins can see all students, optionally filtered by school
             if ($request->filled('school_id')) {
@@ -491,9 +571,9 @@ class AssessmentController extends Controller
     public function updateSelectedStudents(Request $request)
     {
         $user = $request->user();
-        
+
         // Check if user can select students (admin or teacher)
-        if (!in_array($user->role, ['admin', 'teacher'])) {
+        if (! in_array($user->role, ['admin', 'teacher'])) {
             abort(403);
         }
 
@@ -509,9 +589,9 @@ class AssessmentController extends Controller
         // Get students the user has access to
         $accessibleStudentIds = Student::when($user->isTeacher(), function ($q) use ($user) {
             $q->where('school_id', $user->school_id)
-              ->whereHas('class', function ($cq) use ($user) {
-                  $cq->where('teacher_id', $user->id);
-              });
+                ->whereHas('class', function ($cq) use ($user) {
+                    $cq->where('teacher_id', $user->id);
+                });
         })->pluck('id')->toArray();
 
         // Clear existing eligibility for these students and assessment type
@@ -535,7 +615,7 @@ class AssessmentController extends Controller
             }
         }
 
-        if (!empty($eligibilityData)) {
+        if (! empty($eligibilityData)) {
             StudentAssessmentEligibility::insert($eligibilityData);
         }
 

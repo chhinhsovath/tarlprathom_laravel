@@ -19,34 +19,34 @@ use Illuminate\Support\Facades\Route;
 Route::get('/language/{locale}', [LanguageController::class, 'switch'])->name('language.switch');
 
 // Test translation page
-Route::get('/test-translation', function() {
+Route::get('/test-translation', function () {
     return view('test-translation');
 })->middleware(['auth']);
 
 // Debug locale
-Route::get('/debug-locale', function() {
+Route::get('/debug-locale', function () {
     $langPath = app()->langPath();
-    $jsonFile = $langPath . '/' . app()->getLocale() . '.json';
+    $jsonFile = $langPath.'/'.app()->getLocale().'.json';
     $translations = [];
     if (file_exists($jsonFile)) {
         $translations = json_decode(file_get_contents($jsonFile), true);
     }
-    
+
     // Test if translations are working
     $testKeys = [
         'Bulk Import Students',
-        'Instructions', 
+        'Instructions',
         'Download Excel Template',
         'Name',
         'Age',
-        'Gender'
+        'Gender',
     ];
-    
+
     $testResults = [];
     foreach ($testKeys as $key) {
         $testResults[$key] = __($key);
     }
-    
+
     return [
         'app_locale' => app()->getLocale(),
         'session_locale' => session('locale'),
@@ -59,7 +59,7 @@ Route::get('/debug-locale', function() {
         'test_translations' => $testResults,
         'lang_path_real' => realpath($langPath),
         'json_file_real' => realpath($jsonFile),
-        'translator_locale' => app('translator')->getLocale()
+        'translator_locale' => app('translator')->getLocale(),
     ];
 });
 

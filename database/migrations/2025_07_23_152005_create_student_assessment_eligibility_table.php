@@ -19,10 +19,10 @@ return new class extends Migration
             $table->boolean('is_eligible')->default(true);
             $table->text('notes')->nullable();
             $table->timestamps();
-            
+
             // Ensure unique combination of student and assessment type
             $table->unique(['student_id', 'assessment_type']);
-            
+
             // Add indexes for performance
             $table->index('student_id');
             $table->index('assessment_type');

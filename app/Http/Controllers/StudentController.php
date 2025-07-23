@@ -29,13 +29,21 @@ class StudentController extends Controller
         $query = Student::with(['school', 'teacher', 'schoolClass']);
         $user = $request->user();
 
-        // Filter based on user role
+        // Filter based on user role and accessible schools
+        $accessibleSchoolIds = $user->getAccessibleSchoolIds();
+
+        if (! $user->isAdmin()) {
+            if (empty($accessibleSchoolIds)) {
+                // If no schools are accessible, return no results
+                $query->whereRaw('1 = 0');
+            } else {
+                $query->whereIn('school_id', $accessibleSchoolIds);
+            }
+        }
+
+        // Additional filter for teachers to see only their students
         if ($user->isTeacher()) {
-            // Teachers can only see their own students
             $query->where('teacher_id', $user->id);
-        } elseif (! $user->isAdmin()) {
-            // Non-admin users can only see students from their school
-            $query->where('school_id', $user->school_id);
         }
 
         // Add search functionality
@@ -44,9 +52,12 @@ class StudentController extends Controller
             $query->where('name', 'like', "%{$search}%");
         }
 
-        // Add school filter (only for admins)
-        if ($request->filled('school_id') && $user->isAdmin()) {
-            $query->where('school_id', $request->get('school_id'));
+        // Add school filter (for admins and mentors with access)
+        if ($request->filled('school_id')) {
+            $schoolId = $request->get('school_id');
+            if ($user->isAdmin() || $user->canAccessSchool($schoolId)) {
+                $query->where('school_id', $schoolId);
+            }
         }
 
         // Add grade filter
@@ -81,18 +92,32 @@ class StudentController extends Controller
 
         $students = $query->orderBy($sortField, $sortOrder)->paginate(20)->withQueryString();
 
-        // Get schools for filter dropdown (only for admins)
-        $schools = $user->isAdmin() ? School::orderBy('school_name')->get() : collect();
+        // Get schools for filter dropdown (for admins and mentors)
+        if ($user->isAdmin()) {
+            $schools = School::orderBy('school_name')->get();
+        } elseif ($user->isMentor()) {
+            $schools = School::whereIn('id', $accessibleSchoolIds)->orderBy('school_name')->get();
+        } else {
+            $schools = collect();
+        }
 
         // Get classes for filter dropdown
-        $classes = SchoolClass::query()
-            ->when($user->isTeacher(), function ($q) use ($user) {
-                $q->where('teacher_id', $user->id);
-            })
-            ->when(! $user->isAdmin() && ! $user->isTeacher(), function ($q) use ($user) {
-                $q->where('school_id', $user->school_id);
-            })
-            ->orderBy('grade_level')
+        $classes = SchoolClass::query();
+
+        if (! $user->isAdmin()) {
+            if (empty($accessibleSchoolIds)) {
+                // If no schools are accessible, return no results
+                $classes->whereRaw('1 = 0');
+            } else {
+                $classes->whereIn('school_id', $accessibleSchoolIds);
+            }
+        }
+
+        if ($user->isTeacher()) {
+            $classes->where('teacher_id', $user->id);
+        }
+
+        $classes = $classes->orderBy('grade_level')
             ->orderBy('name')
             ->get();
 
@@ -107,11 +132,13 @@ class StudentController extends Controller
         $this->authorize('create', Student::class);
         $user = auth()->user();
 
-        // Get schools for dropdown
-        if ($user->isAdmin()) {
-            $schools = School::orderBy('school_name')->get();
+        // Get schools for dropdown based on access
+        $accessibleSchoolIds = $user->getAccessibleSchoolIds();
+
+        if (! empty($accessibleSchoolIds)) {
+            $schools = School::whereIn('id', $accessibleSchoolIds)->orderBy('school_name')->get();
         } else {
-            $schools = School::where('id', $user->school_id)->get();
+            $schools = collect();
         }
 
         return view('students.create', compact('schools'));
@@ -125,9 +152,13 @@ class StudentController extends Controller
         $validated = $request->validated();
         $user = $request->user();
 
-        // If teacher, ensure they can only add students to their own school and assign to themselves
+        // Ensure user can only add students to accessible schools
+        if (! $user->isAdmin() && ! $user->canAccessSchool($validated['school_id'])) {
+            return back()->withErrors(['school_id' => 'You do not have access to this school.']);
+        }
+
+        // If teacher, ensure they assign students to themselves
         if ($user->isTeacher()) {
-            $validated['school_id'] = $user->school_id;
             $validated['teacher_id'] = $user->id;
         }
 
@@ -166,22 +197,27 @@ class StudentController extends Controller
         $this->authorize('update', $student);
         $user = auth()->user();
 
-        // Get schools for dropdown
-        if ($user->isAdmin()) {
-            $schools = School::orderBy('school_name')->get();
+        // Get schools for dropdown based on access
+        $accessibleSchoolIds = $user->getAccessibleSchoolIds();
+
+        if (! empty($accessibleSchoolIds)) {
+            $schools = School::whereIn('id', $accessibleSchoolIds)->orderBy('school_name')->get();
         } else {
-            $schools = School::where('id', $user->school_id)->get();
+            $schools = collect();
         }
 
         // Get classes for dropdown
-        $classes = SchoolClass::query()
-            ->when($user->isTeacher(), function ($q) use ($user) {
-                $q->where('teacher_id', $user->id);
-            })
-            ->when(! $user->isAdmin() && ! $user->isTeacher(), function ($q) use ($user) {
-                $q->where('school_id', $user->school_id);
-            })
-            ->orderBy('grade_level')
+        $classes = SchoolClass::query();
+
+        if (! $user->isAdmin() && ! empty($accessibleSchoolIds)) {
+            $classes->whereIn('school_id', $accessibleSchoolIds);
+        }
+
+        if ($user->isTeacher()) {
+            $classes->where('teacher_id', $user->id);
+        }
+
+        $classes = $classes->orderBy('grade_level')
             ->orderBy('name')
             ->get();
 

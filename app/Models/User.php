@@ -174,4 +174,74 @@ class User extends Authenticatable
     {
         return $query->where('role', $role);
     }
+
+    /**
+     * Get all school IDs that this mentor can access.
+     * For mentors, returns assigned schools. For admins, returns all schools.
+     */
+    public function getAccessibleSchoolIds()
+    {
+        if ($this->isAdmin()) {
+            return School::pluck('id')->toArray();
+        }
+
+        if ($this->isMentor()) {
+            return $this->assignedSchools()->pluck('schools.id')->toArray();
+        }
+
+        // Teachers only see their own school
+        if ($this->isTeacher() && $this->school_id) {
+            return [$this->school_id];
+        }
+
+        return [];
+    }
+
+    /**
+     * Get all students that this user can access.
+     * For mentors, returns students from assigned schools.
+     */
+    public function getAccessibleStudents()
+    {
+        $schoolIds = $this->getAccessibleSchoolIds();
+
+        if (empty($schoolIds)) {
+            return Student::whereRaw('1 = 0'); // Return empty query
+        }
+
+        return Student::whereIn('school_id', $schoolIds);
+    }
+
+    /**
+     * Get all teachers that this mentor can access.
+     * For mentors, returns teachers from assigned schools.
+     */
+    public function getAccessibleTeachers()
+    {
+        $schoolIds = $this->getAccessibleSchoolIds();
+
+        if (empty($schoolIds)) {
+            return User::whereRaw('1 = 0'); // Return empty query
+        }
+
+        return User::where('role', 'teacher')->whereIn('school_id', $schoolIds);
+    }
+
+    /**
+     * Check if user can access a specific school.
+     */
+    public function canAccessSchool($schoolId)
+    {
+        return in_array($schoolId, $this->getAccessibleSchoolIds());
+    }
+
+    /**
+     * Check if user can access a specific student.
+     */
+    public function canAccessStudent($studentId)
+    {
+        $student = Student::find($studentId);
+
+        return $student && $this->canAccessSchool($student->school_id);
+    }
 }

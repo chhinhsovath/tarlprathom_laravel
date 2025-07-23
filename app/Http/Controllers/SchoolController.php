@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\SchoolTemplateExport;
 use App\Models\School;
 use App\Models\User;
 use App\Traits\Sortable;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Exports\SchoolTemplateExport;
 
 class SchoolController extends Controller
 {
@@ -18,11 +18,25 @@ class SchoolController extends Controller
      */
     public function index(Request $request)
     {
-        // Check if user is admin
-        if (! auth()->user()->isAdmin()) {
+        $user = auth()->user();
+
+        // Check if user can view schools
+        if (! in_array($user->role, ['admin', 'mentor'])) {
             abort(403, __('Unauthorized action.'));
         }
+
         $query = School::withCount(['users', 'students']);
+
+        // Apply access restrictions for mentors
+        if ($user->isMentor()) {
+            $accessibleSchoolIds = $user->getAccessibleSchoolIds();
+            if (! empty($accessibleSchoolIds)) {
+                $query->whereIn('id', $accessibleSchoolIds);
+            } else {
+                // No schools assigned, show empty result
+                $query->whereRaw('1 = 0');
+            }
+        }
 
         // Search functionality
         if ($request->filled('search')) {
@@ -84,13 +98,20 @@ class SchoolController extends Controller
      */
     public function show(School $school)
     {
-        // Check if user is admin
-        if (! auth()->user()->isAdmin()) {
+        $user = auth()->user();
+
+        // Check if user can view this school
+        if (! $user->isAdmin() && ! $user->canAccessSchool($school->id)) {
             abort(403, __('Unauthorized action.'));
         }
+
         $school->loadCount(['users', 'students']);
         $teachers = $school->users()->where('role', 'teacher')->get();
-        $mentors = $school->users()->where('role', 'mentor')->get();
+        $mentors = User::where('role', 'mentor')
+            ->whereHas('assignedSchools', function ($query) use ($school) {
+                $query->where('schools.id', $school->id);
+            })
+            ->get();
         $recentStudents = $school->students()->latest()->limit(10)->get();
 
         return view('schools.show', compact('school', 'teachers', 'mentors', 'recentStudents'));
@@ -419,7 +440,7 @@ class SchoolController extends Controller
         $dateFields = [
             'baseline_start_date', 'baseline_end_date',
             'midline_start_date', 'midline_end_date',
-            'endline_start_date', 'endline_end_date'
+            'endline_start_date', 'endline_end_date',
         ];
 
         foreach ($dateFields as $field) {
@@ -434,7 +455,7 @@ class SchoolController extends Controller
 
         return redirect()->route('schools.assessment-dates')
             ->with('success', __('Assessment dates updated successfully for :count schools.', [
-                'count' => count($validated['school_ids'])
+                'count' => count($validated['school_ids']),
             ]));
     }
 }

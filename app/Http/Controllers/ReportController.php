@@ -101,25 +101,63 @@ class ReportController extends Controller
                 ->get();
 
         } elseif ($user->isMentor()) {
-            // Mentors can see their mentoring statistics
-            $stats['total_visits'] = MentoringVisit::where('mentor_id', $user->id)->count();
-            $stats['schools_visited'] = MentoringVisit::where('mentor_id', $user->id)
-                ->distinct('school_id')
-                ->count('school_id');
-            $stats['teachers_mentored'] = MentoringVisit::where('mentor_id', $user->id)
-                ->distinct('teacher_id')
-                ->count('teacher_id');
+            // Mentors can see statistics for their assigned schools
+            $accessibleSchoolIds = $user->getAccessibleSchoolIds();
 
-            // Recent mentoring visits
-            $stats['recent_visits'] = MentoringVisit::where('mentor_id', $user->id)
-                ->with(['teacher', 'school'])
-                ->orderBy('visit_date', 'desc')
-                ->limit(10)
-                ->get();
+            if (! empty($accessibleSchoolIds)) {
+                $stats['total_students'] = Student::whereIn('school_id', $accessibleSchoolIds)->count();
+                $stats['total_assessments'] = Assessment::whereHas('student', function ($q) use ($accessibleSchoolIds) {
+                    $q->whereIn('school_id', $accessibleSchoolIds);
+                })->count();
+                $stats['total_schools'] = count($accessibleSchoolIds);
+                $stats['total_visits'] = MentoringVisit::whereIn('school_id', $accessibleSchoolIds)->count();
+                $stats['schools_visited'] = MentoringVisit::whereIn('school_id', $accessibleSchoolIds)
+                    ->distinct('school_id')
+                    ->count('school_id');
+                $stats['teachers_mentored'] = MentoringVisit::whereIn('school_id', $accessibleSchoolIds)
+                    ->distinct('teacher_id')
+                    ->count('teacher_id');
 
-            // Average mentoring scores
-            $stats['avg_mentoring_score'] = MentoringVisit::where('mentor_id', $user->id)
-                ->avg('score');
+                // Average assessment scores by subject for their schools
+                $stats['avg_scores_by_subject'] = Assessment::select('subject', DB::raw('AVG(score) as avg_score'))
+                    ->whereHas('student', function ($q) use ($accessibleSchoolIds) {
+                        $q->whereIn('school_id', $accessibleSchoolIds);
+                    })
+                    ->groupBy('subject')
+                    ->get();
+
+                // Recent assessments for their schools
+                $stats['recent_assessments'] = Assessment::with(['student', 'student.school'])
+                    ->whereHas('student', function ($q) use ($accessibleSchoolIds) {
+                        $q->whereIn('school_id', $accessibleSchoolIds);
+                    })
+                    ->orderBy('assessed_at', 'desc')
+                    ->limit(10)
+                    ->get();
+
+                // Recent mentoring visits for their schools
+                $stats['recent_visits'] = MentoringVisit::whereIn('school_id', $accessibleSchoolIds)
+                    ->with(['teacher', 'school', 'mentor'])
+                    ->orderBy('visit_date', 'desc')
+                    ->limit(10)
+                    ->get();
+
+                // Average mentoring scores for their schools
+                $stats['avg_mentoring_score'] = MentoringVisit::whereIn('school_id', $accessibleSchoolIds)
+                    ->avg('score');
+            } else {
+                // No schools assigned, show empty stats
+                $stats['total_students'] = 0;
+                $stats['total_assessments'] = 0;
+                $stats['total_schools'] = 0;
+                $stats['total_visits'] = 0;
+                $stats['schools_visited'] = 0;
+                $stats['teachers_mentored'] = 0;
+                $stats['avg_scores_by_subject'] = collect();
+                $stats['recent_assessments'] = collect();
+                $stats['recent_visits'] = collect();
+                $stats['avg_mentoring_score'] = 0;
+            }
         }
 
         return $stats;
@@ -171,14 +209,24 @@ class ReportController extends Controller
         } elseif ($user->isMentor()) {
             $reports = [
                 [
+                    'name' => 'Student Performance Report',
+                    'description' => 'Performance analysis of students in your assigned schools',
+                    'route' => 'reports.student-performance',
+                ],
+                [
+                    'name' => 'School Comparison Report',
+                    'description' => 'Compare performance across your assigned schools',
+                    'route' => 'reports.school-comparison',
+                ],
+                [
                     'name' => 'My Mentoring Summary',
                     'description' => 'Summary of your mentoring activities',
                     'route' => 'reports.my-mentoring',
                 ],
                 [
-                    'name' => 'School Visit Report',
-                    'description' => 'Detailed reports of school visits',
-                    'route' => 'reports.school-visits',
+                    'name' => 'Progress Tracking Report',
+                    'description' => 'Track student progress in your assigned schools',
+                    'route' => 'reports.progress-tracking',
                 ],
             ];
         }
@@ -192,7 +240,7 @@ class ReportController extends Controller
     public function studentPerformance(Request $request)
     {
         $user = $request->user();
-        if (! in_array($user->role, ['admin', 'viewer'])) {
+        if (! in_array($user->role, ['admin', 'viewer', 'mentor'])) {
             abort(403);
         }
 
@@ -201,16 +249,36 @@ class ReportController extends Controller
         $subject = $request->get('subject', 'all');
         $cycle = $request->get('cycle', 'all');
 
-        // Get schools for filter
-        $schools = School::orderBy('school_name')->get();
+        // Get schools for filter based on user access
+        $accessibleSchoolIds = $user->getAccessibleSchoolIds();
+        if ($user->isAdmin()) {
+            $schools = School::orderBy('school_name')->get();
+        } else {
+            $schools = School::whereIn('id', $accessibleSchoolIds)->orderBy('school_name')->get();
+        }
 
         // Build query
         $query = Assessment::with(['student', 'student.school']);
 
+        // Apply access restrictions for mentors
+        if (! $user->isAdmin()) {
+            if (empty($accessibleSchoolIds)) {
+                // If no schools are accessible, return no results
+                $query->whereRaw('1 = 0');
+            } else {
+                $query->whereHas('student', function ($q) use ($accessibleSchoolIds) {
+                    $q->whereIn('school_id', $accessibleSchoolIds);
+                });
+            }
+        }
+
         if ($schoolId) {
-            $query->whereHas('student', function ($q) use ($schoolId) {
-                $q->where('school_id', $schoolId);
-            });
+            // Verify user has access to this school
+            if ($user->isAdmin() || $user->canAccessSchool($schoolId)) {
+                $query->whereHas('student', function ($q) use ($schoolId) {
+                    $q->where('school_id', $schoolId);
+                });
+            }
         }
 
         if ($subject !== 'all') {
@@ -260,17 +328,29 @@ class ReportController extends Controller
     public function schoolComparison(Request $request)
     {
         $user = $request->user();
-        if (! in_array($user->role, ['admin', 'viewer'])) {
+        if (! in_array($user->role, ['admin', 'viewer', 'mentor'])) {
             abort(403);
         }
 
         $subject = $request->get('subject', 'khmer');
         $cycle = $request->get('cycle', 'baseline');
 
-        // Get all schools with their assessment data
-        $schools = School::with(['students.assessments' => function ($q) use ($subject, $cycle) {
+        // Get schools based on user access
+        $accessibleSchoolIds = $user->getAccessibleSchoolIds();
+        $schoolsQuery = School::with(['students.assessments' => function ($q) use ($subject, $cycle) {
             $q->where('subject', $subject)->where('cycle', $cycle);
-        }])->get();
+        }]);
+
+        if (! $user->isAdmin()) {
+            if (empty($accessibleSchoolIds)) {
+                // If no schools are accessible, return no results
+                $schoolsQuery->whereRaw('1 = 0');
+            } else {
+                $schoolsQuery->whereIn('id', $accessibleSchoolIds);
+            }
+        }
+
+        $schools = $schoolsQuery->get();
 
         $comparisonData = [];
 
@@ -333,10 +413,17 @@ class ReportController extends Controller
 
         // Apply filters based on user role
         $user = $request->user();
-        if ($user->isTeacher()) {
-            $query->whereHas('student', function ($q) use ($user) {
-                $q->where('school_id', $user->school_id);
-            });
+        $accessibleSchoolIds = $user->getAccessibleSchoolIds();
+
+        if (! $user->isAdmin()) {
+            if (empty($accessibleSchoolIds)) {
+                // If no schools are accessible, return no results
+                $query->whereRaw('1 = 0');
+            } else {
+                $query->whereHas('student', function ($q) use ($accessibleSchoolIds) {
+                    $q->whereIn('school_id', $accessibleSchoolIds);
+                });
+            }
         }
 
         $assessments = $query->get();
@@ -359,9 +446,18 @@ class ReportController extends Controller
 
         // Apply filters based on user role
         $user = $request->user();
-        if ($user->isMentor()) {
-            $query->where('mentor_id', $user->id);
-        } elseif ($user->isTeacher()) {
+        $accessibleSchoolIds = $user->getAccessibleSchoolIds();
+
+        if (! $user->isAdmin()) {
+            if (empty($accessibleSchoolIds)) {
+                // If no schools are accessible, return no results
+                $query->whereRaw('1 = 0');
+            } else {
+                $query->whereIn('school_id', $accessibleSchoolIds);
+            }
+        }
+
+        if ($user->isTeacher()) {
             $query->where('teacher_id', $user->id);
         }
 
@@ -456,7 +552,7 @@ class ReportController extends Controller
     public function progressTracking(Request $request)
     {
         $user = $request->user();
-        if (! in_array($user->role, ['admin', 'viewer'])) {
+        if (! in_array($user->role, ['admin', 'viewer', 'mentor'])) {
             abort(403);
         }
 
@@ -464,8 +560,13 @@ class ReportController extends Controller
         $schoolId = $request->get('school_id');
         $subject = $request->get('subject', 'khmer');
 
-        // Get schools for filter
-        $schools = School::orderBy('school_name')->get();
+        // Get schools for filter based on user access
+        $accessibleSchoolIds = $user->getAccessibleSchoolIds();
+        if ($user->isAdmin()) {
+            $schools = School::orderBy('school_name')->get();
+        } else {
+            $schools = School::whereIn('id', $accessibleSchoolIds)->orderBy('school_name')->get();
+        }
 
         // Build query for students with multiple assessments
         $studentsQuery = Student::with(['assessments' => function ($q) use ($subject) {
@@ -476,8 +577,21 @@ class ReportController extends Controller
                 $q->where('subject', $subject);
             }, '>', 1); // Only students with more than 1 assessment
 
+        // Apply access restrictions for mentors
+        if (! $user->isAdmin()) {
+            if (empty($accessibleSchoolIds)) {
+                // If no schools are accessible, return no results
+                $studentsQuery->whereRaw('1 = 0');
+            } else {
+                $studentsQuery->whereIn('school_id', $accessibleSchoolIds);
+            }
+        }
+
         if ($schoolId) {
-            $studentsQuery->where('school_id', $schoolId);
+            // Verify user has access to this school
+            if ($user->isAdmin() || $user->canAccessSchool($schoolId)) {
+                $studentsQuery->where('school_id', $schoolId);
+            }
         }
 
         $students = $studentsQuery->get();
@@ -532,12 +646,19 @@ class ReportController extends Controller
         $startDate = $request->get('start_date', now()->subMonths(6)->startOfDay());
         $endDate = $request->get('end_date', now()->endOfDay());
 
-        // Get mentor's visits
-        $visits = MentoringVisit::where('mentor_id', $user->id)
-            ->with(['teacher', 'school'])
-            ->whereBetween('visit_date', [$startDate, $endDate])
-            ->orderBy('visit_date', 'desc')
-            ->get();
+        // Get mentor's visits from assigned schools
+        $accessibleSchoolIds = $user->getAccessibleSchoolIds();
+        $visitsQuery = MentoringVisit::with(['teacher', 'school'])
+            ->whereBetween('visit_date', [$startDate, $endDate]);
+
+        if (empty($accessibleSchoolIds)) {
+            // If no schools are accessible, return no results
+            $visitsQuery->whereRaw('1 = 0');
+        } else {
+            $visitsQuery->whereIn('school_id', $accessibleSchoolIds);
+        }
+
+        $visits = $visitsQuery->orderBy('visit_date', 'desc')->get();
 
         // Calculate summary statistics
         $stats = [

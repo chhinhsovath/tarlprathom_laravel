@@ -24,11 +24,13 @@ class StudentPolicy
             return true;
         }
 
+        // Teachers can view students from their school
         if ($user->isTeacher() && $user->school_id === $student->school_id) {
             return true;
         }
 
-        if ($user->isMentor()) {
+        // Mentors can view students from their assigned schools
+        if ($user->isMentor() && $user->canAccessStudent($student->id)) {
             return true;
         }
 
@@ -52,7 +54,13 @@ class StudentPolicy
             return true;
         }
 
+        // Teachers can update students from their school
         if ($user->isTeacher() && $user->school_id === $student->school_id) {
+            return true;
+        }
+
+        // Mentors can update students from their assigned schools
+        if ($user->isMentor() && $user->canAccessStudent($student->id)) {
             return true;
         }
 

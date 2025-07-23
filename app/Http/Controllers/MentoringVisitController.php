@@ -37,7 +37,7 @@ class MentoringVisitController extends Controller
         } elseif ($user->isMentor()) {
             // Mentors can see visits for their assigned schools
             $assignedSchoolIds = $user->assignedSchools()->pluck('schools.id')->toArray();
-            if (!empty($assignedSchoolIds)) {
+            if (! empty($assignedSchoolIds)) {
                 $query->whereIn('school_id', $assignedSchoolIds);
             } else {
                 // If no schools assigned, show no visits
@@ -201,7 +201,7 @@ class MentoringVisitController extends Controller
         // Verify mentor has access to the school
         if ($request->user()->isMentor()) {
             $assignedSchoolIds = $request->user()->assignedSchools()->pluck('schools.id')->toArray();
-            if (!in_array($validated['school_id'], $assignedSchoolIds)) {
+            if (! in_array($validated['school_id'], $assignedSchoolIds)) {
                 return back()->withErrors(['school_id' => __('You are not assigned to this school.')]);
             }
         }
@@ -222,8 +222,8 @@ class MentoringVisitController extends Controller
         // Check if user can view this mentoring visit
         if ($user->isAdmin() || $user->isViewer()) {
             // These roles can view all visits
-        } elseif ($user->isMentor() && $mentoringVisit->mentor_id === $user->id) {
-            // Mentors can view their own visits
+        } elseif ($user->isMentor() && $user->canAccessSchool($mentoringVisit->school_id)) {
+            // Mentors can view visits from their assigned schools
         } elseif ($user->isTeacher() && $mentoringVisit->teacher_id === $user->id) {
             // Teachers can view visits where they are the teacher
         } else {

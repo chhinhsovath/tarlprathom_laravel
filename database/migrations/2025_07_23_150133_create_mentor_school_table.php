@@ -16,10 +16,10 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('school_id')->constrained('schools')->onDelete('cascade');
             $table->timestamps();
-            
+
             // Ensure unique combination of mentor and school
             $table->unique(['user_id', 'school_id']);
-            
+
             // Add indexes for performance
             $table->index('user_id');
             $table->index('school_id');

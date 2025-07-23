@@ -95,13 +95,13 @@ class School extends Model
     /**
      * Check if an assessment type is currently active for this school.
      *
-     * @param string $cycle
+     * @param  string  $cycle
      * @return bool
      */
     public function isAssessmentPeriodActive($cycle)
     {
         $today = now()->startOfDay();
-        
+
         switch ($cycle) {
             case 'baseline':
                 return $this->baseline_start_date && $this->baseline_end_date
@@ -120,7 +120,7 @@ class School extends Model
     /**
      * Get the assessment period status for a given cycle.
      *
-     * @param string $cycle
+     * @param  string  $cycle
      * @return string 'not_set', 'upcoming', 'active', or 'expired'
      */
     public function getAssessmentPeriodStatus($cycle)
@@ -128,7 +128,7 @@ class School extends Model
         $today = now()->startOfDay();
         $startDate = null;
         $endDate = null;
-        
+
         switch ($cycle) {
             case 'baseline':
                 $startDate = $this->baseline_start_date;
@@ -143,19 +143,19 @@ class School extends Model
                 $endDate = $this->endline_end_date;
                 break;
         }
-        
-        if (!$startDate || !$endDate) {
+
+        if (! $startDate || ! $endDate) {
             return 'not_set';
         }
-        
+
         if ($today->lt($startDate)) {
             return 'upcoming';
         }
-        
+
         if ($today->between($startDate, $endDate)) {
             return 'active';
         }
-        
+
         return 'expired';
     }
 }

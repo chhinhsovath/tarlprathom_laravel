@@ -140,6 +140,16 @@
             let assessmentChart = null;
             let currentSubject = 'khmer';
             
+            // Setup AJAX to include CSRF token and credentials
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                xhrFields: {
+                    withCredentials: true
+                }
+            });
+            
             // Function to load data and update chart
             function loadAssessmentData(subject) {
                 $('#chartContainer').addClass('loading');
