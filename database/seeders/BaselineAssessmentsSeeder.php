@@ -16,7 +16,7 @@ class BaselineAssessmentsSeeder extends Seeder
         $students = Student::all();
 
         // Assessment levels
-        $khmerLevels = ['Beginner', 'Letter Reader', 'Word Level', 'Paragraph Reader', 'Story Reader', 'Comp. 1', 'Comp. 2'];
+        $khmerLevels = ['Beginner', 'Reader', 'Word', 'Paragraph', 'Story', 'Comp. 1', 'Comp. 2'];
         $mathLevels = ['Beginner', '1-Digit', '2-Digit', 'Subtraction', 'Division', 'Word Problem'];
 
         foreach ($students as $index => $student) {

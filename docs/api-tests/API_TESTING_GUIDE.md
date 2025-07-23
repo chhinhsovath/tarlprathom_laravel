@@ -97,7 +97,7 @@ $.ajax({
         student_id: 1,
         subject: 'khmer',
         cycle: 'baseline',
-        level: 'Word Level',
+        level: 'Word',
         gender: 'male'
     },
     success: function(response) {
@@ -272,7 +272,7 @@ class StudentApiTest extends TestCase
                 'student_id' => $student->id,
                 'subject' => 'khmer',
                 'cycle' => 'baseline',
-                'level' => 'Word Level',
+                'level' => 'Word',
                 'gender' => 'male'
             ]);
 
@@ -285,7 +285,7 @@ class StudentApiTest extends TestCase
         $this->assertDatabaseHas('assessments', [
             'student_id' => $student->id,
             'subject' => 'khmer',
-            'level' => 'Word Level'
+            'level' => 'Word'
         ]);
     }
 }

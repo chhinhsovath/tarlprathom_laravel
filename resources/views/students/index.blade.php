@@ -1,8 +1,8 @@
 <x-app-layout>
     <div class="py-6">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
+        <div class="w-full px-4 sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-sm rounded-lg">
+                <div class="p-4 sm:p-6 lg:p-8 text-gray-900">
                     
                     @if (session('success'))
                         <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
@@ -43,11 +43,12 @@
                             <div>
                                 <select name="grade" class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                                     <option value="">{{ __('All Grades') }}</option>
-                                    @for($i = 1; $i <= 6; $i++)
-                                        <option value="{{ $i }}" {{ request('grade') == $i ? 'selected' : '' }}>
-                                            {{ __('Grade') }} {{ $i }}
-                                        </option>
-                                    @endfor
+                                    <option value="4" {{ request('grade') == 4 ? 'selected' : '' }}>
+                                        {{ __('Grade') }} 4
+                                    </option>
+                                    <option value="5" {{ request('grade') == 5 ? 'selected' : '' }}>
+                                        {{ __('Grade') }} 5
+                                    </option>
                                 </select>
                             </div>
                             <div>
@@ -89,9 +90,6 @@
                             <thead class="bg-gray-50">
                                 <tr>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        {{ __('Photo') }}
-                                    </th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         <x-sortable-header column="name" :current-sort="$sortField" :current-order="$sortOrder">
                                             {{ __('Name') }}
                                         </x-sortable-header>
@@ -125,21 +123,6 @@
                             <tbody class="bg-white divide-y divide-gray-200">
                                 @forelse ($students as $student)
                                     <tr>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="flex items-center">
-                                                @if($student->photo)
-                                                    <div class="h-12 w-12 flex-shrink-0 overflow-hidden rounded-full">
-                                                        <img src="{{ Storage::url($student->photo) }}" alt="{{ $student->name }}" class="h-full w-full object-cover ring-2 ring-gray-200" style="height: 48px; width: 48px; object-fit: cover;">
-                                                    </div>
-                                                @else
-                                                    <div class="h-12 w-12 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0 ring-2 ring-gray-200">
-                                                        <svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                                                        </svg>
-                                                    </div>
-                                                @endif
-                                            </div>
-                                        </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="text-sm font-medium text-gray-900">
                                                 {{ $student->name }}

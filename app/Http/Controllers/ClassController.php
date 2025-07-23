@@ -86,7 +86,7 @@ class ClassController extends Controller
 
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'grade_level' => ['required', 'integer', 'min:1', 'max:6'],
+            'grade_level' => ['required', 'integer', 'in:4,5'],
             'school_id' => ['required', 'exists:schools,id'],
             'teacher_id' => ['nullable', 'exists:users,id'],
             'academic_year' => ['nullable', 'string', 'max:255'],
@@ -148,7 +148,7 @@ class ClassController extends Controller
 
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'grade_level' => ['required', 'integer', 'min:1', 'max:6'],
+            'grade_level' => ['required', 'integer', 'in:4,5'],
             'school_id' => ['required', 'exists:schools,id'],
             'teacher_id' => ['nullable', 'exists:users,id'],
             'academic_year' => ['nullable', 'string', 'max:255'],

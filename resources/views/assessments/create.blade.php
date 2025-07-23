@@ -1,7 +1,62 @@
 <x-app-layout>
+    <style>
+        /* Sticky table styles */
+        .sticky {
+            position: sticky !important;
+        }
+        
+        /* Ensure sticky row stays on top */
+        thead tr.sticky {
+            position: sticky !important;
+            top: 0 !important;
+            z-index: 20 !important;
+        }
+        
+        /* Add shadow to sticky row */
+        thead tr.sticky {
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        /* Style for sticky name column */
+        .sticky.left-0 {
+            box-shadow: 2px 0 4px rgba(0,0,0,0.1);
+        }
+        
+        /* Ensure proper z-index layering */
+        thead th.sticky.left-0 {
+            z-index: 30 !important;
+        }
+        
+        /* Style for saved rows */
+        .student-row[data-saved="true"] td.sticky {
+            background-color: #f0fdf4;
+        }
+        
+        /* Add scroll indicators */
+        .table-container {
+            position: relative;
+        }
+        
+        .table-container::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 40px;
+            background: linear-gradient(to top, rgba(255,255,255,1), rgba(255,255,255,0));
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .table-container.scrollable::after {
+            opacity: 1;
+        }
+    </style>
 
     <div class="py-6">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="w-full px-4 sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
                     
@@ -29,13 +84,126 @@
                         </div>
                     </div>
 
+                    <!-- Assessment Period Notice -->
+                    @if(auth()->user()->school && !auth()->user()->isAdmin())
+                        @php
+                            $school = auth()->user()->school;
+                            $periodStatus = $school->getAssessmentPeriodStatus($cycle);
+                        @endphp
+                        
+                        @if($periodStatus === 'not_set')
+                            <div class="mb-4 bg-yellow-50 border-l-4 border-yellow-400 p-4">
+                                <div class="flex">
+                                    <div class="flex-shrink-0">
+                                        <svg class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                        </svg>
+                                    </div>
+                                    <div class="ml-3">
+                                        <p class="text-sm text-yellow-700">
+                                            {{ __('Assessment dates have not been set for your school. Please contact your administrator.') }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        @elseif($periodStatus === 'upcoming')
+                            <div class="mb-4 bg-blue-50 border-l-4 border-blue-400 p-4">
+                                <div class="flex">
+                                    <div class="flex-shrink-0">
+                                        <svg class="h-5 w-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                                        </svg>
+                                    </div>
+                                    <div class="ml-3">
+                                        <p class="text-sm text-blue-700">
+                                            @if($cycle === 'baseline')
+                                                {{ __('Baseline assessment period starts on') }} {{ $school->baseline_start_date->format('d/m/Y') }}.
+                                            @elseif($cycle === 'midline')
+                                                {{ __('Midline assessment period starts on') }} {{ $school->midline_start_date->format('d/m/Y') }}.
+                                            @else
+                                                {{ __('Endline assessment period starts on') }} {{ $school->endline_start_date->format('d/m/Y') }}.
+                                            @endif
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        @elseif($periodStatus === 'expired')
+                            <div class="mb-4 bg-red-50 border-l-4 border-red-400 p-4">
+                                <div class="flex">
+                                    <div class="flex-shrink-0">
+                                        <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                                        </svg>
+                                    </div>
+                                    <div class="ml-3">
+                                        <p class="text-sm text-red-700">
+                                            @if($cycle === 'baseline')
+                                                {{ __('Baseline assessment period ended on') }} {{ $school->baseline_end_date->format('d/m/Y') }}.
+                                            @elseif($cycle === 'midline')
+                                                {{ __('Midline assessment period ended on') }} {{ $school->midline_end_date->format('d/m/Y') }}.
+                                            @else
+                                                {{ __('Endline assessment period ended on') }} {{ $school->endline_end_date->format('d/m/Y') }}.
+                                            @endif
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        @elseif($periodStatus === 'active')
+                            <div class="mb-4 bg-green-50 border-l-4 border-green-400 p-4">
+                                <div class="flex">
+                                    <div class="flex-shrink-0">
+                                        <svg class="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                        </svg>
+                                    </div>
+                                    <div class="ml-3">
+                                        <p class="text-sm text-green-700">
+                                            @if($cycle === 'baseline')
+                                                {{ __('Baseline assessment period is active until') }} {{ $school->baseline_end_date->format('d/m/Y') }}.
+                                            @elseif($cycle === 'midline')
+                                                {{ __('Midline assessment period is active until') }} {{ $school->midline_end_date->format('d/m/Y') }}.
+                                            @else
+                                                {{ __('Endline assessment period is active until') }} {{ $school->endline_end_date->format('d/m/Y') }}.
+                                            @endif
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                    @endif
+
+                    <!-- Floating Column Headers (Mobile) -->
+                    <div class="md:hidden fixed bottom-4 left-4 right-4 bg-white rounded-lg shadow-lg p-3 z-50" style="display: none;" id="floatingHeaders">
+                        <div class="text-xs text-gray-600 font-medium">
+                            <div class="flex justify-around items-center">
+                                <div class="text-center">
+                                    <div class="text-gray-500">{{ __('Gender') }}</div>
+                                    <div class="flex gap-2 mt-1">
+                                        <span>👨 {{ __('M') }}</span>
+                                        <span>👩 {{ __('F') }}</span>
+                                    </div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="text-gray-500">{{ __('Levels') }}</div>
+                                    <div class="text-xs mt-1">
+                                        @if($subject === 'khmer')
+                                            {{ __('Beg → Let → Wrd → Par → Sto → C1 → C2') }}
+                                        @else
+                                            {{ __('Beg → 1D → 2D → Sub → Div → WP') }}
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Assessment Table -->
                     @if(count($students) > 0)
-                    <div class="overflow-x-auto">
+                    <div class="relative table-container" style="height: calc(100vh - 250px); overflow: auto;">
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">
                                 <tr>
-                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sticky left-0 bg-gray-50 z-20">
                                         {{ __('Student Name') }}
                                     </th>
                                     <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider" colspan="2">
@@ -48,34 +216,34 @@
                                         
                                     </th>
                                 </tr>
-                                <tr>
-                                    <th class="px-4 py-2"></th>
-                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500">{{ __('Male') }}</th>
-                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500">{{ __('Female') }}</th>
+                                <tr class="sticky top-0 z-10 shadow-sm bg-gray-50">
+                                    <th class="px-4 py-2 sticky left-0 bg-gray-50 z-20 border-b-2 border-gray-300"></th>
+                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ __('Male') }}</th>
+                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ __('Female') }}</th>
                                     @if($subject === 'khmer')
-                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500">{{ __('Beginner') }}</th>
-                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500">{{ __('Letter') }}</th>
-                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500">{{ __('Word') }}</th>
-                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500">{{ __('Paragraph') }}</th>
-                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500">{{ __('Story') }}</th>
-                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500">{{ __('Comp. 1') }}</th>
-                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500">{{ __('Comp. 2') }}</th>
+                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ __('Beginner') }}</th>
+                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ __('Letter') }}</th>
+                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ __('Word') }}</th>
+                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ __('Paragraph') }}</th>
+                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ __('Story') }}</th>
+                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ __('Comp. 1') }}</th>
+                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ __('Comp. 2') }}</th>
                                     @else
-                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500">{{ __('Beginner') }}</th>
-                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500">{{ __('1-Digit') }}</th>
-                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500">{{ __('2-Digit') }}</th>
-                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500">{{ __('Subtraction') }}</th>
-                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500">{{ __('Division') }}</th>
-                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500">{{ __('Word Problem') }}</th>
-                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500"></th>
+                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ __('Beginner') }}</th>
+                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ __('1-Digit') }}</th>
+                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ __('2-Digit') }}</th>
+                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ __('Subtraction') }}</th>
+                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ __('Division') }}</th>
+                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ __('Word Problem') }}</th>
+                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300"></th>
                                     @endif
-                                    <th class="px-4 py-2"></th>
+                                    <th class="px-4 py-2 bg-gray-50 border-b-2 border-gray-300"></th>
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
                                 @foreach($students as $student)
                                 <tr class="student-row" data-student-id="{{ $student->id }}" data-saved="false">
-                                    <td class="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                    <td class="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900 sticky left-0 bg-white z-10">
                                         {{ $student->name }}
                                     </td>
                                     <!-- Gender -->
@@ -95,16 +263,16 @@
                                         <input type="radio" name="level_{{ $student->id }}" value="Beginner" class="level-radio">
                                     </td>
                                     <td class="px-2 py-4 text-center">
-                                        <input type="radio" name="level_{{ $student->id }}" value="Letter Reader" class="level-radio">
+                                        <input type="radio" name="level_{{ $student->id }}" value="Reader" class="level-radio">
                                     </td>
                                     <td class="px-2 py-4 text-center">
-                                        <input type="radio" name="level_{{ $student->id }}" value="Word Level" class="level-radio">
+                                        <input type="radio" name="level_{{ $student->id }}" value="Word" class="level-radio">
                                     </td>
                                     <td class="px-2 py-4 text-center">
-                                        <input type="radio" name="level_{{ $student->id }}" value="Paragraph Reader" class="level-radio">
+                                        <input type="radio" name="level_{{ $student->id }}" value="Paragraph" class="level-radio">
                                     </td>
                                     <td class="px-2 py-4 text-center">
-                                        <input type="radio" name="level_{{ $student->id }}" value="Story Reader" class="level-radio">
+                                        <input type="radio" name="level_{{ $student->id }}" value="Story" class="level-radio">
                                     </td>
                                     <td class="px-2 py-4 text-center">
                                         <input type="radio" name="level_{{ $student->id }}" value="Comp. 1" class="level-radio">
@@ -199,15 +367,52 @@
             // Load existing assessments
             loadExistingAssessments();
             
+            // Check if table is scrollable
+            const tableContainer = $('.table-container')[0];
+            if (tableContainer) {
+                const checkScrollable = () => {
+                    if (tableContainer.scrollHeight > tableContainer.clientHeight) {
+                        $(tableContainer).addClass('scrollable');
+                    } else {
+                        $(tableContainer).removeClass('scrollable');
+                    }
+                };
+                
+                checkScrollable();
+                $(window).on('resize', checkScrollable);
+                
+                // Show floating headers on scroll (mobile)
+                let scrollTimer = null;
+                $(tableContainer).on('scroll', function() {
+                    if (window.innerWidth < 768) {
+                        $('#floatingHeaders').fadeIn(200);
+                        
+                        clearTimeout(scrollTimer);
+                        scrollTimer = setTimeout(() => {
+                            $('#floatingHeaders').fadeOut(200);
+                        }, 3000);
+                    }
+                });
+            }
+            
             // Enable submit button when both gender and level are selected
             $('.gender-radio, .level-radio').change(function() {
                 const row = $(this).closest('tr');
                 const studentId = row.data('student-id');
                 const hasGender = $(`input[name="gender_${studentId}"]:checked`).length > 0;
                 const hasLevel = $(`input[name="level_${studentId}"]:checked`).length > 0;
+                const selectedLevel = $(`input[name="level_${studentId}"]:checked`).val();
+                const currentLevel = row.attr('data-current-level');
                 
                 if (hasGender && hasLevel) {
                     row.find('.submit-btn').prop('disabled', false);
+                    
+                    // If this is an update and level changed, highlight the button
+                    if (currentLevel && selectedLevel !== currentLevel) {
+                        row.find('.submit-btn').removeClass('bg-yellow-600').addClass('bg-orange-600');
+                    } else if (currentLevel) {
+                        row.find('.submit-btn').removeClass('bg-orange-600').addClass('bg-yellow-600');
+                    }
                 } else {
                     row.find('.submit-btn').prop('disabled', true);
                 }
@@ -254,8 +459,9 @@
                                 
                                 // Mark as saved
                                 row.attr('data-saved', 'true');
+                                row.attr('data-current-level', assessment.level);
                                 row.addClass('bg-green-50');
-                                row.find('.submit-btn').text('{{ __("Saved") }}').removeClass('bg-blue-600').addClass('bg-green-600');
+                                row.find('.submit-btn').text('{{ __("Update") }}').removeClass('bg-blue-600').addClass('bg-yellow-600');
                                 
                                 // Enable the button since it's already saved
                                 row.find('.submit-btn').prop('disabled', false);
@@ -303,9 +509,13 @@
                 },
                 success: function(response) {
                     if (response.success) {
+                        const previousLevel = row.attr('data-current-level');
+                        const wasUpdate = previousLevel && previousLevel !== level;
+                        
                         row.attr('data-saved', 'true');
+                        row.attr('data-current-level', level);
                         row.addClass('bg-green-50');
-                        btn.text('{{ __("Saved") }}').removeClass('bg-blue-600').addClass('bg-green-600');
+                        btn.text('{{ __("Update") }}').removeClass('bg-blue-600 bg-yellow-600').addClass('bg-yellow-600');
                         updateSavedCount();
                         
                         // Show toast
@@ -319,7 +529,7 @@
                         
                         Toast.fire({
                             icon: 'success',
-                            title: '{{ __("Assessment saved") }}'
+                            title: wasUpdate ? '{{ __("Assessment updated") }}' : '{{ __("Assessment saved") }}'
                         });
                     }
                 },

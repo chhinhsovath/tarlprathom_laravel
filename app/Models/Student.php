@@ -58,4 +58,30 @@ class Student extends Model
     {
         return $this->hasMany(Assessment::class);
     }
+
+    /**
+     * Get the assessment eligibility records for the student.
+     */
+    public function assessmentEligibility()
+    {
+        return $this->hasMany(\App\Models\StudentAssessmentEligibility::class);
+    }
+
+    /**
+     * Check if student is eligible for a specific assessment type.
+     */
+    public function isEligibleForAssessment($assessmentType)
+    {
+        if ($assessmentType === 'baseline') {
+            // All students are eligible for baseline
+            return true;
+        }
+
+        $eligibility = $this->assessmentEligibility()
+            ->where('assessment_type', $assessmentType)
+            ->where('is_eligible', true)
+            ->first();
+
+        return $eligibility !== null;
+    }
 }

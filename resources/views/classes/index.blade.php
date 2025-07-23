@@ -1,7 +1,7 @@
 <x-app-layout>
 
     <div class="py-6">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="w-full px-4 sm:px-6 lg:px-8">
             @if (session('success'))
                 <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
                     <span class="block sm:inline">{{ session('success') }}</span>
@@ -39,11 +39,12 @@
                     <div>
                         <select name="grade_level" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
                             <option value="">{{ __('All Grades') }}</option>
-                            @for($i = 1; $i <= 6; $i++)
-                                <option value="{{ $i }}" {{ request('grade_level') == $i ? 'selected' : '' }}>
-                                    {{ __('Grade') }} {{ $i }}
-                                </option>
-                            @endfor
+                            <option value="4" {{ request('grade_level') == 4 ? 'selected' : '' }}>
+                                {{ __('Grade') }} 4
+                            </option>
+                            <option value="5" {{ request('grade_level') == 5 ? 'selected' : '' }}>
+                                {{ __('Grade') }} 5
+                            </option>
                         </select>
                     </div>
                     

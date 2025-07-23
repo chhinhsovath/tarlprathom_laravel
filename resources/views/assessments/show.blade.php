@@ -5,14 +5,6 @@
                 {{ __('Assessment Details') }}
             </h2>
             <div class="flex gap-2">
-                @can('update', $assessment)
-                    <a href="{{ route('assessments.edit', $assessment) }}" class="inline-flex items-center px-3 py-1.5 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                        </svg>
-                        {{ __('Edit') }}
-                    </a>
-                @endcan
                 <a href="{{ route('assessments.index') }}" class="inline-flex items-center px-3 py-1.5 bg-gray-300 border border-transparent rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest hover:bg-gray-400 focus:bg-gray-400 active:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition ease-in-out duration-150">
                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18"></path>
@@ -24,7 +16,7 @@
     </x-slot>
 
     <div class="py-6">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="w-full px-4 sm:px-6 lg:px-8">
             <!-- Assessment Overview Card -->
             <div class="bg-white overflow-hidden shadow-sm rounded-lg mb-6">
                 <div class="p-4 sm:p-6">
@@ -136,27 +128,6 @@
                 </div>
             </div>
             
-            <!-- Actions -->
-            <div class="mt-6 flex flex-col sm:flex-row gap-3 justify-center">
-                @can('update', $assessment)
-                    <a href="{{ route('assessments.edit', $assessment) }}" 
-                       class="inline-flex items-center justify-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 focus:bg-indigo-700 active:bg-indigo-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                        {{ __('Edit Assessment') }}
-                    </a>
-                @endcan
-                
-                @can('delete', $assessment)
-                    <form action="{{ route('assessments.destroy', $assessment) }}" method="POST" class="inline">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" 
-                                onclick="return confirm('{{ __('Are you sure you want to delete this assessment?') }}')"
-                                class="inline-flex items-center justify-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 focus:bg-red-700 active:bg-red-800 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                            {{ __('Delete Assessment') }}
-                        </button>
-                    </form>
-                @endcan
-            </div>
         </div>
     </div>
 </x-app-layout>

@@ -1,6 +1,6 @@
 <x-app-layout>
     <div class="py-6">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="w-full px-4 sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
                     <!-- Header -->
@@ -190,17 +190,6 @@
                     </div>
                     @endif
 
-                    <!-- Photo -->
-                    @if($mentoringVisit->photo)
-                    <div class="mt-6">
-                        <h4 class="font-semibold text-gray-900 mb-2">{{ __('Visit Photo') }}</h4>
-                        <div class="max-w-2xl">
-                            <img src="{{ Storage::url($mentoringVisit->photo) }}" 
-                                 alt="{{ __('Visit Photo') }}" 
-                                 class="rounded-lg shadow-sm w-full">
-                        </div>
-                    </div>
-                    @endif
 
                     <!-- Dynamic Questionnaire Data -->
                     @if($mentoringVisit->questionnaire_data && count($mentoringVisit->questionnaire_data) > 0)

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Exports\StudentsExport;
 use App\Http\Requests\StoreStudentRequest;
 use App\Http\Requests\UpdateStudentRequest;
+use App\Models\Assessment;
+use App\Models\AssessmentHistory;
 use App\Models\School;
 use App\Models\SchoolClass;
 use App\Models\Student;
@@ -112,19 +114,7 @@ class StudentController extends Controller
             $schools = School::where('id', $user->school_id)->get();
         }
 
-        // Get classes for dropdown
-        $classes = SchoolClass::query()
-            ->when($user->isTeacher(), function ($q) use ($user) {
-                $q->where('teacher_id', $user->id);
-            })
-            ->when(! $user->isAdmin() && ! $user->isTeacher(), function ($q) use ($user) {
-                $q->where('school_id', $user->school_id);
-            })
-            ->orderBy('grade_level')
-            ->orderBy('name')
-            ->get();
-
-        return view('students.create', compact('schools', 'classes'));
+        return view('students.create', compact('schools'));
     }
 
     /**
@@ -139,21 +129,14 @@ class StudentController extends Controller
         if ($user->isTeacher()) {
             $validated['school_id'] = $user->school_id;
             $validated['teacher_id'] = $user->id;
-
-            // Verify the class belongs to this teacher
-            if (isset($validated['class_id'])) {
-                $class = SchoolClass::find($validated['class_id']);
-                if (! $class || $class->teacher_id !== $user->id) {
-                    abort(403, 'Invalid class selection.');
-                }
-            }
         }
 
-        // Handle photo upload
-        if ($request->hasFile('photo')) {
-            $photo = $request->file('photo');
-            $path = $photo->store('students/photos', 'public');
-            $validated['photo'] = $path;
+        // Verify teacher belongs to the selected school if provided
+        if (isset($validated['teacher_id']) && $validated['teacher_id']) {
+            $teacher = \App\Models\User::find($validated['teacher_id']);
+            if (! $teacher || $teacher->school_id != $validated['school_id']) {
+                return back()->withErrors(['teacher_id' => 'The selected teacher does not belong to the selected school.']);
+            }
         }
 
         $student = Student::create($validated);
@@ -236,6 +219,40 @@ class StudentController extends Controller
     }
 
     /**
+     * Show assessment history for a student
+     */
+    public function assessmentHistory(Student $student)
+    {
+        // Check authorization
+        $user = auth()->user();
+        if ($user->isTeacher() && $student->school_id !== $user->school_id) {
+            abort(403);
+        }
+
+        // Load student with school and class
+        $student->load(['school', 'schoolClass']);
+
+        // Get all assessment histories for this student
+        $histories = AssessmentHistory::where('student_id', $student->id)
+            ->with('updatedBy')
+            ->orderBy('assessed_at', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->groupBy(function ($history) {
+                return $history->subject.'_'.$history->cycle;
+            });
+
+        // Get current assessments
+        $currentAssessments = Assessment::where('student_id', $student->id)
+            ->get()
+            ->keyBy(function ($assessment) {
+                return $assessment->subject.'_'.$assessment->cycle;
+            });
+
+        return view('students.assessment-history', compact('student', 'histories', 'currentAssessments'));
+    }
+
+    /**
      * Remove the specified resource from storage.
      */
     public function destroy(Student $student)
@@ -261,5 +278,95 @@ class StudentController extends Controller
         $this->authorize('viewAny', Student::class);
 
         return Excel::download(new StudentsExport($request), 'students_'.date('Y-m-d_H-i-s').'.xlsx');
+    }
+
+    /**
+     * Show the bulk import form.
+     */
+    public function bulkImportForm()
+    {
+        $this->authorize('create', Student::class);
+
+        $schools = School::orderBy('school_name')->pluck('school_name', 'id');
+        $teachers = \App\Models\User::where('role', 'teacher')
+            ->select('id', 'name', 'school_id')
+            ->get();
+
+        return view('students.bulk-import', compact('schools', 'teachers'));
+    }
+
+    /**
+     * Download the student import template
+     */
+    public function downloadTemplate()
+    {
+        $this->authorize('create', Student::class);
+
+        return Excel::download(new \App\Exports\StudentTemplateExport, 'student_import_template.xlsx');
+    }
+
+    /**
+     * Process bulk import of students.
+     */
+    public function bulkImport(Request $request)
+    {
+        $this->authorize('create', Student::class);
+
+        $request->validate([
+            'students' => 'required|array',
+            'students.*.name' => 'required|string|max:255',
+            'students.*.age' => 'required|integer|min:3|max:18',
+            'students.*.gender' => 'required|in:male,female',
+            'students.*.grade' => 'required|integer|in:4,5',
+            'students.*.school_id' => 'required|exists:schools,id',
+            'students.*.teacher_id' => 'nullable|exists:users,id',
+        ]);
+
+        $imported = 0;
+        $failed = 0;
+        $user = auth()->user();
+
+        foreach ($request->students as $studentData) {
+            try {
+                // Verify teacher belongs to the school if provided
+                if (isset($studentData['teacher_id']) && $studentData['teacher_id']) {
+                    $teacher = \App\Models\User::find($studentData['teacher_id']);
+                    if (! $teacher || $teacher->school_id != $studentData['school_id']) {
+                        $failed++;
+
+                        continue;
+                    }
+                }
+
+                // If teacher is importing, assign students to themselves
+                if ($user->isTeacher() && ! isset($studentData['teacher_id'])) {
+                    $studentData['teacher_id'] = $user->id;
+                }
+
+                Student::create([
+                    'name' => $studentData['name'],
+                    'age' => $studentData['age'],
+                    'gender' => $studentData['gender'],
+                    'grade' => $studentData['grade'],
+                    'school_id' => $studentData['school_id'],
+                    'teacher_id' => $studentData['teacher_id'] ?? null,
+                ]);
+                $imported++;
+            } catch (\Exception $e) {
+                $failed++;
+            }
+        }
+
+        $message = "Successfully imported {$imported} students.";
+        if ($failed > 0) {
+            $message .= " {$failed} students failed to import.";
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => $message,
+            'imported' => $imported,
+            'failed' => $failed,
+        ]);
     }
 }

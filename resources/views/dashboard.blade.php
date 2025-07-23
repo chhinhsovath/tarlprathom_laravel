@@ -1,18 +1,62 @@
 <x-app-layout>
     <div class="py-6">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <!-- School Filter for Mentors/Admins -->
+        <div class="w-full px-4 sm:px-6 lg:px-8">
+            <!-- Filters for Mentors/Admins -->
             @if(in_array(auth()->user()->role, ['mentor', 'admin']))
             <div class="bg-white shadow-sm sm:rounded-lg mb-6 p-4">
-                <label for="schoolFilter" class="block text-sm font-medium text-gray-700 mb-2">
-                    {{ __('Filter by School') }}:
-                </label>
-                <select id="schoolFilter" class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                    <option value="">{{ __('All Schools') }}</option>
-                    @foreach($schools as $school)
-                        <option value="{{ $school->id }}">{{ $school->school_name }}</option>
-                    @endforeach
-                </select>
+                <h3 class="text-sm font-medium text-gray-700 mb-3">{{ __('Filter Data') }}:</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <!-- Province Filter -->
+                    <div>
+                        <label for="provinceFilter" class="block text-xs font-medium text-gray-700 mb-1">
+                            {{ __('Province') }}:
+                        </label>
+                        <select id="provinceFilter" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                            <option value="">{{ __('All Provinces') }}</option>
+                            @foreach($provinces as $province)
+                                <option value="{{ $province }}">{{ $province }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    
+                    <!-- District Filter -->
+                    <div>
+                        <label for="districtFilter" class="block text-xs font-medium text-gray-700 mb-1">
+                            {{ __('District') }}:
+                        </label>
+                        <select id="districtFilter" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                            <option value="">{{ __('All Districts') }}</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Cluster Filter -->
+                    <div>
+                        <label for="clusterFilter" class="block text-xs font-medium text-gray-700 mb-1">
+                            {{ __('Cluster') }}:
+                        </label>
+                        <select id="clusterFilter" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                            <option value="">{{ __('All Clusters') }}</option>
+                        </select>
+                    </div>
+                    
+                    <!-- School Filter -->
+                    <div>
+                        <label for="schoolFilter" class="block text-xs font-medium text-gray-700 mb-1">
+                            {{ __('School') }}:
+                        </label>
+                        <select id="schoolFilter" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                            <option value="">{{ __('All Schools') }}</option>
+                            @foreach($schools as $school)
+                                <option value="{{ $school->id }}" 
+                                    data-province="{{ $school->province }}" 
+                                    data-district="{{ $school->district }}" 
+                                    data-cluster="{{ $school->cluster }}">
+                                    {{ $school->school_name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
             </div>
             @endif
             
@@ -142,8 +186,10 @@
                                     {{ __('Endline') }}
                                 </button>
                             </div>
-                            <div class="relative" style="height: 300px;">
-                                <canvas id="schoolResultsChart"></canvas>
+                            <div class="relative overflow-y-auto" style="height: 400px;">
+                                <div style="min-height: 300px;">
+                                    <canvas id="schoolResultsChart"></canvas>
+                                </div>
                             </div>
                         </div>
                         @endif
@@ -198,6 +244,7 @@
     @push('scripts')
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
     <script>
         $(document).ready(function() {
             let overallChart = null;
@@ -205,6 +252,14 @@
             let currentSubject = 'khmer';
             let currentCycle = 'baseline';
             let selectedSchoolId = '';
+            let selectedProvince = '';
+            let selectedDistrict = '';
+            let selectedCluster = '';
+            
+            // Initialize filters data
+            const allSchools = @json($schools);
+            const districts = @json($districts ?? []);
+            const clusters = @json($clusters ?? []);
             
             // Initialize
             loadDashboardStats();
@@ -213,15 +268,122 @@
             loadSchoolResults();
             @endif
             
+            // Province filter change
+            $('#provinceFilter').change(function() {
+                selectedProvince = $(this).val();
+                selectedDistrict = '';
+                selectedCluster = '';
+                selectedSchoolId = '';
+                
+                // Reset dependent filters
+                $('#districtFilter').html('<option value="">{{ __('All Districts') }}</option>');
+                $('#clusterFilter').html('<option value="">{{ __('All Clusters') }}</option>');
+                $('#schoolFilter').val('');
+                
+                // Populate districts for selected province
+                if (selectedProvince) {
+                    const provinceDistricts = [...new Set(allSchools
+                        .filter(s => s.province === selectedProvince)
+                        .map(s => s.district))].sort();
+                    
+                    provinceDistricts.forEach(district => {
+                        $('#districtFilter').append(`<option value="${district}">${district}</option>`);
+                    });
+                }
+                
+                filterSchools();
+                reloadData();
+            });
+            
+            // District filter change
+            $('#districtFilter').change(function() {
+                selectedDistrict = $(this).val();
+                selectedCluster = '';
+                selectedSchoolId = '';
+                
+                // Reset dependent filters
+                $('#clusterFilter').html('<option value="">{{ __('All Clusters') }}</option>');
+                $('#schoolFilter').val('');
+                
+                // Populate clusters for selected district
+                if (selectedDistrict) {
+                    const districtClusters = [...new Set(allSchools
+                        .filter(s => s.province === selectedProvince && s.district === selectedDistrict && s.cluster)
+                        .map(s => s.cluster))].sort();
+                    
+                    districtClusters.forEach(cluster => {
+                        $('#clusterFilter').append(`<option value="${cluster}">${cluster}</option>`);
+                    });
+                }
+                
+                filterSchools();
+                reloadData();
+            });
+            
+            // Cluster filter change
+            $('#clusterFilter').change(function() {
+                selectedCluster = $(this).val();
+                selectedSchoolId = '';
+                $('#schoolFilter').val('');
+                
+                filterSchools();
+                reloadData();
+            });
+            
             // School filter change
             $('#schoolFilter').change(function() {
                 selectedSchoolId = $(this).val();
+                
+                // Auto-select province, district, cluster if a school is selected
+                if (selectedSchoolId) {
+                    const selectedOption = $(this).find(':selected');
+                    const province = selectedOption.data('province');
+                    const district = selectedOption.data('district');
+                    const cluster = selectedOption.data('cluster');
+                    
+                    if (province && province !== selectedProvince) {
+                        $('#provinceFilter').val(province).trigger('change');
+                        $('#districtFilter').val(district);
+                        $('#clusterFilter').val(cluster);
+                        selectedProvince = province;
+                        selectedDistrict = district;
+                        selectedCluster = cluster;
+                    }
+                }
+                
+                reloadData();
+            });
+            
+            // Filter schools based on selected province, district, cluster
+            function filterSchools() {
+                $('#schoolFilter option:not(:first)').each(function() {
+                    const $option = $(this);
+                    const province = $option.data('province');
+                    const district = $option.data('district');
+                    const cluster = $option.data('cluster');
+                    
+                    let show = true;
+                    
+                    if (selectedProvince && province !== selectedProvince) show = false;
+                    if (selectedDistrict && district !== selectedDistrict) show = false;
+                    if (selectedCluster && cluster !== selectedCluster) show = false;
+                    
+                    if (show) {
+                        $option.show();
+                    } else {
+                        $option.hide();
+                    }
+                });
+            }
+            
+            // Reload all data
+            function reloadData() {
                 loadDashboardStats();
                 loadOverallResults();
                 @if(in_array(auth()->user()->role, ['mentor', 'admin']))
                 loadSchoolResults();
                 @endif
-            });
+            }
             
             // Subject toggle
             $('.subject-btn').click(function() {
@@ -247,7 +409,12 @@
                 showLoading('{{ __("Loading statistics...") }}');
                 $.ajax({
                     url: '{{ route("api.dashboard.stats") }}',
-                    data: { school_id: selectedSchoolId },
+                    data: { 
+                        school_id: selectedSchoolId,
+                        province: selectedProvince,
+                        district: selectedDistrict,
+                        cluster: selectedCluster
+                    },
                     success: function(data) {
                         $('#totalStudents').text(data.total_students);
                         $('#totalAssessments').text(data.total_assessments);
@@ -267,7 +434,10 @@
                     url: '{{ route("api.dashboard.overall-results") }}',
                     data: { 
                         subject: currentSubject,
-                        school_id: selectedSchoolId 
+                        school_id: selectedSchoolId,
+                        province: selectedProvince,
+                        district: selectedDistrict,
+                        cluster: selectedCluster
                     },
                     success: function(response) {
                         // Update chart
@@ -292,7 +462,11 @@
                     url: '{{ route("api.dashboard.results-by-school") }}',
                     data: { 
                         subject: currentSubject,
-                        cycle: currentCycle 
+                        cycle: currentCycle,
+                        school_id: selectedSchoolId,
+                        province: selectedProvince,
+                        district: selectedDistrict,
+                        cluster: selectedCluster
                     },
                     success: function(response) {
                         updateSchoolChart(response.chartData);
@@ -339,6 +513,25 @@
                                     padding: 10
                                 }
                             },
+                            datalabels: {
+                                display: function(context) {
+                                    return context.dataset.data[context.dataIndex] > 0; // Show labels for all non-zero values
+                                },
+                                color: 'white',
+                                font: {
+                                    weight: 'bold',
+                                    size: 11
+                                },
+                                formatter: function(value, context) {
+                                    // Calculate percentage for this segment
+                                    const dataArray = context.chart.data.datasets.map(dataset => dataset.data[context.dataIndex]);
+                                    const total = dataArray.reduce((sum, val) => sum + val, 0);
+                                    const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
+                                    return percentage > 0 ? percentage + '%' : '';
+                                },
+                                anchor: 'center',
+                                align: 'center'
+                            },
                             tooltip: {
                                 callbacks: {
                                     afterTitle: function() {
@@ -347,7 +540,8 @@
                                 }
                             }
                         }
-                    }
+                    },
+                    plugins: [ChartDataLabels]
                 });
             }
             
@@ -360,22 +554,40 @@
                     schoolChart.destroy();
                 }
                 
+                // Calculate dynamic height based on number of schools
+                const numSchools = data.labels ? data.labels.length : 0;
+                const barHeight = 50; // Height per school bar
+                const minHeight = 300;
+                const calculatedHeight = Math.max(minHeight, numSchools * barHeight);
+                
+                // Set canvas container height
+                ctx.canvas.parentElement.style.minHeight = calculatedHeight + 'px';
+                ctx.canvas.style.height = calculatedHeight + 'px';
+                
                 schoolChart = new Chart(ctx, {
                     type: 'bar',
                     data: data,
                     options: {
+                        indexAxis: 'y', // This makes it a horizontal bar chart
                         responsive: true,
                         maintainAspectRatio: false,
                         scales: {
                             x: {
                                 stacked: true,
-                            },
-                            y: {
-                                stacked: true,
                                 beginAtZero: true,
                                 title: {
                                     display: true,
-                                    text: '{{ __("Number of Students") }}'
+                                    text: '{{ __("Percentage (%)") }}'
+                                },
+                                max: 100
+                            },
+                            y: {
+                                stacked: true,
+                                ticks: {
+                                    autoSkip: false,
+                                    font: {
+                                        size: 11
+                                    }
                                 }
                             }
                         },
@@ -384,11 +596,44 @@
                                 position: 'bottom',
                                 labels: {
                                     boxWidth: 15,
-                                    padding: 10
+                                    padding: 10,
+                                    font: {
+                                        size: 11
+                                    }
+                                }
+                            },
+                            datalabels: {
+                                display: function(context) {
+                                    return context.dataset.data[context.dataIndex] > 5; // Only show labels for segments > 5%
+                                },
+                                color: 'white',
+                                font: {
+                                    weight: 'bold',
+                                    size: 10
+                                },
+                                formatter: function(value) {
+                                    return value + '%';
+                                },
+                                anchor: 'center',
+                                align: 'center'
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.dataset.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        if (context.parsed.x !== null) {
+                                            label += context.parsed.x + '%';
+                                        }
+                                        return label;
+                                    }
                                 }
                             }
                         }
-                    }
+                    },
+                    plugins: [ChartDataLabels]
                 });
             }
             @endif

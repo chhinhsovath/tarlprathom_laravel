@@ -22,7 +22,7 @@
     </x-slot>
 
     <div class="py-6">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="w-full px-4 sm:px-6 lg:px-8">
             <!-- User Info Card -->
             <div class="bg-white overflow-hidden shadow-sm rounded-lg mb-6">
                 <div class="p-4 sm:p-6">
@@ -126,6 +126,30 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Assigned Schools (for Mentors) -->
+            @if($user->role === 'mentor')
+                <div class="bg-white overflow-hidden shadow-sm rounded-lg mt-6">
+                    <div class="p-4 sm:p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ __('Assigned Schools') }}</h3>
+                        
+                        @if($user->assignedSchools->count() > 0)
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                                @foreach($user->assignedSchools as $school)
+                                    <div class="bg-gray-50 rounded-lg p-3">
+                                        <h4 class="font-medium text-gray-900">{{ $school->school_name }}</h4>
+                                        @if($school->province)
+                                            <p class="text-sm text-gray-600">{{ $school->province }}</p>
+                                        @endif
+                                    </div>
+                                @endforeach
+                            </div>
+                        @else
+                            <p class="text-gray-500">{{ __('No schools assigned yet.') }}</p>
+                        @endif
+                    </div>
+                </div>
+            @endif
             
             <!-- Actions -->
             <div class="mt-6 flex flex-col sm:flex-row gap-3 justify-center">
@@ -133,6 +157,13 @@
                    class="inline-flex items-center justify-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 focus:bg-indigo-700 active:bg-indigo-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
                     {{ __('Edit User') }}
                 </a>
+
+                @if(auth()->user()->role === 'admin' && $user->role === 'mentor')
+                    <a href="{{ route('users.assign-schools', $user) }}" 
+                       class="inline-flex items-center justify-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 focus:bg-green-700 active:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                        {{ __('Assign Schools') }}
+                    </a>
+                @endif
                 
                 @if($user->id !== auth()->id())
                     <form action="{{ route('users.destroy', $user) }}" method="POST" class="inline">

@@ -15,7 +15,7 @@ class AssessmentFactory extends Factory
         $subject = $this->faker->randomElement(['khmer', 'math']);
 
         if ($subject === 'khmer') {
-            $levels = ['Beginner', 'Letter Reader', 'Word Level', 'Paragraph Reader', 'Story Reader', 'Comp. 1', 'Comp. 2'];
+            $levels = ['Beginner', 'Reader', 'Word', 'Paragraph', 'Story', 'Comp. 1', 'Comp. 2'];
         } else {
             $levels = ['Beginner', '1-Digit', '2-Digit', 'Subtraction', 'Division', 'Word Problem'];
         }
@@ -33,7 +33,7 @@ class AssessmentFactory extends Factory
     public function khmer()
     {
         return $this->state(function (array $attributes) {
-            $levels = ['Beginner', 'Letter Reader', 'Word Level', 'Paragraph Reader', 'Story Reader', 'Comp. 1', 'Comp. 2'];
+            $levels = ['Beginner', 'Reader', 'Word', 'Paragraph', 'Story', 'Comp. 1', 'Comp. 2'];
 
             return [
                 'subject' => 'khmer',

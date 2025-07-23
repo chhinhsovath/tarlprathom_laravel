@@ -13,7 +13,7 @@
         @csrf
     </form>
 
-    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6" enctype="multipart/form-data">
+    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
         @csrf
         @method('patch')
 
@@ -45,50 +45,6 @@
                     @endif
                 </div>
             @endif
-        </div>
-
-        <!-- Profile Photo -->
-        <div>
-            <x-input-label for="profile_photo" :value="__('Profile Photo')" />
-            
-            @if($user->profile_photo)
-                <div class="mb-4">
-                    <p class="text-sm text-gray-600 mb-2">{{ __('Current Photo:') }}</p>
-                    <div class="h-32 w-32 rounded-full overflow-hidden">
-                        <img src="{{ Storage::url($user->profile_photo) }}" alt="{{ $user->name }}" class="h-full w-full object-cover" style="height: 128px; width: 128px; object-fit: cover;">
-                    </div>
-                </div>
-            @else
-                <div class="mb-4">
-                    <div class="h-32 w-32 rounded-full bg-gray-200 flex items-center justify-center">
-                        <svg class="h-16 w-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                        </svg>
-                    </div>
-                </div>
-            @endif
-            
-            <input type="file" 
-                   id="profile_photo" 
-                   name="profile_photo" 
-                   accept="image/*"
-                   class="mt-1 block w-full text-sm text-gray-500
-                   file:mr-4 file:py-2 file:px-4
-                   file:rounded-md file:border-0
-                   file:text-sm file:font-semibold
-                   file:bg-indigo-50 file:text-indigo-700
-                   hover:file:bg-indigo-100"
-                   onchange="previewPhoto(this)">
-            <x-input-error class="mt-2" :messages="$errors->get('profile_photo')" />
-            <p class="mt-1 text-sm text-gray-500">{{ __('Upload a profile photo (max 5MB)') }}</p>
-            
-            <!-- Photo Preview -->
-            <div id="photoPreview" class="mt-4 hidden">
-                <p class="text-sm text-gray-600 mb-2">{{ __('New Photo:') }}</p>
-                <div class="h-32 w-32 rounded-full overflow-hidden">
-                    <img id="previewImage" class="h-full w-full object-cover" alt="Photo preview" style="height: 128px; width: 128px; object-fit: cover;">
-                </div>
-            </div>
         </div>
 
         <!-- Gender -->
@@ -157,31 +113,3 @@
     </form>
 </section>
 
-@push('scripts')
-<script>
-    function previewPhoto(input) {
-        const file = input.files[0];
-        const preview = document.getElementById('photoPreview');
-        const previewImage = document.getElementById('previewImage');
-        
-        if (file) {
-            // Check file size (5MB)
-            if (file.size > 5 * 1024 * 1024) {
-                alert('{{ __("File size must be less than 5MB") }}');
-                input.value = '';
-                preview.classList.add('hidden');
-                return;
-            }
-            
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                previewImage.src = e.target.result;
-                preview.classList.remove('hidden');
-            };
-            reader.readAsDataURL(file);
-        } else {
-            preview.classList.add('hidden');
-        }
-    }
-</script>
-@endpush

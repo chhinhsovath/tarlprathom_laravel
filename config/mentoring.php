@@ -92,9 +92,9 @@ return [
                 'options' => [
                     'Beginner',
                     'Letter Level',
-                    'Word Level',
-                    'Paragraph Reader',
-                    'Story Reader',
+                    'Word',
+                    'Paragraph',
+                    'Story',
                 ],
                 'condition' => 'subject_observed:Language',
                 'question' => 'TaRL Level(s) observed (Language)',

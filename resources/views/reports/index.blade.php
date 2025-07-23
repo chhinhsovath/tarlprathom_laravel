@@ -1,7 +1,7 @@
 <x-app-layout>
 
     <div class="py-6">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="w-full px-4 sm:px-6 lg:px-8">
             <!-- Summary Statistics - First Row (4 stats) -->
             <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem;" class="mb-6">
                 @if(isset($stats['total_students']))
@@ -243,9 +243,9 @@
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                            @if(in_array($assessment->level, ['Story Reader', 'Comp. 1', 'Comp. 2', 'Division', 'Word Problem'])) 
+                                            @if(in_array($assessment->level, ['Story', 'Comp. 1', 'Comp. 2', 'Division', 'Word Problem'])) 
                                                 bg-green-100 text-green-800
-                                            @elseif(in_array($assessment->level, ['Paragraph Reader', 'Word Level', 'Subtraction', '2-Digit']))
+                                            @elseif(in_array($assessment->level, ['Paragraph', 'Word', 'Subtraction', '2-Digit']))
                                                 bg-yellow-100 text-yellow-800
                                             @else
                                                 bg-red-100 text-red-800

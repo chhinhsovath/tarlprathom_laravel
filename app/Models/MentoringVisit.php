@@ -251,7 +251,7 @@ class MentoringVisit extends Model
                 'field' => 'language_levels_observed',
                 'type' => 'checkbox',
                 'condition' => 'subject_observed:Language',
-                'options' => ['Beginner', 'Letter Level', 'Word Level', 'Paragraph Reader', 'Story Reader'],
+                'options' => ['Beginner', 'Letter Level', 'Word', 'Paragraph', 'Story'],
             ],
             [
                 'group' => 'Name of Teacher',

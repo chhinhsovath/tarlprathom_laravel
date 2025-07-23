@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\App;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -19,7 +20,16 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Set the lang path to resources/lang for JSON translations
-        $this->app->useLangPath(resource_path('lang'));
+        // Set locale from session or cookie BEFORE setting lang path
+        if (session()->has('locale')) {
+            app()->setLocale(session('locale'));
+        } elseif (request()->hasCookie('locale')) {
+            app()->setLocale(request()->cookie('locale'));
+        }
+
+        // Force HTTPS in production
+        if (config('app.env') === 'production') {
+            \URL::forceScheme('https');
+        }
     }
 }

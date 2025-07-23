@@ -12,6 +12,9 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Hanuman:wght@100;300;400;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+        
         <!-- Scripts -->
         <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -153,7 +156,7 @@
             <!-- Page Heading -->
             @isset($header)
                 <header class="bg-white shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                    <div class="w-full py-6 px-4 sm:px-6 lg:px-8">
                         {{ $header }}
                     </div>
                 </header>
@@ -282,14 +285,33 @@
                 });
                 
                 // Page transition handler
+                let pageTransitionTimeout;
+                
                 function showPageTransition() {
                     $('body').addClass('page-transitioning');
                     $('#pageTransitionOverlay').addClass('active');
+                    
+                    // Clear any existing timeout
+                    if (pageTransitionTimeout) {
+                        clearTimeout(pageTransitionTimeout);
+                    }
+                    
+                    // Set a timeout to hide the overlay after 10 seconds
+                    pageTransitionTimeout = setTimeout(() => {
+                        console.warn('Page transition timeout - hiding overlay');
+                        hidePageTransition();
+                    }, 10000);
                 }
                 
                 function hidePageTransition() {
                     $('body').removeClass('page-transitioning');
                     $('#pageTransitionOverlay').removeClass('active');
+                    
+                    // Clear the timeout if it exists
+                    if (pageTransitionTimeout) {
+                        clearTimeout(pageTransitionTimeout);
+                        pageTransitionTimeout = null;
+                    }
                 }
                 
                 // Handle all link clicks for page transitions
@@ -354,6 +376,27 @@
                     setTimeout(() => {
                         hidePageTransition();
                     }, 100);
+                });
+                
+                // Handle page visibility changes (e.g., when user switches tabs and comes back)
+                document.addEventListener('visibilitychange', function() {
+                    if (!document.hidden) {
+                        // Page is visible again, hide any stuck loading overlays
+                        hidePageTransition();
+                        hideLoading();
+                    }
+                });
+                
+                // Additional fallback: hide loading on focus
+                $(window).on('focus', function() {
+                    hidePageTransition();
+                    hideLoading();
+                });
+                
+                // Handle navigation errors (when user uses back button after error)
+                window.addEventListener('pageshow', function(event) {
+                    hidePageTransition();
+                    hideLoading();
                 });
             });
         </script>

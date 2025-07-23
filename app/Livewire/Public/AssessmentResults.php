@@ -16,7 +16,7 @@ class AssessmentResults extends Component
 
     public $isLoading = false;
 
-    public $levels = ['Beginner', 'Letter Reader', 'Word Level', 'Paragraph Reader', 'Story Reader'];
+    public $levels = ['Beginner', 'Reader', 'Word', 'Paragraph', 'Story'];
 
     public function mount()
     {

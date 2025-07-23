@@ -22,7 +22,7 @@
     </x-slot>
 
     <div class="py-6">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="w-full px-4 sm:px-6 lg:px-8">
             <!-- School Info Card -->
             <div class="bg-white overflow-hidden shadow-sm rounded-lg mb-6">
                 <div class="p-4 sm:p-6">
@@ -73,14 +73,24 @@
             </div>
 
             <!-- Teachers Section -->
-            @if($teachers->count() > 0)
-                <div class="bg-white overflow-hidden shadow-sm rounded-lg mb-6">
-                    <div class="p-4 sm:p-6">
-                        <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ __('Teachers') }}</h3>
-                        
+            <div class="bg-white overflow-hidden shadow-sm rounded-lg mb-6">
+                <div class="p-4 sm:p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold text-gray-900">{{ __('Teachers') }}</h3>
+                        @if(auth()->user()->role === 'admin')
+                            <button onclick="openAddTeacherModal()" class="inline-flex items-center px-3 py-1.5 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 focus:bg-indigo-700 active:bg-indigo-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                </svg>
+                                {{ __('Add Teacher') }}
+                            </button>
+                        @endif
+                    </div>
+                    
+                    @if($teachers->count() > 0)
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                             @foreach($teachers as $teacher)
-                                <div class="flex items-center gap-3 p-3 border rounded-lg">
+                                <div class="flex items-center gap-3 p-3 border rounded-lg relative group">
                                     @if($teacher->profile_photo)
                                         <div class="h-10 w-10 rounded-full overflow-hidden flex-shrink-0">
                                             <img src="{{ Storage::url($teacher->profile_photo) }}" alt="{{ $teacher->name }}" class="h-full w-full object-cover">
@@ -92,16 +102,30 @@
                                             </svg>
                                         </div>
                                     @endif
-                                    <div>
+                                    <div class="flex-1">
                                         <p class="text-sm font-medium text-gray-900">{{ $teacher->name }}</p>
                                         <p class="text-xs text-gray-500">{{ $teacher->email }}</p>
                                     </div>
+                                    @if(auth()->user()->role === 'admin')
+                                        <form action="{{ route('schools.remove-teacher', $school) }}" method="POST" class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                            @csrf
+                                            @method('DELETE')
+                                            <input type="hidden" name="teacher_id" value="{{ $teacher->id }}">
+                                            <button type="submit" onclick="return confirm('Remove this teacher from the school?')" class="text-red-600 hover:text-red-900">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                                </svg>
+                                            </button>
+                                        </form>
+                                    @endif
                                 </div>
                             @endforeach
                         </div>
-                    </div>
+                    @else
+                        <p class="text-sm text-gray-500">{{ __('No teachers assigned to this school yet.') }}</p>
+                    @endif
                 </div>
-            @endif
+            </div>
 
             <!-- Recent Students Section -->
             @if($recentStudents->count() > 0)
@@ -173,4 +197,142 @@
             </div>
         </div>
     </div>
+
+    <!-- Add Teacher Modal -->
+    <div id="addTeacherModal" class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity hidden z-50">
+        <div class="fixed inset-0 overflow-y-auto">
+            <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
+                <div class="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
+                    <div class="absolute right-0 top-0 pr-4 pt-4">
+                        <button type="button" onclick="closeAddTeacherModal()" class="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none">
+                            <span class="sr-only">Close</span>
+                            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                    
+                    <div class="sm:flex sm:items-start">
+                        <div class="mt-3 text-center sm:mt-0 sm:text-left w-full">
+                            <h3 class="text-base font-semibold leading-6 text-gray-900 mb-4" id="modal-title">
+                                {{ __('Add Teacher to School') }}
+                            </h3>
+                            
+                            <form action="{{ route('schools.add-teacher', $school) }}" method="POST" id="addTeacherForm">
+                                @csrf
+                                
+                                <div class="mb-4">
+                                    <label for="teacher_search" class="block text-sm font-medium text-gray-700 mb-2">
+                                        {{ __('Search Teacher') }}
+                                    </label>
+                                    <input type="text" id="teacher_search" placeholder="Type to search teachers..." 
+                                        class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                        onkeyup="searchTeachers(this.value)">
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                        {{ __('Available Teachers') }}
+                                    </label>
+                                    <div id="teachersList" class="max-h-60 overflow-y-auto border rounded-md p-2">
+                                        <p class="text-sm text-gray-500 text-center py-4">{{ __('Start typing to search for teachers...') }}</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                        {{ __('Selected Teachers') }}
+                                    </label>
+                                    <div id="selectedTeachers" class="border rounded-md p-2 min-h-[60px]">
+                                        <p class="text-sm text-gray-500 text-center py-2">{{ __('No teachers selected') }}</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse gap-2">
+                                    <button type="submit" class="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 sm:w-auto">
+                                        {{ __('Add Teachers') }}
+                                    </button>
+                                    <button type="button" onclick="closeAddTeacherModal()" class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto">
+                                        {{ __('Cancel') }}
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedTeacherIds = [];
+        let searchTimeout;
+
+        function openAddTeacherModal() {
+            document.getElementById('addTeacherModal').classList.remove('hidden');
+        }
+
+        function closeAddTeacherModal() {
+            document.getElementById('addTeacherModal').classList.add('hidden');
+            selectedTeacherIds = [];
+            updateSelectedTeachersList();
+        }
+
+        function searchTeachers(query) {
+            clearTimeout(searchTimeout);
+            
+            if (query.length < 2) {
+                document.getElementById('teachersList').innerHTML = '<p class="text-sm text-gray-500 text-center py-4">Start typing to search for teachers...</p>';
+                return;
+            }
+
+            searchTimeout = setTimeout(() => {
+                fetch(`{{ route('schools.search-teachers', $school) }}?q=${query}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        let html = '';
+                        if (data.length === 0) {
+                            html = '<p class="text-sm text-gray-500 text-center py-4">No teachers found</p>';
+                        } else {
+                            data.forEach(teacher => {
+                                const isSelected = selectedTeacherIds.includes(teacher.id);
+                                html += `
+                                    <div class="flex items-center justify-between p-2 hover:bg-gray-50 rounded cursor-pointer ${isSelected ? 'bg-indigo-50' : ''}" 
+                                         onclick="toggleTeacher(${teacher.id}, '${teacher.name}', '${teacher.email}')">
+                                        <div>
+                                            <p class="text-sm font-medium text-gray-900">${teacher.name}</p>
+                                            <p class="text-xs text-gray-500">${teacher.email}</p>
+                                        </div>
+                                        <input type="checkbox" ${isSelected ? 'checked' : ''} class="ml-2">
+                                    </div>
+                                `;
+                            });
+                        }
+                        document.getElementById('teachersList').innerHTML = html;
+                    });
+            }, 300);
+        }
+
+        function toggleTeacher(id, name, email) {
+            const index = selectedTeacherIds.indexOf(id);
+            if (index > -1) {
+                selectedTeacherIds.splice(index, 1);
+            } else {
+                selectedTeacherIds.push(id);
+            }
+            updateSelectedTeachersList();
+            searchTeachers(document.getElementById('teacher_search').value);
+        }
+
+        function updateSelectedTeachersList() {
+            const container = document.getElementById('selectedTeachers');
+            if (selectedTeacherIds.length === 0) {
+                container.innerHTML = '<p class="text-sm text-gray-500 text-center py-2">No teachers selected</p>';
+            } else {
+                container.innerHTML = selectedTeacherIds.map(id => 
+                    `<input type="hidden" name="teacher_ids[]" value="${id}">`
+                ).join('') + `<p class="text-sm text-gray-700">${selectedTeacherIds.length} teacher(s) selected</p>`;
+            }
+        }
+    </script>
 </x-app-layout>

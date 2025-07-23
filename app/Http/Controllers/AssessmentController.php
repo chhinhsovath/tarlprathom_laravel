@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Exports\AssessmentsExport;
 use App\Http\Requests\StoreAssessmentRequest;
 use App\Models\Assessment;
+use App\Models\School;
 use App\Models\Student;
+use App\Models\StudentAssessmentEligibility;
 use App\Traits\Sortable;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
@@ -55,33 +57,47 @@ class AssessmentController extends Controller
         }
 
         // Search by student name
-        if ($request->has('search') && $request->get('search') !== '') {
+        if ($request->filled('search')) {
             $search = $request->get('search');
             $query->whereHas('student', function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%");
             });
         }
 
+        // Filter by school (for admin/mentor)
+        if ($request->filled('school_id')) {
+            $query->whereHas('student', function ($q) use ($request) {
+                $q->where('school_id', $request->get('school_id'));
+            });
+        }
+
+        // Filter by grade
+        if ($request->filled('grade')) {
+            $query->whereHas('student', function ($q) use ($request) {
+                $q->where('grade', $request->get('grade'));
+            });
+        }
+
         // Filter by student
-        if ($request->has('student_id')) {
+        if ($request->filled('student_id')) {
             $query->where('student_id', $request->get('student_id'));
         }
 
         // Filter by subject
-        if ($request->has('subject')) {
+        if ($request->filled('subject')) {
             $query->where('subject', $request->get('subject'));
         }
 
         // Filter by cycle
-        if ($request->has('cycle')) {
+        if ($request->filled('cycle')) {
             $query->where('cycle', $request->get('cycle'));
         }
 
         // Filter by date range
-        if ($request->has('from_date')) {
+        if ($request->filled('from_date')) {
             $query->where('assessed_at', '>=', $request->get('from_date'));
         }
-        if ($request->has('to_date')) {
+        if ($request->filled('to_date')) {
             $query->where('assessed_at', '<=', $request->get('to_date'));
         }
 
@@ -96,7 +112,13 @@ class AssessmentController extends Controller
 
         $assessments = $query->paginate(20)->withQueryString();
 
-        return view('assessments.index', compact('assessments') + $sortData);
+        // Get schools for filter dropdown (admin/mentor only)
+        $schools = [];
+        if ($request->user()->isAdmin() || $request->user()->isMentor()) {
+            $schools = School::orderBy('school_name')->get();
+        }
+
+        return view('assessments.index', compact('assessments', 'schools') + $sortData);
     }
 
     /**
@@ -122,29 +144,40 @@ class AssessmentController extends Controller
         $subject = $request->get('subject', 'khmer');
         $cycle = $request->get('cycle', 'baseline');
 
-        // For Midline or Endline cycles, filter students based on baseline results
+        // For Midline or Endline cycles, filter students based on eligibility
         if (in_array($cycle, ['midline', 'endline'])) {
-            if ($subject === 'khmer') {
-                // Get student IDs who scored Beginner through Story (not Comp. 1 or Comp. 2) in baseline
-                $eligibleStudentsQuery = Assessment::where('subject', 'khmer')
-                    ->where('cycle', 'baseline')
-                    ->whereIn('level', ['Beginner', 'Letter Reader', 'Word Level', 'Paragraph Reader', 'Story Reader']);
+            // First check for manually selected students
+            $eligibleStudentIds = StudentAssessmentEligibility::where('assessment_type', $cycle)
+                ->where('is_eligible', true)
+                ->pluck('student_id');
+
+            if ($eligibleStudentIds->isNotEmpty()) {
+                // Use manually selected students
+                $studentsQuery->whereIn('id', $eligibleStudentIds);
             } else {
-                // For Math: Get student IDs who scored Beginner through Subtraction (not Division or Word Problem) in baseline
-                $eligibleStudentsQuery = Assessment::where('subject', 'math')
-                    ->where('cycle', 'baseline')
-                    ->whereIn('level', ['Beginner', '1-Digit', '2-Digit', 'Subtraction']);
-            }
+                // Fall back to baseline-based filtering
+                if ($subject === 'khmer') {
+                    // Get student IDs who scored Beginner through Story (not Comp. 1 or Comp. 2) in baseline
+                    $eligibleStudentsQuery = Assessment::where('subject', 'khmer')
+                        ->where('cycle', 'baseline')
+                        ->whereIn('level', ['Beginner', 'Reader', 'Word', 'Paragraph', 'Story']);
+                } else {
+                    // For Math: Get student IDs who scored Beginner through Subtraction (not Division or Word Problem) in baseline
+                    $eligibleStudentsQuery = Assessment::where('subject', 'math')
+                        ->where('cycle', 'baseline')
+                        ->whereIn('level', ['Beginner', '1-Digit', '2-Digit', 'Subtraction']);
+                }
 
-            // If teacher, only get eligible students from their school
-            if ($user->isTeacher()) {
-                $eligibleStudentsQuery->whereHas('student', function ($q) use ($user) {
-                    $q->where('school_id', $user->school_id);
-                });
-            }
+                // If teacher, only get eligible students from their school
+                if ($user->isTeacher()) {
+                    $eligibleStudentsQuery->whereHas('student', function ($q) use ($user) {
+                        $q->where('school_id', $user->school_id);
+                    });
+                }
 
-            $eligibleStudentIds = $eligibleStudentsQuery->pluck('student_id');
-            $studentsQuery->whereIn('id', $eligibleStudentIds);
+                $eligibleStudentIds = $eligibleStudentsQuery->pluck('student_id');
+                $studentsQuery->whereIn('id', $eligibleStudentIds);
+            }
         }
 
         $students = $studentsQuery->orderBy('name')->get();
@@ -164,6 +197,22 @@ class AssessmentController extends Controller
             $student = Student::findOrFail($validated['student_id']);
             if ($student->school_id !== $request->user()->school_id) {
                 abort(403, 'You can only assess students from your own school.');
+            }
+        }
+
+        // Check if assessment period is active for the school (only for non-admins)
+        if (!$request->user()->isAdmin()) {
+            $student = Student::findOrFail($validated['student_id']);
+            $school = $student->school;
+            if (!$school->isAssessmentPeriodActive($validated['cycle'])) {
+                $status = $school->getAssessmentPeriodStatus($validated['cycle']);
+                $message = match($status) {
+                    'not_set' => 'Assessment dates have not been set for this school.',
+                    'upcoming' => 'Assessment period has not started yet for this school.',
+                    'expired' => 'Assessment period has ended for this school.',
+                    default => 'Assessment is not available at this time.'
+                };
+                return redirect()->back()->with('error', $message);
             }
         }
 
@@ -210,7 +259,7 @@ class AssessmentController extends Controller
         $subject = $request->get('subject', 'khmer');
 
         if ($subject === 'khmer') {
-            $levels = ['Beginner', 'Letter Reader', 'Word Level', 'Paragraph Reader', 'Story Reader'];
+            $levels = ['Beginner', 'Reader', 'Word', 'Paragraph', 'Story'];
             $labels = [__('Beginner'), __('Letter'), __('Word'), __('Paragraph'), __('Story')];
         } else {
             $levels = ['Beginner', '1-Digit', '2-Digit', 'Subtraction', 'Division'];
@@ -274,7 +323,7 @@ class AssessmentController extends Controller
 
         // Validate level based on subject
         if ($validated['subject'] === 'khmer') {
-            if (! in_array($validated['level'], ['Beginner', 'Letter Reader', 'Word Level', 'Paragraph Reader', 'Story Reader', 'Comp. 1', 'Comp. 2'])) {
+            if (! in_array($validated['level'], ['Beginner', 'Reader', 'Word', 'Paragraph', 'Story', 'Comp. 1', 'Comp. 2'])) {
                 return response()->json(['success' => false, 'message' => 'Invalid level for Khmer'], 422);
             }
         } else {
@@ -288,6 +337,21 @@ class AssessmentController extends Controller
         if ($student->gender !== $validated['gender']) {
             $student->gender = $validated['gender'];
             $student->save();
+        }
+
+        // Check if assessment period is active for the school (only for non-admins)
+        if (!auth()->user()->isAdmin()) {
+            $school = $student->school;
+            if (!$school->isAssessmentPeriodActive($validated['cycle'])) {
+                $status = $school->getAssessmentPeriodStatus($validated['cycle']);
+                $message = match($status) {
+                    'not_set' => 'Assessment dates have not been set for this school.',
+                    'upcoming' => 'Assessment period has not started yet for this school.',
+                    'expired' => 'Assessment period has ended for this school.',
+                    default => 'Assessment is not available at this time.'
+                };
+                return response()->json(['success' => false, 'message' => $message], 422);
+            }
         }
 
         // Check if assessment already exists
@@ -357,5 +421,125 @@ class AssessmentController extends Controller
         }
 
         return Excel::download(new AssessmentsExport($request), 'assessments_'.date('Y-m-d_H-i-s').'.xlsx');
+    }
+
+    /**
+     * Show the form for selecting students for midline/endline assessments.
+     */
+    public function selectStudents(Request $request)
+    {
+        $user = $request->user();
+        
+        // Check if user can select students (admin or teacher)
+        if (!in_array($user->role, ['admin', 'teacher'])) {
+            abort(403);
+        }
+
+        $assessmentType = $request->get('type', 'midline');
+        if (!in_array($assessmentType, ['midline', 'endline'])) {
+            $assessmentType = 'midline';
+        }
+
+        // Get students based on user role
+        $query = Student::with(['school', 'schoolClass', 'assessmentEligibility']);
+
+        if ($user->isTeacher()) {
+            // Teachers can only select their own students
+            $query->where('school_id', $user->school_id)
+                  ->whereHas('class', function ($q) use ($user) {
+                      $q->where('teacher_id', $user->id);
+                  });
+        } elseif ($user->isAdmin()) {
+            // Admins can see all students, optionally filtered by school
+            if ($request->filled('school_id')) {
+                $query->where('school_id', $request->get('school_id'));
+            }
+        }
+
+        // Add search functionality
+        if ($request->filled('search')) {
+            $search = $request->get('search');
+            $query->where('name', 'like', "%{$search}%");
+        }
+
+        // Filter by grade
+        if ($request->filled('grade')) {
+            $query->where('grade', $request->get('grade'));
+        }
+
+        $students = $query->orderBy('name')->paginate(50)->withQueryString();
+
+        // Get current eligibility status for each student
+        $eligibleStudentIds = StudentAssessmentEligibility::where('assessment_type', $assessmentType)
+            ->where('is_eligible', true)
+            ->pluck('student_id')
+            ->toArray();
+
+        $schools = School::orderBy('school_name')->get();
+
+        return view('assessments.select-students', compact(
+            'students',
+            'assessmentType',
+            'eligibleStudentIds',
+            'schools'
+        ));
+    }
+
+    /**
+     * Update the students selected for midline/endline assessments.
+     */
+    public function updateSelectedStudents(Request $request)
+    {
+        $user = $request->user();
+        
+        // Check if user can select students (admin or teacher)
+        if (!in_array($user->role, ['admin', 'teacher'])) {
+            abort(403);
+        }
+
+        $request->validate([
+            'assessment_type' => 'required|in:midline,endline',
+            'students' => 'array',
+            'students.*' => 'exists:students,id',
+        ]);
+
+        $assessmentType = $request->get('assessment_type');
+        $selectedStudentIds = $request->get('students', []);
+
+        // Get students the user has access to
+        $accessibleStudentIds = Student::when($user->isTeacher(), function ($q) use ($user) {
+            $q->where('school_id', $user->school_id)
+              ->whereHas('class', function ($cq) use ($user) {
+                  $cq->where('teacher_id', $user->id);
+              });
+        })->pluck('id')->toArray();
+
+        // Clear existing eligibility for these students and assessment type
+        StudentAssessmentEligibility::whereIn('student_id', $accessibleStudentIds)
+            ->where('assessment_type', $assessmentType)
+            ->delete();
+
+        // Add new eligibility records
+        $eligibilityData = [];
+        foreach ($selectedStudentIds as $studentId) {
+            // Ensure the user has access to this student
+            if (in_array($studentId, $accessibleStudentIds)) {
+                $eligibilityData[] = [
+                    'student_id' => $studentId,
+                    'assessment_type' => $assessmentType,
+                    'selected_by' => $user->id,
+                    'is_eligible' => true,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
+            }
+        }
+
+        if (!empty($eligibilityData)) {
+            StudentAssessmentEligibility::insert($eligibilityData);
+        }
+
+        return redirect()->route('assessments.select-students', ['type' => $assessmentType])
+            ->with('success', __('Students selected for :type assessment successfully.', ['type' => ucfirst($assessmentType)]));
     }
 }

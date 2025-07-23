@@ -5,6 +5,12 @@
                 {{ __('Student Details') }}
             </h2>
             <div class="flex gap-2">
+                <a href="{{ route('students.assessment-history', $student) }}" class="inline-flex items-center px-3 py-1.5 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    {{ __('Assessment History') }}
+                </a>
                 @can('update', $student)
                     <a href="{{ route('students.edit', $student) }}" class="inline-flex items-center px-3 py-1.5 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
                         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -24,7 +30,7 @@
     </x-slot>
 
     <div class="py-6">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="w-full px-4 sm:px-6 lg:px-8">
             <!-- Student Info Card -->
             <div class="bg-white overflow-hidden shadow-sm rounded-lg mb-6">
                 <div class="p-4 sm:p-6">
@@ -107,13 +113,31 @@
             <div class="bg-white overflow-hidden shadow-sm rounded-lg">
                 <div class="p-4 sm:p-6">
                     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
-                        <h3 class="text-lg font-semibold text-gray-900">{{ __('Assessment History') }}</h3>
-                        @if($student->assessments->count() > 0)
-                            <span class="text-sm text-gray-500 mt-1 sm:mt-0">
-                                {{ $student->assessments->count() }} {{ __('assessment(s)') }}
-                            </span>
-                        @endif
+                        <h3 class="text-lg font-semibold text-gray-900">{{ __('Current Assessments') }}</h3>
+                        <div class="flex gap-4">
+                            @if($student->assessments->count() > 0)
+                                <span class="text-sm text-gray-500 mt-1 sm:mt-0">
+                                    {{ $student->assessments->count() }} {{ __('assessment(s)') }}
+                                </span>
+                            @endif
+                            @php
+                                $historyCount = \App\Models\AssessmentHistory::where('student_id', $student->id)->count();
+                            @endphp
+                            @if($historyCount > 0)
+                                <span class="text-sm text-gray-500 mt-1 sm:mt-0">
+                                    {{ $historyCount }} {{ __('change(s)') }}
+                                </span>
+                            @endif
+                        </div>
                     </div>
+                    
+                    @if($historyCount > 0)
+                        <div class="mb-4 text-sm text-gray-600 bg-blue-50 p-3 rounded-lg">
+                            <span class="font-medium">{{ __('Note') }}:</span> 
+                            {{ __('This shows current assessments only.') }} 
+                            {{ __('Click "Assessment History" button above to view all') }} {{ $historyCount }} {{ __('changes.') }}
+                        </div>
+                    @endif
                     
                     @if($student->assessments->count() > 0)
                         <!-- Mobile View -->

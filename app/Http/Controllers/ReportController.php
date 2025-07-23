@@ -771,7 +771,7 @@ class ReportController extends Controller
     private function calculateLevelImprovement($baselineLevel, $currentLevel, $subject)
     {
         $levels = $subject === 'khmer'
-            ? ['Beginner' => 0, 'Letter Reader' => 1, 'Word Level' => 2, 'Paragraph Reader' => 3, 'Story Reader' => 4, 'Comp. 1' => 5, 'Comp. 2' => 6]
+            ? ['Beginner' => 0, 'Reader' => 1, 'Word' => 2, 'Paragraph' => 3, 'Story' => 4, 'Comp. 1' => 5, 'Comp. 2' => 6]
             : ['Beginner' => 0, '1-Digit' => 1, '2-Digit' => 2, 'Subtraction' => 3, 'Division' => 4, 'Word Problem' => 5];
 
         $baselineIndex = $levels[$baselineLevel] ?? 0;

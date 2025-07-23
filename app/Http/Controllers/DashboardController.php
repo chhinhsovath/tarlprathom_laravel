@@ -17,13 +17,22 @@ class DashboardController extends Controller
     {
         $user = auth()->user();
 
-        // Get schools for mentors
+        // Get schools for mentors/admins
         $schools = [];
+        $provinces = [];
+        $districts = [];
+        $clusters = [];
+
         if ($user->role === 'mentor' || $user->role === 'admin') {
             $schools = School::orderBy('school_name')->get();
+
+            // Get unique provinces, districts, and clusters
+            $provinces = School::distinct()->orderBy('province')->pluck('province')->filter()->values();
+            $districts = School::distinct()->orderBy('district')->pluck('district')->filter()->values();
+            $clusters = School::distinct()->orderBy('cluster')->pluck('cluster')->filter()->values();
         }
 
-        return view('dashboard', compact('schools'));
+        return view('dashboard', compact('schools', 'provinces', 'districts', 'clusters'));
     }
 
     /**
@@ -38,6 +47,7 @@ class DashboardController extends Controller
         $studentQuery = Student::query();
         $assessmentQuery = Assessment::query();
         $mentoringQuery = MentoringVisit::query();
+        $schoolQuery = School::query();
 
         // Filter by school for teachers
         if ($user->role === 'teacher') {
@@ -47,18 +57,55 @@ class DashboardController extends Controller
             });
         }
 
-        // Filter by selected school for mentors/admins
-        if ($request->has('school_id') && $request->school_id) {
-            $studentQuery->where('school_id', $request->school_id);
-            $assessmentQuery->whereHas('student', function ($q) use ($request) {
-                $q->where('school_id', $request->school_id);
-            });
-            $mentoringQuery->where('school_id', $request->school_id);
+        // Apply filters for mentors/admins
+        if ($user->role === 'mentor' || $user->role === 'admin') {
+            // Filter by province
+            if ($request->has('province') && $request->province) {
+                $schoolIds = School::where('province', $request->province)->pluck('id');
+                $studentQuery->whereIn('school_id', $schoolIds);
+                $assessmentQuery->whereHas('student', function ($q) use ($schoolIds) {
+                    $q->whereIn('school_id', $schoolIds);
+                });
+                $mentoringQuery->whereIn('school_id', $schoolIds);
+                $schoolQuery->where('province', $request->province);
+            }
+
+            // Filter by district
+            if ($request->has('district') && $request->district) {
+                $schoolIds = School::where('district', $request->district)->pluck('id');
+                $studentQuery->whereIn('school_id', $schoolIds);
+                $assessmentQuery->whereHas('student', function ($q) use ($schoolIds) {
+                    $q->whereIn('school_id', $schoolIds);
+                });
+                $mentoringQuery->whereIn('school_id', $schoolIds);
+                $schoolQuery->where('district', $request->district);
+            }
+
+            // Filter by cluster
+            if ($request->has('cluster') && $request->cluster) {
+                $schoolIds = School::where('cluster', $request->cluster)->pluck('id');
+                $studentQuery->whereIn('school_id', $schoolIds);
+                $assessmentQuery->whereHas('student', function ($q) use ($schoolIds) {
+                    $q->whereIn('school_id', $schoolIds);
+                });
+                $mentoringQuery->whereIn('school_id', $schoolIds);
+                $schoolQuery->where('cluster', $request->cluster);
+            }
+
+            // Filter by selected school
+            if ($request->has('school_id') && $request->school_id) {
+                $studentQuery->where('school_id', $request->school_id);
+                $assessmentQuery->whereHas('student', function ($q) use ($request) {
+                    $q->where('school_id', $request->school_id);
+                });
+                $mentoringQuery->where('school_id', $request->school_id);
+                $schoolQuery->where('id', $request->school_id);
+            }
         }
 
         $stats['total_students'] = $studentQuery->count();
         $stats['total_assessments'] = $assessmentQuery->count();
-        $stats['total_schools'] = School::count();
+        $stats['total_schools'] = $schoolQuery->count();
         $stats['total_mentoring_visits'] = $mentoringQuery->count();
 
         return response()->json($stats);
@@ -74,7 +121,7 @@ class DashboardController extends Controller
 
         // Define levels based on subject
         if ($subject === 'khmer') {
-            $levels = ['Beginner', 'Letter Reader', 'Word Level', 'Paragraph Reader', 'Story Reader'];
+            $levels = ['Beginner', 'Reader', 'Word', 'Paragraph', 'Story'];
         } else {
             $levels = ['Beginner', '1-Digit', '2-Digit', 'Subtraction', 'Division'];
         }
@@ -90,21 +137,48 @@ class DashboardController extends Controller
             });
         }
 
-        // Filter by selected school for mentors/admins
-        if ($request->has('school_id') && $request->school_id) {
-            $query->whereHas('student', function ($q) use ($request) {
-                $q->where('school_id', $request->school_id);
-            });
+        // Apply filters for mentors/admins
+        if ($user->role === 'mentor' || $user->role === 'admin') {
+            // Filter by province
+            if ($request->has('province') && $request->province) {
+                $schoolIds = School::where('province', $request->province)->pluck('id');
+                $query->whereHas('student', function ($q) use ($schoolIds) {
+                    $q->whereIn('school_id', $schoolIds);
+                });
+            }
+
+            // Filter by district
+            if ($request->has('district') && $request->district) {
+                $schoolIds = School::where('district', $request->district)->pluck('id');
+                $query->whereHas('student', function ($q) use ($schoolIds) {
+                    $q->whereIn('school_id', $schoolIds);
+                });
+            }
+
+            // Filter by cluster
+            if ($request->has('cluster') && $request->cluster) {
+                $schoolIds = School::where('cluster', $request->cluster)->pluck('id');
+                $query->whereHas('student', function ($q) use ($schoolIds) {
+                    $q->whereIn('school_id', $schoolIds);
+                });
+            }
+
+            // Filter by selected school
+            if ($request->has('school_id') && $request->school_id) {
+                $query->whereHas('student', function ($q) use ($request) {
+                    $q->where('school_id', $request->school_id);
+                });
+            }
         }
 
         // Get data for each cycle
         $datasets = [];
         $colors = [
             'Beginner' => '#d32f2f',
-            'Letter Reader' => '#f57c00',
-            'Word Level' => '#fbc02d',
-            'Paragraph Reader' => '#388e3c',
-            'Story Reader' => '#2e7d32',
+            'Reader' => '#f57c00',
+            'Word' => '#fbc02d',
+            'Paragraph' => '#388e3c',
+            'Story' => '#2e7d32',
             '1-Digit' => '#f57c00',
             '2-Digit' => '#fbc02d',
             'Subtraction' => '#388e3c',
@@ -161,28 +235,59 @@ class DashboardController extends Controller
 
         // Define levels based on subject
         if ($subject === 'khmer') {
-            $levels = ['Beginner', 'Letter Reader', 'Word Level', 'Paragraph Reader', 'Story Reader'];
+            $levels = ['Beginner', 'Reader', 'Word', 'Paragraph', 'Story'];
         } else {
             $levels = ['Beginner', '1-Digit', '2-Digit', 'Subtraction', 'Division'];
         }
 
-        // Get schools
-        $schools = School::orderBy('school_name')->get();
+        // Get schools with filters
+        $schoolQuery = School::orderBy('school_name');
+
+        // Apply filters
+        if ($request->has('province') && $request->province) {
+            $schoolQuery->where('province', $request->province);
+        }
+
+        if ($request->has('district') && $request->district) {
+            $schoolQuery->where('district', $request->district);
+        }
+
+        if ($request->has('cluster') && $request->cluster) {
+            $schoolQuery->where('cluster', $request->cluster);
+        }
+
+        if ($request->has('school_id') && $request->school_id) {
+            $schoolQuery->where('id', $request->school_id);
+        }
+
+        $schools = $schoolQuery->get();
         $schoolNames = $schools->pluck('school_name')->toArray();
 
         // Prepare datasets
         $datasets = [];
         $colors = [
             'Beginner' => '#d32f2f',
-            'Letter Reader' => '#f57c00',
-            'Word Level' => '#fbc02d',
-            'Paragraph Reader' => '#388e3c',
-            'Story Reader' => '#2e7d32',
+            'Reader' => '#f57c00',
+            'Word' => '#fbc02d',
+            'Paragraph' => '#388e3c',
+            'Story' => '#2e7d32',
             '1-Digit' => '#f57c00',
             '2-Digit' => '#fbc02d',
             'Subtraction' => '#388e3c',
             'Division' => '#2e7d32',
         ];
+
+        // First, get total students per school for the specific cycle
+        $schoolTotals = [];
+        foreach ($schools as $school) {
+            $total = Assessment::where('subject', $subject)
+                ->where('cycle', $cycle)
+                ->whereHas('student', function ($q) use ($school) {
+                    $q->where('school_id', $school->id);
+                })
+                ->count();
+            $schoolTotals[$school->id] = $total;
+        }
 
         foreach ($levels as $level) {
             $data = [];
@@ -194,7 +299,11 @@ class DashboardController extends Controller
                         $q->where('school_id', $school->id);
                     })
                     ->count();
-                $data[] = $count;
+
+                // Calculate percentage
+                $total = $schoolTotals[$school->id];
+                $percentage = $total > 0 ? round(($count / $total) * 100, 1) : 0;
+                $data[] = $percentage;
             }
 
             $datasets[] = [

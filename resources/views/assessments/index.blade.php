@@ -1,17 +1,24 @@
 <x-app-layout>
 
     <div class="py-6">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="w-full px-4 sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
                     <!-- Header with Action Button -->
                     <div class="flex justify-between items-center mb-6">
                         <h3 class="text-lg font-medium text-gray-900">{{ __('Assessments') }}</h3>
-                        @if(in_array(auth()->user()->role, ['admin', 'teacher', 'mentor']))
-                        <a href="{{ route('assessments.create') }}" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700">
-                            {{ __('New Assessment') }}
-                        </a>
-                        @endif
+                        <div class="flex space-x-2">
+                            @if(in_array(auth()->user()->role, ['admin', 'teacher']))
+                            <a href="{{ route('assessments.select-students') }}" class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700">
+                                {{ __('Select Students') }}
+                            </a>
+                            @endif
+                            @if(in_array(auth()->user()->role, ['admin', 'teacher', 'mentor']))
+                            <a href="{{ route('assessments.create') }}" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700">
+                                {{ __('New Assessment') }}
+                            </a>
+                            @endif
+                        </div>
                     </div>
 
                     <!-- Search and Filters -->
@@ -22,6 +29,20 @@
                                     placeholder="{{ __('Search by student name...') }}" 
                                     class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                             </div>
+                            
+                            @if(auth()->user()->isAdmin() || auth()->user()->isMentor())
+                            <div>
+                                <select name="school_id" class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                    <option value="">{{ __('All Schools') }}</option>
+                                    @foreach($schools as $school)
+                                        <option value="{{ $school->id }}" {{ request('school_id') == $school->id ? 'selected' : '' }}>
+                                            {{ $school->school_name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            @endif
+                            
                             <div>
                                 <select name="subject" class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                                     <option value="">{{ __('All Subjects') }}</option>
@@ -37,11 +58,20 @@
                                     <option value="endline" {{ request('cycle') == 'endline' ? 'selected' : '' }}>{{ __('Endline') }}</option>
                                 </select>
                             </div>
+                            
+                            <div>
+                                <select name="grade" class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                    <option value="">{{ __('All Grades') }}</option>
+                                    <option value="4" {{ request('grade') == 4 ? 'selected' : '' }}>{{ __('Grade') }} 4</option>
+                                    <option value="5" {{ request('grade') == 5 ? 'selected' : '' }}>{{ __('Grade') }} 5</option>
+                                </select>
+                            </div>
+                            
                             <div class="flex gap-2">
                                 <button type="submit" class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
                                     {{ __('Search') }}
                                 </button>
-                                @if(request('search') || request('subject') || request('cycle'))
+                                @if(request('search') || request('subject') || request('cycle') || request('school_id') || request('grade'))
                                     <a href="{{ route('assessments.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-300 border border-transparent rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest hover:bg-gray-400 focus:bg-gray-400 active:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition ease-in-out duration-150">
                                         {{ __('Clear') }}
                                     </a>
@@ -106,9 +136,9 @@
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                            @if(in_array($assessment->level, ['Story Reader', 'Comp. 1', 'Comp. 2'])) 
+                                            @if(in_array($assessment->level, ['Story', 'Comp. 1', 'Comp. 2'])) 
                                                 bg-green-100 text-green-800
-                                            @elseif(in_array($assessment->level, ['Paragraph Reader', 'Word Level']))
+                                            @elseif(in_array($assessment->level, ['Paragraph', 'Word']))
                                                 bg-yellow-100 text-yellow-800
                                             @else
                                                 bg-red-100 text-red-800

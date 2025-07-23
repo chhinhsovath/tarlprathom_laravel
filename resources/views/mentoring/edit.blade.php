@@ -1,6 +1,6 @@
 <x-app-layout>
     <div class="py-6">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="w-full px-4 sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
                     <h3 class="text-lg font-medium text-gray-900 mb-6">{{ __('Edit Mentoring Visit') }}</h3>
@@ -305,7 +305,7 @@
                                         {{ __('TaRL Level(s) observed (Language)') }} <span class="text-red-500">*</span>
                                     </p>
                                     <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
-                                        @foreach(['Beginner', 'Letter Level', 'Word Level', 'Paragraph Reader', 'Story Reader'] as $level)
+                                        @foreach(['Beginner', 'Letter Level', 'Word', 'Paragraph', 'Story'] as $level)
                                         <label class="flex items-center">
                                             <input type="checkbox" name="language_levels_observed[]" value="{{ $level }}" 
                                                    class="mr-2 text-indigo-600 focus:ring-indigo-500"
@@ -871,38 +871,6 @@
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
                                 </div>
-                                
-                                <!-- Photo Upload -->
-                                <div>
-                                    <label for="photo" class="block text-sm font-medium text-gray-700 mb-2">
-                                        {{ __('Upload Photo from Visit') }}
-                                    </label>
-                                    @if($mentoringVisit->photo)
-                                        <div class="mb-3">
-                                            <p class="text-sm text-gray-600 mb-2">{{ __('Current Photo:') }}</p>
-                                            <img src="{{ Storage::url($mentoringVisit->photo) }}" alt="{{ __('Visit Photo') }}" class="h-32 rounded-lg shadow-sm">
-                                        </div>
-                                    @endif
-                                    <div class="flex items-center space-x-4">
-                                        <label for="photo" class="cursor-pointer inline-flex items-center px-4 py-2 bg-indigo-50 border border-indigo-300 rounded-md font-semibold text-sm text-indigo-700 hover:bg-indigo-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                                            </svg>
-                                            {{ __('Choose File') }}
-                                        </label>
-                                        <span id="fileName" class="text-sm text-gray-500">{{ __('No file chosen') }}</span>
-                                    </div>
-                                    <input type="file" 
-                                           id="photo" 
-                                           name="photo" 
-                                           accept="image/*"
-                                           class="hidden"
-                                           onchange="updateFileName(this)">
-                                    <p class="mt-1 text-xs text-gray-500">{{ __('Accepted formats: JPEG, PNG, JPG, GIF. Max size: 5MB') }}</p>
-                                    @error('photo')
-                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                    @enderror
-                                </div>
                             </div>
                         </div>
 
@@ -1187,15 +1155,6 @@
             updateProgress();
         });
         
-        // File upload function
-        function updateFileName(input) {
-            const fileName = document.getElementById('fileName');
-            if (input.files && input.files.length > 0) {
-                fileName.textContent = input.files[0].name;
-            } else {
-                fileName.textContent = '{{ __("No file chosen") }}';
-            }
-        }
     </script>
     @endpush
 </x-app-layout>

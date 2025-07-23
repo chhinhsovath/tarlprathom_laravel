@@ -6,7 +6,7 @@
     </x-slot>
 
     <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="w-full px-4 sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                     <form method="POST" action="{{ route('students.update', $student) }}" class="space-y-6" enctype="multipart/form-data">
@@ -25,11 +25,12 @@
                             <x-input-label for="grade" :value="__('Grade')" />
                             <select id="grade" name="grade" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
                                 <option value="">{{ __('Select Grade') }}</option>
-                                @for($i = 1; $i <= 6; $i++)
-                                    <option value="{{ $i }}" {{ old('grade', $student->grade) == $i ? 'selected' : '' }}>
-                                        {{ __('Grade') }} {{ $i }}
-                                    </option>
-                                @endfor
+                                <option value="4" {{ old('grade', $student->grade) == 4 ? 'selected' : '' }}>
+                                    {{ __('Grade') }} 4
+                                </option>
+                                <option value="5" {{ old('grade', $student->grade) == 5 ? 'selected' : '' }}>
+                                    {{ __('Grade') }} 5
+                                </option>
                             </select>
                             <x-input-error class="mt-2" :messages="$errors->get('grade')" />
                         </div>

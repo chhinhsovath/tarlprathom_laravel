@@ -157,7 +157,7 @@ class StudentManagementTest extends TestCase
                 'student_id' => $student->id,
                 'subject' => 'khmer',
                 'cycle' => 'baseline',
-                'level' => 'Word Level',
+                'level' => 'Word',
                 'gender' => 'male'
             ]);
             
@@ -170,7 +170,7 @@ class StudentManagementTest extends TestCase
         $this->assertDatabaseHas('assessments', [
             'student_id' => $student->id,
             'subject' => 'khmer',
-            'level' => 'Word Level'
+            'level' => 'Word'
         ]);
     }
 }
@@ -216,7 +216,7 @@ describe('Assessment Module', () => {
             data: {
                 student_id: 1,
                 subject: 'khmer',
-                level: 'Word Level'
+                level: 'Word'
             },
             success: (response) => {
                 expect(response.success).toBe(true);
@@ -282,7 +282,7 @@ class AssessmentFlowTest extends TestCase
 
         // 2. Save individual assessments via AJAX
         foreach ($students as $index => $student) {
-            $levels = ['Beginner', 'Letter Reader', 'Word Level'];
+            $levels = ['Beginner', 'Reader', 'Word'];
             $level = $levels[$index % 3];
             
             $response = $this->actingAs($teacher)

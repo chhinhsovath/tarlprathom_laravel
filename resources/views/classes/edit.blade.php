@@ -26,11 +26,12 @@
                             <x-input-label for="grade_level" :value="__('Grade Level')" />
                             <select id="grade_level" name="grade_level" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
                                 <option value="">{{ __('Select Grade Level') }}</option>
-                                @for($i = 1; $i <= 6; $i++)
-                                    <option value="{{ $i }}" {{ old('grade_level', $class->grade_level) == $i ? 'selected' : '' }}>
-                                        {{ __('Grade') }} {{ $i }}
-                                    </option>
-                                @endfor
+                                <option value="4" {{ old('grade_level', $class->grade_level) == 4 ? 'selected' : '' }}>
+                                    {{ __('Grade') }} 4
+                                </option>
+                                <option value="5" {{ old('grade_level', $class->grade_level) == 5 ? 'selected' : '' }}>
+                                    {{ __('Grade') }} 5
+                                </option>
                             </select>
                             <x-input-error class="mt-2" :messages="$errors->get('grade_level')" />
                         </div>

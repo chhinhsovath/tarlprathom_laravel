@@ -45,12 +45,24 @@
     <div class="min-h-screen bg-gray-50">
         <!-- Navigation -->
         <nav class="bg-white shadow">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="w-full px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between h-16">
                     <div class="flex items-center">
                         <h1 class="text-xl font-semibold">{{ __('TaRL Project') }}</h1>
                     </div>
                     <div class="flex items-center space-x-4">
+
+                                    <a 
+           href="https://plp.moeys.gov.kh" class="inline-flex 
+           items-center px-1 pt-1 border-b-2 border-transparent 
+           text-sm font-medium leading-5 text-gray-500 
+           hover:text-gray-700 hover:border-gray-300 
+           focus:outline-none focus:text-gray-700 
+           focus:border-gray-300 transition duration-150 
+           ease-in-out">
+                                 {{ __('PLP') }}
+                             </a> 
+                             
                         @if (Route::has('login'))
                             @auth
                                 <a href="{{ url('/dashboard') }}" class="text-sm text-gray-700 hover:text-gray-900">{{ __('Dashboard') }}</a>
@@ -86,7 +98,7 @@
                 
                 <!-- Chart Container -->
                 <div class="mb-8 relative" style="height: 300px;" id="chartContainer">
-                    <div class="loading-spinner">
+                    <div class="loading-spinner" style="display: none;">
                         <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
                     </div>
                     <canvas id="assessmentChart"></canvas>

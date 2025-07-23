@@ -107,7 +107,6 @@ class StoreMentoringVisitRequest extends FormRequest
             'action_plan' => 'nullable|string',
             'score' => 'nullable|integer|min:0|max:100',
             'follow_up_required' => 'nullable|in:Yes,No',
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
         ];
     }
 
@@ -124,9 +123,6 @@ class StoreMentoringVisitRequest extends FormRequest
             'visit_date.date' => 'The visit date must be a valid date.',
             'score.min' => 'The score must be at least 0.',
             'score.max' => 'The score must not exceed 100.',
-            'photo.image' => 'The photo must be an image.',
-            'photo.mimes' => 'The photo must be a file of type: jpeg, png, jpg, gif.',
-            'photo.max' => 'The photo may not be greater than 5MB.',
         ];
     }
 }

@@ -10,7 +10,6 @@ use App\Models\User;
 use App\Traits\Sortable;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 
 class MentoringVisitController extends Controller
@@ -36,12 +35,18 @@ class MentoringVisitController extends Controller
             // Teachers can only see visits where they are the teacher
             $query->where('teacher_id', $user->id);
         } elseif ($user->isMentor()) {
-            // Mentors can see their own visits
-            $query->where('mentor_id', $user->id);
+            // Mentors can see visits for their assigned schools
+            $assignedSchoolIds = $user->assignedSchools()->pluck('schools.id')->toArray();
+            if (!empty($assignedSchoolIds)) {
+                $query->whereIn('school_id', $assignedSchoolIds);
+            } else {
+                // If no schools assigned, show no visits
+                $query->whereRaw('1 = 0');
+            }
         }
 
         // Add search functionality
-        if ($request->has('search') && $request->get('search') !== '') {
+        if ($request->filled('search')) {
             $search = $request->get('search');
             $query->where(function ($q) use ($search) {
                 $q->where('observation', 'like', "%{$search}%")
@@ -59,23 +64,23 @@ class MentoringVisitController extends Controller
         }
 
         // Add filters
-        if ($request->has('school_id') && $request->get('school_id') !== '') {
+        if ($request->filled('school_id')) {
             $query->where('school_id', $request->get('school_id'));
         }
 
-        if ($request->has('mentor_id') && $request->get('mentor_id') !== '') {
+        if ($request->filled('mentor_id')) {
             $query->where('mentor_id', $request->get('mentor_id'));
         }
 
-        if ($request->has('teacher_id') && $request->get('teacher_id') !== '') {
+        if ($request->filled('teacher_id')) {
             $query->where('teacher_id', $request->get('teacher_id'));
         }
 
         // Filter by date range
-        if ($request->has('from_date')) {
+        if ($request->filled('from_date')) {
             $query->where('visit_date', '>=', $request->get('from_date'));
         }
-        if ($request->has('to_date')) {
+        if ($request->filled('to_date')) {
             $query->where('visit_date', '<=', $request->get('to_date'));
         }
 
@@ -104,7 +109,14 @@ class MentoringVisitController extends Controller
         }
 
         // Get schools for dropdown
-        $schools = School::orderBy('school_name')->get();
+        $user = $request->user();
+        if ($user->isMentor()) {
+            // Mentors can only see their assigned schools
+            $schools = $user->assignedSchools()->orderBy('school_name')->get();
+        } else {
+            // Admins can see all schools
+            $schools = School::orderBy('school_name')->get();
+        }
 
         // Get provinces from schools table (distinct values)
         $provinces = School::distinct()
@@ -186,10 +198,12 @@ class MentoringVisitController extends Controller
             return back()->withErrors(['teacher_id' => __('The selected teacher does not belong to the selected school.')]);
         }
 
-        // Handle photo upload if present
-        if ($request->hasFile('photo')) {
-            $path = $request->file('photo')->store('mentoring-visits', 'public');
-            $validated['photo'] = $path;
+        // Verify mentor has access to the school
+        if ($request->user()->isMentor()) {
+            $assignedSchoolIds = $request->user()->assignedSchools()->pluck('schools.id')->toArray();
+            if (!in_array($validated['school_id'], $assignedSchoolIds)) {
+                return back()->withErrors(['school_id' => __('You are not assigned to this school.')]);
+            }
         }
 
         $mentoringVisit = MentoringVisit::create($validated);
@@ -234,9 +248,13 @@ class MentoringVisitController extends Controller
         } else {
             abort(403);
         }
-
-        // Get schools for dropdown
-        $schools = School::orderBy('school_name')->get();
+        if ($user->isMentor()) {
+            // Mentors can only see their assigned schools
+            $schools = $user->assignedSchools()->orderBy('school_name')->get();
+        } else {
+            // Admins can see all schools
+            $schools = School::orderBy('school_name')->get();
+        }
 
         // Get provinces from schools table (distinct values)
         $provinces = School::distinct()
@@ -319,17 +337,6 @@ class MentoringVisitController extends Controller
             return back()->withErrors(['teacher_id' => __('The selected teacher does not belong to the selected school.')]);
         }
 
-        // Handle photo upload if present
-        if ($request->hasFile('photo')) {
-            // Delete old photo if exists
-            if ($mentoringVisit->photo) {
-                Storage::delete($mentoringVisit->photo);
-            }
-
-            $path = $request->file('photo')->store('mentoring-visits', 'public');
-            $validated['photo'] = $path;
-        }
-
         $mentoringVisit->update($validated);
 
         return redirect()->route('mentoring.show', $mentoringVisit)
@@ -346,11 +353,6 @@ class MentoringVisitController extends Controller
         // Check if user can delete this mentoring visit
         if (! ($user->isAdmin() || $mentoringVisit->mentor_id === $user->id)) {
             abort(403);
-        }
-
-        // Delete photo if exists
-        if ($mentoringVisit->photo) {
-            Storage::delete($mentoringVisit->photo);
         }
 
         $mentoringVisit->delete();

@@ -8,6 +8,7 @@ use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\MentoringVisitController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\ResourceController;
 use App\Http\Controllers\SchoolController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\StudentController;
@@ -17,9 +18,58 @@ use Illuminate\Support\Facades\Route;
 // Language switching
 Route::get('/language/{locale}', [LanguageController::class, 'switch'])->name('language.switch');
 
+// Test translation page
+Route::get('/test-translation', function() {
+    return view('test-translation');
+})->middleware(['auth']);
+
+// Debug locale
+Route::get('/debug-locale', function() {
+    $langPath = app()->langPath();
+    $jsonFile = $langPath . '/' . app()->getLocale() . '.json';
+    $translations = [];
+    if (file_exists($jsonFile)) {
+        $translations = json_decode(file_get_contents($jsonFile), true);
+    }
+    
+    // Test if translations are working
+    $testKeys = [
+        'Bulk Import Students',
+        'Instructions', 
+        'Download Excel Template',
+        'Name',
+        'Age',
+        'Gender'
+    ];
+    
+    $testResults = [];
+    foreach ($testKeys as $key) {
+        $testResults[$key] = __($key);
+    }
+    
+    return [
+        'app_locale' => app()->getLocale(),
+        'session_locale' => session('locale'),
+        'cookie_locale' => request()->cookie('locale'),
+        'config_locale' => config('app.locale'),
+        'lang_path' => $langPath,
+        'json_file' => $jsonFile,
+        'json_exists' => file_exists($jsonFile),
+        'translations_count' => count($translations),
+        'test_translations' => $testResults,
+        'lang_path_real' => realpath($langPath),
+        'json_file_real' => realpath($jsonFile),
+        'translator_locale' => app('translator')->getLocale()
+    ];
+});
+
 // Public routes
 Route::get('/', [AssessmentController::class, 'publicResults'])->name('public.assessment-results');
 Route::get('/api/assessment-data', [AssessmentController::class, 'getChartData'])->name('api.assessment-data');
+Route::get('/resources', [ResourceController::class, 'publicIndex'])->name('resources.public');
+Route::get('/resources/{resource}', [ResourceController::class, 'publicShow'])->name('resources.public.show');
+Route::get('/resources/{resource}/download', [ResourceController::class, 'download'])->name('resources.download');
+Route::post('/api/resources/{resource}/track-view', [ResourceController::class, 'trackView'])->name('api.resources.track-view');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
@@ -35,9 +85,19 @@ Route::middleware('auth')->group(function () {
     Route::get('/api/dashboard/overall-results', [DashboardController::class, 'getOverallResults'])->name('api.dashboard.overall-results');
     Route::get('/api/dashboard/results-by-school', [DashboardController::class, 'getResultsBySchool'])->name('api.dashboard.results-by-school');
 
+    // User API endpoints
+    Route::get('/api/users', [UserController::class, 'apiGetUsersByRole'])->name('api.users.by-role');
+
+    // School API endpoints
+    Route::get('/api/school/{school}/teachers', [SchoolController::class, 'getTeachers'])->name('api.school.teachers');
+
     // Student Management Routes
-    Route::resource('students', StudentController::class);
     Route::get('/students/export', [StudentController::class, 'export'])->name('students.export');
+    Route::get('/students/{student}/assessment-history', [StudentController::class, 'assessmentHistory'])->name('students.assessment-history');
+    Route::get('/students/download-template', [StudentController::class, 'downloadTemplate'])->name('students.download-template');
+    Route::get('/students/bulk-import', [StudentController::class, 'bulkImportForm'])->name('students.bulk-import-form');
+    Route::post('/students/bulk-import', [StudentController::class, 'bulkImport'])->name('students.bulk-import');
+    Route::resource('students', StudentController::class);
     Route::get('/students/import', function () {
         return view('students.import');
     })->name('students.import')->middleware('role:admin,teacher');
@@ -46,8 +106,10 @@ Route::middleware('auth')->group(function () {
     Route::resource('classes', ClassController::class);
 
     // Assessment Routes
-    Route::resource('assessments', AssessmentController::class)->only(['index', 'create', 'store', 'show']);
     Route::get('/assessments/export', [AssessmentController::class, 'export'])->name('assessments.export');
+    Route::get('/assessments/select-students', [AssessmentController::class, 'selectStudents'])->name('assessments.select-students');
+    Route::post('/assessments/select-students', [AssessmentController::class, 'updateSelectedStudents'])->name('assessments.update-selected-students');
+    Route::resource('assessments', AssessmentController::class)->only(['index', 'create', 'store', 'show']);
     Route::post('/api/assessments/save-student', [AssessmentController::class, 'saveStudentAssessment'])->name('api.assessments.save-student');
     Route::post('/api/assessments/submit-all', [AssessmentController::class, 'submitAllAssessments'])->name('api.assessments.submit-all');
 
@@ -57,6 +119,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/mentoring/create', [MentoringVisitController::class, 'create'])->name('mentoring.create');
     Route::post('/mentoring', [MentoringVisitController::class, 'store'])->name('mentoring.store');
     Route::get('/mentoring/{mentoringVisit}', [MentoringVisitController::class, 'show'])->name('mentoring.show');
+    Route::get('/mentoring/{mentoringVisit}/edit', [MentoringVisitController::class, 'edit'])->name('mentoring.edit');
+    Route::put('/mentoring/{mentoringVisit}', [MentoringVisitController::class, 'update'])->name('mentoring.update');
+    Route::delete('/mentoring/{mentoringVisit}', [MentoringVisitController::class, 'destroy'])->name('mentoring.destroy');
 
     // Reports Routes
     Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
@@ -73,10 +138,38 @@ Route::middleware('auth')->group(function () {
     // Admin Routes
     Route::middleware(['auth'])->group(function () {
         // User Management
+        Route::get('/users/bulk-import', [UserController::class, 'bulkImportForm'])->name('users.bulk-import-form');
+        Route::post('/users/bulk-import', [UserController::class, 'bulkImport'])->name('users.bulk-import');
+        Route::get('/users/bulk-import-enhanced', [UserController::class, 'bulkImportEnhancedForm'])->name('users.bulk-import-enhanced-form');
+        Route::post('/users/bulk-import-enhanced', [UserController::class, 'bulkImportEnhanced'])->name('users.bulk-import-enhanced');
+        Route::get('/users/download-template', [UserController::class, 'downloadTemplate'])->name('users.download-template');
+        Route::get('/users/{user}/assign-schools', [UserController::class, 'assignSchools'])->name('users.assign-schools');
+        Route::post('/users/{user}/assign-schools', [UserController::class, 'updateAssignedSchools'])->name('users.update-assigned-schools');
         Route::resource('users', UserController::class);
 
         // School Management
+        Route::get('/schools/bulk-import', [SchoolController::class, 'bulkImportForm'])->name('schools.bulk-import-form');
+        Route::post('/schools/bulk-import', [SchoolController::class, 'bulkImport'])->name('schools.bulk-import');
+        Route::get('/schools/download-template', [SchoolController::class, 'downloadTemplate'])->name('schools.download-template');
+        Route::get('/schools/assessment-dates', [SchoolController::class, 'assessmentDates'])->name('schools.assessment-dates');
+        Route::post('/schools/update-assessment-dates', [SchoolController::class, 'updateAssessmentDates'])->name('schools.update-assessment-dates');
         Route::resource('schools', SchoolController::class);
+        Route::post('/schools/{school}/add-teacher', [SchoolController::class, 'addTeacher'])->name('schools.add-teacher');
+        Route::delete('/schools/{school}/remove-teacher', [SchoolController::class, 'removeTeacher'])->name('schools.remove-teacher');
+        Route::get('/schools/{school}/search-teachers', [SchoolController::class, 'searchTeachers'])->name('schools.search-teachers');
+
+        // Resource Management (Admin only)
+        Route::middleware(['auth', 'App\Http\Middleware\AdminMiddleware'])->group(function () {
+            Route::resource('admin/resources', ResourceController::class)->names([
+                'index' => 'resources.index',
+                'create' => 'resources.create',
+                'store' => 'resources.store',
+                'show' => 'resources.show',
+                'edit' => 'resources.edit',
+                'update' => 'resources.update',
+                'destroy' => 'resources.destroy',
+            ]);
+        });
 
         // Settings
         Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');

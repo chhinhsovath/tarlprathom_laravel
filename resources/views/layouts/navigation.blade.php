@@ -1,6 +1,6 @@
 <nav x-data="{ open: false }" class="bg-white">
     <!-- Primary Navigation Menu -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="w-full px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
             <div class="flex">
                 <!-- Logo -->
@@ -12,11 +12,22 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+
+                <a 
+           href="https://plp.moeys.gov.kh" class="inline-flex 
+           items-center px-1 pt-1 border-b-2 border-transparent 
+           text-sm font-medium leading-5 text-gray-500 
+           hover:text-gray-700 hover:border-gray-300 
+           focus:outline-none focus:text-gray-700 
+           focus:border-gray-300 transition duration-150 
+           ease-in-out">
+                                 {{ __('PLP') }}
+                             </a>
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
                     
-                    @if(auth()->user()->role === 'admin' || auth()->user()->role === 'teacher')
+                    @if(in_array(auth()->user()->role, ['admin', 'teacher', 'mentor', 'viewer']))
                     <x-nav-link :href="route('assessments.index')" :active="request()->routeIs('assessments.*')">
                         {{ __('Assessments') }}
                     </x-nav-link>
@@ -54,19 +65,6 @@
                 <x-dropdown align="right" width="56">
                     <x-slot name="trigger">
                         <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
-                            <!-- Profile Photo -->
-                            @if(Auth::user()->profile_photo)
-                                <div class="h-8 w-8 rounded-full overflow-hidden mr-2 flex-shrink-0">
-                                    <img src="{{ Storage::url(Auth::user()->profile_photo) }}" alt="{{ Auth::user()->name }}" class="h-full w-full object-cover" style="height: 32px; width: 32px; object-fit: cover;">
-                                </div>
-                            @else
-                                <div class="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center mr-2">
-                                    <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                                    </svg>
-                                </div>
-                            @endif
-                            
                             <div>
                                 <div>{{ Auth::user()->name }}</div>
                                 <div class="text-xs text-gray-400">{{ __(ucfirst(Auth::user()->role)) }}</div>
@@ -119,11 +117,39 @@
                                     {{ __('Manage Users') }}
                                 </a>
                                 
+                                <a href="{{ route('users.bulk-import-enhanced-form') }}" class="flex items-center px-3 py-2 text-sm text-gray-700 rounded-md hover:bg-gray-100 transition-colors duration-150">
+                                    <svg class="w-4 h-4 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                                    </svg>
+                                    {{ __('Import Users') }}
+                                </a>
+                                
+                                <a href="{{ route('students.bulk-import-form') }}" class="flex items-center px-3 py-2 text-sm text-gray-700 rounded-md hover:bg-gray-100 transition-colors duration-150">
+                                    <svg class="w-4 h-4 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                                    </svg>
+                                    {{ __('Import Students') }}
+                                </a>
+                                
                                 <a href="{{ route('schools.index') }}" class="flex items-center px-3 py-2 text-sm text-gray-700 rounded-md hover:bg-gray-100 transition-colors duration-150">
                                     <svg class="w-4 h-4 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
                                     </svg>
                                     {{ __('Manage Schools') }}
+                                </a>
+                                
+                                <a href="{{ route('schools.assessment-dates') }}" class="flex items-center px-3 py-2 text-sm text-gray-700 rounded-md hover:bg-gray-100 transition-colors duration-150">
+                                    <svg class="w-4 h-4 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                    </svg>
+                                    {{ __('Assessment Dates') }}
+                                </a>
+                                
+                                <a href="{{ route('resources.index') }}" class="flex items-center px-3 py-2 text-sm text-gray-700 rounded-md hover:bg-gray-100 transition-colors duration-150">
+                                    <svg class="w-4 h-4 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                                    </svg>
+                                    {{ __('Manage Resources') }}
                                 </a>
                                 
                                 <a href="{{ route('settings.index') }}" class="flex items-center px-3 py-2 text-sm text-gray-700 rounded-md hover:bg-gray-100 transition-colors duration-150">
@@ -190,7 +216,7 @@
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
             
-            @if(auth()->user()->role === 'admin' || auth()->user()->role === 'teacher')
+            @if(in_array(auth()->user()->role, ['admin', 'teacher', 'mentor', 'viewer']))
             <x-responsive-nav-link :href="route('assessments.index')" :active="request()->routeIs('assessments.*')">
                 {{ __('Assessments') }}
             </x-responsive-nav-link>
@@ -266,11 +292,32 @@
                         {{ __('Manage Users') }}
                     </x-responsive-nav-link>
                     
+                    <x-responsive-nav-link :href="route('users.bulk-import-enhanced-form')">
+                        <svg class="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                        </svg>
+                        {{ __('Import Users') }}
+                    </x-responsive-nav-link>
+                    
+                    <x-responsive-nav-link :href="route('students.bulk-import-form')">
+                        <svg class="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                        </svg>
+                        {{ __('Import Students') }}
+                    </x-responsive-nav-link>
+                    
                     <x-responsive-nav-link :href="route('schools.index')">
                         <svg class="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
                         </svg>
                         {{ __('Manage Schools') }}
+                    </x-responsive-nav-link>
+                    
+                    <x-responsive-nav-link :href="route('resources.index')">
+                        <svg class="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                        </svg>
+                        {{ __('Manage Resources') }}
                     </x-responsive-nav-link>
                     
                     <x-responsive-nav-link :href="route('settings.index')">

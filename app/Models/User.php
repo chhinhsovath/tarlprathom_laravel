@@ -119,6 +119,15 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the schools assigned to this mentor (many-to-many relationship).
+     */
+    public function assignedSchools()
+    {
+        return $this->belongsToMany(School::class, 'mentor_school', 'user_id', 'school_id')
+            ->withTimestamps();
+    }
+
+    /**
      * Check if user is an admin.
      */
     public function isAdmin()
