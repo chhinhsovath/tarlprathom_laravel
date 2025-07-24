@@ -81,6 +81,9 @@ class MentoringVisit extends Model
         'activity3_students_practice',
         'activity3_small_groups',
         'activity3_individual',
+        'is_locked',
+        'locked_by',
+        'locked_at',
     ];
 
     /**
@@ -115,6 +118,8 @@ class MentoringVisit extends Model
         'activity3_duration' => 'integer',
         'activity3_clear_instructions' => 'boolean',
         'activity3_demonstrated' => 'boolean',
+        'is_locked' => 'boolean',
+        'locked_at' => 'datetime',
     ];
 
     /**
@@ -139,6 +144,14 @@ class MentoringVisit extends Model
     public function teacher()
     {
         return $this->belongsTo(User::class, 'teacher_id');
+    }
+
+    /**
+     * Get the user who locked this mentoring visit.
+     */
+    public function lockedBy()
+    {
+        return $this->belongsTo(User::class, 'locked_by');
     }
 
     /**

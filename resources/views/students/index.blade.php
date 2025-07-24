@@ -31,16 +31,6 @@
                                 </div>
                             @endif
                             <div>
-                                <select name="class_id" class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                                    <option value="">{{ __('All Classes') }}</option>
-                                    @foreach($classes as $class)
-                                        <option value="{{ $class->id }}" {{ request('class_id') == $class->id ? 'selected' : '' }}>
-                                            {{ $class->full_name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div>
                                 <select name="grade" class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                                     <option value="">{{ __('All Grades') }}</option>
                                     <option value="4" {{ request('grade') == 4 ? 'selected' : '' }}>
@@ -62,7 +52,7 @@
                                 <button type="submit" class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
                                     {{ __('Search') }}
                                 </button>
-                                @if(request('search') || request('school_id') || request('grade') || request('gender') || request('class_id'))
+                                @if(request('search') || request('school_id') || request('grade') || request('gender'))
                                     <a href="{{ route('students.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-300 border border-transparent rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest hover:bg-gray-400 focus:bg-gray-400 active:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition ease-in-out duration-150">
                                         {{ __('Clear') }}
                                     </a>
@@ -99,9 +89,6 @@
                                             {{ __('Grade') }}
                                         </x-sortable-header>
                                     </th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        {{ __('Class') }}
-                                    </th>
                                     @if(!auth()->user()->isTeacher())
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         {{ __('Teacher') }}
@@ -131,9 +118,6 @@
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="text-sm text-gray-900">{{ $student->grade }}</div>
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm text-gray-900">{{ $student->schoolClass ? $student->schoolClass->name : ($student->class ?? 'N/A') }}</div>
-                                        </td>
                                         @if(!auth()->user()->isTeacher())
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="text-sm text-gray-900">{{ $student->teacher ? $student->teacher->name : 'N/A' }}</div>
@@ -151,14 +135,20 @@
                                                 <a href="{{ route('students.edit', $student) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">{{ __('Edit') }}</a>
                                             @endcan
                                             @can('delete', $student)
-                                                <form action="{{ route('students.destroy', $student) }}" method="POST" class="inline">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="text-red-600 hover:text-red-900" 
-                                                        onclick="return confirm('Are you sure you want to delete this student?')">
-                                                        {{ __('Delete') }}
-                                                    </button>
-                                                </form>
+                                                @if($student->assessments_count == 0)
+                                                    <form action="{{ route('students.destroy', $student) }}" method="POST" class="inline">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="text-red-600 hover:text-red-900" 
+                                                            onclick="return confirm('{{ __('Are you sure you want to delete this student?') }}')">
+                                                            {{ __('Delete') }}
+                                                        </button>
+                                                    </form>
+                                                @else
+                                                    <span class="text-gray-400 text-sm" title="{{ __('Cannot delete student with assessments') }}">
+                                                        {{ __('Has Assessments') }}
+                                                    </span>
+                                                @endif
                                             @endcan
                                         </td>
                                     </tr>

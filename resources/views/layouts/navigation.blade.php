@@ -23,37 +23,47 @@
            ease-in-out">
                                  {{ __('PLP') }}
                              </a>
+                    @if(auth()->check() && !auth()->user()->isCoordinator())
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+                    @endif
                     
-                    @if(in_array(auth()->user()->role, ['admin', 'teacher', 'mentor', 'viewer']))
+                    @if(auth()->check() && in_array(auth()->user()->role, ['admin', 'teacher', 'mentor', 'viewer']))
                     <x-nav-link :href="route('assessments.index')" :active="request()->routeIs('assessments.*')">
                         {{ __('Assessments') }}
                     </x-nav-link>
                     @endif
                     
-                    @if(auth()->user()->role === 'admin' || auth()->user()->role === 'teacher')
+                    @if(auth()->check() && in_array(auth()->user()->role, ['admin', 'teacher']))
                     <x-nav-link :href="route('students.index')" :active="request()->routeIs('students.*')">
                         {{ __('Students') }}
                     </x-nav-link>
                     @endif
                     
-                    @if(auth()->user()->role === 'admin' || (auth()->user()->role === 'teacher' && auth()->user()->teachingClasses()->exists()))
-                    <x-nav-link :href="route('classes.index')" :active="request()->routeIs('classes.*')">
-                        {{ __('Classes') }}
-                    </x-nav-link>
-                    @endif
-                    
-                    @if(auth()->user()->role === 'admin' || auth()->user()->role === 'mentor')
+                    @if(auth()->check() && in_array(auth()->user()->role, ['admin', 'mentor']))
                     <x-nav-link :href="route('mentoring.index')" :active="request()->routeIs('mentoring.*')">
                         {{ __('Mentoring') }}
                     </x-nav-link>
                     @endif
                     
+                    @if(auth()->check() && !auth()->user()->isCoordinator())
                     <x-nav-link :href="route('reports.index')" :active="request()->routeIs('reports.*')">
                         {{ __('Reports') }}
                     </x-nav-link>
+                    @endif
+                    
+                    @if(auth()->check() && in_array(auth()->user()->role, ['admin', 'coordinator']))
+                    <x-nav-link :href="route('coordinator.workspace')" :active="request()->routeIs('coordinator.*') || request()->routeIs('imports.*') || request()->routeIs('localization.*')">
+                        {{ __('Coordinator Workspace') }}
+                    </x-nav-link>
+                    @endif
+                    
+                    @if(auth()->check() && auth()->user()->role === 'admin')
+                    <x-nav-link :href="route('administration.index')" :active="request()->routeIs('administration.*')">
+                        {{ __('Administration') }}
+                    </x-nav-link>
+                    @endif
                 </div>
             </div>
 
@@ -66,8 +76,8 @@
                     <x-slot name="trigger">
                         <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
                             <div>
-                                <div>{{ Auth::user()->name }}</div>
-                                <div class="text-xs text-gray-400">{{ __(ucfirst(Auth::user()->role)) }}</div>
+                                <div>{{ auth()->check() ? Auth::user()->name : 'Guest' }}</div>
+                                <div class="text-xs text-gray-400">{{ auth()->check() ? __(ucfirst(Auth::user()->role)) : 'Guest' }}</div>
                             </div>
 
                             <div class="ms-1">
@@ -81,8 +91,8 @@
                     <x-slot name="content">
                         <!-- User Info Section -->
                         <div class="px-4 py-3">
-                            <p class="text-sm font-semibold text-gray-900">{{ Auth::user()->name }}</p>
-                            <p class="text-xs text-gray-500 truncate">{{ Auth::user()->email }}</p>
+                            <p class="text-sm font-semibold text-gray-900">{{ auth()->check() ? Auth::user()->name : 'Guest' }}</p>
+                            <p class="text-xs text-gray-500 truncate">{{ auth()->check() ? Auth::user()->email : 'guest@example.com' }}</p>
                         </div>
                         
                         <div class="border-t border-gray-100"></div>
@@ -104,63 +114,6 @@
                             </a>
                         </div>
                         
-                        <!-- Admin Only Links -->
-                        @if(Auth::user()->isAdmin())
-                            <div class="border-t border-gray-100"></div>
-                            <div class="px-2 py-2">
-                                <p class="px-3 py-1 text-xs font-semibold text-gray-400 uppercase tracking-wider">{{ __('Administration') }}</p>
-                                
-                                <a href="{{ route('users.index') }}" class="flex items-center px-3 py-2 text-sm text-gray-700 rounded-md hover:bg-gray-100 transition-colors duration-150">
-                                    <svg class="w-4 h-4 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
-                                    </svg>
-                                    {{ __('Manage Users') }}
-                                </a>
-                                
-                                <a href="{{ route('users.bulk-import-enhanced-form') }}" class="flex items-center px-3 py-2 text-sm text-gray-700 rounded-md hover:bg-gray-100 transition-colors duration-150">
-                                    <svg class="w-4 h-4 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
-                                    </svg>
-                                    {{ __('Import Users') }}
-                                </a>
-                                
-                                <a href="{{ route('students.bulk-import-form') }}" class="flex items-center px-3 py-2 text-sm text-gray-700 rounded-md hover:bg-gray-100 transition-colors duration-150">
-                                    <svg class="w-4 h-4 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
-                                    </svg>
-                                    {{ __('Import Students') }}
-                                </a>
-                                
-                                <a href="{{ route('schools.index') }}" class="flex items-center px-3 py-2 text-sm text-gray-700 rounded-md hover:bg-gray-100 transition-colors duration-150">
-                                    <svg class="w-4 h-4 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
-                                    </svg>
-                                    {{ __('Manage Schools') }}
-                                </a>
-                                
-                                <a href="{{ route('schools.assessment-dates') }}" class="flex items-center px-3 py-2 text-sm text-gray-700 rounded-md hover:bg-gray-100 transition-colors duration-150">
-                                    <svg class="w-4 h-4 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                                    </svg>
-                                    {{ __('Assessment Dates') }}
-                                </a>
-                                
-                                <a href="{{ route('resources.index') }}" class="flex items-center px-3 py-2 text-sm text-gray-700 rounded-md hover:bg-gray-100 transition-colors duration-150">
-                                    <svg class="w-4 h-4 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-                                    </svg>
-                                    {{ __('Manage Resources') }}
-                                </a>
-                                
-                                <a href="{{ route('settings.index') }}" class="flex items-center px-3 py-2 text-sm text-gray-700 rounded-md hover:bg-gray-100 transition-colors duration-150">
-                                    <svg class="w-4 h-4 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                    </svg>
-                                    {{ __('Settings') }}
-                                </a>
-                            </div>
-                        @endif
                         
                         <!-- Help & Support -->
                         <div class="border-t border-gray-100"></div>
@@ -212,45 +165,55 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
+            @if(auth()->check() && !auth()->user()->isCoordinator())
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+            @endif
             
-            @if(in_array(auth()->user()->role, ['admin', 'teacher', 'mentor', 'viewer']))
+            @if(auth()->check() && in_array(auth()->user()->role, ['admin', 'teacher', 'mentor', 'viewer']))
             <x-responsive-nav-link :href="route('assessments.index')" :active="request()->routeIs('assessments.*')">
                 {{ __('Assessments') }}
             </x-responsive-nav-link>
             @endif
             
-            @if(auth()->user()->role === 'admin' || auth()->user()->role === 'teacher')
+            @if(auth()->check() && (auth()->user()->role === 'admin' || auth()->user()->role === 'teacher'))
             <x-responsive-nav-link :href="route('students.index')" :active="request()->routeIs('students.*')">
                 {{ __('Students') }}
             </x-responsive-nav-link>
             @endif
             
-            @if(auth()->user()->role === 'admin' || (auth()->user()->role === 'teacher' && auth()->user()->teachingClasses()->exists()))
-            <x-responsive-nav-link :href="route('classes.index')" :active="request()->routeIs('classes.*')">
-                {{ __('Classes') }}
-            </x-responsive-nav-link>
-            @endif
-            
-            @if(auth()->user()->role === 'admin' || auth()->user()->role === 'mentor')
+            @if(auth()->check() && (auth()->user()->role === 'admin' || auth()->user()->role === 'mentor'))
             <x-responsive-nav-link :href="route('mentoring.index')" :active="request()->routeIs('mentoring.*')">
                 {{ __('Mentoring') }}
             </x-responsive-nav-link>
             @endif
             
+            @if(auth()->check() && !auth()->user()->isCoordinator())
             <x-responsive-nav-link :href="route('reports.index')" :active="request()->routeIs('reports.*')">
                 {{ __('Reports') }}
             </x-responsive-nav-link>
+            @endif
+            
+            @if(auth()->check() && in_array(auth()->user()->role, ['admin', 'coordinator']))
+            <x-responsive-nav-link :href="route('coordinator.workspace')" :active="request()->routeIs('coordinator.*') || request()->routeIs('imports.*') || request()->routeIs('localization.*')">
+                {{ __('Coordinator Workspace') }}
+            </x-responsive-nav-link>
+            @endif
+            
+            @if(auth()->check() && auth()->user()->role === 'admin')
+            <x-responsive-nav-link :href="route('administration.index')" :active="request()->routeIs('administration.*')">
+                {{ __('Administration') }}
+            </x-responsive-nav-link>
+            @endif
         </div>
 
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200">
             <div class="px-4">
-                <div class="font-medium text-base text-gray-800">{{ Auth::user()->name }}</div>
-                <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
-                <div class="text-xs text-gray-400 mt-1">{{ __(ucfirst(Auth::user()->role)) }}</div>
+                <div class="font-medium text-base text-gray-800">{{ auth()->check() ? Auth::user()->name : 'Guest' }}</div>
+                <div class="font-medium text-sm text-gray-500">{{ auth()->check() ? Auth::user()->email : 'guest@example.com' }}</div>
+                <div class="text-xs text-gray-400 mt-1">{{ auth()->check() ? __(ucfirst(Auth::user()->role)) : 'Guest' }}</div>
             </div>
 
             <!-- Language Switcher in Mobile Menu -->
@@ -283,51 +246,6 @@
                     {{ __('Change Password') }}
                 </x-responsive-nav-link>
                 
-                @if(Auth::user()->isAdmin())
-                    <div class="border-t border-gray-200 my-2"></div>
-                    <x-responsive-nav-link :href="route('users.index')">
-                        <svg class="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
-                        </svg>
-                        {{ __('Manage Users') }}
-                    </x-responsive-nav-link>
-                    
-                    <x-responsive-nav-link :href="route('users.bulk-import-enhanced-form')">
-                        <svg class="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
-                        </svg>
-                        {{ __('Import Users') }}
-                    </x-responsive-nav-link>
-                    
-                    <x-responsive-nav-link :href="route('students.bulk-import-form')">
-                        <svg class="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
-                        </svg>
-                        {{ __('Import Students') }}
-                    </x-responsive-nav-link>
-                    
-                    <x-responsive-nav-link :href="route('schools.index')">
-                        <svg class="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
-                        </svg>
-                        {{ __('Manage Schools') }}
-                    </x-responsive-nav-link>
-                    
-                    <x-responsive-nav-link :href="route('resources.index')">
-                        <svg class="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-                        </svg>
-                        {{ __('Manage Resources') }}
-                    </x-responsive-nav-link>
-                    
-                    <x-responsive-nav-link :href="route('settings.index')">
-                        <svg class="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                        </svg>
-                        {{ __('Settings') }}
-                    </x-responsive-nav-link>
-                @endif
                 
                 <div class="border-t border-gray-200 my-2"></div>
                 <x-responsive-nav-link :href="route('help.index')">

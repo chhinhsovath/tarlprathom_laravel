@@ -34,38 +34,54 @@
             <!-- Student Info Card -->
             <div class="bg-white overflow-hidden shadow-sm rounded-lg mb-6">
                 <div class="p-4 sm:p-6">
-                    <div class="flex flex-col sm:flex-row gap-4 sm:gap-6">
-                        <!-- Photo Section -->
-                        <div class="flex-shrink-0">
-                            @if($student->photo)
-                                <div class="h-16 w-16 rounded-lg overflow-hidden shadow-md">
-                                    <img src="{{ Storage::url($student->photo) }}" alt="{{ $student->name }}" class="h-full w-full object-cover" style="height: 64px; width: 64px; object-fit: cover;">
-                                </div>
-                            @else
-                                <div class="h-16 w-16 rounded-lg bg-gray-200 flex items-center justify-center">
-                                    <svg class="h-10 w-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                                    </svg>
-                                </div>
-                            @endif
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ $student->name }}</h3>
+                    
+                    <!-- Personal Information -->
+                    <div class="mb-4">
+                        <h4 class="text-sm font-medium text-gray-700 uppercase tracking-wider mb-2">{{ __('Personal Information') }}</h4>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                            <div>
+                                <span class="text-xs text-gray-500 uppercase tracking-wider">{{ __('Age') }}</span>
+                                <p class="text-sm font-medium text-gray-900">{{ $student->age ?? 'N/A' }}</p>
+                            </div>
+                            <div>
+                                <span class="text-xs text-gray-500 uppercase tracking-wider">{{ __('Gender') }}</span>
+                                <p class="text-sm font-medium text-gray-900">{{ ucfirst($student->gender) }}</p>
+                            </div>
+                            <div>
+                                <span class="text-xs text-gray-500 uppercase tracking-wider">{{ __('Grade') }}</span>
+                                <p class="text-sm font-medium text-gray-900">{{ __('Grade') }} {{ $student->grade }}</p>
+                            </div>
                         </div>
-                        
-                        <!-- Student Details -->
-                        <div class="flex-grow">
-                            <h3 class="text-lg font-semibold text-gray-900 mb-3">{{ $student->name }}</h3>
-                            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-                                <div>
-                                    <span class="text-xs text-gray-500 uppercase tracking-wider">{{ __('Grade') }}</span>
-                                    <p class="text-sm font-medium text-gray-900">{{ __('Grade') }} {{ $student->grade }}</p>
-                                </div>
-                                <div>
-                                    <span class="text-xs text-gray-500 uppercase tracking-wider">{{ __('Gender') }}</span>
-                                    <p class="text-sm font-medium text-gray-900">{{ ucfirst($student->gender) }}</p>
-                                </div>
-                                <div class="col-span-2 sm:col-span-1 lg:col-span-2">
-                                    <span class="text-xs text-gray-500 uppercase tracking-wider">{{ __('School') }}</span>
-                                    <p class="text-sm font-medium text-gray-900">{{ $student->school->school_name ?? 'N/A' }}</p>
-                                </div>
+                    </div>
+                    
+                    <!-- School Information -->
+                    <div class="mb-4 border-t pt-4">
+                        <h4 class="text-sm font-medium text-gray-700 uppercase tracking-wider mb-2">{{ __('School Information') }}</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div>
+                                <span class="text-xs text-gray-500 uppercase tracking-wider">{{ __('School') }}</span>
+                                <p class="text-sm font-medium text-gray-900">{{ $student->school->school_name ?? 'N/A' }}</p>
+                            </div>
+                            <div>
+                                <span class="text-xs text-gray-500 uppercase tracking-wider">{{ __('District') }}</span>
+                                <p class="text-sm font-medium text-gray-900">{{ $student->school->district ?? 'N/A' }}</p>
+                            </div>
+                            <div>
+                                <span class="text-xs text-gray-500 uppercase tracking-wider">{{ __('Cluster') }}</span>
+                                <p class="text-sm font-medium text-gray-900">{{ $student->school->cluster ?? 'N/A' }}</p>
+                            </div>
+                            <div>
+                                <span class="text-xs text-gray-500 uppercase tracking-wider">{{ __('Province') }}</span>
+                                <p class="text-sm font-medium text-gray-900">{{ $student->school->province ?? 'N/A' }}</p>
+                            </div>
+                            <div>
+                                <span class="text-xs text-gray-500 uppercase tracking-wider">{{ __('Teacher') }}</span>
+                                <p class="text-sm font-medium text-gray-900">{{ $student->teacher->name ?? 'N/A' }}</p>
+                            </div>
+                            <div>
+                                <span class="text-xs text-gray-500 uppercase tracking-wider">{{ __('School Code') }}</span>
+                                <p class="text-sm font-medium text-gray-900">{{ $student->school->school_code ?? 'N/A' }}</p>
                             </div>
                         </div>
                     </div>

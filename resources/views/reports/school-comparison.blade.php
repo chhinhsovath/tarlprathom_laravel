@@ -16,7 +16,7 @@
                     <form method="GET" action="{{ route('reports.school-comparison') }}" class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
                             <label for="subject" class="block text-sm font-medium text-gray-700 mb-1">{{ __('Subject') }}</label>
-                            <select name="subject" id="subject" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                            <select name="subject" id="subject" class="w-full h-11 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                                 <option value="khmer" {{ $subject == 'khmer' ? 'selected' : '' }}>{{ __('Khmer') }}</option>
                                 <option value="math" {{ $subject == 'math' ? 'selected' : '' }}>{{ __('Math') }}</option>
                             </select>
@@ -24,7 +24,7 @@
                         
                         <div>
                             <label for="cycle" class="block text-sm font-medium text-gray-700 mb-1">{{ __('Test Cycle') }}</label>
-                            <select name="cycle" id="cycle" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                            <select name="cycle" id="cycle" class="w-full h-11 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                                 <option value="baseline" {{ $cycle == 'baseline' ? 'selected' : '' }}>{{ __('Baseline') }}</option>
                                 <option value="midline" {{ $cycle == 'midline' ? 'selected' : '' }}>{{ __('Midline') }}</option>
                                 <option value="endline" {{ $cycle == 'endline' ? 'selected' : '' }}>{{ __('Endline') }}</option>
@@ -32,29 +32,145 @@
                         </div>
                         
                         <div class="flex items-end">
-                            <button type="submit" class="w-full inline-flex justify-center items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700">
+                            <button type="submit" class="w-full h-11 inline-flex justify-center items-center px-4 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition">
                                 {{ __('Apply Filters') }}
                             </button>
                         </div>
                     </form>
                 </div>
             </div>
-            
-            <!-- Comparison Chart -->
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
-                <div class="p-6 bg-white border-b border-gray-200">
-                    <h4 class="text-md font-medium text-gray-900 mb-4">{{ __('Performance Comparison') }}</h4>
-                    
-                    <div class="relative" style="height: 400px;">
-                        <canvas id="comparisonChart"></canvas>
+
+            <!-- Understanding School Comparisons -->
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <svg class="h-5 w-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <div class="ml-3">
+                        <h3 class="text-sm font-medium text-blue-800">{{ __('Understanding School Comparisons') }}</h3>
+                        <div class="mt-2 text-sm text-blue-700">
+                            <p class="mb-2">{{ __('This report compares student performance across different schools for a specific subject and assessment cycle. It helps identify:') }}</p>
+                            <ul class="list-disc list-inside space-y-1">
+                                <li>{{ __('Schools with higher concentrations of advanced students') }}</li>
+                                <li>{{ __('Schools that may need additional support for foundational skills') }}</li>
+                                <li>{{ __('Distribution patterns that inform resource allocation') }}</li>
+                                <li>{{ __('Performance variations across the school network') }}</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- How to Read the Data -->
+            <div class="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <svg class="h-5 w-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <div class="ml-3">
+                        <h3 class="text-sm font-medium text-green-800">{{ __('How to Read the Charts and Tables') }}</h3>
+                        <div class="mt-2 text-sm text-green-700">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <h4 class="font-semibold mb-1">{{ __('Stacked Bar Chart') }}:</h4>
+                                    <ul class="list-disc list-inside text-xs space-y-0.5">
+                                        <li>{{ __('Each bar represents one school') }}</li>
+                                        <li>{{ __('Colors show skill levels (red=beginner, green/teal=advanced)') }}</li>
+                                        <li>{{ __('Bar height shows total students assessed') }}</li>
+                                        <li>{{ __('Color proportions show level distribution') }}</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold mb-1">{{ __('Comparison Table') }}:</h4>
+                                    <ul class="list-disc list-inside text-xs space-y-0.5">
+                                        <li>{{ __('Numbers show student counts at each level') }}</li>
+                                        <li>{{ __('Percentages show proportion of school total') }}</li>
+                                        <li>{{ __('Compare across rows to see school differences') }}</li>
+                                        <li>{{ __('Compare within columns to see level concentrations') }}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Current Selection Info -->
+            <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-6">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <svg class="h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <div class="ml-3">
+                        <h3 class="text-sm font-medium text-gray-800">{{ __('Current View') }}</h3>
+                        <p class="text-sm text-gray-600 mt-1">
+                            {{ __('Showing') }} <strong>{{ ucfirst($subject) }}</strong> {{ __('performance during') }} <strong>{{ ucfirst($cycle) }}</strong> {{ __('assessment cycle') }}
+                            @if($subject === 'khmer')
+                                - {{ __('Reading skill levels from basic letter recognition to advanced comprehension') }}
+                            @else
+                                - {{ __('Math skill levels from basic number recognition to complex problem solving') }}
+                            @endif
+                        </p>
                     </div>
                 </div>
             </div>
             
-            <!-- Detailed Comparison Table -->
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+            <!-- Comparison Chart -->
+            @if(count($comparisonData) > 0)
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
                 <div class="p-6 bg-white border-b border-gray-200">
-                    <h4 class="text-md font-medium text-gray-900 mb-4">{{ __('Detailed Comparison') }}</h4>
+                    <h4 class="text-md font-medium text-gray-900 mb-4">{{ __('Performance Comparison') }} - {{ ucfirst($subject) }} ({{ ucfirst($cycle) }})</h4>
+                    
+                    <div class="mb-4 p-3 bg-gray-50 rounded-lg text-sm text-gray-600">
+                        <p><strong>{{ __('Chart interpretation') }}:</strong> {{ __('Each school is represented by a stacked bar. Taller bars indicate more students assessed. The color distribution within each bar shows how students are distributed across skill levels.') }}</p>
+                    </div>
+                    
+                    <div class="relative" style="height: 400px;">
+                        <canvas id="comparisonChart"></canvas>
+                    </div>
+                    
+                    <div class="mt-4 text-sm text-gray-600">
+                        <p><strong>{{ __('Look for') }}:</strong> {{ __('Schools with more green/teal (advanced levels) vs red/yellow (beginner levels), and schools with similar total heights but different color distributions.') }}</p>
+                    </div>
+                </div>
+            </div>
+            @endif
+            
+            <!-- Detailed Comparison Table -->
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
+                <div class="p-6 bg-white border-b border-gray-200">
+                    <h4 class="text-md font-medium text-gray-900 mb-4">{{ __('Detailed Comparison') }} - {{ ucfirst($subject) }} ({{ ucfirst($cycle) }})</h4>
+                    
+                    <!-- Level Explanations -->
+                    <div class="mb-4 p-3 bg-gray-50 rounded-lg text-sm text-gray-600">
+                        <p class="font-medium mb-2">{{ __('Skill Level Definitions') }}:</p>
+                        @if($subject === 'khmer')
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
+                            <div><strong>{{ __('Beginner') }}:</strong> {{ __('Pre-reading') }}</div>
+                            <div><strong>{{ __('Reader') }}:</strong> {{ __('Letter recognition') }}</div>
+                            <div><strong>{{ __('Word') }}:</strong> {{ __('Simple words') }}</div>
+                            <div><strong>{{ __('Paragraph') }}:</strong> {{ __('Basic reading') }}</div>
+                            <div><strong>{{ __('Story') }}:</strong> {{ __('Fluent reading') }}</div>
+                            <div><strong>{{ __('Comp. 1') }}:</strong> {{ __('Basic comprehension') }}</div>
+                            <div><strong>{{ __('Comp. 2') }}:</strong> {{ __('Advanced comprehension') }}</div>
+                        </div>
+                        @else
+                        <div class="grid grid-cols-2 md:grid-cols-3 gap-2 text-xs">
+                            <div><strong>{{ __('Beginner') }}:</strong> {{ __('Pre-math skills') }}</div>
+                            <div><strong>{{ __('1-Digit') }}:</strong> {{ __('Single numbers') }}</div>
+                            <div><strong>{{ __('2-Digit') }}:</strong> {{ __('Two-digit operations') }}</div>
+                            <div><strong>{{ __('Subtraction') }}:</strong> {{ __('Subtraction skills') }}</div>
+                            <div><strong>{{ __('Division') }}:</strong> {{ __('Division operations') }}</div>
+                            <div><strong>{{ __('Word Problem') }}:</strong> {{ __('Applied math') }}</div>
+                        </div>
+                        @endif
+                    </div>
                     
                     <div class="overflow-x-auto">
                         <table class="min-w-full divide-y divide-gray-200">
@@ -62,9 +178,11 @@
                                 <tr>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         {{ __('School') }}
+                                        <span class="normal-case text-gray-400" title="{{ __('School name') }}">ⓘ</span>
                                     </th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         {{ __('Total Assessed') }}
+                                        <span class="normal-case text-gray-400" title="{{ __('Total number of students assessed in this subject and cycle') }}">ⓘ</span>
                                     </th>
                                     @php
                                         $allLevels = $subject === 'khmer' 
@@ -74,13 +192,14 @@
                                     @foreach($allLevels as $level)
                                     <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         {{ __($level) }}
+                                        <span class="normal-case text-gray-400" title="{{ __('Number and percentage of students at this level') }}">ⓘ</span>
                                     </th>
                                     @endforeach
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
                                 @forelse($comparisonData as $data)
-                                <tr>
+                                <tr class="hover:bg-gray-50">
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                         {{ $data['school'] }}
                                     </td>
@@ -89,14 +208,14 @@
                                     </td>
                                     @foreach($allLevels as $level)
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
-                                        @if(isset($data['levels'][$level]))
-                                            {{ $data['levels'][$level] }}
-                                            <br>
-                                            <span class="text-xs text-gray-400">
+                                        @if(isset($data['levels'][$level]) && $data['levels'][$level] > 0)
+                                            <div class="font-medium">{{ $data['levels'][$level] }}</div>
+                                            <div class="text-xs text-gray-400">
                                                 ({{ number_format(($data['levels'][$level] / $data['total_assessed']) * 100, 1) }}%)
-                                            </span>
+                                            </div>
                                         @else
-                                            0
+                                            <div class="text-gray-300">0</div>
+                                            <div class="text-xs text-gray-300">(0.0%)</div>
                                         @endif
                                     </td>
                                     @endforeach
@@ -111,6 +230,73 @@
                             </tbody>
                         </table>
                     </div>
+                    
+                    @if(count($comparisonData) > 0)
+                    <div class="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-800">
+                        <p><strong>{{ __('Reading the table') }}:</strong> {{ __('Each row shows one school\'s results. The first number in each level column is student count, the percentage below shows what portion of that school\'s total this represents. Compare percentages across schools to see relative performance patterns.') }}</p>
+                    </div>
+                    @endif
+                </div>
+            </div>
+
+            <!-- Analysis Insights -->
+            @if(count($comparisonData) > 0)
+            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <svg class="h-5 w-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <div class="ml-3">
+                        <h3 class="text-sm font-medium text-yellow-800">{{ __('Key Insights to Look For') }}</h3>
+                        <div class="mt-2 text-sm text-yellow-700">
+                            <ul class="list-disc list-inside space-y-1">
+                                <li><strong>{{ __('High-performing schools') }}:</strong> {{ __('Schools with higher percentages in advanced levels (rightmost columns)') }}</li>
+                                <li><strong>{{ __('Schools needing support') }}:</strong> {{ __('Schools with high percentages in beginner levels') }}</li>
+                                <li><strong>{{ __('Balanced distributions') }}:</strong> {{ __('Schools with students spread across multiple levels') }}</li>
+                                <li><strong>{{ __('Sample size considerations') }}:</strong> {{ __('Compare percentages rather than raw numbers when schools have different total assessed counts') }}</li>
+                                <li><strong>{{ __('Improvement opportunities') }}:</strong> {{ __('Use this data to identify schools that could benefit from sharing successful practices') }}</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endif
+
+            <!-- Export and Actions -->
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 bg-white border-b border-gray-200">
+                    <h4 class="text-md font-medium text-gray-900 mb-4">{{ __('Actions') }}</h4>
+                    
+                    <div class="mb-3 text-sm text-gray-600">
+                        <p>{{ __('Use this comparison data to inform resource allocation, identify best practices, and plan targeted interventions.') }}</p>
+                    </div>
+                    
+                    <div class="flex gap-4">
+                        @if(count($comparisonData) > 0)
+                        <button onclick="exportChart()" class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 002 2v12a2 2 0 002 2z"></path>
+                            </svg>
+                            {{ __('Export Chart') }}
+                        </button>
+                        @endif
+                        
+                        <button onclick="window.print()" class="inline-flex items-center px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
+                            </svg>
+                            {{ __('Print Report') }}
+                        </button>
+                        
+                        <a href="{{ route('reports.student-performance') }}" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 00-2-2z"></path>
+                            </svg>
+                            {{ __('View Individual Performance') }}
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -118,7 +304,10 @@
     
     @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
     <script>
+        let comparisonChart;
+        
         $(document).ready(function() {
             const comparisonData = @json($comparisonData);
             const subject = @json($subject);
@@ -132,26 +321,28 @@
                 
                 const datasets = levels.map((level, index) => {
                     const colors = [
-                        '#ef4444', // red
+                        '#ef4444', // red for beginner
                         '#f59e0b', // amber
                         '#eab308', // yellow
                         '#84cc16', // lime
                         '#22c55e', // green
                         '#10b981', // emerald
-                        '#14b8a6'  // teal
+                        '#14b8a6'  // teal for advanced
                     ];
                     
                     return {
                         label: level,
                         data: comparisonData.map(d => d.levels[level] || 0),
                         backgroundColor: colors[index],
+                        borderColor: colors[index] + 'DD',
+                        borderWidth: 1,
                         stack: 'stack0'
                     };
                 });
                 
                 // Create stacked bar chart
                 const ctx = document.getElementById('comparisonChart').getContext('2d');
-                new Chart(ctx, {
+                comparisonChart = new Chart(ctx, {
                     type: 'bar',
                     data: {
                         labels: schools,
@@ -163,16 +354,48 @@
                         plugins: {
                             title: {
                                 display: true,
-                                text: '{{ __("Student Distribution by School and Level") }}'
+                                text: '{{ __("Student Distribution by School and Level") }} - ' + subject.charAt(0).toUpperCase() + subject.slice(1),
+                                font: {
+                                    size: 16,
+                                    weight: 'bold'
+                                }
+                            },
+                            legend: {
+                                display: true,
+                                position: 'right',
+                                labels: {
+                                    boxWidth: 15,
+                                    padding: 10
+                                }
                             },
                             tooltip: {
                                 callbacks: {
-                                    afterLabel: function(context) {
+                                    label: function(context) {
                                         const total = comparisonData[context.dataIndex].total_assessed;
                                         const percentage = ((context.raw / total) * 100).toFixed(1);
-                                        return percentage + '%';
+                                        return context.dataset.label + ': ' + context.raw + ' {{ __("students") }} (' + percentage + '%)';
+                                    },
+                                    footer: function(tooltipItems) {
+                                        const dataIndex = tooltipItems[0].dataIndex;
+                                        const total = comparisonData[dataIndex].total_assessed;
+                                        return '{{ __("Total assessed") }}: ' + total + ' {{ __("students") }}';
                                     }
                                 }
+                            },
+                            datalabels: {
+                                display: function(context) {
+                                    return context.dataset.data[context.dataIndex] > 0;
+                                },
+                                color: 'white',
+                                font: {
+                                    weight: 'bold',
+                                    size: 10
+                                },
+                                formatter: function(value) {
+                                    return value;
+                                },
+                                anchor: 'center',
+                                align: 'center'
                             }
                         },
                         scales: {
@@ -180,7 +403,11 @@
                                 stacked: true,
                                 title: {
                                     display: true,
-                                    text: '{{ __("School") }}'
+                                    text: '{{ __("Schools") }}',
+                                    font: {
+                                        size: 12,
+                                        weight: 'bold'
+                                    }
                                 }
                             },
                             y: {
@@ -188,14 +415,36 @@
                                 beginAtZero: true,
                                 title: {
                                     display: true,
-                                    text: '{{ __("Number of Students") }}'
+                                    text: '{{ __("Number of Students") }}',
+                                    font: {
+                                        size: 12,
+                                        weight: 'bold'
+                                    }
+                                },
+                                ticks: {
+                                    stepSize: 1
                                 }
                             }
                         }
-                    }
+                    },
+                    plugins: [ChartDataLabels]
                 });
             }
         });
+        
+        // Export chart function
+        window.exportChart = function() {
+            if (comparisonChart) {
+                const subject = '{{ $subject }}';
+                const cycle = '{{ $cycle }}';
+                const date = new Date().toISOString().split('T')[0];
+                
+                const link = document.createElement('a');
+                link.download = 'school-comparison-' + subject + '-' + cycle + '-' + date + '.png';
+                link.href = comparisonChart.toBase64Image();
+                link.click();
+            }
+        };
     </script>
     @endpush
 </x-app-layout>

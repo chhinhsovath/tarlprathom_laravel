@@ -54,3 +54,17 @@ This is a Laravel-based TaRL (Teaching at the Right Level) assessment system wit
 - School management: `/app/Http/Controllers/SchoolController.php`
 - Settings: `/app/Http/Controllers/SettingController.php`
 - Help system: `/app/Http/Controllers/HelpController.php`
+
+## MCP Integration
+
+### Notion MCP Setup
+The project includes Notion MCP integration for enhanced Claude Code functionality.
+
+1. **Configuration**: `.claude_config.json` contains MCP server settings
+2. **API Key**: Set your `NOTION_API_KEY` environment variable or update the config file
+3. **Installation**: Ensure `@modelcontextprotocol/server-notion` is available via npx
+
+To use Notion MCP:
+- Get your Notion integration token from https://developers.notion.com/
+- Add it to your environment or config file
+- Restart Claude Code to load the MCP server

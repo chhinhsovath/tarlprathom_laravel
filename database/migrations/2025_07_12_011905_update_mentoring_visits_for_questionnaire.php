@@ -36,22 +36,20 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('mentoring_visits', function (Blueprint $table) {
-            $table->dropColumn([
-                'questionnaire_data',
-                'region',
-                'province',
-                'program_type',
-                'class_in_session',
-                'class_not_in_session_reason',
-                'full_session_observed',
-                'grade_group',
-                'grades_observed',
-                'subject_observed',
-                'language_levels_observed',
-                'numeracy_levels_observed',
-                'action_plan',
-                'follow_up_required',
-            ]);
+            $table->dropColumn('questionnaire_data');
+            $table->dropColumn('region');
+            $table->dropColumn('province');
+            $table->dropColumn('program_type');
+            $table->dropColumn('class_in_session');
+            $table->dropColumn('class_not_in_session_reason');
+            $table->dropColumn('full_session_observed');
+            $table->dropColumn('grade_group');
+            $table->dropColumn('grades_observed');
+            $table->dropColumn('subject_observed');
+            $table->dropColumn('language_levels_observed');
+            $table->dropColumn('numeracy_levels_observed');
+            $table->dropColumn('action_plan');
+            $table->dropColumn('follow_up_required');
         });
     }
 };

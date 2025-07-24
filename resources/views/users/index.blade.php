@@ -42,6 +42,7 @@
                         <select name="role" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
                             <option value="">{{ __('All Roles') }}</option>
                             <option value="admin" {{ request('role') == 'admin' ? 'selected' : '' }}>{{ __('Admin') }}</option>
+                            <option value="coordinator" {{ request('role') == 'coordinator' ? 'selected' : '' }}>{{ __('Coordinator') }}</option>
                             <option value="mentor" {{ request('role') == 'mentor' ? 'selected' : '' }}>{{ __('Mentor') }}</option>
                             <option value="teacher" {{ request('role') == 'teacher' ? 'selected' : '' }}>{{ __('Teacher') }}</option>
                             <option value="viewer" {{ request('role') == 'viewer' ? 'selected' : '' }}>{{ __('Viewer') }}</option>

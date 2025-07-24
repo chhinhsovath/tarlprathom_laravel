@@ -31,7 +31,7 @@
     <p><strong>Loaded translations count:</strong> {{ count($translations) }}</p>
     <p><strong>Sample: Assessments in km.json:</strong> {{ $translations['Assessments'] ?? 'NOT FOUND' }}</p>
     
-    <h2>Actions</h2>
+    <h2>{{ __("Actions") }}</h2>
     <p>
         <a href="{{ url('/language/en') }}" style="margin-right: 10px;">Switch to English</a>
         <a href="{{ url('/language/km') }}">Switch to Khmer</a>

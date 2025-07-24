@@ -13,12 +13,16 @@ class SettingController extends Controller
         if (! auth()->user()->isAdmin()) {
             abort(403, __('Unauthorized action.'));
         }
+        
+        // Get cached settings or fallback to config values
+        $cachedSettings = Cache::get('settings', []);
+        
         $settings = [
-            'app_name' => config('app.name'),
-            'app_timezone' => config('app.timezone'),
-            'app_locale' => config('app.locale'),
-            'mail_from_address' => config('mail.from.address'),
-            'mail_from_name' => config('mail.from.name'),
+            'app_name' => $cachedSettings['app_name'] ?? config('app.name'),
+            'app_timezone' => $cachedSettings['app_timezone'] ?? config('app.timezone'),
+            'app_locale' => $cachedSettings['app_locale'] ?? config('app.locale'),
+            'mail_from_address' => $cachedSettings['mail_from_address'] ?? config('mail.from.address'),
+            'mail_from_name' => $cachedSettings['mail_from_name'] ?? config('mail.from.name'),
         ];
 
         return view('settings.index', compact('settings'));

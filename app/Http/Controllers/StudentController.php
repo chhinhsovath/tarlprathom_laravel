@@ -8,7 +8,6 @@ use App\Http\Requests\UpdateStudentRequest;
 use App\Models\Assessment;
 use App\Models\AssessmentHistory;
 use App\Models\School;
-use App\Models\SchoolClass;
 use App\Models\Student;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
@@ -26,7 +25,8 @@ class StudentController extends Controller
     {
         $this->authorize('viewAny', Student::class);
 
-        $query = Student::with(['school', 'teacher', 'schoolClass']);
+        $query = Student::with(['school', 'teacher'])
+            ->withCount('assessments');
         $user = $request->user();
 
         // Filter based on user role and accessible schools
@@ -70,11 +70,6 @@ class StudentController extends Controller
             $query->where('gender', $request->get('gender'));
         }
 
-        // Add class filter
-        if ($request->filled('class_id')) {
-            $query->where('class_id', $request->get('class_id'));
-        }
-
         // Add sorting
         $sortField = $request->get('sort', 'name');
         $sortOrder = $request->get('order', 'asc');
@@ -101,27 +96,7 @@ class StudentController extends Controller
             $schools = collect();
         }
 
-        // Get classes for filter dropdown
-        $classes = SchoolClass::query();
-
-        if (! $user->isAdmin()) {
-            if (empty($accessibleSchoolIds)) {
-                // If no schools are accessible, return no results
-                $classes->whereRaw('1 = 0');
-            } else {
-                $classes->whereIn('school_id', $accessibleSchoolIds);
-            }
-        }
-
-        if ($user->isTeacher()) {
-            $classes->where('teacher_id', $user->id);
-        }
-
-        $classes = $classes->orderBy('grade_level')
-            ->orderBy('name')
-            ->get();
-
-        return view('students.index', compact('students', 'schools', 'classes', 'sortField', 'sortOrder'));
+        return view('students.index', compact('students', 'schools', 'sortField', 'sortOrder'));
     }
 
     /**
@@ -206,22 +181,7 @@ class StudentController extends Controller
             $schools = collect();
         }
 
-        // Get classes for dropdown
-        $classes = SchoolClass::query();
-
-        if (! $user->isAdmin() && ! empty($accessibleSchoolIds)) {
-            $classes->whereIn('school_id', $accessibleSchoolIds);
-        }
-
-        if ($user->isTeacher()) {
-            $classes->where('teacher_id', $user->id);
-        }
-
-        $classes = $classes->orderBy('grade_level')
-            ->orderBy('name')
-            ->get();
-
-        return view('students.edit', compact('student', 'schools', 'classes'));
+        return view('students.edit', compact('student', 'schools'));
     }
 
     /**
@@ -234,18 +194,6 @@ class StudentController extends Controller
         // If teacher, ensure they can only keep students in their own school
         if ($request->user()->isTeacher()) {
             $validated['school_id'] = $request->user()->school_id;
-        }
-
-        // Handle photo upload
-        if ($request->hasFile('photo')) {
-            // Delete old photo if exists
-            if ($student->photo) {
-                Storage::disk('public')->delete($student->photo);
-            }
-
-            $photo = $request->file('photo');
-            $path = $photo->store('students/photos', 'public');
-            $validated['photo'] = $path;
         }
 
         $student->update($validated);
@@ -265,8 +213,8 @@ class StudentController extends Controller
             abort(403);
         }
 
-        // Load student with school and class
-        $student->load(['school', 'schoolClass']);
+        // Load student with school and teacher
+        $student->load(['school', 'teacher']);
 
         // Get all assessment histories for this student
         $histories = AssessmentHistory::where('student_id', $student->id)

@@ -1,9 +1,19 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
-            <h2 class="font-semibold text-lg sm:text-xl text-gray-800 leading-tight">
-                {{ __('Assessment Details') }}
-            </h2>
+            <div class="flex items-center gap-3">
+                <h2 class="font-semibold text-lg sm:text-xl text-gray-800 leading-tight">
+                    {{ __('Assessment Details') }}
+                </h2>
+                @if($assessment->is_locked ?? false)
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                        <svg class="-ml-0.5 mr-1.5 h-2 w-2" fill="currentColor" viewBox="0 0 8 8">
+                            <circle cx="4" cy="4" r="3" />
+                        </svg>
+                        {{ __('Locked') }}
+                    </span>
+                @endif
+            </div>
             <div class="flex gap-2">
                 <a href="{{ route('assessments.index') }}" class="inline-flex items-center px-3 py-1.5 bg-gray-300 border border-transparent rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest hover:bg-gray-400 focus:bg-gray-400 active:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition ease-in-out duration-150">
                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">

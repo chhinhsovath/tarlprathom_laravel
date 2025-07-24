@@ -205,6 +205,24 @@ class AssessmentController extends Controller
 
         $students = $studentsQuery->orderBy('name')->get();
 
+        // Get existing assessments for these students
+        $studentIds = $students->pluck('id');
+        $existingAssessments = Assessment::whereIn('student_id', $studentIds)
+            ->where('subject', $subject)
+            ->where('cycle', $cycle)
+            ->get()
+            ->keyBy('student_id');
+
+        // Add assessment status to each student
+        $students->transform(function ($student) use ($existingAssessments) {
+            $existingAssessment = $existingAssessments->get($student->id);
+            $student->has_assessment = $existingAssessment !== null;
+            $student->is_assessment_locked = $existingAssessment && (\Schema::hasColumn('assessments', 'is_locked') ? ($existingAssessment->is_locked ?? false) : false);
+            $student->assessment_level = $existingAssessment ? $existingAssessment->level : null;
+
+            return $student;
+        });
+
         return view('assessments.create', compact('students', 'subject', 'cycle'));
     }
 
@@ -521,14 +539,13 @@ class AssessmentController extends Controller
         }
 
         // Get students based on user role
-        $query = Student::with(['school', 'schoolClass', 'assessmentEligibility']);
+        $query = Student::with(['school', 'assessmentEligibility', 'assessments' => function ($q) {
+            $q->where('cycle', 'baseline')->latest('assessed_at');
+        }]);
 
         if ($user->isTeacher()) {
-            // Teachers can only select their own students
-            $query->where('school_id', $user->school_id)
-                ->whereHas('class', function ($q) use ($user) {
-                    $q->where('teacher_id', $user->id);
-                });
+            // Teachers can only select students from their school
+            $query->where('school_id', $user->school_id);
         } elseif ($user->isAdmin()) {
             // Admins can see all students, optionally filtered by school
             if ($request->filled('school_id')) {
@@ -545,6 +562,36 @@ class AssessmentController extends Controller
         // Filter by grade
         if ($request->filled('grade')) {
             $query->where('grade', $request->get('grade'));
+        }
+
+        // Filter by baseline Khmer level
+        if ($request->filled('baseline_khmer')) {
+            if ($request->get('baseline_khmer') === 'not_assessed') {
+                $query->whereDoesntHave('assessments', function ($q) {
+                    $q->where('cycle', 'baseline')->where('subject', 'khmer');
+                });
+            } else {
+                $query->whereHas('assessments', function ($q) use ($request) {
+                    $q->where('cycle', 'baseline')
+                        ->where('subject', 'khmer')
+                        ->where('level', $request->get('baseline_khmer'));
+                });
+            }
+        }
+
+        // Filter by baseline Math level
+        if ($request->filled('baseline_math')) {
+            if ($request->get('baseline_math') === 'not_assessed') {
+                $query->whereDoesntHave('assessments', function ($q) {
+                    $q->where('cycle', 'baseline')->where('subject', 'math');
+                });
+            } else {
+                $query->whereHas('assessments', function ($q) use ($request) {
+                    $q->where('cycle', 'baseline')
+                        ->where('subject', 'math')
+                        ->where('level', $request->get('baseline_math'));
+                });
+            }
         }
 
         $students = $query->orderBy('name')->paginate(50)->withQueryString();
@@ -588,10 +635,7 @@ class AssessmentController extends Controller
 
         // Get students the user has access to
         $accessibleStudentIds = Student::when($user->isTeacher(), function ($q) use ($user) {
-            $q->where('school_id', $user->school_id)
-                ->whereHas('class', function ($cq) use ($user) {
-                    $cq->where('teacher_id', $user->id);
-                });
+            $q->where('school_id', $user->school_id);
         })->pluck('id')->toArray();
 
         // Clear existing eligibility for these students and assessment type

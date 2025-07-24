@@ -46,6 +46,7 @@
     
     @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
     <script>
         document.addEventListener('livewire:initialized', () => {
             let chart = null;
@@ -81,6 +82,28 @@
                             },
                             title: {
                                 display: false
+                            },
+                            datalabels: {
+                                display: function(context) {
+                                    return context.dataset.data[context.dataIndex] > 0;
+                                },
+                                color: function(context) {
+                                    return type === 'pie' ? 'white' : 'black';
+                                },
+                                font: {
+                                    weight: 'bold',
+                                    size: 12
+                                },
+                                formatter: function(value, context) {
+                                    if (type === 'pie') {
+                                        const total = context.dataset.data.reduce((sum, val) => sum + val, 0);
+                                        const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
+                                        return percentage > 0 ? percentage + '%' : '';
+                                    }
+                                    return value;
+                                },
+                                anchor: 'center',
+                                align: type === 'bar' ? 'top' : 'center'
                             }
                         },
                         scales: type !== 'pie' ? {
@@ -88,7 +111,8 @@
                                 beginAtZero: true
                             }
                         } : {}
-                    }
+                    },
+                    plugins: [ChartDataLabels]
                 });
             }
             

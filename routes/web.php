@@ -1,10 +1,14 @@
 <?php
 
+use App\Http\Controllers\AdministrationController;
 use App\Http\Controllers\AssessmentController;
 use App\Http\Controllers\ClassController;
+use App\Http\Controllers\CoordinatorController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HelpController;
+use App\Http\Controllers\ImportController;
 use App\Http\Controllers\LanguageController;
+use App\Http\Controllers\LocalizationController;
 use App\Http\Controllers\MentoringVisitController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReportController;
@@ -129,11 +133,15 @@ Route::middleware('auth')->group(function () {
     Route::get('/reports/school-comparison', [ReportController::class, 'schoolComparison'])->name('reports.school-comparison');
     Route::get('/reports/mentoring-impact', [ReportController::class, 'mentoringImpact'])->name('reports.mentoring-impact');
     Route::get('/reports/progress-tracking', [ReportController::class, 'progressTracking'])->name('reports.progress-tracking');
+    Route::get('/reports/performance-calculation', [ReportController::class, 'performanceCalculation'])->name('reports.performance-calculation');
     Route::get('/reports/my-students', [ReportController::class, 'myStudents'])->name('reports.my-students');
     Route::get('/reports/class-progress', [ReportController::class, 'classProgress'])->name('reports.class-progress');
     Route::get('/reports/my-mentoring', [ReportController::class, 'myMentoring'])->name('reports.my-mentoring');
     Route::get('/reports/school-visits', [ReportController::class, 'schoolVisits'])->name('reports.school-visits');
     Route::get('/reports/export/{type}', [ReportController::class, 'export'])->name('reports.export');
+
+    // Administration Routes (Admin only)
+    Route::get('/administration', [AdministrationController::class, 'index'])->name('administration.index');
 
     // Admin Routes
     Route::middleware(['auth'])->group(function () {
@@ -169,11 +177,63 @@ Route::middleware('auth')->group(function () {
                 'update' => 'resources.update',
                 'destroy' => 'resources.destroy',
             ]);
+
+            // Assessment Management (Admin only)
+            Route::prefix('assessment-management')->name('assessment-management.')->group(function () {
+                Route::get('/', [\App\Http\Controllers\AssessmentManagementController::class, 'index'])->name('index');
+                Route::get('/mentoring-visits', [\App\Http\Controllers\AssessmentManagementController::class, 'mentoringVisits'])->name('mentoring-visits');
+
+                // Individual lock/unlock actions
+                Route::post('/assessments/{assessment}/lock', [\App\Http\Controllers\AssessmentManagementController::class, 'lockAssessment'])->name('lock');
+                Route::post('/assessments/{assessment}/unlock', [\App\Http\Controllers\AssessmentManagementController::class, 'unlockAssessment'])->name('unlock');
+                Route::post('/mentoring-visits/{mentoringVisit}/lock', [\App\Http\Controllers\AssessmentManagementController::class, 'lockMentoringVisit'])->name('mentoring.lock');
+                Route::post('/mentoring-visits/{mentoringVisit}/unlock', [\App\Http\Controllers\AssessmentManagementController::class, 'unlockMentoringVisit'])->name('mentoring.unlock');
+
+                // Bulk actions
+                Route::post('/assessments/bulk-lock', [\App\Http\Controllers\AssessmentManagementController::class, 'bulkLockAssessments'])->name('bulk-lock');
+                Route::post('/assessments/bulk-unlock', [\App\Http\Controllers\AssessmentManagementController::class, 'bulkUnlockAssessments'])->name('bulk-unlock');
+                Route::post('/mentoring-visits/bulk-lock', [\App\Http\Controllers\AssessmentManagementController::class, 'bulkLockMentoringVisits'])->name('mentoring.bulk-lock');
+                Route::post('/mentoring-visits/bulk-unlock', [\App\Http\Controllers\AssessmentManagementController::class, 'bulkUnlockMentoringVisits'])->name('mentoring.bulk-unlock');
+            });
         });
 
         // Settings
         Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
         Route::post('/settings', [SettingController::class, 'update'])->name('settings.update');
+    });
+
+    // Coordinator Workspace Routes (Admin and Coordinator only)
+    Route::middleware(['role:admin,coordinator'])->group(function () {
+        // Coordinator Workspace
+        Route::get('/coordinator', [CoordinatorController::class, 'workspace'])->name('coordinator.workspace');
+        Route::get('/coordinator/bulk-import', [CoordinatorController::class, 'bulkImportDashboard'])->name('coordinator.bulk-import');
+        Route::get('/coordinator/language-management', [CoordinatorController::class, 'languageManagement'])->name('coordinator.language-management');
+        Route::get('/coordinator/system-overview', [CoordinatorController::class, 'systemOverview'])->name('coordinator.system-overview');
+
+        // Bulk Import Routes
+        Route::get('/imports', [ImportController::class, 'index'])->name('imports.index');
+        
+        // Dedicated import pages
+        Route::get('/imports/schools', [ImportController::class, 'showSchoolsImport'])->name('imports.schools.show');
+        Route::post('/imports/schools', [ImportController::class, 'importSchools'])->name('imports.schools');
+        
+        Route::get('/imports/users', [ImportController::class, 'showUsersImport'])->name('imports.users.show');
+        Route::post('/imports/users', [ImportController::class, 'importUsers'])->name('imports.users');
+        
+        Route::get('/imports/students', [ImportController::class, 'showStudentsImport'])->name('imports.students.show');
+        Route::post('/imports/students', [ImportController::class, 'importStudents'])->name('imports.students');
+        
+        Route::get('/imports/template/{type}', [ImportController::class, 'downloadTemplate'])->name('imports.template');
+
+        // Localization Routes
+        Route::get('/localization', [LocalizationController::class, 'index'])->name('localization.index');
+        Route::get('/localization/set/{locale}', [LocalizationController::class, 'setLanguage'])->name('localization.set');
+        Route::get('/localization/edit', [LocalizationController::class, 'editTranslations'])->name('localization.edit');
+        Route::put('/localization/{translation}', [LocalizationController::class, 'updateTranslation'])->name('localization.update');
+        Route::post('/localization', [LocalizationController::class, 'createTranslation'])->name('localization.create');
+        Route::delete('/localization/{translation}', [LocalizationController::class, 'deleteTranslation'])->name('localization.delete');
+        Route::patch('/localization/{translation}/toggle', [LocalizationController::class, 'toggleTranslation'])->name('localization.toggle');
+        Route::post('/localization/export', [LocalizationController::class, 'exportToFiles'])->name('localization.export');
     });
 
     // Help & Support

@@ -33,7 +33,7 @@
                                 <td class="px-4 py-2">{{ __('Download Excel Template') }}</td>
                             </tr>
                             <tr>
-                                <td class="px-4 py-2">Name</td>
+                                <td class="px-4 py-2">{{ __("Name") }}</td>
                                 <td class="px-4 py-2">{{ __('Name') }}</td>
                             </tr>
                             <tr>

@@ -174,35 +174,40 @@ class ReportController extends Controller
             $reports = [
                 [
                     'name' => 'Student Performance Report',
-                    'description' => 'Detailed analysis of student assessment scores',
+                    'description' => 'Comprehensive analysis using Assessment Dataset (student_id, cycle, subject, level, score). Formula: Performance Distribution = COUNT(level) GROUP BY subject, cycle. Expected Result: Visual breakdown of student performance levels across Khmer (Beginner→Comp.2) and Math (Beginner→Word Problem) subjects by assessment cycles.',
                     'route' => 'reports.student-performance',
                 ],
                 [
                     'name' => 'School Comparison Report',
-                    'description' => 'Compare performance metrics across schools',
+                    'description' => 'Cross-school performance analysis using aggregated Assessment data. Formula: School Performance = AVG(score) + COUNT(level) WHERE school_id GROUP BY school, subject, cycle. Expected Result: Comparative charts showing average scores and level distribution across schools, enabling identification of high-performing institutions.',
                     'route' => 'reports.school-comparison',
                 ],
                 [
                     'name' => 'Mentoring Impact Report',
-                    'description' => 'Analysis of mentoring visits and their impact',
+                    'description' => 'Correlation analysis between Mentoring Visits and Student Performance datasets. Formula: Impact Score = ΔAVG(assessment_score) / COUNT(mentoring_visits) WHERE visit_date BETWEEN baseline_date AND endline_date. Expected Result: Statistical evidence of mentoring effectiveness on student learning outcomes.',
                     'route' => 'reports.mentoring-impact',
                 ],
                 [
                     'name' => 'Progress Tracking Report',
-                    'description' => 'Track student progress over time',
+                    'description' => 'Longitudinal student progress analysis across assessment cycles. Formula: Progress = (Latest_Level_Index - Baseline_Level_Index) + (Latest_Score - Baseline_Score). Expected Result: Individual student progression trajectories showing improvements from baseline through midline to endline assessments.',
                     'route' => 'reports.progress-tracking',
+                ],
+                [
+                    'name' => 'Performance Calculation Report',
+                    'description' => 'TaRL methodology performance indicators using level aggregation. Formula: Language_Readers_% = (Para+Story+Comp1+Comp2)/Total_Students×100, Math_Operations_% = (Subtraction+Division+WordProblem)/Total_Students×100. Expected Result: Standardized performance percentages enabling comparison with national TaRL benchmarks.',
+                    'route' => 'reports.performance-calculation',
                 ],
             ];
         } elseif ($user->isTeacher()) {
             $reports = [
                 [
                     'name' => 'My Students Performance',
-                    'description' => 'Performance analysis of students in your school',
+                    'description' => 'School-specific assessment analysis filtered by teacher\'s school_id. Formula: School Performance = COUNT(level) WHERE school_id = teacher.school_id GROUP BY subject, cycle, class. Expected Result: Detailed breakdown of student performance levels within your school, showing distribution across classes and subjects for targeted teaching interventions.',
                     'route' => 'reports.my-students',
                 ],
                 [
                     'name' => 'Class Progress Report',
-                    'description' => 'Track progress by class',
+                    'description' => 'Class-level longitudinal analysis using Student-Assessment relationships. Formula: Class Progress = Σ(student_progress) / COUNT(students) WHERE class_id GROUP BY assessment_cycle. Expected Result: Class-wise progress trajectories showing average improvements, helping identify which classes need additional support.',
                     'route' => 'reports.class-progress',
                 ],
             ];
@@ -210,23 +215,28 @@ class ReportController extends Controller
             $reports = [
                 [
                     'name' => 'Student Performance Report',
-                    'description' => 'Performance analysis of students in your assigned schools',
+                    'description' => 'Assessment analysis filtered by mentor\'s assigned schools. Formula: Mentor Performance = COUNT(level) WHERE school_id IN (mentor.assigned_schools) GROUP BY school, subject, cycle. Expected Result: Performance overview across your assigned schools, enabling targeted mentoring focus on schools with lower performance levels.',
                     'route' => 'reports.student-performance',
                 ],
                 [
                     'name' => 'School Comparison Report',
-                    'description' => 'Compare performance across your assigned schools',
+                    'description' => 'Comparative analysis within mentor\'s school portfolio. Formula: School Ranking = RANK() OVER (ORDER BY AVG(score) DESC) WHERE school_id IN (mentor.assigned_schools). Expected Result: Ranked comparison of assigned schools showing which institutions are excelling and which need intensive mentoring support.',
                     'route' => 'reports.school-comparison',
                 ],
                 [
                     'name' => 'My Mentoring Summary',
-                    'description' => 'Summary of your mentoring activities',
+                    'description' => 'Personal mentoring activity analysis using MentoringVisit dataset. Formula: Mentoring Effectiveness = COUNT(visits) × AVG(mentoring_score) × COUNT(teachers_mentored) WHERE mentor_id = current_user. Expected Result: Comprehensive dashboard showing visit frequency, quality scores, and coverage metrics for performance evaluation.',
                     'route' => 'reports.my-mentoring',
                 ],
                 [
                     'name' => 'Progress Tracking Report',
-                    'description' => 'Track student progress in your assigned schools',
+                    'description' => 'Student progress analysis within mentor\'s assigned schools portfolio. Formula: Mentored Schools Progress = Σ(school_progress) WHERE school_id IN (mentor.assigned_schools) GROUP BY school. Expected Result: Progress trajectories showing impact of mentoring interventions on student learning outcomes across assigned schools.',
                     'route' => 'reports.progress-tracking',
+                ],
+                [
+                    'name' => 'Performance Calculation Report',
+                    'description' => 'TaRL performance indicators for mentor\'s school portfolio. Formula: Portfolio Performance = Σ(Language_Readers_% + Math_Operations_%) / COUNT(assigned_schools). Expected Result: Aggregated TaRL performance metrics across assigned schools for strategic mentoring planning and resource allocation.',
+                    'route' => 'reports.performance-calculation',
                 ],
             ];
         }
@@ -294,6 +304,25 @@ class ReportController extends Controller
             ->groupBy('level')
             ->get();
 
+        // Get performance by level and subject
+        $performanceByLevelAndSubject = [];
+
+        if ($subject === 'all') {
+            // Get data for both subjects
+            $subjects = ['khmer', 'math'];
+            foreach ($subjects as $subj) {
+                $subjectQuery = clone $query;
+                $performanceByLevelAndSubject[$subj] = $subjectQuery
+                    ->where('subject', $subj)
+                    ->select('level', DB::raw('count(*) as count'))
+                    ->groupBy('level')
+                    ->get();
+            }
+        } else {
+            // Get data for selected subject only
+            $performanceByLevelAndSubject[$subject] = $performanceByLevel;
+        }
+
         // Get performance trends
         $performanceTrends = Assessment::select(
             'cycle',
@@ -301,16 +330,26 @@ class ReportController extends Controller
             'level',
             DB::raw('count(*) as count')
         )
-            ->when($schoolId, function ($q) use ($schoolId) {
-                $q->whereHas('student', function ($sq) use ($schoolId) {
-                    $sq->where('school_id', $schoolId);
-                });
+            ->when($schoolId, function ($q) use ($schoolId, $user) {
+                // Verify user has access to this school
+                if ($user->isAdmin() || $user->canAccessSchool($schoolId)) {
+                    $q->whereHas('student', function ($sq) use ($schoolId) {
+                        $sq->where('school_id', $schoolId);
+                    });
+                }
             })
             ->when($subject !== 'all', function ($q) use ($subject) {
                 $q->where('subject', $subject);
             })
+            ->when($cycle !== 'all', function ($q) use ($cycle) {
+                $q->where('cycle', $cycle);
+            })
             ->groupBy('cycle', 'subject', 'level')
             ->get();
+
+        // Get level ordering for proper chart display
+        $khmerLevels = ['Beginner', 'Letter', 'Word', 'Paragraph', 'Story', 'Comp. 1', 'Comp. 2'];
+        $mathLevels = ['Beginner', '1-Digit', '2-Digit', 'Subtraction', 'Division', 'Word Problem'];
 
         return view('reports.student-performance', compact(
             'schools',
@@ -318,7 +357,10 @@ class ReportController extends Controller
             'subject',
             'cycle',
             'performanceByLevel',
-            'performanceTrends'
+            'performanceByLevelAndSubject',
+            'performanceTrends',
+            'khmerLevels',
+            'mathLevels'
         ));
     }
 
@@ -883,6 +925,109 @@ class ReportController extends Controller
             'schools',
             'schoolId',
             'visitData'
+        ));
+    }
+
+    /**
+     * Performance Calculation Report
+     */
+    public function performanceCalculation(Request $request)
+    {
+        $user = $request->user();
+        if (! in_array($user->role, ['admin', 'viewer', 'mentor'])) {
+            abort(403);
+        }
+
+        // Get filters
+        $schoolId = $request->get('school_id');
+        $cycle = $request->get('cycle', 'baseline');
+
+        // Get schools for filter based on user access
+        $accessibleSchoolIds = $user->getAccessibleSchoolIds();
+        if ($user->isAdmin()) {
+            $schools = School::orderBy('school_name')->get();
+        } else {
+            $schools = School::whereIn('id', $accessibleSchoolIds)->orderBy('school_name')->get();
+        }
+
+        // Build base query for assessments
+        $assessmentsQuery = Assessment::with(['student', 'student.school'])
+            ->where('cycle', $cycle);
+
+        // Apply access restrictions for mentors
+        if (! $user->isAdmin()) {
+            if (empty($accessibleSchoolIds)) {
+                $assessmentsQuery->whereRaw('1 = 0');
+            } else {
+                $assessmentsQuery->whereHas('student', function ($q) use ($accessibleSchoolIds) {
+                    $q->whereIn('school_id', $accessibleSchoolIds);
+                });
+            }
+        }
+
+        if ($schoolId) {
+            if ($user->isAdmin() || $user->canAccessSchool($schoolId)) {
+                $assessmentsQuery->whereHas('student', function ($q) use ($schoolId) {
+                    $q->where('school_id', $schoolId);
+                });
+            }
+        }
+
+        // Get performance data by school
+        $schoolPerformanceData = [];
+
+        $targetSchools = $schoolId ? School::where('id', $schoolId)->get() : $schools;
+
+        foreach ($targetSchools as $school) {
+            if (! $user->isAdmin() && ! $user->canAccessSchool($school->id)) {
+                continue;
+            }
+
+            $schoolAssessments = Assessment::with(['student'])
+                ->where('cycle', $cycle)
+                ->whereHas('student', function ($q) use ($school) {
+                    $q->where('school_id', $school->id);
+                })
+                ->get();
+
+            // Language Performance Calculation
+            $khmerAssessments = $schoolAssessments->where('subject', 'khmer');
+            $totalKhmerStudents = $khmerAssessments->count();
+
+            $languageReaders = $khmerAssessments->whereIn('level', ['Paragraph', 'Story', 'Comp. 1', 'Comp. 2'])->count();
+            $languageBeginners = $khmerAssessments->whereIn('level', ['Beginner', 'Letter'])->count();
+
+            // Math Performance Calculation
+            $mathAssessments = $schoolAssessments->where('subject', 'math');
+            $totalMathStudents = $mathAssessments->count();
+
+            $mathOperations = $mathAssessments->whereIn('level', ['Subtraction', 'Division', 'Word Problem'])->count();
+            $mathBeginners = $mathAssessments->whereIn('level', ['Beginner', '1-Digit'])->count();
+
+            $schoolPerformanceData[] = [
+                'school' => $school,
+                'language' => [
+                    'total_students' => $totalKhmerStudents,
+                    'readers' => $languageReaders,
+                    'beginners' => $languageBeginners,
+                    'readers_percentage' => $totalKhmerStudents > 0 ? round(($languageReaders / $totalKhmerStudents) * 100, 1) : 0,
+                    'beginners_percentage' => $totalKhmerStudents > 0 ? round(($languageBeginners / $totalKhmerStudents) * 100, 1) : 0,
+                ],
+                'math' => [
+                    'total_students' => $totalMathStudents,
+                    'operations' => $mathOperations,
+                    'beginners' => $mathBeginners,
+                    'operations_percentage' => $totalMathStudents > 0 ? round(($mathOperations / $totalMathStudents) * 100, 1) : 0,
+                    'beginners_percentage' => $totalMathStudents > 0 ? round(($mathBeginners / $totalMathStudents) * 100, 1) : 0,
+                ],
+            ];
+        }
+
+        return view('reports.performance-calculation', compact(
+            'schools',
+            'schoolId',
+            'cycle',
+            'schoolPerformanceData'
         ));
     }
 

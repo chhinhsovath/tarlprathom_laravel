@@ -117,6 +117,11 @@
                                             {{ __('Date') }}
                                         </x-sortable-header>
                                     </th>
+                                    @if(\Schema::hasColumn('assessments', 'is_locked'))
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        {{ __('Status') }}
+                                    </th>
+                                    @endif
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
@@ -149,10 +154,26 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         {{ $assessment->assessed_at->format('Y-m-d') }}
                                     </td>
+                                    @if(\Schema::hasColumn('assessments', 'is_locked'))
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        @if($assessment->is_locked ?? false)
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                                <svg class="-ml-0.5 mr-1.5 h-2 w-2" fill="currentColor" viewBox="0 0 8 8">
+                                                    <circle cx="4" cy="4" r="3" />
+                                                </svg>
+                                                {{ __('Locked') }}
+                                            </span>
+                                        @else
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                {{ __('Active') }}
+                                            </span>
+                                        @endif
+                                    </td>
+                                    @endif
                                 </tr>
                                 @empty
                                 <tr>
-                                    <td colspan="6" class="px-6 py-4 text-center text-sm text-gray-500">
+                                    <td colspan="{{ \Schema::hasColumn('assessments', 'is_locked') ? '7' : '6' }}" class="px-6 py-4 text-center text-sm text-gray-500">
                                         {{ __('No assessments found') }}
                                     </td>
                                 </tr>

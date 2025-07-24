@@ -23,7 +23,9 @@
                     <a href="#getting-started" class="text-indigo-600 hover:text-indigo-800 text-sm">→ {{ __('Getting Started') }}</a>
                     <a href="#student-management" class="text-indigo-600 hover:text-indigo-800 text-sm">→ {{ __('Student Management') }}</a>
                     <a href="#assessments" class="text-indigo-600 hover:text-indigo-800 text-sm">→ {{ __('Assessments') }}</a>
+                    <a href="#assessment-management" class="text-indigo-600 hover:text-indigo-800 text-sm">→ {{ __('Manage Assessments') }}</a>
                     <a href="#mentoring" class="text-indigo-600 hover:text-indigo-800 text-sm">→ {{ __('Mentoring Visits') }}</a>
+                    <a href="#mentoring-management" class="text-indigo-600 hover:text-indigo-800 text-sm">→ {{ __('Manage Mentoring') }}</a>
                     <a href="#reports" class="text-indigo-600 hover:text-indigo-800 text-sm">→ {{ __('Reports') }}</a>
                     <a href="#bulk-import" class="text-indigo-600 hover:text-indigo-800 text-sm">→ {{ __('Bulk Import') }}</a>
                     <a href="#resources" class="text-indigo-600 hover:text-indigo-800 text-sm">→ {{ __('Resources') }}</a>
@@ -275,6 +277,86 @@
                     </div>
                 </div>
 
+                <!-- Assessment Management -->
+                <div class="bg-white overflow-hidden shadow-sm rounded-lg" id="assessment-management">
+                    <div class="p-6">
+                        <h4 class="text-lg font-medium text-gray-900 mb-4 flex items-center">
+                            <svg class="w-5 h-5 mr-2 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            {{ __('Manage Assessments') }} <span class="text-sm text-gray-500 ml-2">({{ __('Admin only') }})</span>
+                        </h4>
+                        <div class="space-y-4">
+                            <details class="group">
+                                <summary class="cursor-pointer text-sm font-medium text-gray-900 hover:text-indigo-600">{{ __('Lock/Unlock Assessments') }}</summary>
+                                <div class="mt-2 text-sm text-gray-600 pl-4 space-y-2">
+                                    <p class="font-medium">{{ __('Steps:') }}</p>
+                                    <ol class="list-decimal list-inside space-y-1 ml-2">
+                                        <li>{{ __('Go to "Manage Assessments" page (Admin menu)') }}</li>
+                                        <li>{{ __('View list of all assessments with their lock status') }}</li>
+                                        <li>{{ __('Find the assessment you want to manage') }}</li>
+                                        <li>{{ __('Click the lock/unlock button:') }}
+                                            <ul class="list-disc list-inside ml-4 mt-1">
+                                                <li>{{ __('Red lock icon = Assessment is locked (no edits allowed)') }}</li>
+                                                <li>{{ __('Green unlock icon = Assessment is unlocked (can be edited)') }}</li>
+                                            </ul>
+                                        </li>
+                                        <li>{{ __('Confirm the action when prompted') }}</li>
+                                    </ol>
+                                    <p class="text-xs text-gray-500 mt-2">{{ __('Note: Locking an assessment prevents any changes to scores or student data') }}</p>
+                                </div>
+                            </details>
+                            <details class="group">
+                                <summary class="cursor-pointer text-sm font-medium text-gray-900 hover:text-indigo-600">{{ __('Filter and Search Assessments') }}</summary>
+                                <div class="mt-2 text-sm text-gray-600 pl-4 space-y-2">
+                                    <p class="font-medium">{{ __('Available filters:') }}</p>
+                                    <ul class="list-disc list-inside space-y-1 ml-2">
+                                        <li>{{ __('By School - Select specific school') }}</li>
+                                        <li>{{ __('By Teacher - Filter by teacher name') }}</li>
+                                        <li>{{ __('By Subject - Khmer or Math') }}</li>
+                                        <li>{{ __('By Cycle - Baseline, Midline, or Endline') }}</li>
+                                        <li>{{ __('By Lock Status - Show locked or unlocked only') }}</li>
+                                        <li>{{ __('By Date Range - Filter by assessment date') }}</li>
+                                    </ul>
+                                    <p class="text-xs text-gray-500 mt-2">{{ __('Tip: Combine multiple filters for precise results') }}</p>
+                                </div>
+                            </details>
+                            <details class="group">
+                                <summary class="cursor-pointer text-sm font-medium text-gray-900 hover:text-indigo-600">{{ __('Bulk Actions on Assessments') }}</summary>
+                                <div class="mt-2 text-sm text-gray-600 pl-4 space-y-2">
+                                    <p class="font-medium">{{ __('Available bulk actions:') }}</p>
+                                    <ol class="list-decimal list-inside space-y-1 ml-2">
+                                        <li>{{ __('Select multiple assessments using checkboxes') }}</li>
+                                        <li>{{ __('Choose bulk action from dropdown:') }}
+                                            <ul class="list-disc list-inside ml-4 mt-1">
+                                                <li>{{ __('Lock selected assessments') }}</li>
+                                                <li>{{ __('Unlock selected assessments') }}</li>
+                                                <li>{{ __('Export selected assessments') }}</li>
+                                            </ul>
+                                        </li>
+                                        <li>{{ __('Click "Apply" to execute the action') }}</li>
+                                        <li>{{ __('Confirm when prompted') }}</li>
+                                    </ol>
+                                </div>
+                            </details>
+                            <details class="group">
+                                <summary class="cursor-pointer text-sm font-medium text-gray-900 hover:text-indigo-600">{{ __('When to Lock Assessments') }}</summary>
+                                <div class="mt-2 text-sm text-gray-600 pl-4 space-y-2">
+                                    <p class="font-medium">{{ __('Best practices:') }}</p>
+                                    <ul class="list-disc list-inside space-y-1 ml-2">
+                                        <li>{{ __('Lock baseline assessments after all students are assessed') }}</li>
+                                        <li>{{ __('Lock midline assessments before starting endline') }}</li>
+                                        <li>{{ __('Lock all assessments before generating final reports') }}</li>
+                                        <li>{{ __('Lock assessments after verification by mentors') }}</li>
+                                        <li>{{ __('Keep assessments unlocked during active assessment periods') }}</li>
+                                    </ul>
+                                    <p class="text-xs text-gray-500 mt-2">{{ __('Important: Locked assessments cannot be edited by anyone, including admins') }}</p>
+                                </div>
+                            </details>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Mentoring Visits -->
                 <div class="bg-white overflow-hidden shadow-sm rounded-lg" id="mentoring">
                     <div class="p-6">
@@ -320,6 +402,102 @@
                                         <li>{{ __('Upload photos (optional)') }}</li>
                                         <li>{{ __('Submit visit log') }}</li>
                                     </ol>
+                                </div>
+                            </details>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mentoring Management -->
+                <div class="bg-white overflow-hidden shadow-sm rounded-lg" id="mentoring-management">
+                    <div class="p-6">
+                        <h4 class="text-lg font-medium text-gray-900 mb-4 flex items-center">
+                            <svg class="w-5 h-5 mr-2 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                            </svg>
+                            {{ __('Manage Mentoring') }} <span class="text-sm text-gray-500 ml-2">({{ __('Admin only') }})</span>
+                        </h4>
+                        <div class="space-y-4">
+                            <details class="group">
+                                <summary class="cursor-pointer text-sm font-medium text-gray-900 hover:text-indigo-600">{{ __('View All Mentoring Visits') }}</summary>
+                                <div class="mt-2 text-sm text-gray-600 pl-4 space-y-2">
+                                    <p class="font-medium">{{ __('Features:') }}</p>
+                                    <ul class="list-disc list-inside space-y-1 ml-2">
+                                        <li>{{ __('View all mentoring visits across all schools') }}</li>
+                                        <li>{{ __('See visit details including:') }}
+                                            <ul class="list-circle list-inside ml-4 mt-1">
+                                                <li>{{ __('Mentor name and contact') }}</li>
+                                                <li>{{ __('School visited') }}</li>
+                                                <li>{{ __('Teacher observed') }}</li>
+                                                <li>{{ __('Visit date and duration') }}</li>
+                                                <li>{{ __('Observation notes') }}</li>
+                                                <li>{{ __('Action plans') }}</li>
+                                                <li>{{ __('Photos uploaded') }}</li>
+                                            </ul>
+                                        </li>
+                                        <li>{{ __('Track follow-up requirements') }}</li>
+                                    </ul>
+                                </div>
+                            </details>
+                            <details class="group">
+                                <summary class="cursor-pointer text-sm font-medium text-gray-900 hover:text-indigo-600">{{ __('Filter Mentoring Visits') }}</summary>
+                                <div class="mt-2 text-sm text-gray-600 pl-4 space-y-2">
+                                    <p class="font-medium">{{ __('Available filters:') }}</p>
+                                    <ul class="list-disc list-inside space-y-1 ml-2">
+                                        <li>{{ __('By Mentor - Select specific mentor') }}</li>
+                                        <li>{{ __('By School - Filter by school name') }}</li>
+                                        <li>{{ __('By District - Show visits in specific district') }}</li>
+                                        <li>{{ __('By Date Range - Filter by visit date') }}</li>
+                                        <li>{{ __('By Follow-up Status - Show visits requiring follow-up') }}</li>
+                                        <li>{{ __('By Teacher - Filter by teacher observed') }}</li>
+                                    </ul>
+                                    <p class="text-xs text-gray-500 mt-2">{{ __('Tip: Export filtered results for reporting') }}</p>
+                                </div>
+                            </details>
+                            <details class="group">
+                                <summary class="cursor-pointer text-sm font-medium text-gray-900 hover:text-indigo-600">{{ __('Mentoring Analytics') }}</summary>
+                                <div class="mt-2 text-sm text-gray-600 pl-4 space-y-2">
+                                    <p class="font-medium">{{ __('Available metrics:') }}</p>
+                                    <ul class="list-disc list-inside space-y-1 ml-2">
+                                        <li>{{ __('Total visits per month/quarter') }}</li>
+                                        <li>{{ __('Average visits per school') }}</li>
+                                        <li>{{ __('Mentor performance metrics') }}</li>
+                                        <li>{{ __('Schools with most/least visits') }}</li>
+                                        <li>{{ __('Follow-up completion rate') }}</li>
+                                        <li>{{ __('Time between visits per school') }}</li>
+                                    </ul>
+                                </div>
+                            </details>
+                            <details class="group">
+                                <summary class="cursor-pointer text-sm font-medium text-gray-900 hover:text-indigo-600">{{ __('Export Mentoring Data') }}</summary>
+                                <div class="mt-2 text-sm text-gray-600 pl-4 space-y-2">
+                                    <p class="font-medium">{{ __('Steps:') }}</p>
+                                    <ol class="list-decimal list-inside space-y-1 ml-2">
+                                        <li>{{ __('Go to "Manage Mentoring" page') }}</li>
+                                        <li>{{ __('Apply desired filters') }}</li>
+                                        <li>{{ __('Click "Export" button') }}</li>
+                                        <li>{{ __('Choose export format:') }}
+                                            <ul class="list-disc list-inside ml-4 mt-1">
+                                                <li>{{ __('CSV - For data analysis') }}</li>
+                                                <li>{{ __('Excel - For formatted reports') }}</li>
+                                                <li>{{ __('PDF - For presentation') }}</li>
+                                            </ul>
+                                        </li>
+                                        <li>{{ __('Download the file') }}</li>
+                                    </ol>
+                                </div>
+                            </details>
+                            <details class="group">
+                                <summary class="cursor-pointer text-sm font-medium text-gray-900 hover:text-indigo-600">{{ __('Mentor Assignment Overview') }}</summary>
+                                <div class="mt-2 text-sm text-gray-600 pl-4 space-y-2">
+                                    <p class="font-medium">{{ __('View and manage:') }}</p>
+                                    <ul class="list-disc list-inside space-y-1 ml-2">
+                                        <li>{{ __('List of all mentors and their assigned schools') }}</li>
+                                        <li>{{ __('Quick reassignment of schools') }}</li>
+                                        <li>{{ __('Mentor workload balancing') }}</li>
+                                        <li>{{ __('Coverage gaps identification') }}</li>
+                                        <li>{{ __('Historical assignment tracking') }}</li>
+                                    </ul>
                                 </div>
                             </details>
                         </div>

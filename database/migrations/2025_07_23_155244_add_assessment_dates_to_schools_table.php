@@ -37,18 +37,16 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('schools', function (Blueprint $table) {
-            $table->dropIndex(['baseline_start_date', 'baseline_end_date']);
-            $table->dropIndex(['midline_start_date', 'midline_end_date']);
-            $table->dropIndex(['endline_start_date', 'endline_end_date']);
+            $table->dropIndex('schools_baseline_start_date_baseline_end_date_index');
+            $table->dropIndex('schools_midline_start_date_midline_end_date_index');
+            $table->dropIndex('schools_endline_start_date_endline_end_date_index');
 
-            $table->dropColumn([
-                'baseline_start_date',
-                'baseline_end_date',
-                'midline_start_date',
-                'midline_end_date',
-                'endline_start_date',
-                'endline_end_date',
-            ]);
+            $table->dropColumn('baseline_start_date');
+            $table->dropColumn('baseline_end_date');
+            $table->dropColumn('midline_start_date');
+            $table->dropColumn('midline_end_date');
+            $table->dropColumn('endline_start_date');
+            $table->dropColumn('endline_end_date');
         });
     }
 };

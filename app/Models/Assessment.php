@@ -22,6 +22,9 @@ class Assessment extends Model
         'level',
         'score',
         'assessed_at',
+        'is_locked',
+        'locked_by',
+        'locked_at',
     ];
 
     /**
@@ -32,6 +35,8 @@ class Assessment extends Model
     protected $casts = [
         'assessed_at' => 'date',
         'score' => 'float',
+        'is_locked' => 'boolean',
+        'locked_at' => 'datetime',
     ];
 
     /**
@@ -77,6 +82,14 @@ class Assessment extends Model
     public function histories()
     {
         return $this->hasMany(AssessmentHistory::class);
+    }
+
+    /**
+     * Get the user who locked this assessment.
+     */
+    public function lockedBy()
+    {
+        return $this->belongsTo(User::class, 'locked_by');
     }
 
     /**

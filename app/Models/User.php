@@ -21,13 +21,12 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'role', // 'admin', 'mentor', 'teacher', 'viewer'
+        'role', // 'admin', 'coordinator', 'mentor', 'teacher', 'viewer'
         'school_id',
         'phone',
         'is_active',
         'profile_photo',
         'sex',
-        'telephone',
         'holding_classes',
     ];
 
@@ -152,6 +151,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Check if user is a coordinator.
+     */
+    public function isCoordinator()
+    {
+        return $this->role === 'coordinator';
+    }
+
+    /**
      * Check if user is a viewer.
      */
     public function isViewer()
@@ -176,12 +183,12 @@ class User extends Authenticatable
     }
 
     /**
-     * Get all school IDs that this mentor can access.
-     * For mentors, returns assigned schools. For admins, returns all schools.
+     * Get all school IDs that this user can access.
+     * For admins and coordinators, returns all schools. For mentors, returns assigned schools.
      */
     public function getAccessibleSchoolIds()
     {
-        if ($this->isAdmin()) {
+        if ($this->isAdmin() || $this->isCoordinator()) {
             return School::pluck('id')->toArray();
         }
 

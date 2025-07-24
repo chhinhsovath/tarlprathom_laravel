@@ -242,6 +242,14 @@ class MentoringVisitController extends Controller
     {
         $user = auth()->user();
 
+        // Check if the mentoring visit is locked (only if column exists)
+        if (\Schema::hasColumn('mentoring_visits', 'is_locked')) {
+            if ($mentoringVisit->is_locked && ! $user->isAdmin()) {
+                return redirect()->route('mentoring.show', $mentoringVisit)
+                    ->with('error', __('This mentoring visit is locked and cannot be edited.'));
+            }
+        }
+
         // Check if user can edit this mentoring visit
         if ($user->isAdmin() || $mentoringVisit->mentor_id === $user->id) {
             // Admin and the mentor who created it can edit
@@ -293,6 +301,14 @@ class MentoringVisitController extends Controller
     public function update(StoreMentoringVisitRequest $request, MentoringVisit $mentoringVisit)
     {
         $user = auth()->user();
+
+        // Check if the mentoring visit is locked (only if column exists)
+        if (\Schema::hasColumn('mentoring_visits', 'is_locked')) {
+            if ($mentoringVisit->is_locked && ! $user->isAdmin()) {
+                return redirect()->route('mentoring.show', $mentoringVisit)
+                    ->with('error', __('This mentoring visit is locked and cannot be edited.'));
+            }
+        }
 
         // Check if user can edit this mentoring visit
         if (! ($user->isAdmin() || $mentoringVisit->mentor_id === $user->id)) {

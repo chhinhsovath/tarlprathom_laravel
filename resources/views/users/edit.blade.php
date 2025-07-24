@@ -62,6 +62,7 @@
                                     <select id="role" name="role" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
                                         <option value="">{{ __('Select Role') }}</option>
                                         <option value="admin" {{ old('role', $user->role) == 'admin' ? 'selected' : '' }}>{{ __('Admin') }}</option>
+                                        <option value="coordinator" {{ old('role', $user->role) == 'coordinator' ? 'selected' : '' }}>{{ __('Coordinator') }}</option>
                                         <option value="mentor" {{ old('role', $user->role) == 'mentor' ? 'selected' : '' }}>{{ __('Mentor') }}</option>
                                         <option value="teacher" {{ old('role', $user->role) == 'teacher' ? 'selected' : '' }}>{{ __('Teacher') }}</option>
                                         <option value="viewer" {{ old('role', $user->role) == 'viewer' ? 'selected' : '' }}>{{ __('Viewer') }}</option>
@@ -115,13 +116,6 @@
                                     <x-input-label for="phone" :value="__('Phone')" />
                                     <x-text-input id="phone" name="phone" type="text" class="mt-1 block w-full" :value="old('phone', $user->phone)" />
                                     <x-input-error class="mt-2" :messages="$errors->get('phone')" />
-                                </div>
-
-                                <!-- Telephone -->
-                                <div>
-                                    <x-input-label for="telephone" :value="__('Telephone')" />
-                                    <x-text-input id="telephone" name="telephone" type="text" class="mt-1 block w-full" :value="old('telephone', $user->telephone)" />
-                                    <x-input-error class="mt-2" :messages="$errors->get('telephone')" />
                                 </div>
 
                                 <!-- Holding Classes -->

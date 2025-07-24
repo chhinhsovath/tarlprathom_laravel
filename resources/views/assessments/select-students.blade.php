@@ -22,7 +22,7 @@
             <!-- Filters -->
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
                 <div class="p-6 bg-white border-b border-gray-200">
-                    <form method="GET" action="{{ route('assessments.select-students') }}" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <form method="GET" action="{{ route('assessments.select-students') }}" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
                         <input type="hidden" name="type" value="{{ $assessmentType }}">
                         
                         <!-- Search -->
@@ -61,6 +61,50 @@
                             </select>
                         </div>
 
+                        <!-- Baseline Khmer Filter -->
+                        <div>
+                            <select name="baseline_khmer" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                <option value="">{{ __('Baseline Khmer') }}</option>
+                                <option value="letter" {{ request('baseline_khmer') == 'letter' ? 'selected' : '' }}>
+                                    {{ __('Letter') }}
+                                </option>
+                                <option value="word" {{ request('baseline_khmer') == 'word' ? 'selected' : '' }}>
+                                    {{ __('Word') }}
+                                </option>
+                                <option value="sentence" {{ request('baseline_khmer') == 'sentence' ? 'selected' : '' }}>
+                                    {{ __('Sentence') }}
+                                </option>
+                                <option value="paragraph" {{ request('baseline_khmer') == 'paragraph' ? 'selected' : '' }}>
+                                    {{ __('Paragraph') }}
+                                </option>
+                                <option value="not_assessed" {{ request('baseline_khmer') == 'not_assessed' ? 'selected' : '' }}>
+                                    {{ __('Not Assessed') }}
+                                </option>
+                            </select>
+                        </div>
+
+                        <!-- Baseline Math Filter -->
+                        <div>
+                            <select name="baseline_math" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                <option value="">{{ __('Baseline Math') }}</option>
+                                <option value="beginner" {{ request('baseline_math') == 'beginner' ? 'selected' : '' }}>
+                                    {{ __('Beginner') }}
+                                </option>
+                                <option value="basic_operations" {{ request('baseline_math') == 'basic_operations' ? 'selected' : '' }}>
+                                    {{ __('Basic Operations') }}
+                                </option>
+                                <option value="subtraction" {{ request('baseline_math') == 'subtraction' ? 'selected' : '' }}>
+                                    {{ __('Subtraction') }}
+                                </option>
+                                <option value="multiplication_division" {{ request('baseline_math') == 'multiplication_division' ? 'selected' : '' }}>
+                                    {{ __('Multiplication/Division') }}
+                                </option>
+                                <option value="not_assessed" {{ request('baseline_math') == 'not_assessed' ? 'selected' : '' }}>
+                                    {{ __('Not Assessed') }}
+                                </option>
+                            </select>
+                        </div>
+
                         <!-- Submit Button -->
                         <div>
                             <button type="submit" class="w-full bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
@@ -78,22 +122,45 @@
 
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-6 bg-white border-b border-gray-200">
-                        <div class="mb-4 flex justify-between items-center">
-                            <div>
-                                <p class="text-sm text-gray-600">
-                                    {{ __('Select which students should be assessed for :type. Only selected students will appear in the assessment list.', ['type' => $assessmentType]) }}
-                                </p>
-                                <p class="text-sm text-gray-600 mt-2">
-                                    <strong>{{ __('Note') }}:</strong> {{ __('All students are automatically eligible for baseline assessments.') }}
-                                </p>
+                        <div class="mb-4">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="text-sm text-gray-600">
+                                        {{ __('Select which students should be assessed for :type. Only selected students will appear in the assessment list.', ['type' => $assessmentType]) }}
+                                    </p>
+                                    <p class="text-sm text-gray-600 mt-2">
+                                        <strong>{{ __('Note') }}:</strong> {{ __('All students are automatically eligible for baseline assessments.') }}
+                                    </p>
+                                </div>
+                                <div>
+                                    <button type="button" id="selectAll" class="text-sm text-blue-600 hover:text-blue-800 mr-4">
+                                        {{ __('Select All') }}
+                                    </button>
+                                    <button type="button" id="deselectAll" class="text-sm text-blue-600 hover:text-blue-800">
+                                        {{ __('Deselect All') }}
+                                    </button>
+                                </div>
                             </div>
-                            <div>
-                                <button type="button" id="selectAll" class="text-sm text-blue-600 hover:text-blue-800 mr-4">
-                                    {{ __('Select All') }}
-                                </button>
-                                <button type="button" id="deselectAll" class="text-sm text-blue-600 hover:text-blue-800">
-                                    {{ __('Deselect All') }}
-                                </button>
+                            
+                            <!-- Baseline Assessment Legend -->
+                            <div class="mt-4 p-3 bg-gray-50 rounded-lg">
+                                <p class="text-xs font-medium text-gray-700 mb-2">{{ __('Baseline Assessment Levels') }}:</p>
+                                <div class="flex flex-wrap gap-4 text-xs">
+                                    <div class="flex items-center gap-2">
+                                        <span class="font-medium text-gray-600">{{ __('Khmer') }}:</span>
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-red-100 text-red-800">{{ __('Letter') }}</span>
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-yellow-100 text-yellow-800">{{ __('Word') }}</span>
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-blue-100 text-blue-800">{{ __('Sentence') }}</span>
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-green-100 text-green-800">{{ __('Paragraph') }}</span>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <span class="font-medium text-gray-600">{{ __('Math') }}:</span>
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-red-100 text-red-800">{{ __('Beginner') }}</span>
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-yellow-100 text-yellow-800">{{ __('Basic Operations') }}</span>
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-blue-100 text-blue-800">{{ __('Subtraction') }}</span>
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-green-100 text-green-800">{{ __('Multiplication/Division') }}</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -114,8 +181,17 @@
                                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                                 {{ __('School') }}
                                             </th>
-                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                {{ __('Class') }}
+                                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider" colspan="2">
+                                                {{ __('Baseline Assessment') }}
+                                            </th>
+                                        </tr>
+                                        <tr class="bg-gray-50">
+                                            <th colspan="4"></th>
+                                            <th class="px-6 py-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                {{ __('Khmer') }}
+                                            </th>
+                                            <th class="px-6 py-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                {{ __('Math') }}
                                             </th>
                                         </tr>
                                     </thead>
@@ -139,8 +215,39 @@
                                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                                     {{ $student->school->school_name }}
                                                 </td>
-                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                                    {{ $student->schoolClass ? $student->schoolClass->name : __('Not Assigned') }}
+                                                <td class="px-6 py-4 whitespace-nowrap text-center">
+                                                    @php
+                                                        $khmerBaseline = $student->assessments->where('subject', 'khmer')->first();
+                                                    @endphp
+                                                    @if($khmerBaseline)
+                                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                                                            @if($khmerBaseline->level == 'letter') bg-red-100 text-red-800
+                                                            @elseif($khmerBaseline->level == 'word') bg-yellow-100 text-yellow-800
+                                                            @elseif($khmerBaseline->level == 'sentence') bg-blue-100 text-blue-800
+                                                            @elseif($khmerBaseline->level == 'paragraph') bg-green-100 text-green-800
+                                                            @endif">
+                                                            {{ ucfirst($khmerBaseline->level) }}
+                                                        </span>
+                                                    @else
+                                                        <span class="text-gray-400">{{ __('Not Assessed') }}</span>
+                                                    @endif
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-center">
+                                                    @php
+                                                        $mathBaseline = $student->assessments->where('subject', 'math')->first();
+                                                    @endphp
+                                                    @if($mathBaseline)
+                                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                                                            @if($mathBaseline->level == 'beginner') bg-red-100 text-red-800
+                                                            @elseif($mathBaseline->level == 'basic_operations') bg-yellow-100 text-yellow-800
+                                                            @elseif($mathBaseline->level == 'subtraction') bg-blue-100 text-blue-800
+                                                            @elseif($mathBaseline->level == 'multiplication_division') bg-green-100 text-green-800
+                                                            @endif">
+                                                            {{ str_replace('_', ' ', ucfirst($mathBaseline->level)) }}
+                                                        </span>
+                                                    @else
+                                                        <span class="text-gray-400">{{ __('Not Assessed') }}</span>
+                                                    @endif
                                                 </td>
                                             </tr>
                                         @endforeach

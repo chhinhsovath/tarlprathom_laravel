@@ -11,7 +11,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // Fix the migration repository configuration issue
+        $this->app->singleton('migration.repository', function ($app) {
+            $table = $app['config']['database.migrations.table'];
+
+            return new \Illuminate\Database\Migrations\DatabaseMigrationRepository($app['db'], $table);
+        });
     }
 
     /**

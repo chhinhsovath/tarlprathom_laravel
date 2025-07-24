@@ -50,6 +50,7 @@
                             <div class="flex flex-wrap gap-2 mb-4">
                                 <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium 
                                     {{ $user->role == 'admin' ? 'bg-purple-100 text-purple-800' : '' }}
+                                    {{ $user->role == 'coordinator' ? 'bg-orange-100 text-orange-800' : '' }}
                                     {{ $user->role == 'mentor' ? 'bg-blue-100 text-blue-800' : '' }}
                                     {{ $user->role == 'teacher' ? 'bg-green-100 text-green-800' : '' }}
                                     {{ $user->role == 'viewer' ? 'bg-gray-100 text-gray-800' : '' }}">
@@ -79,13 +80,6 @@
                                     <div>
                                         <span class="text-xs text-gray-500 uppercase tracking-wider">{{ __('Phone') }}</span>
                                         <p class="text-sm font-medium text-gray-900">{{ $user->phone }}</p>
-                                    </div>
-                                @endif
-                                
-                                @if($user->telephone)
-                                    <div>
-                                        <span class="text-xs text-gray-500 uppercase tracking-wider">{{ __('Telephone') }}</span>
-                                        <p class="text-sm font-medium text-gray-900">{{ $user->telephone }}</p>
                                     </div>
                                 @endif
                                 

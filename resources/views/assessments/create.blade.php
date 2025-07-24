@@ -172,6 +172,30 @@
                         @endif
                     @endif
 
+                    <!-- Locked Assessments Notice -->
+                    @php
+                        $lockedCount = $students->filter(function($student) {
+                            return $student->is_assessment_locked;
+                        })->count();
+                    @endphp
+                    @if($lockedCount > 0 && !auth()->user()->isAdmin())
+                        <div class="mb-4 bg-yellow-50 border-l-4 border-yellow-400 p-4">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <svg class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                                <div class="ml-3">
+                                    <p class="text-sm text-yellow-700">
+                                        {{ __(':count assessment(s) are locked by administrators and cannot be edited.', ['count' => $lockedCount]) }}
+                                        {{ __('You can only view these assessments.') }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+
                     <!-- Floating Column Headers (Mobile) -->
                     <div class="md:hidden fixed bottom-4 left-4 right-4 bg-white rounded-lg shadow-lg p-3 z-50" style="display: none;" id="floatingHeaders">
                         <div class="text-xs text-gray-600 font-medium">
@@ -242,74 +266,96 @@
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
                                 @foreach($students as $student)
-                                <tr class="student-row" data-student-id="{{ $student->id }}" data-saved="false">
+                                <tr class="student-row {{ $student->is_assessment_locked ? 'opacity-60' : '' }}" data-student-id="{{ $student->id }}" data-saved="false" {{ $student->is_assessment_locked ? 'data-locked="true"' : '' }}>
                                     <td class="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900 sticky left-0 bg-white z-10">
-                                        {{ $student->name }}
+                                        <div class="flex items-center">
+                                            {{ $student->name }}
+                                            @if($student->has_assessment)
+                                                @if($student->is_assessment_locked)
+                                                    <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800">
+                                                        <svg class="-ml-0.5 mr-1 h-2 w-2" fill="currentColor" viewBox="0 0 8 8">
+                                                            <circle cx="4" cy="4" r="3" />
+                                                        </svg>
+                                                        {{ __('Locked') }}
+                                                    </span>
+                                                @else
+                                                    <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800">
+                                                        {{ __('Assessed') }}
+                                                    </span>
+                                                @endif
+                                            @endif
+                                        </div>
                                     </td>
                                     <!-- Gender -->
                                     <td class="px-2 py-4 text-center">
                                         <input type="radio" name="gender_{{ $student->id }}" value="male" 
                                                {{ $student->gender === 'male' ? 'checked' : '' }}
+                                               {{ $student->is_assessment_locked ? 'disabled' : '' }}
                                                class="gender-radio">
                                     </td>
                                     <td class="px-2 py-4 text-center">
                                         <input type="radio" name="gender_{{ $student->id }}" value="female" 
                                                {{ $student->gender === 'female' ? 'checked' : '' }}
+                                               {{ $student->is_assessment_locked ? 'disabled' : '' }}
                                                class="gender-radio">
                                     </td>
                                     <!-- Levels -->
                                     @if($subject === 'khmer')
                                     <td class="px-2 py-4 text-center">
-                                        <input type="radio" name="level_{{ $student->id }}" value="Beginner" class="level-radio">
+                                        <input type="radio" name="level_{{ $student->id }}" value="Beginner" {{ $student->is_assessment_locked ? 'disabled' : '' }} {{ $student->assessment_level == 'Beginner' ? 'checked' : '' }} class="level-radio">
                                     </td>
                                     <td class="px-2 py-4 text-center">
-                                        <input type="radio" name="level_{{ $student->id }}" value="Reader" class="level-radio">
+                                        <input type="radio" name="level_{{ $student->id }}" value="Reader" {{ $student->is_assessment_locked ? 'disabled' : '' }} {{ $student->assessment_level == 'Reader' ? 'checked' : '' }} class="level-radio">
                                     </td>
                                     <td class="px-2 py-4 text-center">
-                                        <input type="radio" name="level_{{ $student->id }}" value="Word" class="level-radio">
+                                        <input type="radio" name="level_{{ $student->id }}" value="Word" {{ $student->is_assessment_locked ? 'disabled' : '' }} {{ $student->assessment_level == 'Word' ? 'checked' : '' }} class="level-radio">
                                     </td>
                                     <td class="px-2 py-4 text-center">
-                                        <input type="radio" name="level_{{ $student->id }}" value="Paragraph" class="level-radio">
+                                        <input type="radio" name="level_{{ $student->id }}" value="Paragraph" {{ $student->is_assessment_locked ? 'disabled' : '' }} {{ $student->assessment_level == 'Paragraph' ? 'checked' : '' }} class="level-radio">
                                     </td>
                                     <td class="px-2 py-4 text-center">
-                                        <input type="radio" name="level_{{ $student->id }}" value="Story" class="level-radio">
+                                        <input type="radio" name="level_{{ $student->id }}" value="Story" {{ $student->is_assessment_locked ? 'disabled' : '' }} {{ $student->assessment_level == 'Story' ? 'checked' : '' }} class="level-radio">
                                     </td>
                                     <td class="px-2 py-4 text-center">
-                                        <input type="radio" name="level_{{ $student->id }}" value="Comp. 1" class="level-radio">
+                                        <input type="radio" name="level_{{ $student->id }}" value="Comp. 1" {{ $student->is_assessment_locked ? 'disabled' : '' }} {{ $student->assessment_level == 'Comp. 1' ? 'checked' : '' }} class="level-radio">
                                     </td>
                                     <td class="px-2 py-4 text-center">
-                                        <input type="radio" name="level_{{ $student->id }}" value="Comp. 2" class="level-radio">
+                                        <input type="radio" name="level_{{ $student->id }}" value="Comp. 2" {{ $student->is_assessment_locked ? 'disabled' : '' }} {{ $student->assessment_level == 'Comp. 2' ? 'checked' : '' }} class="level-radio">
                                     </td>
                                     @else
                                     <td class="px-2 py-4 text-center">
-                                        <input type="radio" name="level_{{ $student->id }}" value="Beginner" class="level-radio">
+                                        <input type="radio" name="level_{{ $student->id }}" value="Beginner" {{ $student->is_assessment_locked ? 'disabled' : '' }} {{ $student->assessment_level == 'Beginner' ? 'checked' : '' }} class="level-radio">
                                     </td>
                                     <td class="px-2 py-4 text-center">
-                                        <input type="radio" name="level_{{ $student->id }}" value="1-Digit" class="level-radio">
+                                        <input type="radio" name="level_{{ $student->id }}" value="1-Digit" {{ $student->is_assessment_locked ? 'disabled' : '' }} {{ $student->assessment_level == '1-Digit' ? 'checked' : '' }} class="level-radio">
                                     </td>
                                     <td class="px-2 py-4 text-center">
-                                        <input type="radio" name="level_{{ $student->id }}" value="2-Digit" class="level-radio">
+                                        <input type="radio" name="level_{{ $student->id }}" value="2-Digit" {{ $student->is_assessment_locked ? 'disabled' : '' }} {{ $student->assessment_level == '2-Digit' ? 'checked' : '' }} class="level-radio">
                                     </td>
                                     <td class="px-2 py-4 text-center">
-                                        <input type="radio" name="level_{{ $student->id }}" value="Subtraction" class="level-radio">
+                                        <input type="radio" name="level_{{ $student->id }}" value="Subtraction" {{ $student->is_assessment_locked ? 'disabled' : '' }} {{ $student->assessment_level == 'Subtraction' ? 'checked' : '' }} class="level-radio">
                                     </td>
                                     <td class="px-2 py-4 text-center">
-                                        <input type="radio" name="level_{{ $student->id }}" value="Division" class="level-radio">
+                                        <input type="radio" name="level_{{ $student->id }}" value="Division" {{ $student->is_assessment_locked ? 'disabled' : '' }} {{ $student->assessment_level == 'Division' ? 'checked' : '' }} class="level-radio">
                                     </td>
                                     <td class="px-2 py-4 text-center">
-                                        <input type="radio" name="level_{{ $student->id }}" value="Word Problem" class="level-radio">
+                                        <input type="radio" name="level_{{ $student->id }}" value="Word Problem" {{ $student->is_assessment_locked ? 'disabled' : '' }} {{ $student->assessment_level == 'Word Problem' ? 'checked' : '' }} class="level-radio">
                                     </td>
                                     <td class="px-2 py-4 text-center">
                                         <!-- Empty cell for Math to align with submit button -->
                                     </td>
                                     @endif
                                     <td class="px-4 py-4 text-center">
-                                        <button type="button" 
-                                                class="submit-btn inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
-                                                onclick="submitStudent({{ $student->id }})"
-                                                disabled>
-                                            {{ __('Submit') }}
-                                        </button>
+                                        @if($student->is_assessment_locked)
+                                            <span class="text-xs text-gray-500">{{ __('Locked') }}</span>
+                                        @else
+                                            <button type="button" 
+                                                    class="submit-btn inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                                                    onclick="submitStudent({{ $student->id }})"
+                                                    disabled>
+                                                {{ __('Submit') }}
+                                            </button>
+                                        @endif
                                     </td>
                                 </tr>
                                 @endforeach
@@ -399,6 +445,12 @@
             $('.gender-radio, .level-radio').change(function() {
                 const row = $(this).closest('tr');
                 const studentId = row.data('student-id');
+                
+                // Skip if locked
+                if (row.attr('data-locked') === 'true') {
+                    return;
+                }
+                
                 const hasGender = $(`input[name="gender_${studentId}"]:checked`).length > 0;
                 const hasLevel = $(`input[name="level_${studentId}"]:checked`).length > 0;
                 const selectedLevel = $(`input[name="level_${studentId}"]:checked`).val();
@@ -478,6 +530,11 @@
         
         function submitStudent(studentId) {
             const row = $(`.student-row[data-student-id="${studentId}"]`);
+            
+            // Skip if locked
+            if (row.attr('data-locked') === 'true') {
+                return;
+            }
             const gender = $(`input[name="gender_${studentId}"]:checked`).val();
             const level = $(`input[name="level_${studentId}"]:checked`).val();
             const subject = $('#subject').val();

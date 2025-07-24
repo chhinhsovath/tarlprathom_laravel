@@ -65,13 +65,6 @@
             <x-input-error class="mt-2" :messages="$errors->get('phone')" />
         </div>
 
-        <!-- Telephone -->
-        <div>
-            <x-input-label for="telephone" :value="__('Telephone')" />
-            <x-text-input id="telephone" name="telephone" type="text" class="mt-1 block w-full" :value="old('telephone', $user->telephone)" />
-            <x-input-error class="mt-2" :messages="$errors->get('telephone')" />
-        </div>
-
         <!-- School (Read-only for non-admins) -->
         <div>
             <x-input-label for="school" :value="__('School')" />

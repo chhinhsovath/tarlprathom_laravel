@@ -25,54 +25,37 @@ class UserSeeder extends Seeder
 
         // Admin user
         User::create([
-            'name' => 'Admin User',
-            'email' => 'admin@tarlconnect.com',
-            'password' => Hash::make('password'),
+            'name' => 'Kairav Admin',
+            'email' => 'kairav@prathaminternational.org',
+            'password' => Hash::make('admin123'),
             'role' => 'admin',
             'is_active' => true,
         ]);
 
-        // Mentor users
+        // Mentor user
         User::create([
             'name' => 'Mentor One',
-            'email' => 'mentor1@tarlconnect.com',
-            'password' => Hash::make('password'),
+            'email' => 'mentor1@prathaminternational.org',
+            'password' => Hash::make('admin123'),
             'role' => 'mentor',
             'is_active' => true,
         ]);
 
-        User::create([
-            'name' => 'Mentor Two',
-            'email' => 'mentor2@tarlconnect.com',
-            'password' => Hash::make('password'),
-            'role' => 'mentor',
-            'is_active' => true,
-        ]);
-
-        // Teacher users
+        // Teacher user
         User::create([
             'name' => 'Teacher One',
-            'email' => 'teacher1@tarlconnect.com',
-            'password' => Hash::make('password'),
+            'email' => 'teacher1@prathaminternational.org',
+            'password' => Hash::make('admin123'),
             'role' => 'teacher',
             'school_id' => $school->id,
             'is_active' => true,
         ]);
 
+        // Viewer user
         User::create([
-            'name' => 'Teacher Two',
-            'email' => 'teacher2@tarlconnect.com',
-            'password' => Hash::make('password'),
-            'role' => 'teacher',
-            'school_id' => $school->id,
-            'is_active' => true,
-        ]);
-
-        // Viewer user (MoEYS)
-        User::create([
-            'name' => 'MoEYS Viewer',
-            'email' => 'viewer@moeys.gov.kh',
-            'password' => Hash::make('password'),
+            'name' => 'Viewer User',
+            'email' => 'viewer@prathaminternational.org',
+            'password' => Hash::make('admin123'),
             'role' => 'viewer',
             'is_active' => true,
         ]);

@@ -32,7 +32,8 @@ return new class extends Migration
         Schema::table('students', function (Blueprint $table) {
             $table->dropForeign(['teacher_id']);
             $table->dropForeign(['class_id']);
-            $table->dropColumn(['teacher_id', 'class_id']);
+            $table->dropColumn('teacher_id');
+            $table->dropColumn('class_id');
         });
     }
 };

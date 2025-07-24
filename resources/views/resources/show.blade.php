@@ -37,7 +37,7 @@
 
                                 @if($resource->description)
                                     <div>
-                                        <label class="block text-sm font-medium text-gray-700">Description</label>
+                                        <label class="block text-sm font-medium text-gray-700">{{ __("Description") }}</label>
                                         <p class="mt-1 text-sm text-gray-900">{{ $resource->description }}</p>
                                     </div>
                                 @endif
@@ -57,7 +57,7 @@
                                 </div>
 
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700">Status</label>
+                                    <label class="block text-sm font-medium text-gray-700">{{ __("Status") }}</label>
                                     <div class="mt-1">
                                         @if($resource->is_public)
                                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">

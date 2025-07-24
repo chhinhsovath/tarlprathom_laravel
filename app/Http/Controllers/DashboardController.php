@@ -17,6 +17,11 @@ class DashboardController extends Controller
     {
         $user = auth()->user();
 
+        // Redirect coordinators to their workspace
+        if ($user->isCoordinator()) {
+            return redirect()->route('coordinator.workspace');
+        }
+
         // Get schools for mentors/admins
         $schools = [];
         $provinces = [];

@@ -1,161 +1,123 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Edit Student') }}
-        </h2>
+        <div class="flex justify-between items-center">
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                {{ __('Edit Student') }}
+            </h2>
+            <a href="{{ route('students.show', $student) }}" class="text-sm text-gray-600 hover:text-gray-900">
+                {{ __('View Student') }} →
+            </a>
+        </div>
     </x-slot>
 
-    <div class="py-12">
-        <div class="w-full px-4 sm:px-6 lg:px-8">
+    <div class="py-6">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    <form method="POST" action="{{ route('students.update', $student) }}" class="space-y-6" enctype="multipart/form-data">
+                <div class="p-4 sm:p-6 text-gray-900">
+                    <form method="POST" action="{{ route('students.update', $student) }}" class="space-y-4">
                         @csrf
                         @method('PUT')
 
-                        <!-- Name -->
-                        <div>
-                            <x-input-label for="name" :value="__('Name')" />
-                            <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $student->name)" required autofocus autocomplete="name" />
-                            <x-input-error class="mt-2" :messages="$errors->get('name')" />
-                        </div>
+                        <!-- Two Column Grid -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- Name -->
+                            <div class="col-span-1 md:col-span-2">
+                                <x-input-label for="name" :value="__('Student Name')" class="text-sm font-medium" />
+                                <x-text-input id="name" name="name" type="text" class="mt-1 block w-full text-sm" :value="old('name', $student->name)" required autofocus autocomplete="name" />
+                                <x-input-error class="mt-1" :messages="$errors->get('name')" />
+                            </div>
 
-                        <!-- Grade -->
-                        <div>
-                            <x-input-label for="grade" :value="__('Grade')" />
-                            <select id="grade" name="grade" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
-                                <option value="">{{ __('Select Grade') }}</option>
-                                <option value="4" {{ old('grade', $student->grade) == 4 ? 'selected' : '' }}>
-                                    {{ __('Grade') }} 4
-                                </option>
-                                <option value="5" {{ old('grade', $student->grade) == 5 ? 'selected' : '' }}>
-                                    {{ __('Grade') }} 5
-                                </option>
-                            </select>
-                            <x-input-error class="mt-2" :messages="$errors->get('grade')" />
-                        </div>
-
-                        <!-- Gender -->
-                        <div>
-                            <x-input-label for="gender" :value="__('Gender')" />
-                            <select id="gender" name="gender" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
-                                <option value="">{{ __('Select Gender') }}</option>
-                                <option value="male" {{ old('gender', $student->gender) == 'male' ? 'selected' : '' }}>{{ __('Male') }}</option>
-                                <option value="female" {{ old('gender', $student->gender) == 'female' ? 'selected' : '' }}>{{ __('Female') }}</option>
-                            </select>
-                            <x-input-error class="mt-2" :messages="$errors->get('gender')" />
-                        </div>
-
-                        <!-- Class -->
-                        <div>
-                            <x-input-label for="class_id" :value="__('Class')" />
-                            <select id="class_id" name="class_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                                <option value="">{{ __('Select Class') }}</option>
-                                @foreach($classes as $class)
-                                    <option value="{{ $class->id }}" {{ old('class_id', $student->class_id) == $class->id ? 'selected' : '' }}>
-                                        {{ $class->full_name }}
+                            <!-- Grade -->
+                            <div>
+                                <x-input-label for="grade" :value="__('Grade')" class="text-sm font-medium" />
+                                <select id="grade" name="grade" class="mt-1 block w-full text-sm rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
+                                    <option value="">{{ __('Select Grade') }}</option>
+                                    <option value="4" {{ old('grade', $student->grade) == 4 ? 'selected' : '' }}>
+                                        {{ __('Grade') }} 4
                                     </option>
-                                @endforeach
-                            </select>
-                            <x-input-error class="mt-2" :messages="$errors->get('class_id')" />
-                        </div>
-
-                        <!-- School -->
-                        @if($schools->count() > 1)
-                            <div>
-                                <x-input-label for="school_id" :value="__('School')" />
-                                <select id="school_id" name="school_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
-                                    <option value="">{{ __('Select School') }}</option>
-                                    @foreach($schools as $school)
-                                        <option value="{{ $school->id }}" {{ old('school_id', $student->school_id) == $school->id ? 'selected' : '' }}>
-                                            {{ $school->school_name }}
-                                        </option>
-                                    @endforeach
+                                    <option value="5" {{ old('grade', $student->grade) == 5 ? 'selected' : '' }}>
+                                        {{ __('Grade') }} 5
+                                    </option>
                                 </select>
-                                <x-input-error class="mt-2" :messages="$errors->get('school_id')" />
+                                <x-input-error class="mt-1" :messages="$errors->get('grade')" />
                             </div>
-                        @else
-                            <input type="hidden" name="school_id" value="{{ $schools->first()->id }}">
-                            <div>
-                                <x-input-label :value="__('School')" />
-                                <p class="mt-1 text-sm text-gray-600">{{ $schools->first()->school_name }}</p>
-                            </div>
-                        @endif
 
-                        <!-- Photo Upload -->
-                        <div>
-                            <x-input-label for="photo" :value="__('Photo (Optional)')" />
-                            
-                            @if($student->photo)
-                                <div class="mb-4">
-                                    <p class="text-sm text-gray-600 mb-2">{{ __('Current Photo:') }}</p>
-                                    <div class="h-32 w-32 rounded-lg overflow-hidden shadow-md">
-                                        <img src="{{ Storage::url($student->photo) }}" alt="{{ $student->name }}" class="h-full w-full object-cover" style="height: 64px; width: 64px; object-fit: cover;">
+                            <!-- Gender -->
+                            <div>
+                                <x-input-label for="gender" :value="__('Gender')" class="text-sm font-medium" />
+                                <select id="gender" name="gender" class="mt-1 block w-full text-sm rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
+                                    <option value="">{{ __('Select Gender') }}</option>
+                                    <option value="male" {{ old('gender', $student->gender) == 'male' ? 'selected' : '' }}>{{ __('Male') }}</option>
+                                    <option value="female" {{ old('gender', $student->gender) == 'female' ? 'selected' : '' }}>{{ __('Female') }}</option>
+                                </select>
+                                <x-input-error class="mt-1" :messages="$errors->get('gender')" />
+                            </div>
+
+                            <!-- Age -->
+                            <div>
+                                <x-input-label for="age" :value="__('Age')" class="text-sm font-medium" />
+                                <x-text-input id="age" name="age" type="number" min="3" max="18" class="mt-1 block w-full text-sm" :value="old('age', $student->age)" required />
+                                <x-input-error class="mt-1" :messages="$errors->get('age')" />
+                            </div>
+
+                            <!-- School -->
+                            @if($schools->count() > 1)
+                                <div>
+                                    <x-input-label for="school_id" :value="__('School')" class="text-sm font-medium" />
+                                    <select id="school_id" name="school_id" class="mt-1 block w-full text-sm rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
+                                        <option value="">{{ __('Select School') }}</option>
+                                        @foreach($schools as $school)
+                                            <option value="{{ $school->id }}" {{ old('school_id', $student->school_id) == $school->id ? 'selected' : '' }}>
+                                                {{ $school->school_name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    <x-input-error class="mt-1" :messages="$errors->get('school_id')" />
+                                </div>
+                            @else
+                                <input type="hidden" name="school_id" value="{{ $schools->first()->id }}">
+                                <div>
+                                    <x-input-label :value="__('School')" class="text-sm font-medium" />
+                                    <div class="mt-1 px-3 py-2 text-sm bg-gray-50 border border-gray-300 rounded-md text-gray-700">
+                                        {{ $schools->first()->school_name }}
                                     </div>
                                 </div>
                             @endif
-                            
-                            <input type="file" 
-                                   id="photo" 
-                                   name="photo" 
-                                   accept="image/*"
-                                   class="mt-1 block w-full text-sm text-gray-500
-                                   file:mr-4 file:py-2 file:px-4
-                                   file:rounded-md file:border-0
-                                   file:text-sm file:font-semibold
-                                   file:bg-indigo-50 file:text-indigo-700
-                                   hover:file:bg-indigo-100"
-                                   onchange="previewPhoto(this)">
-                            <x-input-error class="mt-2" :messages="$errors->get('photo')" />
-                            <p class="mt-1 text-sm text-gray-500">{{ __('Upload a new photo to replace the existing one (max 5MB)') }}</p>
-                            
-                            <!-- Photo Preview -->
-                            <div id="photoPreview" class="mt-4 hidden">
-                                <p class="text-sm text-gray-600 mb-2">{{ __('New Photo:') }}</p>
-                                <div class="h-32 w-32 rounded-lg overflow-hidden shadow-md">
-                                    <img id="previewImage" class="h-full w-full object-cover" alt="Photo preview" style="height: 64px; width: 64px; object-fit: cover;">
+                        </div>
+
+                        <!-- Student Info Summary -->
+                        <div class="mt-6 p-3 bg-gray-50 rounded-lg">
+                            <h3 class="text-sm font-medium text-gray-700 mb-2">{{ __('Current Information') }}</h3>
+                            <div class="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-500">{{ __('Student ID') }}:</span>
+                                    <span class="font-medium text-gray-900">{{ $student->student_id }}</span>
                                 </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-500">{{ __('Created') }}:</span>
+                                    <span class="font-medium text-gray-900">{{ $student->created_at->format('M d, Y') }}</span>
+                                </div>
+                                @if($student->teacher)
+                                <div class="flex justify-between col-span-2">
+                                    <span class="text-gray-500">{{ __('Teacher') }}:</span>
+                                    <span class="font-medium text-gray-900">{{ $student->teacher->name }}</span>
+                                </div>
+                                @endif
                             </div>
                         </div>
 
-                        <div class="flex items-center gap-4">
-                            <x-primary-button>{{ __('Update') }}</x-primary-button>
-                            <a href="{{ route('students.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-300 border border-transparent rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest hover:bg-gray-400 focus:bg-gray-400 active:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                        <!-- Action Buttons -->
+                        <div class="flex items-center justify-end gap-3 pt-4 border-t border-gray-200">
+                            <a href="{{ route('students.index') }}" class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
                                 {{ __('Cancel') }}
                             </a>
+                            <x-primary-button class="text-xs uppercase tracking-widest">
+                                {{ __('Update Student') }}
+                            </x-primary-button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
-    
-    @push('scripts')
-    <script>
-        function previewPhoto(input) {
-            const file = input.files[0];
-            const preview = document.getElementById('photoPreview');
-            const previewImage = document.getElementById('previewImage');
-            
-            if (file) {
-                // Check file size (5MB)
-                if (file.size > 5 * 1024 * 1024) {
-                    alert('{{ __("File size must be less than 5MB") }}');
-                    input.value = '';
-                    preview.classList.add('hidden');
-                    return;
-                }
-                
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    previewImage.src = e.target.result;
-                    preview.classList.remove('hidden');
-                };
-                reader.readAsDataURL(file);
-            } else {
-                preview.classList.add('hidden');
-            }
-        }
-    </script>
-    @endpush
 </x-app-layout>

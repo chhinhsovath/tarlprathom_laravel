@@ -15,16 +15,37 @@
             <!-- Student Info -->
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
                 <div class="p-6 bg-white border-b border-gray-200">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         <div>
-                            <span class="font-semibold">{{ __('Student ID') }}:</span> {{ $student->student_id }}
+                            <span class="font-semibold text-gray-600">{{ __('Name') }}:</span> 
+                            <span class="text-lg">{{ $student->name }}</span>
                         </div>
                         <div>
-                            <span class="font-semibold">{{ __('School') }}:</span> {{ $student->school->school_name }}
+                            <span class="font-semibold text-gray-600">{{ __('Student ID') }}:</span> 
+                            {{ $student->student_id }}
                         </div>
                         <div>
-                            <span class="font-semibold">{{ __('Class') }}:</span> {{ $student->schoolClass ? $student->schoolClass->name : 'N/A' }}
+                            <span class="font-semibold text-gray-600">{{ __('Age') }}:</span> 
+                            {{ $student->age ?? 'N/A' }}
                         </div>
+                        <div>
+                            <span class="font-semibold text-gray-600">{{ __('Gender') }}:</span> 
+                            {{ $student->gender ? __(ucfirst($student->gender)) : 'N/A' }}
+                        </div>
+                        <div>
+                            <span class="font-semibold text-gray-600">{{ __('Grade') }}:</span> 
+                            {{ $student->grade ? __('Grade') . ' ' . $student->grade : 'N/A' }}
+                        </div>
+                        <div>
+                            <span class="font-semibold text-gray-600">{{ __('School') }}:</span> 
+                            {{ $student->school ? $student->school->school_name : 'N/A' }}
+                        </div>
+                        @if($student->teacher)
+                        <div class="md:col-span-2 lg:col-span-3">
+                            <span class="font-semibold text-gray-600">{{ __('Teacher') }}:</span> 
+                            {{ $student->teacher->name }}
+                        </div>
+                        @endif
                     </div>
                 </div>
             </div>

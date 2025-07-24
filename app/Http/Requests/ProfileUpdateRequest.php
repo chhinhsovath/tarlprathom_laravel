@@ -28,7 +28,6 @@ class ProfileUpdateRequest extends FormRequest
             'profile_photo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:5120'], // 5MB max
             'sex' => ['nullable', 'in:male,female'],
             'phone' => ['nullable', 'string', 'max:20'],
-            'telephone' => ['nullable', 'string', 'max:20'],
             'school_id' => ['nullable', 'exists:schools,id'],
             'holding_classes' => ['nullable', 'string', 'max:255'],
         ];
