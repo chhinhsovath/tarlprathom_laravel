@@ -47,7 +47,7 @@ $modelTranslations = [
     'Last Login' => 'ចូលចុងក្រោយ',
     'Created By' => 'បង្កើតដោយ',
     'Updated By' => 'កែប្រែដោយ',
-    
+
     // School model
     'School' => 'សាលា',
     'Schools' => 'សាលារៀន',
@@ -72,7 +72,7 @@ $modelTranslations = [
     'Academic Year' => 'ឆ្នាំសិក្សា',
     'School Facilities' => 'គ្រឿងបរិក្ខារសាលា',
     'School Address' => 'អាសយដ្ឋានសាលា',
-    
+
     // Student model
     'Student' => 'សិស្ស',
     'Students' => 'សិស្ស',
@@ -99,7 +99,7 @@ $modelTranslations = [
     'Special Needs' => 'តម្រូវការពិសេស',
     'Medical Conditions' => 'ស្ថានភាពសុខភាព',
     'Emergency Contact' => 'ទំនាក់ទំនងពេលអាសន្ន',
-    
+
     // Assessment model
     'Assessment' => 'ការវាយតម្លៃ',
     'Assessments' => 'ការវាយតម្លៃ',
@@ -140,7 +140,7 @@ $modelTranslations = [
     'Achievement' => 'សមិទ្ធិផល',
     'Competency' => 'សមត្ថភាព',
     'Learning Outcome' => 'លទ្ធផលសិក្សា',
-    
+
     // Mentoring model
     'Mentoring' => 'ការណែនាំ',
     'Mentoring Visit' => 'ការមកសួរសុខទុក្ខ',

@@ -230,7 +230,7 @@ class AssessmentController extends Controller
             $student->has_assessment = $existingAssessment !== null;
             $student->is_assessment_locked = $existingAssessment && (\Schema::hasColumn('assessments', 'is_locked') ? ($existingAssessment->is_locked ?? false) : false);
             $student->assessment_level = $existingAssessment ? $existingAssessment->level : null;
-            
+
             // Add latest assessment data
             $student->previous_assessment = $latestAssessments->get($student->id);
 

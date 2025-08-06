@@ -551,7 +551,7 @@ class ReportController extends Controller
             })
                 ->where('cycle', 'baseline')
                 ->count();
-                
+
             $baselineAdvanced = Assessment::whereHas('student', function ($q) use ($schoolId) {
                 $q->where('school_id', $schoolId);
             })
@@ -572,7 +572,7 @@ class ReportController extends Controller
                 })
                     ->where('cycle', $latestCycle->cycle)
                     ->count();
-                    
+
                 $latestAdvanced = Assessment::whereHas('student', function ($q) use ($schoolId) {
                     $q->where('school_id', $schoolId);
                 })

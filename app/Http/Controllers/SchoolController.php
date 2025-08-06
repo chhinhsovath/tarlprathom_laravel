@@ -319,7 +319,7 @@ class SchoolController extends Controller
             $mentor = User::where('id', $mentorId)->where('role', 'mentor')->first();
             if ($mentor) {
                 // Attach mentor to school if not already attached
-                if (!$mentor->assignedSchools()->where('school_id', $school->id)->exists()) {
+                if (! $mentor->assignedSchools()->where('school_id', $school->id)->exists()) {
                     $mentor->assignedSchools()->attach($school->id);
                 }
             }
@@ -368,6 +368,7 @@ class SchoolController extends Controller
             ->get(['id', 'name', 'email'])
             ->map(function ($mentor) use ($school) {
                 $mentor->is_assigned = $mentor->assignedSchools()->where('school_id', $school->id)->exists();
+
                 return $mentor;
             });
 
@@ -481,7 +482,7 @@ class SchoolController extends Controller
     public function getProvinces()
     {
         $provinces = \App\Models\Geographic::getProvinces();
-        
+
         return response()->json($provinces);
     }
 
@@ -491,9 +492,9 @@ class SchoolController extends Controller
     public function getDistricts(Request $request)
     {
         $provinceCode = $request->get('province_code');
-        
+
         $districts = \App\Models\Geographic::getDistrictsByProvince($provinceCode);
-        
+
         return response()->json($districts);
     }
 
@@ -503,9 +504,9 @@ class SchoolController extends Controller
     public function getCommunes(Request $request)
     {
         $districtCode = $request->get('district_code');
-        
+
         $communes = \App\Models\Geographic::getCommunesByDistrict($districtCode);
-        
+
         return response()->json($communes);
     }
 
@@ -515,9 +516,9 @@ class SchoolController extends Controller
     public function getVillages(Request $request)
     {
         $communeCode = $request->get('commune_code');
-        
+
         $villages = \App\Models\Geographic::getVillagesByCommune($communeCode);
-        
+
         return response()->json($villages);
     }
 

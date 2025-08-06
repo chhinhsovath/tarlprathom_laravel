@@ -219,17 +219,17 @@ Route::middleware('auth')->group(function () {
 
         // Bulk Import Routes
         Route::get('/imports', [ImportController::class, 'index'])->name('imports.index');
-        
+
         // Dedicated import pages
         Route::get('/imports/schools', [ImportController::class, 'showSchoolsImport'])->name('imports.schools.show');
         Route::post('/imports/schools', [ImportController::class, 'importSchools'])->name('imports.schools');
-        
+
         Route::get('/imports/users', [ImportController::class, 'showUsersImport'])->name('imports.users.show');
         Route::post('/imports/users', [ImportController::class, 'importUsers'])->name('imports.users');
-        
+
         Route::get('/imports/students', [ImportController::class, 'showStudentsImport'])->name('imports.students.show');
         Route::post('/imports/students', [ImportController::class, 'importStudents'])->name('imports.students');
-        
+
         Route::get('/imports/template/{type}', [ImportController::class, 'downloadTemplate'])->name('imports.template');
 
         // Localization Routes

@@ -15,7 +15,7 @@ $specificTranslations = [
     'TaRL Assessment System' => 'ប្រព័ន្ធវាយតម្លៃ TaRL',
     'Teaching at the Right Level' => 'ការបង្រៀនតាមកម្រិតសមស្រប',
     'TaRL' => 'TaRL',
-    
+
     // Assessment cycles
     'Baseline' => 'មូលដ្ឋាន',
     'Midline' => 'ពាក់កណ្តាល',
@@ -23,14 +23,14 @@ $specificTranslations = [
     'Assessment Cycle' => 'វដ្តវាយតម្លៃ',
     'All Cycles' => 'វដ្តទាំងអស់',
     'Test Cycle' => 'វដ្តតេស្ត',
-    
+
     // Subjects
     'Khmer' => 'ភាសាខ្មែរ',
     'Math' => 'គណិតវិទ្យា',
     'Language' => 'ភាសា',
     'Numeracy' => 'គណិតវិទ្យា',
     'All Subjects' => 'មុខវិជ្ជាទាំងអស់',
-    
+
     // Reading levels
     'Beginner' => 'ចាប់ផ្តើម',
     'Letter' => 'អក្សរ',
@@ -42,7 +42,7 @@ $specificTranslations = [
     'Reading Level' => 'កម្រិតអាន',
     'Comp. 1' => 'សមាសភាគ ១',
     'Comp. 2' => 'សមាសភាគ ២',
-    
+
     // Math levels
     '1-Digit' => 'លេខ១ខ្ទង់',
     '2-Digit' => 'លេខ២ខ្ទង់',
@@ -53,7 +53,7 @@ $specificTranslations = [
     'Word Problem' => 'ល្បាកលេខ',
     'Basic Operations' => 'ប្រតិបត្តិការមូលដ្ឋាន',
     'Multiplication/Division' => 'ការគុណ/ការចែក',
-    
+
     // Assessment related
     'Assessment Results' => 'លទ្ធផលវាយតម្លៃ',
     'Assessment Level' => 'កម្រិតវាយតម្លៃ',
@@ -76,7 +76,7 @@ $specificTranslations = [
     'No assessments found' => 'រកមិនឃើញការវាយតម្លៃ',
     'No assessments have been saved yet' => 'មិនទាន់មានការវាយតម្លៃត្រូវបានរក្សាទុកនៅឡើយទេ',
     'You can only view these assessments.' => 'អ្នកអាចមើលតែការវាយតម្លៃទាំងនេះប៉ុណ្ណោះ។',
-    
+
     // Student related
     'Total Students' => 'សិស្សសរុប',
     'Total Students Assessed' => 'សិស្សដែលបានវាយតម្លៃសរុប',
@@ -91,7 +91,7 @@ $specificTranslations = [
     'Add Student' => 'បន្ថែមសិស្ស',
     'Bulk import student data from spreadsheets' => 'នាំចូលទិន្នន័យសិស្សច្រើនពីតារាងគណនា',
     'All students are automatically eligible for baseline assessments.' => 'សិស្សទាំងអស់មានសិទ្ធិដោយស្វ័យប្រវត្តិសម្រាប់ការវាយតម្លៃមូលដ្ឋាន។',
-    
+
     // School related
     'Manage Schools' => 'គ្រប់គ្រងសាលារៀន',
     'Schools Added' => 'សាលាបានបន្ថែម',
@@ -99,7 +99,7 @@ $specificTranslations = [
     'Schools Template' => 'គំរូសាលា',
     'Total registered' => 'ចុះឈ្មោះសរុប',
     'Configure assessment dates for schools' => 'កំណត់រចនាសម្ព័ន្ធកាលបរិច្ឆេទវាយតម្លៃសម្រាប់សាលា',
-    
+
     // User roles
     'Mentor' => 'អ្នកណែនាំ',
     'Mentors' => 'អ្នកណែនាំ',
@@ -118,7 +118,7 @@ $specificTranslations = [
     'Mentors Template' => 'គំរូអ្នកណែនាំ',
     'Total System Users' => 'អ្នកប្រើប្រាស់ប្រព័ន្ធសរុប',
     'Teachers + Mentors + Coordinators' => 'គ្រូ + អ្នកណែនាំ + អ្នកសម្របសម្រួល',
-    
+
     // Mentoring
     'Mentoring Management' => 'ការគ្រប់គ្រងការណែនាំ',
     'Mentoring Visit Management' => 'ការគ្រប់គ្រងការមកសួរសុខទុក្ខ',
@@ -128,7 +128,7 @@ $specificTranslations = [
     'No mentoring visits found' => 'រកមិនឃើញការមកសួរសុខទុក្ខ',
     'Mentoring Visits' => 'ការមកសួរសុខទុក្ខ',
     'Log Visit' => 'កត់ត្រាការមកសួរ',
-    
+
     // Dates and periods
     'Baseline assessment period starts on' => 'រយៈពេលវាយតម្លៃមូលដ្ឋានចាប់ផ្តើមនៅ',
     'Midline assessment period starts on' => 'រយៈពេលវាយតម្លៃពាក់កណ្តាលចាប់ផ្តើមនៅ',
@@ -141,7 +141,7 @@ $specificTranslations = [
     'Endline assessment period is active until' => 'រយៈពេលវាយតម្លៃចុងក្រោយសកម្មរហូតដល់',
     'Assessment dates have not been set for your school. Please contact your administrator.' => 'កាលបរិច្ឆេទវាយតម្លៃមិនទាន់បានកំណត់សម្រាប់សាលារបស់អ្នកទេ។ សូមទាក់ទងអ្នកគ្រប់គ្រងរបស់អ្នក។',
     'Manage Dates' => 'គ្រប់គ្រងកាលបរិច្ឆេទ',
-    
+
     // Actions and buttons
     'Select All' => 'ជ្រើសរើសទាំងអស់',
     'Deselect All' => 'មិនជ្រើសរើសទាំងអស់',
@@ -151,7 +151,7 @@ $specificTranslations = [
     'Clear Filters' => 'សម្អាតតម្រង',
     'Export to Excel' => 'នាំចេញទៅ Excel',
     'Go to Baseline Assessment' => 'ទៅកាន់ការវាយតម្លៃមូលដ្ឋាន',
-    
+
     // Dashboard specific
     'Coordinator Dashboard' => 'ផ្ទាំងគ្រប់គ្រងអ្នកសម្របសម្រួល',
     'System Administration' => 'ការគ្រប់គ្រងប្រព័ន្ធ',
@@ -161,13 +161,13 @@ $specificTranslations = [
     'Quick Actions' => 'សកម្មភាពរហ័ស',
     'Loading statistics...' => 'កំពុងផ្ទុកស្ថិតិ...',
     'Loading existing assessments...' => 'កំពុងផ្ទុកការវាយតម្លៃដែលមានស្រាប់...',
-    
+
     // Import/Export
     'Data Import Center' => 'មជ្ឈមណ្ឌលនាំចូលទិន្នន័យ',
     'Templates' => 'គំរូ',
     'Quick Download' => 'ទាញយករហ័ស',
     'Data Management Access' => 'ការចូលប្រើការគ្រប់គ្រងទិន្នន័យ',
-    
+
     // Language specific
     'Language Center' => 'មជ្ឈមណ្ឌលភាសា',
     'Available Languages' => 'ភាសាដែលមាន',
@@ -175,7 +175,7 @@ $specificTranslations = [
     'Switch Language' => 'ប្តូរភាសា',
     'Translation Tools' => 'ឧបករណ៍បកប្រែ',
     'Open Translation Editor' => 'បើកកម្មវិធីកែសម្រួលការបកប្រែ',
-    
+
     // Status and filters
     'Lock Status' => 'ស្ថានភាពចាក់សោ',
     'All Status' => 'ស្ថានភាពទាំងអស់',
@@ -184,7 +184,7 @@ $specificTranslations = [
     'All Clusters' => 'ចង្កោមទាំងអស់',
     'All Grades' => 'ថ្នាក់ទាំងអស់',
     'Filter Data' => 'ចម្រាញ់ទិន្នន័យ',
-    
+
     // Messages
     'Warning' => 'ការព្រមាន',
     'Note' => 'ចំណាំ',
@@ -195,7 +195,7 @@ $specificTranslations = [
     'Do you want to submit?' => 'តើអ្នកចង់ដាក់ស្នើទេ?',
     'You have assessed' => 'អ្នកបានវាយតម្លៃ',
     'out of' => 'ក្នុងចំណោម',
-    
+
     // Others
     'Administration' => 'រដ្ឋបាល',
     'Gender' => 'ភេទ',
@@ -235,14 +235,14 @@ $count = 0;
 foreach ($specificTranslations as $en => $km) {
     $updated = Translation::where('key', $en)
         ->where('group', 'views')
-        ->where(function($q) {
+        ->where(function ($q) {
             $q->whereNull('km')
-              ->orWhere('km', '')
-              ->orWhere('km', 'LIKE', '%[%')
-              ->orWhereRaw('km = en');
+                ->orWhere('km', '')
+                ->orWhere('km', 'LIKE', '%[%')
+                ->orWhereRaw('km = en');
         })
         ->update(['km' => $km]);
-    
+
     if ($updated > 0) {
         echo "  ✓ Updated: {$en} -> {$km}\n";
         $count += $updated;
@@ -256,11 +256,11 @@ Translation::clearCache();
 
 // Check final status
 $remaining = Translation::where('group', 'views')
-    ->where(function($q) {
+    ->where(function ($q) {
         $q->whereNull('km')
-          ->orWhere('km', '')
-          ->orWhere('km', 'LIKE', '%[%')
-          ->orWhereRaw('km = en');
+            ->orWhere('km', '')
+            ->orWhere('km', 'LIKE', '%[%')
+            ->orWhereRaw('km = en');
     })
     ->count();
 
@@ -277,15 +277,15 @@ echo "Completion: {$percentage}%\n";
 if ($remaining > 0) {
     echo "\nShowing first 10 remaining translations that need Khmer:\n";
     $samples = Translation::where('group', 'views')
-        ->where(function($q) {
+        ->where(function ($q) {
             $q->whereNull('km')
-              ->orWhere('km', '')
-              ->orWhere('km', 'LIKE', '%[%')
-              ->orWhereRaw('km = en');
+                ->orWhere('km', '')
+                ->orWhere('km', 'LIKE', '%[%')
+                ->orWhereRaw('km = en');
         })
         ->limit(10)
         ->pluck('key');
-    
+
     foreach ($samples as $key) {
         echo "  - {$key}\n";
     }

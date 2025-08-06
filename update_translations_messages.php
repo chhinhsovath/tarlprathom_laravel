@@ -45,7 +45,7 @@ $messageTranslations = [
     'Changes saved' => 'ការផ្លាស់ប្តូរត្រូវបានរក្សាទុក',
     'Settings applied' => 'ការកំណត់ត្រូវបានអនុវត្ត',
     'Configuration updated' => 'ការកំណត់រចនាសម្ព័ន្ធត្រូវបានធ្វើបច្ចុប្បន្នភាព',
-    
+
     // Error messages
     'An error occurred' => 'មានកំហុសកើតឡើង',
     'Not found' => 'រកមិនឃើញ',
@@ -85,7 +85,7 @@ $messageTranslations = [
     'Method not allowed' => 'វិធីសាស្ត្រមិនត្រូវបានអនុញ្ញាត',
     'Service unavailable' => 'សេវាមិនមាន',
     'Too many requests' => 'សំណើច្រើនពេក',
-    
+
     // Info messages
     'Please select at least one item' => 'សូមជ្រើសរើសយ៉ាងហោចណាស់មួយ',
     'No changes were made' => 'គ្មានការផ្លាស់ប្តូរត្រូវបានធ្វើទេ',
@@ -119,7 +119,7 @@ $messageTranslations = [
     'Read only mode' => 'របៀបអានតែប៉ុណ្ណោះ',
     'Limited access' => 'ការចូលប្រើមានកម្រិត',
     'Full access' => 'ការចូលប្រើពេញលេញ',
-    
+
     // Confirmation messages
     'Are you sure?' => 'តើអ្នកប្រាកដទេ?',
     'This action cannot be undone' => 'សកម្មភាពនេះមិនអាចត្រឡប់វិញបានទេ',
@@ -141,7 +141,7 @@ $messageTranslations = [
     'You will not be able to recover this' => 'អ្នកនឹងមិនអាចស្តារវាឡើងវិញបានទេ',
     'Please type DELETE to confirm' => 'សូមវាយ DELETE ដើម្បីបញ្ជាក់',
     'Please enter your password to confirm' => 'សូមបញ្ចូលពាក្យសម្ងាត់របស់អ្នកដើម្បីបញ្ជាក់',
-    
+
     // Warning messages
     'Warning' => 'ការព្រមាន',
     'Caution' => 'ប្រុងប្រយ័ត្ន',

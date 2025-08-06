@@ -12,7 +12,7 @@ use App\Models\Translation;
 $batch4Translations = [
     // User creation and management
     'Create User' => 'បង្កើតអ្នកប្រើប្រាស់',
-    'Edit User' => 'កែសម្រួលអ្នកប្រើប្រាស់', 
+    'Edit User' => 'កែសម្រួលអ្នកប្រើប្រាស់',
     'User Details' => 'ព័ត៌មានលម្អិតអ្នកប្រើប្រាស់',
     'User Information' => 'ព័ត៌មានអ្នកប្រើប្រាស់',
     'User Profile' => 'ប្រវត្តិរូបអ្នកប្រើប្រាស់',
@@ -27,7 +27,7 @@ $batch4Translations = [
     'Holding Classes' => 'កាន់ថ្នាក់',
     'Assign School' => 'ចាត់តាំងសាលា',
     'Assign Role' => 'ចាត់តាំងតួនាទី',
-    
+
     // Student management
     'Create Student' => 'បង្កើតសិស្ស',
     'Edit Student' => 'កែសម្រួលសិស្ស',
@@ -44,7 +44,7 @@ $batch4Translations = [
     'Remove Student' => 'ដកសិស្សចេញ',
     'Transfer Student' => 'ផ្ទេរសិស្ស',
     'Graduate Student' => 'សិស្សបញ្ចប់',
-    
+
     // Reports and analysis
     'Generate Report' => 'បង្កើតរបាយការណ៍',
     'Export Report' => 'នាំចេញរបាយការណ៍',
@@ -59,7 +59,7 @@ $batch4Translations = [
     'Summary Report' => 'របាយការណ៍សង្ខេប',
     'View All Reports' => 'មើលរបាយការណ៍ទាំងអស់',
     'Recent Reports' => 'របាយការណ៍ថ្មីៗ',
-    
+
     // Assessment management
     'Create Assessment' => 'បង្កើតការវាយតម្លៃ',
     'Edit Assessment' => 'កែសម្រួលការវាយតម្លៃ',
@@ -74,7 +74,7 @@ $batch4Translations = [
     'Assessment Summary' => 'សង្ខេបការវាយតម្លៃ',
     'Assessment Status' => 'ស្ថានភាពការវាយតម្លៃ',
     'Assessment Settings' => 'ការកំណត់ការវាយតម្លៃ',
-    
+
     // Date and time related
     'Date Created' => 'កាលបរិច្ឆេទបង្កើត',
     'Date Modified' => 'កាលបរិច្ឆេទកែប្រែ',
@@ -88,7 +88,7 @@ $batch4Translations = [
     'Duration' => 'រយៈពេល',
     'Time Remaining' => 'ពេលវេលានៅសល់',
     'Time Spent' => 'ពេលវេលាបានចំណាយ',
-    
+
     // Import/Export operations
     'Import' => 'នាំចូល',
     'Export' => 'នាំចេញ',
@@ -106,7 +106,7 @@ $batch4Translations = [
     'Export Successful' => 'នាំចេញដោយជោគជ័យ',
     'Import Failed' => 'នាំចូលបរាជ័យ',
     'Export Failed' => 'នាំចេញបរាជ័យ',
-    
+
     // Filter and search
     'Apply Filters' => 'អនុវត្តតម្រង',
     'Reset Filters' => 'កំណត់តម្រងឡើងវិញ',
@@ -118,7 +118,7 @@ $batch4Translations = [
     'No search results' => 'គ្មានលទ្ធផលស្វែងរក',
     'Found :count results' => 'រកឃើញ :count លទ្ធផល',
     'Searching...' => 'កំពុងស្វែងរក...',
-    
+
     // Actions and operations
     'Bulk Actions' => 'សកម្មភាពច្រើន',
     'Quick Actions' => 'សកម្មភាពរហ័ស',
@@ -130,7 +130,7 @@ $batch4Translations = [
     'Undo Action' => 'មិនធ្វើសកម្មភាពវិញ',
     'Redo Action' => 'ធ្វើសកម្មភាពឡើងវិញ',
     'Confirm Action' => 'បញ្ជាក់សកម្មភាព',
-    
+
     // School management
     'School Information' => 'ព័ត៌មានសាលា',
     'School Profile' => 'ប្រវត្តិសាលា',
@@ -143,7 +143,7 @@ $batch4Translations = [
     'Transfer School' => 'ផ្ទេរសាលា',
     'School List' => 'បញ្ជីសាលា',
     'All Genders' => 'ភេទទាំងអស់',
-    
+
     // Mentoring specific additional
     'Mentoring Session' => 'វគ្គការណែនាំ',
     'Mentoring Plan' => 'ផែនការណែនាំ',
@@ -152,7 +152,7 @@ $batch4Translations = [
     'Mentoring Progress' => 'វឌ្ឍនភាពការណែនាំ',
     'Mentoring History' => 'ប្រវត្តិការណែនាំ',
     'Add Mentoring Visit' => 'បន្ថែមការមកសួរសុខទុក្ខ',
-    
+
     // File operations
     'Upload' => 'ផ្ទុកឡើង',
     'Download' => 'ទាញយក',
@@ -165,7 +165,7 @@ $batch4Translations = [
     'File Size' => 'ទំហំឯកសារ',
     'File Name' => 'ឈ្មោះឯកសារ',
     'Files' => 'ឯកសារ',
-    
+
     // Settings categories
     'General Settings' => 'ការកំណត់ទូទៅ',
     'Privacy Settings' => 'ការកំណត់ឯកជនភាព',
@@ -174,7 +174,7 @@ $batch4Translations = [
     'Language Settings' => 'ការកំណត់ភាសា',
     'Advanced Settings' => 'ការកំណត់កម្រិតខ្ពស់',
     'System Preferences' => 'ចំណូលចិត្តប្រព័ន្ធ',
-    
+
     // Navigation and menus
     'Main Navigation' => 'ការរុករកមេ',
     'Quick Links' => 'តំណរហ័ស',
@@ -183,7 +183,7 @@ $batch4Translations = [
     'Recent Items' => 'ធាតុថ្មីៗ',
     'Popular Items' => 'ធាតុពេញនិយម',
     'Featured Items' => 'ធាតុពិសេស',
-    
+
     // Status indicators additional
     'In Review' => 'កំពុងពិនិត្យ',
     'Under Review' => 'ក្រោមការពិនិត្យ',
@@ -197,7 +197,7 @@ $batch4Translations = [
     'Scheduled' => 'បានកំណត់ពេល',
     'Cancelled' => 'បានលុបចោល',
     'Expired' => 'ផុតកំណត់',
-    
+
     // Additional UI elements
     'Toggle' => 'បិទបើក',
     'Expand All' => 'ពង្រីកទាំងអស់',
@@ -211,7 +211,7 @@ $batch4Translations = [
     'View Options' => 'ជម្រើសមើល',
     'Display Options' => 'ជម្រើសបង្ហាញ',
     'Format Options' => 'ជម្រើសទម្រង់',
-    
+
     // Help and documentation
     'User Manual' => 'សៀវភៅណែនាំអ្នកប្រើ',
     'Quick Start Guide' => 'មគ្គុទ្ទេសក៍ចាប់ផ្តើមរហ័ស',
@@ -230,7 +230,7 @@ foreach ($batch4Translations as $en => $km) {
     $updated = Translation::where('key', $en)
         ->where('group', 'views')
         ->update(['km' => $km]);
-    
+
     if ($updated > 0) {
         echo "  ✓ Updated: {$en}\n";
         $count += $updated;
@@ -244,11 +244,11 @@ Translation::clearCache();
 
 // Check status
 $remaining = Translation::where('group', 'views')
-    ->where(function($q) {
+    ->where(function ($q) {
         $q->whereNull('km')
-          ->orWhere('km', '')
-          ->orWhere('km', 'LIKE', '%[%')
-          ->orWhereRaw('km = en');
+            ->orWhere('km', '')
+            ->orWhere('km', 'LIKE', '%[%')
+            ->orWhereRaw('km = en');
     })
     ->count();
 

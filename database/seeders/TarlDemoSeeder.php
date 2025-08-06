@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\School;
-use App\Models\User;
 use App\Models\Student;
+use App\Models\User;
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
@@ -71,7 +71,7 @@ class TarlDemoSeeder extends Seeder
                     Student::create([
                         'school_id' => $school->id,
                         'student_code' => sprintf('STU%04d', $studentCount),
-                        'first_name' => "Student",
+                        'first_name' => 'Student',
                         'last_name' => "Number$studentCount",
                         'nickname' => "S$studentCount",
                         'birthdate' => now()->subYears(9 + $grade - 4),
@@ -95,11 +95,11 @@ class TarlDemoSeeder extends Seeder
         // Assign students to teachers (25 students per teacher)
         $allStudents = Student::all();
         $studentsPerTeacher = 25;
-        
+
         foreach ($teachers as $index => $teacherData) {
             $startIndex = $index * $studentsPerTeacher;
             $assignedStudents = $allStudents->slice($startIndex, $studentsPerTeacher);
-            
+
             foreach ($assignedStudents as $student) {
                 $student->teacher_id = $teacherData['teacher']->id;
                 $student->save();

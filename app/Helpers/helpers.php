@@ -2,13 +2,13 @@
 
 use App\Models\Translation;
 
-if (!function_exists('trans_db')) {
+if (! function_exists('trans_db')) {
     /**
      * Translate the given key from database.
      *
-     * @param string $key
-     * @param array $replace
-     * @param string|null $locale
+     * @param  string  $key
+     * @param  array  $replace
+     * @param  string|null  $locale
      * @return string
      */
     function trans_db($key, $replace = [], $locale = null)
@@ -22,18 +22,18 @@ if (!function_exists('trans_db')) {
 
         // Replace placeholders
         foreach ($replace as $placeholder => $value) {
-            $translation = str_replace(':' . $placeholder, $value, $translation);
+            $translation = str_replace(':'.$placeholder, $value, $translation);
         }
 
         return $translation;
     }
 }
 
-if (!function_exists('setLocale')) {
+if (! function_exists('setLocale')) {
     /**
      * Set the application locale
      *
-     * @param string $locale
+     * @param  string  $locale
      * @return void
      */
     function setLocale($locale)
@@ -45,7 +45,7 @@ if (!function_exists('setLocale')) {
     }
 }
 
-if (!function_exists('getLocale')) {
+if (! function_exists('getLocale')) {
     /**
      * Get the current application locale
      *

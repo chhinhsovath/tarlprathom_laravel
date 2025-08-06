@@ -2,16 +2,16 @@
 
 namespace Database\Seeders;
 
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 
 class CreateTablesForDemo extends Seeder
 {
     public function run(): void
     {
         // Create schools table
-        if (!Schema::hasTable('schools')) {
+        if (! Schema::hasTable('schools')) {
             Schema::create('schools', function (Blueprint $table) {
                 $table->id();
                 $table->string('name');
@@ -31,7 +31,7 @@ class CreateTablesForDemo extends Seeder
         }
 
         // Create users table if not exists
-        if (!Schema::hasTable('users')) {
+        if (! Schema::hasTable('users')) {
             Schema::create('users', function (Blueprint $table) {
                 $table->id();
                 $table->string('name');
@@ -51,7 +51,7 @@ class CreateTablesForDemo extends Seeder
         }
 
         // Create classes table
-        if (!Schema::hasTable('classes')) {
+        if (! Schema::hasTable('classes')) {
             Schema::create('classes', function (Blueprint $table) {
                 $table->id();
                 $table->string('name');
@@ -65,7 +65,7 @@ class CreateTablesForDemo extends Seeder
         }
 
         // Create students table
-        if (!Schema::hasTable('students')) {
+        if (! Schema::hasTable('students')) {
             Schema::create('students', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('school_id')->constrained()->onDelete('cascade');
@@ -98,7 +98,7 @@ class CreateTablesForDemo extends Seeder
         }
 
         // Create mentor_school pivot table
-        if (!Schema::hasTable('mentor_school')) {
+        if (! Schema::hasTable('mentor_school')) {
             Schema::create('mentor_school', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('school_id')->constrained()->onDelete('cascade');
@@ -109,7 +109,7 @@ class CreateTablesForDemo extends Seeder
         }
 
         // Create student_teacher pivot table
-        if (!Schema::hasTable('student_teacher')) {
+        if (! Schema::hasTable('student_teacher')) {
             Schema::create('student_teacher', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('student_id')->constrained()->onDelete('cascade');
@@ -120,7 +120,7 @@ class CreateTablesForDemo extends Seeder
         }
 
         // Create assessments table
-        if (!Schema::hasTable('assessments')) {
+        if (! Schema::hasTable('assessments')) {
             Schema::create('assessments', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('student_id')->constrained('students')->cascadeOnDelete();
@@ -139,7 +139,7 @@ class CreateTablesForDemo extends Seeder
         }
 
         // Create mentoring_visits table
-        if (!Schema::hasTable('mentoring_visits')) {
+        if (! Schema::hasTable('mentoring_visits')) {
             Schema::create('mentoring_visits', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('mentor_id')->constrained('users')->cascadeOnDelete();
@@ -160,7 +160,7 @@ class CreateTablesForDemo extends Seeder
         }
 
         // Create assessment_histories table
-        if (!Schema::hasTable('assessment_histories')) {
+        if (! Schema::hasTable('assessment_histories')) {
             Schema::create('assessment_histories', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('student_id')->constrained()->onDelete('cascade');
@@ -180,7 +180,7 @@ class CreateTablesForDemo extends Seeder
         }
 
         // Create student_assessment_eligibility table
-        if (!Schema::hasTable('student_assessment_eligibility')) {
+        if (! Schema::hasTable('student_assessment_eligibility')) {
             Schema::create('student_assessment_eligibility', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('student_id')->constrained()->onDelete('cascade');
@@ -194,7 +194,7 @@ class CreateTablesForDemo extends Seeder
         }
 
         // Create resources table
-        if (!Schema::hasTable('resources')) {
+        if (! Schema::hasTable('resources')) {
             Schema::create('resources', function (Blueprint $table) {
                 $table->id();
                 $table->string('title');
@@ -210,7 +210,7 @@ class CreateTablesForDemo extends Seeder
         }
 
         // Create translations table
-        if (!Schema::hasTable('translations')) {
+        if (! Schema::hasTable('translations')) {
             Schema::create('translations', function (Blueprint $table) {
                 $table->id();
                 $table->string('key')->unique();
@@ -227,7 +227,7 @@ class CreateTablesForDemo extends Seeder
         }
 
         // Create cache table
-        if (!Schema::hasTable('cache')) {
+        if (! Schema::hasTable('cache')) {
             Schema::create('cache', function (Blueprint $table) {
                 $table->string('key')->primary();
                 $table->mediumText('value');
@@ -236,7 +236,7 @@ class CreateTablesForDemo extends Seeder
         }
 
         // Create cache_locks table
-        if (!Schema::hasTable('cache_locks')) {
+        if (! Schema::hasTable('cache_locks')) {
             Schema::create('cache_locks', function (Blueprint $table) {
                 $table->string('key')->primary();
                 $table->string('owner');
@@ -245,7 +245,7 @@ class CreateTablesForDemo extends Seeder
         }
 
         // Create sessions table
-        if (!Schema::hasTable('sessions')) {
+        if (! Schema::hasTable('sessions')) {
             Schema::create('sessions', function (Blueprint $table) {
                 $table->string('id')->primary();
                 $table->foreignId('user_id')->nullable()->index();
@@ -257,7 +257,7 @@ class CreateTablesForDemo extends Seeder
         }
 
         // Create jobs table
-        if (!Schema::hasTable('jobs')) {
+        if (! Schema::hasTable('jobs')) {
             Schema::create('jobs', function (Blueprint $table) {
                 $table->id();
                 $table->string('queue')->index();
@@ -270,7 +270,7 @@ class CreateTablesForDemo extends Seeder
         }
 
         // Create failed_jobs table
-        if (!Schema::hasTable('failed_jobs')) {
+        if (! Schema::hasTable('failed_jobs')) {
             Schema::create('failed_jobs', function (Blueprint $table) {
                 $table->id();
                 $table->string('uuid')->unique();

@@ -13,7 +13,7 @@
                         @csrf
 
                         <div>
-                            <label for="title" class="block text-sm font-medium text-gray-700">Title</label>
+                            <label for="title" class="block text-sm font-medium text-gray-700">ចំណងជើង</label>
                             <input type="text" name="title" id="title" value="{{ old('title') }}" required
                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                             @error('title')
@@ -32,26 +32,26 @@
 
                         <!-- Resource Type Selection -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-3">Resource Type</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-3">ប្រភេទធនធាន</label>
                             <div class="space-y-2">
                                 <label class="flex items-center">
                                     <input type="radio" name="resource_type" value="file" checked
                                         class="mr-2 text-indigo-600 focus:ring-indigo-500"
                                         onchange="toggleResourceType()">
-                                    <span class="text-sm text-gray-700">Upload File</span>
+                                    <span class="text-sm text-gray-700">ផ្ទុកឯកសារ</span>
                                 </label>
                                 <label class="flex items-center">
                                     <input type="radio" name="resource_type" value="youtube"
                                         class="mr-2 text-indigo-600 focus:ring-indigo-500"
                                         onchange="toggleResourceType()">
-                                    <span class="text-sm text-gray-700">YouTube Video Link</span>
+                                    <span class="text-sm text-gray-700">តំណវីដេអូ YouTube</span>
                                 </label>
                             </div>
                         </div>
 
                         <!-- File Upload Section -->
                         <div id="fileUploadSection">
-                            <label for="file" class="block text-sm font-medium text-gray-700">File</label>
+                            <label for="file" class="block text-sm font-medium text-gray-700">ឯកសារ</label>
                             <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
                                 <div class="space-y-1 text-center">
                                     <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
@@ -59,14 +59,14 @@
                                     </svg>
                                     <div class="flex text-sm text-gray-600">
                                         <label for="file" class="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
-                                            <span>Upload a file</span>
+                                            <span>ផ្ទុកឯកសារ</span>
                                             <input id="file" name="file" type="file" class="sr-only"
                                                 accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.mp4,.mov,.avi,.wmv">
                                         </label>
-                                        <p class="pl-1">or drag and drop</p>
+                                        <p class="pl-1">ឬអូសនិងទម្លាក់</p>
                                     </div>
                                     <p class="text-xs text-gray-500">
-                                        PDF, Word, Excel, PowerPoint, or Video files up to 100MB
+                                        ឯកសារ PDF, Word, Excel, PowerPoint, ឬវីដេអូរហូតដល់ 100MB
                                     </p>
                                 </div>
                             </div>
@@ -77,13 +77,13 @@
 
                         <!-- YouTube URL Section -->
                         <div id="youtubeSection" style="display: none;">
-                            <label for="youtube_url" class="block text-sm font-medium text-gray-700">YouTube Video URL</label>
+                            <label for="youtube_url" class="block text-sm font-medium text-gray-700">តំណ URL វីដេអូ YouTube</label>
                             <div class="mt-1">
                                 <input type="url" name="youtube_url" id="youtube_url" 
                                     placeholder="https://www.youtube.com/watch?v=..."
                                     class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                                 <p class="mt-2 text-sm text-gray-500">
-                                    Enter a YouTube video URL (e.g., https://www.youtube.com/watch?v=dQw4w9WgXcQ)
+                                    បញ្ចូលតំណ URL វីដេអូ YouTube (ឧទាហរណ៍: https://www.youtube.com/watch?v=dQw4w9WgXcQ)
                                 </p>
                             </div>
                             @error('youtube_url')
@@ -95,18 +95,18 @@
                             <label class="flex items-center">
                                 <input type="checkbox" name="is_public" value="1" checked
                                     class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                                <span class="ml-2 text-sm text-gray-700">Make this resource publicly accessible</span>
+                                <span class="ml-2 text-sm text-gray-700">ធ្វើឱ្យធនធាននេះអាចចូលប្រើប្រាស់ជាសាធារណៈ</span>
                             </label>
                         </div>
 
                         <div class="flex justify-end space-x-3">
                             <a href="{{ route('resources.index') }}" 
                                 class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded">
-                                Cancel
+                                បោះបង់
                             </a>
                             <button type="submit" 
                                 class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                Upload Resource
+                                ផ្ទុកធនធាន
                             </button>
                         </div>
                     </form>

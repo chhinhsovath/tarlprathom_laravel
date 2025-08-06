@@ -27,7 +27,7 @@ return new class extends Migration
             $table->string('village_name_en')->nullable();
             $table->timestamps();
             $table->softDeletes();
-            
+
             // Add indexes for better performance
             $table->index('province_code');
             $table->index('province_name_kh');

@@ -3,7 +3,7 @@
         <div class="w-full px-4 sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
-                    <h3 class="text-lg font-medium text-gray-900 mb-6">{{ __('Mentor Visit - Observation Form') }}</h3>
+                    <h3 class="text-lg font-medium text-gray-900 mb-6">ទម្រង់សង្កេតការណ៍ការចុះណែនាំ</h3>
                     
                     <form id="mentoringForm" method="POST" action="{{ route('mentoring.store') }}" enctype="multipart/form-data">
                         @csrf
@@ -11,7 +11,7 @@
                         <!-- Progress Indicator -->
                         <div class="mb-8">
                             <div class="flex items-center justify-between">
-                                <span class="text-sm text-gray-600">{{ __('Progress') }}</span>
+                                <span class="text-sm text-gray-600">វឌ្ឍនភាព</span>
                                 <span class="text-sm text-gray-600"><span id="progressPercent">0</span>%</span>
                             </div>
                             <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
@@ -21,7 +21,7 @@
 
                         <!-- Section 1: Visit Details -->
                         <div class="questionnaire-section mb-8" data-section="visit_details">
-                            <h4 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b">{{ __('Visit Details') }}</h4>
+                            <h4 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b">ព័ត៌មានលម្អិតការចុះអង្កេត</h4>
                             
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <!-- កាលបរិច្ឆេទនៃការចុះ (Visit Date) -->
@@ -49,7 +49,7 @@
                                             name="province" 
                                             class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                                             required>
-                                        <option value="">{{ __('Select Province') }}</option>
+                                        <option value="">ជ្រើសរើសខេត្ត</option>
                                     </select>
                                     @error('province')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -65,7 +65,7 @@
                                             name="district" 
                                             class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                                             required disabled>
-                                        <option value="">{{ __('Select District') }}</option>
+                                        <option value="">ជ្រើសរើសស្រុក/ក្រុង</option>
                                     </select>
                                     @error('district')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -81,7 +81,7 @@
                                             name="commune" 
                                             class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                                             required disabled>
-                                        <option value="">{{ __('Select Commune') }}</option>
+                                        <option value="">ជ្រើសរើសឃុំ/សង្កាត់</option>
                                     </select>
                                     @error('commune')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -97,7 +97,7 @@
                                             name="village" 
                                             class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                                             required disabled>
-                                        <option value="">{{ __('Select Village') }}</option>
+                                        <option value="">ជ្រើសរើសភូមិ</option>
                                     </select>
                                     @error('village')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -128,7 +128,7 @@
                                             name="school_id" 
                                             class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                                             required>
-                                        <option value="">{{ __('Select School') }}</option>
+                                        <option value="">ជ្រើសរើសសាលា</option>
                                         @foreach($schools as $school)
                                             <option value="{{ $school->id }}" {{ old('school_id') == $school->id ? 'selected' : '' }}>
                                                 {{ $school->name }}
@@ -149,7 +149,7 @@
                                             name="teacher_id" 
                                             class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                                             required>
-                                        <option value="">{{ __('Select Teacher') }}</option>
+                                        <option value="">ជ្រើសរើសគ្រូ</option>
                                     </select>
                                     @error('teacher_id')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -160,7 +160,7 @@
 
                         <!-- TaRL Class Status -->
                         <div class="questionnaire-section mb-8" data-section="class_status">
-                            <h4 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b">{{ __('Class Status') }}</h4>
+                            <h4 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b">ស្ថានភាពថ្នាក់រៀន</h4>
                             
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <!-- តើថ្នាក់រៀន TaRL មានដំណើរការនៅថ្ងៃចុះអង្កេតដែរឬទេ? -->
@@ -255,7 +255,7 @@
                                     <select id="subject_observed" 
                                             name="subject_observed" 
                                             class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                                        <option value="">{{ __('Select Subject') }}</option>
+                                        <option value="">ជ្រើសរើសមុខវិជ្ជា</option>
                                         <option value="ភាសាខ្មែរ" {{ old('subject_observed') == 'ភាសាខ្មែរ' ? 'selected' : '' }}>{{ __('ភាសាខ្មែរ') }}</option>
                                         <option value="គណិតវិទ្យា" {{ old('subject_observed') == 'គណិតវិទ្យា' ? 'selected' : '' }}>{{ __('គណិតវិទ្យា') }}</option>
                                     </select>
@@ -365,7 +365,7 @@
 
                         <!-- Delivery Questions -->
                         <div class="questionnaire-section mb-8" data-section="delivery_questions" id="delivery_section">
-                            <h4 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b">{{ __('Delivery Questions') }}</h4>
+                            <h4 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b">សំណួរអំពីការបង្រៀន</h4>
                             
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <!-- តើថ្នាក់រៀនបានចាប់ផ្តើមទាន់ពេលដែរឬទេ (ក្នុងរយៈពេល ៥ នាទី)? -->
@@ -406,7 +406,7 @@
 
                         <!-- Classroom Related Questions -->
                         <div class="questionnaire-section mb-8" data-section="classroom_questions" id="classroom_section">
-                            <h4 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b">{{ __('Classroom Related Questions') }}</h4>
+                            <h4 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b">សំណួរទាក់ទងនឹងថ្នាក់រៀន</h4>
                             
                             <div class="space-y-6">
                                 <!-- តើសម្ភារឧបទេសអ្វីខ្លះដែលអ្នកបានឃើញមាននៅក្នុងថ្នាក់រៀន? -->
@@ -492,7 +492,7 @@
 
                         <!-- Teacher Related Questions -->
                         <div class="questionnaire-section mb-8" data-section="teacher_questions" id="teacher_section">
-                            <h4 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b">{{ __('Teacher Related Questions') }}</h4>
+                            <h4 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b">សំណួរទាក់ទងនឹងគ្រូបង្រៀន</h4>
                             
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <!-- តើគ្រូមានកិច្ចតែងការបង្រៀន (ផែនការមេរៀន) ដែរឬទេ? -->
@@ -597,7 +597,7 @@
 
                         <!-- Activity Related Questions -->
                         <div class="questionnaire-section mb-8" data-section="activities" id="activities_section">
-                            <h4 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b">{{ __('Activity Related Questions') }}</h4>
+                            <h4 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b">សំណួរទាក់ទងនឹងសកម្មភាព</h4>
                             
                             <!-- តើមានសកម្មភាពប៉ុន្មានត្រូវបានអង្កេត? -->
                             <div class="mb-6">
@@ -616,7 +616,7 @@
                             
                             <!-- Activity 1 -->
                             <div id="activity1_section" style="display: none;" class="border-l-4 border-blue-500 pl-4 mb-6">
-                                <h5 class="font-semibold text-gray-700 mb-4">{{ __('Activity 1') }}</h5>
+                                <h5 class="font-semibold text-gray-700 mb-4">សកម្មភាពទី១</h5>
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <!-- Activity name for Khmer -->
                                     <div id="activity1_khmer_container" style="display: none;">
@@ -626,7 +626,7 @@
                                         <select id="activity1_name_language" 
                                                 name="activity1_name_language" 
                                                 class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                                            <option value="">{{ __('Select Activity') }}</option>
+                                            <option value="">ជ្រើសរើសសកម្មភាព</option>
                                             @php
                                             $khmerActivities = [
                                                 'ការសន្ទនាសេរី',
@@ -664,7 +664,7 @@
                                         <select id="activity1_name_numeracy" 
                                                 name="activity1_name_numeracy" 
                                                 class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                                            <option value="">{{ __('Select Activity') }}</option>
+                                            <option value="">ជ្រើសរើសសកម្មភាព</option>
                                             @php
                                             $mathActivities = [
                                                 'ចំនួនដោយប្រើបាច់ឈើនិងឈើ',
@@ -781,7 +781,7 @@
                             
                             <!-- Activity 2 -->
                             <div id="activity2_section" style="display: none;" class="border-l-4 border-green-500 pl-4 mb-6">
-                                <h5 class="font-semibold text-gray-700 mb-4">{{ __('Activity 2') }}</h5>
+                                <h5 class="font-semibold text-gray-700 mb-4">សកម្មភាពទី២</h5>
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <!-- Activity name for Khmer -->
                                     <div id="activity2_khmer_container" style="display: none;">
@@ -791,7 +791,7 @@
                                         <select id="activity2_name_language" 
                                                 name="activity2_name_language" 
                                                 class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                                            <option value="">{{ __('Select Activity') }}</option>
+                                            <option value="">ជ្រើសរើសសកម្មភាព</option>
                                             @foreach($khmerActivities as $activity)
                                             <option value="{{ $activity }}" {{ old('activity2_name_language') == $activity ? 'selected' : '' }}>
                                                 {{ $activity }}
@@ -808,7 +808,7 @@
                                         <select id="activity2_name_numeracy" 
                                                 name="activity2_name_numeracy" 
                                                 class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                                            <option value="">{{ __('Select Activity') }}</option>
+                                            <option value="">ជ្រើសរើសសកម្មភាព</option>
                                             @foreach($mathActivities as $activity)
                                             <option value="{{ $activity }}" {{ old('activity2_name_numeracy') == $activity ? 'selected' : '' }}>
                                                 {{ $activity }}
@@ -898,7 +898,7 @@
 
                         <!-- Miscellaneous -->
                         <div class="questionnaire-section mb-8" data-section="miscellaneous">
-                            <h4 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b">{{ __('Miscellaneous') }}</h4>
+                            <h4 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b">ផ្សេងៗ</h4>
                             
                             <!-- មតិយោបល់សម្រាប់គ្រូបង្រៀន -->
                             <div>
@@ -909,7 +909,7 @@
                                           name="feedback_for_teacher" 
                                           rows="4"
                                           class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                                          placeholder="{{ __('Enter feedback for the teacher (100-120 words)') }}">{{ old('feedback_for_teacher') }}</textarea>
+                                          placeholder="សូមបញ្ចូលមតិយោបល់សម្រាប់គ្រូបង្រៀន (១០០-១២០ ពាក្យ)">{{ old('feedback_for_teacher') }}</textarea>
                                 @error('feedback_for_teacher')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
@@ -920,11 +920,11 @@
                         <div class="flex items-center justify-between">
                             <a href="{{ route('mentoring.index') }}" 
                                class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg">
-                                {{ __('Cancel') }}
+                                បោះបង់
                             </a>
                             <button type="submit" 
                                     class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">
-                                {{ __('Submit') }}
+                                បញ្ជូន
                             </button>
                         </div>
                     </form>
@@ -954,7 +954,7 @@
                 fetch('{{ route("api.geographic.provinces") }}')
                     .then(response => response.json())
                     .then(data => {
-                        provinceSelect.innerHTML = '<option value="">{{ __("ជ្រើសរើសខេត្ត") }}</option>';
+                        provinceSelect.innerHTML = '<option value="">ជ្រើសរើសខេត្ត</option>';
                         data.forEach(province => {
                             const option = document.createElement('option');
                             option.value = province.province_name_kh;
@@ -978,11 +978,11 @@
                 selectedProvinceCode = selectedOption.dataset.code;
                 
                 // Reset dependent selects
-                districtSelect.innerHTML = '<option value="">{{ __("ជ្រើសរើសស្រុក/ក្រុង") }}</option>';
+                districtSelect.innerHTML = '<option value="">ជ្រើសរើសស្រុក/ក្រុង</option>';
                 districtSelect.disabled = true;
-                communeSelect.innerHTML = '<option value="">{{ __("ជ្រើសរើសឃុំ/សង្កាត់") }}</option>';
+                communeSelect.innerHTML = '<option value="">ជ្រើសរើសឃុំ/សង្កាត់</option>';
                 communeSelect.disabled = true;
-                villageSelect.innerHTML = '<option value="">{{ __("ជ្រើសរើសភូមិ") }}</option>';
+                villageSelect.innerHTML = '<option value="">ជ្រើសរើសភូមិ</option>';
                 villageSelect.disabled = true;
                 
                 if (selectedProvinceCode) {
@@ -990,7 +990,7 @@
                     fetch(`{{ route("api.geographic.districts") }}?province_code=${selectedProvinceCode}`)
                         .then(response => response.json())
                         .then(data => {
-                            districtSelect.innerHTML = '<option value="">{{ __("ជ្រើសរើសស្រុក/ក្រុង") }}</option>';
+                            districtSelect.innerHTML = '<option value="">ជ្រើសរើសស្រុក/ក្រុង</option>';
                             data.forEach(district => {
                                 const option = document.createElement('option');
                                 option.value = district.district_name_kh;
@@ -1016,9 +1016,9 @@
                 selectedDistrictCode = selectedOption.dataset.code;
                 
                 // Reset dependent selects
-                communeSelect.innerHTML = '<option value="">{{ __("ជ្រើសរើសឃុំ/សង្កាត់") }}</option>';
+                communeSelect.innerHTML = '<option value="">ជ្រើសរើសឃុំ/សង្កាត់</option>';
                 communeSelect.disabled = true;
-                villageSelect.innerHTML = '<option value="">{{ __("ជ្រើសរើសភូមិ") }}</option>';
+                villageSelect.innerHTML = '<option value="">ជ្រើសរើសភូមិ</option>';
                 villageSelect.disabled = true;
                 
                 if (selectedDistrictCode) {
@@ -1026,7 +1026,7 @@
                     fetch(`{{ route("api.geographic.communes") }}?district_code=${selectedDistrictCode}`)
                         .then(response => response.json())
                         .then(data => {
-                            communeSelect.innerHTML = '<option value="">{{ __("ជ្រើសរើសឃុំ/សង្កាត់") }}</option>';
+                            communeSelect.innerHTML = '<option value="">ជ្រើសរើសឃុំ/សង្កាត់</option>';
                             data.forEach(commune => {
                                 const option = document.createElement('option');
                                 option.value = commune.commune_name_kh;
@@ -1052,7 +1052,7 @@
                 selectedCommuneCode = selectedOption.dataset.code;
                 
                 // Reset village select
-                villageSelect.innerHTML = '<option value="">{{ __("ជ្រើសរើសភូមិ") }}</option>';
+                villageSelect.innerHTML = '<option value="">ជ្រើសរើសភូមិ</option>';
                 villageSelect.disabled = true;
                 
                 if (selectedCommuneCode) {
@@ -1060,7 +1060,7 @@
                     fetch(`{{ route("api.geographic.villages") }}?commune_code=${selectedCommuneCode}`)
                         .then(response => response.json())
                         .then(data => {
-                            villageSelect.innerHTML = '<option value="">{{ __("ជ្រើសរើសភូមិ") }}</option>';
+                            villageSelect.innerHTML = '<option value="">ជ្រើសរើសភូមិ</option>';
                             data.forEach(village => {
                                 const option = document.createElement('option');
                                 option.value = village.village_name_kh;
@@ -1106,7 +1106,7 @@
             if (schoolSelect) {
                 schoolSelect.addEventListener('change', function() {
                     const schoolId = this.value;
-                    teacherSelect.innerHTML = '<option value="">{{ __("Select Teacher") }}</option>';
+                    teacherSelect.innerHTML = '<option value="">ជ្រើសរើសគ្រូ</option>';
                     
                     if (schoolId) {
                         fetch(`/api/school/${schoolId}/teachers`)
@@ -1263,7 +1263,7 @@
                     const present = parseInt(this.value) || 0;
                     
                     if (present > total) {
-                        this.setCustomValidity('Students present cannot exceed total students enrolled');
+                        this.setCustomValidity('ចំនួនសិស្សមានវត្តមានមិនអាចលើសពីចំនួនសិស្សសរុបបានទេ');
                     } else {
                         this.setCustomValidity('');
                     }
@@ -1276,7 +1276,7 @@
                     const improved = parseInt(this.value) || 0;
                     
                     if (improved > total) {
-                        this.setCustomValidity('Students improved cannot exceed total students enrolled');
+                        this.setCustomValidity('ចំនួនសិស្សដែលមានការកើនឡើងមិនអាចលើសពីចំនួនសិស្សសរុបបានទេ');
                     } else {
                         this.setCustomValidity('');
                     }

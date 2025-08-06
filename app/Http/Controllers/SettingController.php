@@ -13,10 +13,10 @@ class SettingController extends Controller
         if (! auth()->user()->isAdmin()) {
             abort(403, __('Unauthorized action.'));
         }
-        
+
         // Get cached settings or fallback to config values
         $cachedSettings = Cache::get('settings', []);
-        
+
         $settings = [
             'app_name' => $cachedSettings['app_name'] ?? config('app.name'),
             'app_timezone' => $cachedSettings['app_timezone'] ?? config('app.timezone'),

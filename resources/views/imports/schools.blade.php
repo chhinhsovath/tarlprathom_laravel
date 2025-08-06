@@ -7,10 +7,10 @@
             <div class="flex items-center justify-between">
                 <div>
                     <h4 class="text-xl font-semibold text-gray-900">{{ __('Import Schools') }}</h4>
-                    <p class="text-gray-600 mt-1">Upload a CSV file to import multiple schools at once</p>
+                    <p class="text-gray-600 mt-1">ផ្ទុកឯកសារ CSV ដើម្បីនាំចូលសាលាច្រើនក្នុងពេលតែម្តង</p>
                 </div>
                 <a href="{{ route('imports.index') }}" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
-                    ← Back to Import Overview
+                    ← ត្រឡប់ទៅទិដ្ឋភាពនាំចូល
                 </a>
             </div>
         </div>
@@ -38,14 +38,14 @@
                     <div class="bg-blue-50 border border-blue-200 rounded-lg p-6">
                         <div class="flex items-center mb-4">
                             <i class="fas fa-school text-blue-600 text-2xl mr-3"></i>
-                            <h5 class="text-lg font-semibold text-blue-900">School Import</h5>
+                            <h5 class="text-lg font-semibold text-blue-900">នាំចូលសាលា</h5>
                         </div>
                         
                         <form action="{{ route('imports.schools') }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             <div class="mb-6">
                                 <label for="file" class="block text-sm font-medium text-gray-700 mb-2">
-                                    Select CSV File
+                                    ជ្រើសរើសឯកសារ CSV
                                 </label>
                                 <input type="file" 
                                        id="file"
@@ -54,7 +54,7 @@
                                        required
                                        class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 border border-gray-300 rounded-md">
                                 <p class="text-xs text-gray-500 mt-2">
-                                    Required columns: <code class="bg-gray-100 px-1 rounded">school_name</code>, 
+                                    ជួរដេញដែលត្រូវការ: <code class="bg-gray-100 px-1 rounded">school_name</code>, 
                                     <code class="bg-gray-100 px-1 rounded">school_code</code>, 
                                     <code class="bg-gray-100 px-1 rounded">province</code>, 
                                     <code class="bg-gray-100 px-1 rounded">district</code>, 
@@ -65,11 +65,11 @@
                             <div class="flex justify-between items-center">
                                 <a href="{{ route('imports.template', 'schools') }}" 
                                    class="export-btn text-blue-600 hover:text-blue-800 text-sm font-medium border border-blue-300 px-4 py-2 rounded hover:bg-blue-50 transition">
-                                    <i class="fas fa-download mr-2"></i>Download Template
+                                    <i class="fas fa-download mr-2"></i>ទាញយកគំរូ
                                 </a>
                                 <button type="submit" 
                                         class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition font-medium">
-                                    <i class="fas fa-upload mr-2"></i>Import Schools
+                                    <i class="fas fa-upload mr-2"></i>នាំចូលសាលា
                                 </button>
                             </div>
                         </form>
@@ -80,45 +80,45 @@
                 <div>
                     <div class="bg-gray-50 border border-gray-200 rounded-lg p-6">
                         <h5 class="text-lg font-semibold text-gray-900 mb-4">
-                            <i class="fas fa-info-circle text-gray-600 mr-2"></i>Import Guidelines
+                            <i class="fas fa-info-circle text-gray-600 mr-2"></i>គោលការណ៍នាំចូល
                         </h5>
                         
                         <div class="space-y-4">
                             <div>
-                                <h6 class="font-medium text-gray-800 mb-2">File Requirements</h6>
+                                <h6 class="font-medium text-gray-800 mb-2">តម្រូវការឯកសារ</h6>
                                 <ul class="space-y-1 text-sm text-gray-600">
                                     <li class="flex items-center">
                                         <i class="fas fa-check text-green-500 mr-2"></i>
-                                        CSV format only
+                                        ទម្រង់ CSV តែប៉ុណ្ណោះ
                                     </li>
                                     <li class="flex items-center">
                                         <i class="fas fa-check text-green-500 mr-2"></i>
-                                        UTF-8 encoding
+                                        ការអ៊ីនកូដ UTF-8
                                     </li>
                                     <li class="flex items-center">
                                         <i class="fas fa-check text-green-500 mr-2"></i>
-                                        First row as headers
+                                        ជួរដេញដំបូងជាបណ្តាំក្បាល
                                     </li>
                                 </ul>
                             </div>
 
                             <div>
-                                <h6 class="font-medium text-gray-800 mb-2">Column Definitions</h6>
+                                <h6 class="font-medium text-gray-800 mb-2">និយមន័យជួរដេញ</h6>
                                 <div class="space-y-2 text-sm">
                                     <div class="bg-white p-2 rounded border">
-                                        <code class="text-blue-600">school_name</code> - Full name of the school
+                                        <code class="text-blue-600">school_name</code> - ឈ្មោះពេញរបស់សាលា
                                     </div>
                                     <div class="bg-white p-2 rounded border">
-                                        <code class="text-blue-600">school_code</code> - Unique identifier (required)
+                                        <code class="text-blue-600">school_code</code> - លេខកូដសាលា (ត្រូវការ)
                                     </div>
                                     <div class="bg-white p-2 rounded border">
-                                        <code class="text-blue-600">province</code> - Province/state location
+                                        <code class="text-blue-600">province</code> - ទីតាំងខេត្ត
                                     </div>
                                     <div class="bg-white p-2 rounded border">
-                                        <code class="text-blue-600">district</code> - District/county location
+                                        <code class="text-blue-600">district</code> - ទីតាំងស្រុក/ក្រុង
                                     </div>
                                     <div class="bg-white p-2 rounded border">
-                                        <code class="text-blue-600">cluster</code> - School cluster (optional)
+                                        <code class="text-blue-600">cluster</code> - ក្រុមសាលា (មិនចាំបាច់)
                                     </div>
                                 </div>
                             </div>
@@ -126,7 +126,7 @@
                             <div class="bg-yellow-50 border border-yellow-200 rounded p-3">
                                 <p class="text-sm text-yellow-800">
                                     <i class="fas fa-exclamation-triangle mr-2"></i>
-                                    <strong>Note:</strong> School codes must be unique. Duplicate codes will be updated with new information.
+                                    <strong>ចំណាំ:</strong> លេខកូដសាលាត្រូវតែមិនដូចគ្នា។ លេខកូដដែលដូចគ្នានឹងត្រូវធ្វើបច្ចុប្បន្នភាពជាមួយព័ត៌មានថ្មី។
                                 </p>
                             </div>
                         </div>

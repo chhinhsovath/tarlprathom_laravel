@@ -16,7 +16,7 @@ $batch5Translations = [
     'User Roles & Permissions' => 'តួនាទីនិងសិទ្ធិអ្នកប្រើប្រាស់',
     'Resources' => 'ធនធាន',
     'Bulk Import' => 'នាំចូលច្រើន',
-    
+
     // User roles descriptions
     'Administrator' => 'អ្នកគ្រប់គ្រង',
     'Full system access' => 'ការចូលប្រើប្រព័ន្ធពេញលេញ',
@@ -34,7 +34,7 @@ $batch5Translations = [
     'Viewer' => 'អ្នកមើល',
     'View reports only' => 'មើលតែរបាយការណ៍ប៉ុណ្ណោះ',
     'Read-only access' => 'ការចូលប្រើអានតែប៉ុណ្ណោះ',
-    
+
     // Assessment workflow
     'Assessment Workflow' => 'លំហូរការងារវាយតម្លៃ',
     'Step 1: Select Assessment Type' => 'ជំហានទី១៖ ជ្រើសរើសប្រភេទវាយតម្លៃ',
@@ -44,7 +44,7 @@ $batch5Translations = [
     'Important Notes' => 'ចំណាំសំខាន់',
     'Save your progress regularly' => 'រក្សាទុកវឌ្ឍនភាពរបស់អ្នកជាប្រចាំ',
     'All fields marked with * are required' => 'វាលទាំងអស់ដែលមានសញ្ញា * ចាំបាច់ត្រូវបំពេញ',
-    
+
     // Import workflow
     'How to Import Data' => 'របៀបនាំចូលទិន្នន័យ',
     'Step 1: Download the template' => 'ជំហានទី១៖ ទាញយកគំរូ',
@@ -56,7 +56,7 @@ $batch5Translations = [
     'Make sure all required fields are filled' => 'ត្រូវប្រាកដថាវាលចាំបាច់ទាំងអស់ត្រូវបានបំពេញ',
     'Upload the completed file' => 'ផ្ទុកឯកសារដែលបានបំពេញរួចឡើង',
     'Review the preview before importing' => 'ពិនិត្យមើលជាមុនមុនពេលនាំចូល',
-    
+
     // Error messages
     'No data to import' => 'គ្មានទិន្នន័យដើម្បីនាំចូល',
     'Invalid file format' => 'ទម្រង់ឯកសារមិនត្រឹមត្រូវ',
@@ -65,7 +65,7 @@ $batch5Translations = [
     'Import partially successful' => 'នាំចូលជោគជ័យមួយផ្នែក',
     'Some records were skipped' => 'កំណត់ត្រាមួយចំនួនត្រូវបានរំលង',
     'Check the error log for details' => 'ពិនិត្យកំណត់ហេតុកំហុសសម្រាប់ព័ត៌មានលម្អិត',
-    
+
     // Report descriptions
     'Shows individual student progress over time' => 'បង្ហាញវឌ្ឍនភាពសិស្សម្នាក់ៗតាមពេលវេលា',
     'Compare performance across different schools' => 'ប្រៀបធៀបសមិទ្ធផលរវាងសាលាផ្សេងៗ',
@@ -75,7 +75,7 @@ $batch5Translations = [
     'Export data for further analysis' => 'នាំចេញទិន្នន័យសម្រាប់ការវិភាគបន្ថែម',
     'Generate custom reports' => 'បង្កើតរបាយការណ៍ផ្ទាល់ខ្លួន',
     'Schedule automatic reports' => 'កំណត់ពេលរបាយការណ៍ស្វ័យប្រវត្តិ',
-    
+
     // School import specific
     'School Import' => 'នាំចូលសាលា',
     'Import Schools' => 'នាំចូលសាលា',
@@ -85,7 +85,7 @@ $batch5Translations = [
     'School already exists' => 'សាលាមានរួចហើយ',
     'Invalid school code' => 'លេខកូដសាលាមិនត្រឹមត្រូវ',
     'Missing school name' => 'បាត់ឈ្មោះសាលា',
-    
+
     // User import specific
     'User Import' => 'នាំចូលអ្នកប្រើប្រាស់',
     'Import Users' => 'នាំចូលអ្នកប្រើប្រាស់',
@@ -95,7 +95,7 @@ $batch5Translations = [
     'Email already exists' => 'អ៊ីមែលមានរួចហើយ',
     'Invalid email format' => 'ទម្រង់អ៊ីមែលមិនត្រឹមត្រូវ',
     'Invalid role specified' => 'តួនាទីដែលបានបញ្ជាក់មិនត្រឹមត្រូវ',
-    
+
     // Student import specific
     'Student Import' => 'នាំចូលសិស្ស',
     'Student Import Complete' => 'ការនាំចូលសិស្សបានបញ្ចប់',
@@ -105,7 +105,7 @@ $batch5Translations = [
     'Invalid student code' => 'លេខកូដសិស្សមិនត្រឹមត្រូវ',
     'Invalid grade level' => 'កម្រិតថ្នាក់មិនត្រឹមត្រូវ',
     'Age out of range' => 'អាយុក្រៅពីកម្រិត',
-    
+
     // Settings descriptions
     'Configure system-wide settings' => 'កំណត់រចនាសម្ព័ន្ធការកំណត់ទូទាំងប្រព័ន្ធ',
     'Manage application preferences' => 'គ្រប់គ្រងចំណូលចិត្តកម្មវិធី',
@@ -115,7 +115,7 @@ $batch5Translations = [
     'Set language preferences' => 'កំណត់ចំណូលចិត្តភាសា',
     'Manage security settings' => 'គ្រប់គ្រងការកំណត់សុវត្ថិភាព',
     'Configure backup settings' => 'កំណត់រចនាសម្ព័ន្ធការកំណត់បម្រុងទុក',
-    
+
     // Dashboard widgets
     'Recent Activity' => 'សកម្មភាពថ្មីៗ',
     'System Overview' => 'ទិដ្ឋភាពទូទៅប្រព័ន្ធ',
@@ -127,7 +127,7 @@ $batch5Translations = [
     'Task List' => 'បញ្ជីកិច្ចការ',
     'Calendar View' => 'ទិដ្ឋភាពប្រតិទិន',
     'Recent Updates' => 'បច្ចុប្បន្នភាពថ្មីៗ',
-    
+
     // File upload messages
     'Drop files here or click to upload' => 'ទម្លាក់ឯកសារនៅទីនេះ ឬចុចដើម្បីផ្ទុកឡើង',
     'Uploading...' => 'កំពុងផ្ទុកឡើង...',
@@ -137,7 +137,7 @@ $batch5Translations = [
     'Invalid file type' => 'ប្រភេទឯកសារមិនត្រឹមត្រូវ',
     'Maximum file size is' => 'ទំហំឯកសារអតិបរមាគឺ',
     'Allowed file types' => 'ប្រភេទឯកសារដែលអនុញ្ញាត',
-    
+
     // Pagination
     'First Page' => 'ទំព័រដំបូង',
     'Previous Page' => 'ទំព័រមុន',
@@ -147,14 +147,14 @@ $batch5Translations = [
     'Show' => 'បង្ហាញ',
     'entries' => 'ធាតុ',
     'Showing :start to :end of :total entries' => 'បង្ហាញ :start ដល់ :end នៃ :total ធាតុ',
-    
+
     // Sorting
     'Sort by' => 'តម្រៀបតាម',
     'Sort ascending' => 'តម្រៀបឡើង',
     'Sort descending' => 'តម្រៀបចុះ',
     'Default sorting' => 'ការតម្រៀបលំនាំដើម',
     'Custom sorting' => 'ការតម្រៀបផ្ទាល់ខ្លួន',
-    
+
     // Validation specific
     'This field is required' => 'វាលនេះចាំបាច់ត្រូវបំពេញ',
     'Please enter a valid email' => 'សូមបញ្ចូលអ៊ីមែលត្រឹមត្រូវ',
@@ -164,7 +164,7 @@ $batch5Translations = [
     'Please fill out this field' => 'សូមបំពេញវាលនេះ',
     'Value must be between' => 'តម្លៃត្រូវតែនៅចន្លោះ',
     'and' => 'និង',
-    
+
     // Additional status
     'Ready' => 'រួចរាល់',
     'Not Ready' => 'មិនទាន់រួចរាល់',
@@ -176,7 +176,7 @@ $batch5Translations = [
     'Stopped' => 'បានឈប់',
     'Paused' => 'បានផ្អាក',
     'Resumed' => 'បានបន្ត',
-    
+
     // Additional actions
     'Approve' => 'អនុម័ត',
     'Reject' => 'បដិសេធ',
@@ -200,7 +200,7 @@ foreach ($batch5Translations as $en => $km) {
     $updated = Translation::where('key', $en)
         ->where('group', 'views')
         ->update(['km' => $km]);
-    
+
     if ($updated > 0) {
         echo "  ✓ Updated: {$en}\n";
         $count += $updated;
@@ -214,11 +214,11 @@ Translation::clearCache();
 
 // Check status
 $remaining = Translation::where('group', 'views')
-    ->where(function($q) {
+    ->where(function ($q) {
         $q->whereNull('km')
-          ->orWhere('km', '')
-          ->orWhere('km', 'LIKE', '%[%')
-          ->orWhereRaw('km = en');
+            ->orWhere('km', '')
+            ->orWhere('km', 'LIKE', '%[%')
+            ->orWhereRaw('km = en');
     })
     ->count();
 

@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use App\Models\User;
 use App\Models\School;
+use App\Models\User;
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
@@ -14,7 +14,7 @@ class PrathamUserSeeder extends Seeder
     {
         // Get first school for teachers (or create one if none exists)
         $school = School::first();
-        if (!$school) {
+        if (! $school) {
             $school = School::create([
                 'name' => 'Pratham School',
                 'address' => '123 Main Street',

@@ -7,10 +7,10 @@
             <div class="flex items-center justify-between">
                 <div>
                     <h4 class="text-xl font-semibold text-gray-900">{{ __('Import Students') }}</h4>
-                    <p class="text-gray-600 mt-1">Upload a CSV file to import multiple students at once</p>
+                    <p class="text-gray-600 mt-1">ផ្ទុកឯកសារ CSV ដើម្បីនាំចូលសិស្សច្រើននាក់ក្នុងពេលតែម្តង</p>
                 </div>
                 <a href="{{ route('imports.index') }}" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
-                    ← Back to Import Overview
+                    ← ត្រឡប់ទៅទិដ្ឋភាពនាំចូល
                 </a>
             </div>
         </div>
@@ -38,14 +38,14 @@
                     <div class="bg-cyan-50 border border-cyan-200 rounded-lg p-6">
                         <div class="flex items-center mb-4">
                             <i class="fas fa-user-graduate text-cyan-600 text-2xl mr-3"></i>
-                            <h5 class="text-lg font-semibold text-cyan-900">Student Import</h5>
+                            <h5 class="text-lg font-semibold text-cyan-900">នាំចូលសិស្ស</h5>
                         </div>
                         
                         <form action="{{ route('imports.students') }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             <div class="mb-6">
                                 <label for="file" class="block text-sm font-medium text-gray-700 mb-2">
-                                    Select CSV File
+                                    ជ្រើសរើសឯកសារ CSV
                                 </label>
                                 <input type="file" 
                                        id="file"

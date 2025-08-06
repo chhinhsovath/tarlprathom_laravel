@@ -16,7 +16,7 @@ class Translation extends Model
         'en',
         'group',
         'description',
-        'is_active'
+        'is_active',
     ];
 
     protected $casts = [
@@ -42,6 +42,7 @@ class Translation extends Model
     public static function getTranslation($key, $locale = 'km')
     {
         $translations = self::getTranslations($locale);
+
         return $translations[$key] ?? $key;
     }
 
@@ -103,6 +104,7 @@ class Translation extends Model
         if ($group && $group !== 'all') {
             return $query->where('group', $group);
         }
+
         return $query;
     }
 }

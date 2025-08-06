@@ -21,7 +21,7 @@ $batch7Translations = [
     'Click your name in the top right corner' => 'ចុចឈ្មោះរបស់អ្នកនៅជ្រុងខាងស្តាំខាងលើ',
     'Update your information:' => 'ធ្វើបច្ចុប្បន្នភាពព័ត៌មានរបស់អ្នក៖',
     'Profile photo (max 5MB)' => 'រូបថតប្រវត្តិរូប (អតិបរមា 5MB)',
-    
+
     // Student management instructions
     'Add a New Student' => 'បន្ថែមសិស្សថ្មី',
     'Fill in required information:' => 'បំពេញព័ត៌មានដែលត្រូវការ៖',
@@ -30,20 +30,20 @@ $batch7Translations = [
     'Class/Section' => 'ថ្នាក់/ផ្នែក',
     'Upload student photo (optional)' => 'ផ្ទុករូបថតសិស្សឡើង (ស្រេចចិត្ត)',
     'Important: Only Grade 4 and 5 students can be added' => 'សំខាន់៖ អាចបន្ថែមតែសិស្សថ្នាក់ទី៤ និងទី៥ប៉ុណ្ណោះ',
-    
+
     // Assessment instructions
     'Select Students for Assessments' => 'ជ្រើសរើសសិស្សសម្រាប់ការវាយតម្លៃ',
     'For Midline/Endline Assessments:' => 'សម្រាប់ការវាយតម្លៃពាក់កណ្តាល/ចុងក្រោយ៖',
     'Only students who completed previous assessments are eligible' => 'មានតែសិស្សដែលបានបញ្ចប់ការវាយតម្លៃមុនៗប៉ុណ្ណោះដែលមានសិទ្ធិ',
     'Students must progress through levels sequentially' => 'សិស្សត្រូវតែឆ្លងកាត់កម្រិតតាមលំដាប់',
-    
+
     // No access messages
     'No editing rights' => 'គ្មានសិទ្ធិកែសម្រួល',
     'View only access' => 'ការចូលប្រើមើលតែប៉ុណ្ណោះ',
     'Contact administrator for access' => 'ទាក់ទងអ្នកគ្រប់គ្រងសម្រាប់ការចូលប្រើ',
     'You do not have permission to perform this action' => 'អ្នកមិនមានសិទ្ធិអនុវត្តសកម្មភាពនេះទេ',
     'This feature is not available for your role' => 'មុខងារនេះមិនមានសម្រាប់តួនាទីរបស់អ្នកទេ',
-    
+
     // Assessment levels explanation
     'Assessment Levels Explained' => 'ការពន្យល់អំពីកម្រិតវាយតម្លៃ',
     'Khmer Reading Levels:' => 'កម្រិតអានភាសាខ្មែរ៖',
@@ -55,7 +55,7 @@ $batch7Translations = [
     'Story - Can read stories' => 'រឿង - អាចអានរឿង',
     'Comprehension 1 - Basic understanding' => 'យល់ដឹង១ - ការយល់ដឹងមូលដ្ឋាន',
     'Comprehension 2 - Advanced understanding' => 'យល់ដឹង២ - ការយល់ដឹងកម្រិតខ្ពស់',
-    
+
     'Math Levels:' => 'កម្រិតគណិតវិទ្យា៖',
     'Beginner - Cannot do basic operations' => 'ចាប់ផ្តើម - មិនអាចធ្វើប្រតិបត្តិការមូលដ្ឋាន',
     '1-Digit - Can add/subtract single digits' => '១ខ្ទង់ - អាចបូក/ដកលេខ១ខ្ទង់',
@@ -63,7 +63,7 @@ $batch7Translations = [
     'Subtraction - Can perform subtraction' => 'ការដក - អាចធ្វើការដក',
     'Division - Can perform division' => 'ការចែក - អាចធ្វើការចែក',
     'Word Problems - Can solve word problems' => 'ល្បាកលេខ - អាចដោះស្រាយល្បាកលេខ',
-    
+
     // Report descriptions
     'Report Types' => 'ប្រភេទរបាយការណ៍',
     'Available Reports:' => 'របាយការណ៍ដែលមាន៖',
@@ -73,7 +73,7 @@ $batch7Translations = [
     'Subject-wise analysis (Khmer/Math)' => 'ការវិភាគតាមមុខវិជ្ជា (ខ្មែរ/គណិត)',
     'Gender-based performance metrics' => 'រង្វាស់សមិទ្ធផលផ្អែកលើភេទ',
     'Mentor visit impact analysis' => 'ការវិភាគផលប៉ះពាល់នៃការមកសួរសុខទុក្ខរបស់អ្នកណែនាំ',
-    
+
     // Data management
     'Data Management' => 'ការគ្រប់គ្រងទិន្នន័យ',
     'Import/Export Guidelines:' => 'គោលការណ៍ណែនាំនាំចូល/នាំចេញ៖',
@@ -81,7 +81,7 @@ $batch7Translations = [
     'Use provided templates for imports' => 'ប្រើគំរូដែលបានផ្តល់សម្រាប់ការនាំចូល',
     'Verify data accuracy before submission' => 'ផ្ទៀងផ្ទាត់ភាពត្រឹមត្រូវនៃទិន្នន័យមុនពេលដាក់ស្នើ',
     'Export regularly for record keeping' => 'នាំចេញជាទៀងទាត់សម្រាប់ការរក្សាកំណត់ត្រា',
-    
+
     // System requirements
     'System Requirements' => 'តម្រូវការប្រព័ន្ធ',
     'Browser Requirements:' => 'តម្រូវការកម្មវិធីរុករក៖',
@@ -91,7 +91,7 @@ $batch7Translations = [
     'Edge' => 'Edge',
     'Internet connection required' => 'ត្រូវការការតភ្ជាប់អ៊ីនធឺណិត',
     'JavaScript must be enabled' => 'JavaScript ត្រូវតែបើក',
-    
+
     // Troubleshooting
     'Troubleshooting' => 'ការដោះស្រាយបញ្ហា',
     'Common Issues:' => 'បញ្ហាទូទៅ៖',
@@ -103,7 +103,7 @@ $batch7Translations = [
     'Try refreshing the page' => 'សាកល្បងផ្ទុកទំព័រឡើងវិញ',
     'Report errors' => 'កំហុសរបាយការណ៍',
     'Ensure data exists for selected criteria' => 'ត្រូវប្រាកដថាទិន្នន័យមានសម្រាប់លក្ខណៈវិនិច្ឆ័យដែលបានជ្រើសរើស',
-    
+
     // Best practices
     'Best Practices' => 'ការអនុវត្តល្អបំផុត',
     'Assessment Best Practices:' => 'ការអនុវត្តល្អបំផុតសម្រាប់ការវាយតម្លៃ៖',
@@ -111,7 +111,7 @@ $batch7Translations = [
     'One-on-one assessment recommended' => 'ការវាយតម្លៃម្តងម្នាក់ត្រូវបានណែនាំ',
     'Save progress frequently' => 'រក្សាទុកវឌ្ឍនភាពញឹកញាប់',
     'Double-check level assignments' => 'ពិនិត្យការកំណត់កម្រិតពីរដង',
-    
+
     // Contact information
     'Need Help?' => 'ត្រូវការជំនួយ?',
     'Contact Information:' => 'ព័ត៌មានទំនាក់ទំនង៖',
@@ -121,7 +121,7 @@ $batch7Translations = [
     'Support Hours' => 'ម៉ោងគាំទ្រ',
     'Monday to Friday' => 'ថ្ងៃច័ន្ទដល់ថ្ងៃសុក្រ',
     '8:00 AM - 5:00 PM' => '៨:០០ ព្រឹក - ៥:០០ ល្ងាច',
-    
+
     // Additional UI elements
     'Toggle Navigation' => 'បិទបើកការរុករក',
     'Toggle Sidebar' => 'បិទបើករបារចំហៀង',
@@ -135,7 +135,7 @@ $batch7Translations = [
     'Print Preview' => 'មើលមុនបោះពុម្ព',
     'Page Setup' => 'កំណត់ទំព័រ',
     'Print Options' => 'ជម្រើសបោះពុម្ព',
-    
+
     // Status updates
     'Status Updates' => 'បច្ចុប្បន្នភាពស្ថានភាព',
     'Recent Changes' => 'ការផ្លាស់ប្តូរថ្មីៗ',
@@ -145,7 +145,7 @@ $batch7Translations = [
     'System Updates' => 'បច្ចុប្បន្នភាពប្រព័ន្ធ',
     'Release Notes' => 'កំណត់ចំណាំការចេញផ្សាយ',
     'Version History' => 'ប្រវត្តិកំណែ',
-    
+
     // Error handling
     'Error Details' => 'ព័ត៌មានលម្អិតកំហុស',
     'Error Code' => 'លេខកូដកំហុស',
@@ -154,7 +154,7 @@ $batch7Translations = [
     'Report Error' => 'រាយការណ៍កំហុស',
     'Ignore Error' => 'មិនអើពើកំហុស',
     'Retry Operation' => 'ព្យាយាមប្រតិបត្តិការម្តងទៀត',
-    
+
     // Additional fields
     '2024-2025' => '២០២៤-២០២៥',
     '2023-2024' => '២០២៣-២០២៤',
@@ -179,7 +179,7 @@ foreach ($batch7Translations as $en => $km) {
     $updated = Translation::where('key', $en)
         ->where('group', 'views')
         ->update(['km' => $km]);
-    
+
     if ($updated > 0) {
         echo "  ✓ Updated: {$en}\n";
         $count += $updated;
@@ -193,11 +193,11 @@ Translation::clearCache();
 
 // Check status
 $remaining = Translation::where('group', 'views')
-    ->where(function($q) {
+    ->where(function ($q) {
         $q->whereNull('km')
-          ->orWhere('km', '')
-          ->orWhere('km', 'LIKE', '%[%')
-          ->orWhereRaw('km = en');
+            ->orWhere('km', '')
+            ->orWhere('km', 'LIKE', '%[%')
+            ->orWhereRaw('km = en');
     })
     ->count();
 

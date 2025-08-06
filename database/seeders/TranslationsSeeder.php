@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\Translation;
+use Illuminate\Database\Seeder;
 
 class TranslationsSeeder extends Seeder
 {
@@ -201,6 +201,6 @@ class TranslationsSeeder extends Seeder
         Translation::clearCache();
 
         $this->command->info('Translations seeded successfully!');
-        $this->command->info('Total translations: ' . count($translations));
+        $this->command->info('Total translations: '.count($translations));
     }
 }

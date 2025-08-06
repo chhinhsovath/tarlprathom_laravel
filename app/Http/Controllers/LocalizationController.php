@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Translation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Session;
 
 class LocalizationController extends Controller
 {
@@ -43,24 +43,24 @@ class LocalizationController extends Controller
     {
         $search = $request->get('search');
         $group = $request->get('group', 'all');
-        
+
         // Get all groups for filter
         $groups = Translation::getGroups();
         array_unshift($groups, 'all');
-        
+
         // Get translations
         $query = Translation::query();
-        
+
         if ($search) {
             $query->search($search);
         }
-        
+
         if ($group !== 'all') {
             $query->where('group', $group);
         }
-        
+
         $translations = $query->orderBy('group')->orderBy('key')->paginate(50);
-        
+
         return view('localization.database-edit', compact('translations', 'groups', 'group', 'search'));
     }
 
@@ -69,14 +69,14 @@ class LocalizationController extends Controller
         $request->validate([
             'km' => 'nullable|string',
             'en' => 'nullable|string',
-            'description' => 'nullable|string'
+            'description' => 'nullable|string',
         ]);
 
         $translation->update($request->only(['km', 'en', 'description']));
 
         return response()->json([
             'success' => true,
-            'message' => 'Translation updated successfully'
+            'message' => 'Translation updated successfully',
         ]);
     }
 
@@ -87,7 +87,7 @@ class LocalizationController extends Controller
             'km' => 'nullable|string',
             'en' => 'nullable|string',
             'group' => 'required|string',
-            'description' => 'nullable|string'
+            'description' => 'nullable|string',
         ]);
 
         $translation = Translation::create($request->all());
@@ -102,18 +102,18 @@ class LocalizationController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Translation deleted successfully'
+            'message' => 'Translation deleted successfully',
         ]);
     }
 
     public function toggleTranslation(Translation $translation)
     {
-        $translation->is_active = !$translation->is_active;
+        $translation->is_active = ! $translation->is_active;
         $translation->save();
 
         return response()->json([
             'success' => true,
-            'is_active' => $translation->is_active
+            'is_active' => $translation->is_active,
         ]);
     }
 
@@ -121,21 +121,21 @@ class LocalizationController extends Controller
     {
         // Export translations to language files
         $locales = ['km', 'en'];
-        
+
         foreach ($locales as $locale) {
             $translations = Translation::where('is_active', true)
                 ->whereNotNull($locale)
                 ->pluck($locale, 'key')
                 ->toArray();
-            
+
             $json = json_encode($translations, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
             $path = resource_path("lang/{$locale}.json");
-            
+
             File::put($path, $json);
         }
-        
+
         Translation::clearCache();
-        
+
         return back()->with('success', 'Translations exported to language files successfully');
     }
 }

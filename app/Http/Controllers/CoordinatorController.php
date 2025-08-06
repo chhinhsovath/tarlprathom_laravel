@@ -45,7 +45,7 @@ class CoordinatorController extends Controller
     {
         $available = [
             'en' => 'English',
-            'km' => 'ភាសាខ្មែរ (Khmer)'
+            'km' => 'ភាសាខ្មែរ (Khmer)',
         ];
         $current = App::getLocale();
 

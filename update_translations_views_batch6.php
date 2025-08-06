@@ -37,7 +37,7 @@ $batch6Translations = [
     'Email Address' => 'អាសយដ្ឋានអ៊ីមែល',
     'Website' => 'គេហទំព័រ',
     'Social Media' => 'បណ្តាញសង្គម',
-    
+
     // Date/Time labels
     'Start Date' => 'កាលបរិច្ឆេទចាប់ផ្តើម',
     'End Date' => 'កាលបរិច្ឆេទបញ្ចប់',
@@ -52,7 +52,7 @@ $batch6Translations = [
     'Time Zone' => 'ល្វែងម៉ោង',
     'Schedule' => 'កាលវិភាគ',
     'Timeline' => 'បន្ទាត់ពេលវេលា',
-    
+
     // Common actions and buttons
     'Apply' => 'អនុវត្ត',
     'Apply Changes' => 'អនុវត្តការផ្លាស់ប្តូរ',
@@ -89,7 +89,7 @@ $batch6Translations = [
     'Unpin' => 'ដកខ្ទាស់',
     'Bookmark' => 'ចំណាំ',
     'Remove Bookmark' => 'ដកចំណាំ',
-    
+
     // Counts and statistics
     'Total Count' => 'ចំនួនសរុប',
     'Active Count' => 'ចំនួនសកម្ម',
@@ -106,7 +106,7 @@ $batch6Translations = [
     'Lowest Score' => 'ពិន្ទុទាបបំផុត',
     'Pass Rate' => 'អត្រាជាប់',
     'Fail Rate' => 'អត្រាធ្លាក់',
-    
+
     // Messages and notifications
     'New Message' => 'សារថ្មី',
     'Unread Messages' => 'សារមិនទាន់អាន',
@@ -121,7 +121,7 @@ $batch6Translations = [
     'Mark All as Read' => 'សម្គាល់ទាំងអស់ថាបានអាន',
     'Clear All' => 'សម្អាតទាំងអស់',
     'View All Notifications' => 'មើលការជូនដំណឹងទាំងអស់',
-    
+
     // Forms and fields
     'Form' => 'ទម្រង់',
     'Field' => 'វាល',
@@ -141,7 +141,7 @@ $batch6Translations = [
     'Submit Button' => 'ប៊ូតុងដាក់ស្នើ',
     'Reset Button' => 'ប៊ូតុងកំណត់ឡើងវិញ',
     'Cancel Button' => 'ប៊ូតុងបោះបង់',
-    
+
     // System messages
     'System Message' => 'សារប្រព័ន្ធ',
     'System Alert' => 'ការជូនដំណឹងប្រព័ន្ធ',
@@ -153,7 +153,7 @@ $batch6Translations = [
     'System Maintenance' => 'ការថែទាំប្រព័ន្ធ',
     'System Backup' => 'ការបម្រុងទុកប្រព័ន្ធ',
     'System Restore' => 'ការស្តារប្រព័ន្ធ',
-    
+
     // Permissions and access
     'Permission' => 'សិទ្ធិ',
     'Permissions' => 'សិទ្ធិ',
@@ -169,7 +169,7 @@ $batch6Translations = [
     'Full Access' => 'ការចូលប្រើពេញលេញ',
     'Limited Access' => 'ការចូលប្រើមានកម្រិត',
     'No Access' => 'គ្មានការចូលប្រើ',
-    
+
     // Filters and sorting
     'Filter' => 'តម្រង',
     'Filters' => 'តម្រង',
@@ -185,7 +185,7 @@ $batch6Translations = [
     'Alphabetical Order' => 'លំដាប់អក្ខរក្រម',
     'Chronological Order' => 'លំដាប់កាលប្បវត្តិ',
     'Random Order' => 'លំដាប់ចៃដន្យ',
-    
+
     // Additional common phrases
     'Please Wait' => 'សូមរង់ចាំ',
     'Please Try Again' => 'សូមព្យាយាមម្តងទៀត',
@@ -220,7 +220,7 @@ foreach ($batch6Translations as $en => $km) {
     $updated = Translation::where('key', $en)
         ->where('group', 'views')
         ->update(['km' => $km]);
-    
+
     if ($updated > 0) {
         echo "  ✓ Updated: {$en}\n";
         $count += $updated;
@@ -234,11 +234,11 @@ Translation::clearCache();
 
 // Check status
 $remaining = Translation::where('group', 'views')
-    ->where(function($q) {
+    ->where(function ($q) {
         $q->whereNull('km')
-          ->orWhere('km', '')
-          ->orWhere('km', 'LIKE', '%[%')
-          ->orWhereRaw('km = en');
+            ->orWhere('km', '')
+            ->orWhere('km', 'LIKE', '%[%')
+            ->orWhereRaw('km = en');
     })
     ->count();
 

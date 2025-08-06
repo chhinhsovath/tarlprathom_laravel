@@ -285,7 +285,7 @@
                                     <label for="teacher_search" class="block text-sm font-medium text-gray-700 mb-2">
                                         {{ __('Search Teacher') }}
                                     </label>
-                                    <input type="text" id="teacher_search" placeholder="Type to search teachers..." 
+                                    <input type="text" id="teacher_search" placeholder="វាយបញ្ចូលដើម្បីស្វែងរកគ្រូបង្រៀន..." 
                                         class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                         onkeyup="searchTeachers(this.value)">
                                 </div>
@@ -351,7 +351,7 @@
                                     <label for="mentor_search" class="block text-sm font-medium text-gray-700 mb-2">
                                         {{ __('Search Mentor') }}
                                     </label>
-                                    <input type="text" id="mentor_search" placeholder="Type to search mentors..." 
+                                    <input type="text" id="mentor_search" placeholder="វាយបញ្ចូលដើម្បីស្វែងរកទីប្រឹក្សា..." 
                                         class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                         onkeyup="searchMentors(this.value)">
                                 </div>
@@ -418,7 +418,7 @@
                     .then(data => {
                         let html = '';
                         if (data.length === 0) {
-                            html = '<p class="text-sm text-gray-500 text-center py-4">No teachers found</p>';
+                            html = '<p class="text-sm text-gray-500 text-center py-4">រកមិនឃើញគ្រូបង្រៀន</p>';
                         } else {
                             data.forEach(teacher => {
                                 const isSelected = selectedTeacherIds.includes(teacher.id);
@@ -453,7 +453,7 @@
         function updateSelectedTeachersList() {
             const container = document.getElementById('selectedTeachers');
             if (selectedTeacherIds.length === 0) {
-                container.innerHTML = '<p class="text-sm text-gray-500 text-center py-2">No teachers selected</p>';
+                container.innerHTML = '<p class="text-sm text-gray-500 text-center py-2">មិនមានគ្រូបង្រៀនដែលបានជ្រើសរើស</p>';
             } else {
                 container.innerHTML = selectedTeacherIds.map(id => 
                     `<input type="hidden" name="teacher_ids[]" value="${id}">`
@@ -489,7 +489,7 @@
                     .then(data => {
                         let html = '';
                         if (data.length === 0) {
-                            html = '<p class="text-sm text-gray-500 text-center py-4">No mentors found</p>';
+                            html = '<p class="text-sm text-gray-500 text-center py-4">រកមិនឃើញទីប្រឹក្សា</p>';
                         } else {
                             data.forEach(mentor => {
                                 const isSelected = selectedMentorIds.includes(mentor.id);
@@ -524,7 +524,7 @@
         function updateSelectedMentorsList() {
             const container = document.getElementById('selectedMentors');
             if (selectedMentorIds.length === 0) {
-                container.innerHTML = '<p class="text-sm text-gray-500 text-center py-2">No mentors selected</p>';
+                container.innerHTML = '<p class="text-sm text-gray-500 text-center py-2">មិនមានទីប្រឹក្សាដែលបានជ្រើសរើស</p>';
             } else {
                 container.innerHTML = selectedMentorIds.map(id => 
                     `<input type="hidden" name="mentor_ids[]" value="${id}">`

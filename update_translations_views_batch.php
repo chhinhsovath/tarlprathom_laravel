@@ -9,19 +9,23 @@ $kernel->bootstrap();
 use App\Models\Translation;
 
 // Function to check if text contains Khmer Unicode
-function isKhmerUnicode($text) {
-    if (empty($text)) return false;
+function isKhmerUnicode($text)
+{
+    if (empty($text)) {
+        return false;
+    }
+
     // Check if text contains Khmer Unicode range (U+1780 to U+17FF)
     return preg_match('/[\x{1780}-\x{17FF}]/u', $text);
 }
 
 // Get all translations in views group that don't have Khmer Unicode in km field
 $query = Translation::where('group', 'views')
-    ->where(function($q) {
+    ->where(function ($q) {
         $q->whereNull('km')
-          ->orWhere('km', '')
-          ->orWhere('km', 'LIKE', '%[%')  // Contains brackets (untranslated)
-          ->orWhereRaw('km = en');         // km same as en
+            ->orWhere('km', '')
+            ->orWhere('km', 'LIKE', '%[%')  // Contains brackets (untranslated)
+            ->orWhereRaw('km = en');         // km same as en
     });
 
 $total = $query->count();
@@ -54,7 +58,7 @@ $viewsTranslations = [
     'Please' => 'សូម',
     'Sorry' => 'សូមទោស',
     'Excuse me' => 'សូមអត់ទោស',
-    
+
     // Page titles
     'Home Page' => 'ទំព័រដើម',
     'Dashboard Page' => 'ទំព័រផ្ទាំងគ្រប់គ្រង',
@@ -70,7 +74,7 @@ $viewsTranslations = [
     'Help Page' => 'ទំព័រជំនួយ',
     'About Page' => 'ទំព័រអំពី',
     'Contact Page' => 'ទំព័រទំនាក់ទំនង',
-    
+
     // Headers and sections
     'User Management' => 'ការគ្រប់គ្រងអ្នកប្រើប្រាស់',
     'School Management' => 'ការគ្រប់គ្រងសាលារៀន',
@@ -85,7 +89,7 @@ $viewsTranslations = [
     'Language Settings' => 'ការកំណត់ភាសា',
     'Theme Settings' => 'ការកំណត់រូបរាង',
     'Privacy Settings' => 'ការកំណត់ឯកជនភាព',
-    
+
     // User interface elements
     'Main Menu' => 'ម៉ឺនុយមេ',
     'Side Menu' => 'ម៉ឺនុយចំហៀង',
@@ -100,7 +104,7 @@ $viewsTranslations = [
     'Navigation Bar' => 'របាររុករក',
     'Tab Bar' => 'របារផ្ទាំង',
     'Action Bar' => 'របារសកម្មភាព',
-    
+
     // Content sections
     'Overview' => 'ទិដ្ឋភាពទូទៅ',
     'Summary' => 'សង្ខេប',
@@ -115,7 +119,7 @@ $viewsTranslations = [
     'Cards' => 'កាត',
     'Tiles' => 'ក្រឡា',
     'Widgets' => 'ធាតុក្រាហ្វិក',
-    
+
     // Actions and operations
     'Create New' => 'បង្កើតថ្មី',
     'Add New' => 'បន្ថែមថ្មី',
@@ -130,7 +134,7 @@ $viewsTranslations = [
     'Submit Form' => 'ដាក់ស្នើទម្រង់',
     'Clear Form' => 'សម្អាតទម្រង់',
     'Validate Form' => 'ផ្ទៀងផ្ទាត់ទម្រង់',
-    
+
     // Lists and tables
     'List of Users' => 'បញ្ជីអ្នកប្រើប្រាស់',
     'List of Schools' => 'បញ្ជីសាលារៀន',
@@ -145,7 +149,7 @@ $viewsTranslations = [
     'List of Activities' => 'បញ្ជីសកម្មភាព',
     'List of Events' => 'បញ្ជីព្រឹត្តិការណ៍',
     'List of Notifications' => 'បញ្ជីការជូនដំណឹង',
-    
+
     // Forms and inputs
     'User Form' => 'ទម្រង់អ្នកប្រើប្រាស់',
     'School Form' => 'ទម្រង់សាលា',
@@ -160,7 +164,7 @@ $viewsTranslations = [
     'Upload Form' => 'ទម្រង់ផ្ទុកឡើង',
     'Import Form' => 'ទម្រង់នាំចូល',
     'Export Form' => 'ទម្រង់នាំចេញ',
-    
+
     // Buttons and links
     'Click here' => 'ចុចទីនេះ',
     'Learn more' => 'ស្វែងយល់បន្ថែម',
@@ -181,7 +185,7 @@ $viewsTranslations = [
     'Retry' => 'ព្យាយាមម្តងទៀត',
     'Reload' => 'ផ្ទុកឡើងវិញ',
     'Refresh' => 'ធ្វើឱ្យស្រស់',
-    
+
     // Status indicators
     'Online' => 'នៅលើបណ្តាញ',
     'Offline' => 'ក្រៅបណ្តាញ',
@@ -198,7 +202,7 @@ $viewsTranslations = [
     'Shared' => 'បានចែករំលែក',
     'Locked' => 'បានចាក់សោ',
     'Unlocked' => 'បានដោះសោ',
-    
+
     // Time-related
     'Last updated' => 'ធ្វើបច្ចុប្បន្នភាពចុងក្រោយ',
     'Last modified' => 'កែប្រែចុងក្រោយ',
@@ -213,7 +217,7 @@ $viewsTranslations = [
     'Duration' => 'រយៈពេល',
     'Time left' => 'ពេលនៅសល់',
     'Time elapsed' => 'ពេលវេលាកន្លងផុត',
-    
+
     // Help and support
     'Need help?' => 'ត្រូវការជំនួយ?',
     'Get help' => 'ទទួលជំនួយ',
@@ -230,7 +234,7 @@ $viewsTranslations = [
     'Blog' => 'ប្លុក',
     'News' => 'ព័ត៌មាន',
     'Updates' => 'បច្ចុប្បន្នភាព',
-    
+
     // Empty states
     'No data' => 'គ្មានទិន្នន័យ',
     'No results' => 'គ្មានលទ្ធផល',
@@ -244,7 +248,7 @@ $viewsTranslations = [
     'Empty folder' => 'ថតទទេ',
     'Empty cart' => 'រទេះទទេ',
     'Empty inbox' => 'ប្រអប់ទទួលទទេ',
-    
+
     // Error states
     'Error occurred' => 'កំហុសបានកើតឡើង',
     'Something went wrong' => 'មានអ្វីមួយខុសប្រក្រតី',
@@ -258,7 +262,7 @@ $viewsTranslations = [
     'Network error' => 'កំហុសបណ្តាញ',
     'Timeout error' => 'កំហុសអស់ពេល',
     'Unknown error' => 'កំហុសមិនស្គាល់',
-    
+
     // Success states
     'Success!' => 'ជោគជ័យ!',
     'Well done!' => 'ល្អណាស់!',
@@ -277,17 +281,17 @@ $viewsTranslations = [
 // Process translations in batches
 while ($processed < $total) {
     $batch = Translation::where('group', 'views')
-        ->where(function($q) {
+        ->where(function ($q) {
             $q->whereNull('km')
-              ->orWhere('km', '')
-              ->orWhere('km', 'LIKE', '%[%')
-              ->orWhereRaw('km = en');
+                ->orWhere('km', '')
+                ->orWhere('km', 'LIKE', '%[%')
+                ->orWhereRaw('km = en');
         })
         ->limit($batchSize)
         ->get();
-    
-    echo "Processing batch: " . ($processed + 1) . " to " . min($processed + $batchSize, $total) . "\n";
-    
+
+    echo 'Processing batch: '.($processed + 1).' to '.min($processed + $batchSize, $total)."\n";
+
     foreach ($batch as $translation) {
         // Check if we have a Khmer translation for this key
         if (isset($viewsTranslations[$translation->key])) {
@@ -306,17 +310,17 @@ while ($processed < $total) {
                     break;
                 }
             }
-            
-            if (!$found) {
+
+            if (! $found) {
                 echo "  ⚠ No translation found for: {$translation->key}\n";
             }
         }
-        
+
         $processed++;
     }
-    
+
     echo "\n";
-    
+
     // Clear cache periodically
     if ($processed % 400 == 0) {
         Translation::clearCache();
@@ -329,11 +333,11 @@ Translation::clearCache();
 
 // Check remaining untranslated
 $remaining = Translation::where('group', 'views')
-    ->where(function($q) {
+    ->where(function ($q) {
         $q->whereNull('km')
-          ->orWhere('km', '')
-          ->orWhere('km', 'LIKE', '%[%')
-          ->orWhereRaw('km = en');
+            ->orWhere('km', '')
+            ->orWhere('km', 'LIKE', '%[%')
+            ->orWhereRaw('km = en');
     })
     ->count();
 

@@ -13,20 +13,20 @@ return new class extends Migration
     {
         // Add commune field back to schools table if it doesn't exist
         Schema::table('schools', function (Blueprint $table) {
-            if (!Schema::hasColumn('schools', 'commune')) {
+            if (! Schema::hasColumn('schools', 'commune')) {
                 $table->string('commune')->nullable()->after('district');
             }
-            if (!Schema::hasColumn('schools', 'village')) {
+            if (! Schema::hasColumn('schools', 'village')) {
                 $table->string('village')->nullable()->after('commune');
             }
         });
 
         // Add commune and village fields to mentoring_visits table
         Schema::table('mentoring_visits', function (Blueprint $table) {
-            if (!Schema::hasColumn('mentoring_visits', 'commune')) {
+            if (! Schema::hasColumn('mentoring_visits', 'commune')) {
                 $table->string('commune')->nullable()->after('district');
             }
-            if (!Schema::hasColumn('mentoring_visits', 'village')) {
+            if (! Schema::hasColumn('mentoring_visits', 'village')) {
                 $table->string('village')->nullable()->after('commune');
             }
         });

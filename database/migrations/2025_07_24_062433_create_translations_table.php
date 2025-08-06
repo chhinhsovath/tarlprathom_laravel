@@ -20,7 +20,7 @@ return new class extends Migration
             $table->text('description')->nullable(); // Description to help translators
             $table->boolean('is_active')->default(true);
             $table->timestamps();
-            
+
             // Add indexes for performance
             $table->index('key');
             $table->index('group');

@@ -46,7 +46,7 @@ $uiTranslations = [
     'Cut' => 'កាត់',
     'Undo' => 'មិនធ្វើវិញ',
     'Redo' => 'ធ្វើឡើងវិញ',
-    
+
     // Status
     'Active' => 'សកម្ម',
     'Inactive' => 'អសកម្ម',
@@ -71,7 +71,7 @@ $uiTranslations = [
     'Error' => 'កំហុស',
     'Warning' => 'ការព្រមាន',
     'Info' => 'ព័ត៌មាន',
-    
+
     // Navigation
     'Dashboard' => 'ផ្ទាំងគ្រប់គ្រង',
     'Home' => 'ទំព័រដើម',
@@ -93,7 +93,7 @@ $uiTranslations = [
     'FAQ' => 'សំណួរញឹកញាប់',
     'Terms' => 'លក្ខខណ្ឌ',
     'Privacy' => 'ឯកជនភាព',
-    
+
     // Table headers
     'No' => 'ល.រ',
     'Actions' => 'សកម្មភាព',
@@ -113,7 +113,7 @@ $uiTranslations = [
     'Notes' => 'កំណត់ចំណាំ',
     'Comments' => 'មតិយោបល់',
     'Attachments' => 'ឯកសារភ្ជាប់',
-    
+
     // Pagination
     'Showing' => 'បង្ហាញ',
     'to' => 'ដល់',
@@ -126,7 +126,7 @@ $uiTranslations = [
     'Pages' => 'ទំព័រ',
     'Go to page' => 'ទៅកាន់ទំព័រ',
     'Items per page' => 'ធាតុក្នុងមួយទំព័រ',
-    
+
     // Time
     'Today' => 'ថ្ងៃនេះ',
     'Yesterday' => 'ម្សិលមិញ',
@@ -146,7 +146,7 @@ $uiTranslations = [
     'Later' => 'ពេលក្រោយ',
     'Never' => 'មិនដែល',
     'Always' => 'ជានិច្ច',
-    
+
     // Common phrases
     'All' => 'ទាំងអស់',
     'None' => 'គ្មាន',

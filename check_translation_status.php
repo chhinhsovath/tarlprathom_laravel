@@ -34,8 +34,8 @@ $groups = Translation::select('group')
     ->get();
 
 echo "Statistics by Group:\n";
-echo str_pad("Group", 20) . str_pad("Total", 10) . str_pad("Translated", 12) . str_pad("Remaining", 12) . "Completion\n";
-echo str_repeat("-", 70) . "\n";
+echo str_pad('Group', 20).str_pad('Total', 10).str_pad('Translated', 12).str_pad('Remaining', 12)."Completion\n";
+echo str_repeat('-', 70)."\n";
 
 foreach ($groups as $group) {
     $groupTotal = Translation::where('group', $group->group)->count();
@@ -45,10 +45,10 @@ foreach ($groups as $group) {
         ->whereRaw('km != en')
         ->where('km', 'NOT LIKE', '%[%')
         ->count();
-    
+
     $groupRemaining = $groupTotal - $groupTranslated;
     $groupPercentage = $groupTotal > 0 ? round(($groupTranslated / $groupTotal) * 100, 2) : 0;
-    
+
     echo str_pad($group->group, 20);
     echo str_pad($groupTotal, 10);
     echo str_pad($groupTranslated, 12);
@@ -60,14 +60,14 @@ echo "\n";
 
 // Show sample of untranslated keys
 echo "Sample of untranslated keys (first 20):\n";
-echo str_repeat("-", 70) . "\n";
+echo str_repeat('-', 70)."\n";
 
-$untranslated = Translation::where(function($q) {
-        $q->whereNull('km')
-          ->orWhere('km', '')
-          ->orWhere('km', 'LIKE', '%[%')
-          ->orWhereRaw('km = en');
-    })
+$untranslated = Translation::where(function ($q) {
+    $q->whereNull('km')
+        ->orWhere('km', '')
+        ->orWhere('km', 'LIKE', '%[%')
+        ->orWhereRaw('km = en');
+})
     ->limit(20)
     ->get();
 

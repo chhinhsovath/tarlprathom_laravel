@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\Translation;
+use Illuminate\Database\Seeder;
 
 class AdditionalTranslationsSeeder extends Seeder
 {
@@ -19,12 +19,12 @@ class AdditionalTranslationsSeeder extends Seeder
             ['key' => 'assessment_progress', 'en' => 'Assessment Progress', 'km' => 'វឌ្ឍនភាពនៃការវាយតម្លៃ', 'group' => 'dashboard'],
             ['key' => 'recent_activities', 'en' => 'Recent Activities', 'km' => 'សកម្មភាពថ្មីៗ', 'group' => 'dashboard'],
             ['key' => 'quick_stats', 'en' => 'Quick Stats', 'km' => 'ស្ថិតិរហ័ស', 'group' => 'dashboard'],
-            
+
             // Filter related
             ['key' => 'apply_filters', 'en' => 'Apply Filters', 'km' => 'អនុវត្តការត្រង', 'group' => 'filters'],
             ['key' => 'clear_filters', 'en' => 'Clear Filters', 'km' => 'សម្អាតការត្រង', 'group' => 'filters'],
             ['key' => 'filter_by', 'en' => 'Filter by', 'km' => 'ត្រងតាម', 'group' => 'filters'],
-            
+
             // Time periods
             ['key' => 'today', 'en' => 'Today', 'km' => 'ថ្ងៃនេះ', 'group' => 'time'],
             ['key' => 'yesterday', 'en' => 'Yesterday', 'km' => 'ម្សិលមិញ', 'group' => 'time'],
@@ -34,7 +34,7 @@ class AdditionalTranslationsSeeder extends Seeder
             ['key' => 'last_month', 'en' => 'Last Month', 'km' => 'ខែមុន', 'group' => 'time'],
             ['key' => 'this_year', 'en' => 'This Year', 'km' => 'ឆ្នាំនេះ', 'group' => 'time'],
             ['key' => 'last_year', 'en' => 'Last Year', 'km' => 'ឆ្នាំមុន', 'group' => 'time'],
-            
+
             // Additional common terms
             ['key' => 'total', 'en' => 'Total', 'km' => 'សរុប', 'group' => 'general'],
             ['key' => 'average', 'en' => 'Average', 'km' => 'មធ្យម', 'group' => 'general'],
@@ -66,6 +66,6 @@ class AdditionalTranslationsSeeder extends Seeder
         Translation::clearCache();
 
         $this->command->info('Additional translations seeded successfully!');
-        $this->command->info('Total translations added: ' . count($translations));
+        $this->command->info('Total translations added: '.count($translations));
     }
 }
