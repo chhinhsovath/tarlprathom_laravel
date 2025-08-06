@@ -54,7 +54,7 @@
                             <option value="">{{ __('All Schools') }}</option>
                             @foreach($schools as $school)
                                 <option value="{{ $school->id }}" {{ request('school_id') == $school->id ? 'selected' : '' }}>
-                                    {{ $school->school_name }}
+                                    {{ $school->name }}
                                 </option>
                             @endforeach
                         </select>
@@ -143,7 +143,7 @@
                                         </span>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        {{ $user->school ? $user->school->school_name : '-' }}
+                                        {{ $user->school ? $user->school->name : '-' }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $user->is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">

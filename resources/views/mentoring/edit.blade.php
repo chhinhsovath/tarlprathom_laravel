@@ -113,7 +113,7 @@
                                         <option value="">{{ __('Select School') }}</option>
                                         @foreach($schools as $school)
                                             <option value="{{ $school->id }}" {{ old('school_id', $mentoringVisit->school_id) == $school->id ? 'selected' : '' }}>
-                                                {{ $school->school_name }}
+                                                {{ $school->name }}
                                             </option>
                                         @endforeach
                                     </select>
@@ -212,7 +212,7 @@
                                             <option value="{{ $teacher->id }}" 
                                                     data-school="{{ $teacher->school_id }}"
                                                     {{ old('teacher_id', $mentoringVisit->teacher_id) == $teacher->id ? 'selected' : '' }}>
-                                                {{ $teacher->name }}{{ $teacher->school ? ' (' . $teacher->school->school_name . ')' : '' }}
+                                                {{ $teacher->name }}{{ $teacher->school ? ' (' . $teacher->school->name . ')' : '' }}
                                             </option>
                                         @endforeach
                                     </select>

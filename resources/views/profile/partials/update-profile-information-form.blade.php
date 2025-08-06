@@ -73,13 +73,13 @@
                     <option value="">{{ __('Select School') }}</option>
                     @foreach(\App\Models\School::orderBy('school_name')->get() as $school)
                         <option value="{{ $school->id }}" {{ old('school_id', $user->school_id) == $school->id ? 'selected' : '' }}>
-                            {{ $school->school_name }}
+                            {{ $school->name }}
                         </option>
                     @endforeach
                 </select>
                 <x-input-error class="mt-2" :messages="$errors->get('school_id')" />
             @else
-                <p class="mt-1 text-sm text-gray-600">{{ $user->school ? $user->school->school_name : __('Not assigned') }}</p>
+                <p class="mt-1 text-sm text-gray-600">{{ $user->school ? $user->school->name : __('Not assigned') }}</p>
             @endif
         </div>
 

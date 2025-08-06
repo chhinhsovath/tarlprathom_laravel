@@ -62,7 +62,7 @@ class UserController extends Controller
         }
 
         $users = $query->orderBy($sortField, $sortOrder)->paginate(20)->withQueryString();
-        $schools = School::orderBy('school_name')->get();
+        $schools = School::orderBy('name')->get();
 
         return view('users.index', compact('users', 'schools', 'sortField', 'sortOrder'));
     }
@@ -76,7 +76,7 @@ class UserController extends Controller
         if (! auth()->user()->isAdmin()) {
             abort(403, __('Unauthorized action.'));
         }
-        $schools = School::orderBy('school_name')->get();
+        $schools = School::orderBy('name')->get();
 
         return view('users.create', compact('schools'));
     }
@@ -96,6 +96,10 @@ class UserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'role' => ['required', 'in:admin,mentor,teacher,viewer,coordinator'],
             'school_id' => ['nullable', 'exists:schools,id'],
+            'province' => ['nullable', 'string', 'max:255'],
+            'district' => ['nullable', 'string', 'max:255'],
+            'commune' => ['nullable', 'string', 'max:255'],
+            'village' => ['nullable', 'string', 'max:255'],
             'phone' => ['nullable', 'string', 'max:20'],
             'profile_photo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:5120'],
             'sex' => ['nullable', 'in:male,female'],
@@ -142,7 +146,7 @@ class UserController extends Controller
         if (! auth()->user()->isAdmin()) {
             abort(403, __('Unauthorized action.'));
         }
-        $schools = School::orderBy('school_name')->get();
+        $schools = School::orderBy('name')->get();
 
         return view('users.edit', compact('user', 'schools'));
     }
@@ -162,6 +166,10 @@ class UserController extends Controller
             'password' => ['nullable', 'confirmed', Rules\Password::defaults()],
             'role' => ['required', 'in:admin,mentor,teacher,viewer,coordinator'],
             'school_id' => ['nullable', 'exists:schools,id'],
+            'province' => ['nullable', 'string', 'max:255'],
+            'district' => ['nullable', 'string', 'max:255'],
+            'commune' => ['nullable', 'string', 'max:255'],
+            'village' => ['nullable', 'string', 'max:255'],
             'phone' => ['nullable', 'string', 'max:20'],
             'profile_photo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:5120'],
             'sex' => ['nullable', 'in:male,female'],
@@ -437,7 +445,7 @@ class UserController extends Controller
             'Is Active',
         ];
 
-        $schools = School::orderBy('school_name')->pluck('school_name')->toArray();
+        $schools = School::orderBy('name')->pluck('name')->toArray();
 
         // Sample data
         $sampleData = [
@@ -515,7 +523,7 @@ class UserController extends Controller
                 ->with('error', __('Schools can only be assigned to mentors.'));
         }
 
-        $schools = School::orderBy('school_name')->get();
+        $schools = School::orderBy('name')->get();
         $assignedSchoolIds = $user->assignedSchools->pluck('id')->toArray();
 
         return view('users.assign-schools', compact('user', 'schools', 'assignedSchoolIds'));

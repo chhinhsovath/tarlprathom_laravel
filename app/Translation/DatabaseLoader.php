@@ -23,10 +23,11 @@ class DatabaseLoader extends FileLoader
 
         // For JSON translations (when $group is '*')
         if ($group === '*') {
+            // Load all translations from database
             return Translation::getTranslations($locale);
         }
 
-        // For file-based translations, use parent method
+        // For other groups, just use parent method (file-based)
         return parent::load($locale, $group, $namespace);
     }
 }

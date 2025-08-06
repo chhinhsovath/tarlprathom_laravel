@@ -37,7 +37,7 @@
                                 
                                 <div>
                                     <dt class="text-sm font-medium text-gray-500">{{ __('School') }}</dt>
-                                    <dd class="mt-1 text-sm text-gray-900">{{ $class->school->school_name }}</dd>
+                                    <dd class="mt-1 text-sm text-gray-900">{{ $class->school->name }}</dd>
                                 </div>
                                 
                                 <div>

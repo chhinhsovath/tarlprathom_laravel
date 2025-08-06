@@ -51,7 +51,7 @@
                                     data-province="{{ $school->province }}" 
                                     data-district="{{ $school->district }}" 
                                     data-cluster="{{ $school->cluster }}">
-                                    {{ $school->school_name }}
+                                    {{ $school->name }}
                                 </option>
                             @endforeach
                         </select>

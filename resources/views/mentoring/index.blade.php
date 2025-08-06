@@ -26,9 +26,9 @@
                             <div>
                                 <select name="school_id" class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                                     <option value="">{{ __('All Schools') }}</option>
-                                    @foreach(App\Models\School::orderBy('school_name')->get() as $school)
+                                    @foreach(App\Models\School::orderBy('name')->get() as $school)
                                         <option value="{{ $school->id }}" {{ request('school_id') == $school->id ? 'selected' : '' }}>
-                                            {{ $school->school_name }}
+                                            {{ $school->name }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -110,7 +110,7 @@
                                         {{ $visit->visit_date->format('Y-m-d') }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {{ $visit->school->school_name }}
+                                        {{ $visit->school->name }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         {{ $visit->teacher->name }}

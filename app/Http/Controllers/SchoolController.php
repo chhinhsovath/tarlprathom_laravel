@@ -80,7 +80,7 @@ class SchoolController extends Controller
             abort(403, __('Unauthorized action.'));
         }
         $validated = $request->validate([
-            'school_name' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255'],
             'school_code' => ['required', 'string', 'max:255', 'unique:schools'],
             'province' => ['required', 'string', 'max:255'],
             'district' => ['required', 'string', 'max:255'],
@@ -144,7 +144,7 @@ class SchoolController extends Controller
             abort(403, __('Unauthorized action.'));
         }
         $validated = $request->validate([
-            'school_name' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255'],
             'school_code' => ['required', 'string', 'max:255', 'unique:schools,school_code,'.$school->id],
             'province' => ['required', 'string', 'max:255'],
             'district' => ['required', 'string', 'max:255'],
@@ -299,6 +299,82 @@ class SchoolController extends Controller
     }
 
     /**
+     * Add mentors to the school.
+     */
+    public function addMentor(Request $request, School $school)
+    {
+        // Check if user is admin
+        if (! auth()->user()->isAdmin()) {
+            abort(403, __('Unauthorized action.'));
+        }
+
+        $request->validate([
+            'mentor_ids' => 'required|array',
+            'mentor_ids.*' => 'exists:users,id',
+        ]);
+
+        // Attach mentors to the school through the pivot table
+        foreach ($request->mentor_ids as $mentorId) {
+            // Check if the user is actually a mentor
+            $mentor = User::where('id', $mentorId)->where('role', 'mentor')->first();
+            if ($mentor) {
+                // Attach mentor to school if not already attached
+                if (!$mentor->assignedSchools()->where('school_id', $school->id)->exists()) {
+                    $mentor->assignedSchools()->attach($school->id);
+                }
+            }
+        }
+
+        return redirect()->route('schools.show', $school)
+            ->with('success', __('Mentors added successfully.'));
+    }
+
+    /**
+     * Remove a mentor from the school.
+     */
+    public function removeMentor(Request $request, School $school)
+    {
+        // Check if user is admin
+        if (! auth()->user()->isAdmin()) {
+            abort(403, __('Unauthorized action.'));
+        }
+
+        $request->validate([
+            'mentor_id' => 'required|exists:users,id',
+        ]);
+
+        $mentor = User::find($request->mentor_id);
+        if ($mentor && $mentor->role === 'mentor') {
+            $mentor->assignedSchools()->detach($school->id);
+        }
+
+        return redirect()->route('schools.show', $school)
+            ->with('success', __('Mentor removed successfully.'));
+    }
+
+    /**
+     * Search for available mentors.
+     */
+    public function searchMentors(Request $request, School $school)
+    {
+        $query = $request->get('q', '');
+
+        $mentors = User::where('role', 'mentor')
+            ->where(function ($q) use ($query) {
+                $q->where('name', 'like', "%{$query}%")
+                    ->orWhere('email', 'like', "%{$query}%");
+            })
+            ->limit(20)
+            ->get(['id', 'name', 'email'])
+            ->map(function ($mentor) use ($school) {
+                $mentor->is_assigned = $mentor->assignedSchools()->where('school_id', $school->id)->exists();
+                return $mentor;
+            });
+
+        return response()->json($mentors);
+    }
+
+    /**
      * Show the bulk import form.
      */
     public function bulkImportForm()
@@ -358,7 +434,7 @@ class SchoolController extends Controller
                 }
 
                 School::create([
-                    'school_name' => $schoolData['school_name'],
+                    'name' => $schoolData['name'],
                     'school_code' => $schoolData['school_code'],
                     'province' => $schoolData['province'],
                     'district' => $schoolData['district'],
@@ -400,6 +476,52 @@ class SchoolController extends Controller
     }
 
     /**
+     * Get all provinces (API endpoint)
+     */
+    public function getProvinces()
+    {
+        $provinces = \App\Models\Geographic::getProvinces();
+        
+        return response()->json($provinces);
+    }
+
+    /**
+     * Get districts by province (API endpoint)
+     */
+    public function getDistricts(Request $request)
+    {
+        $provinceCode = $request->get('province_code');
+        
+        $districts = \App\Models\Geographic::getDistrictsByProvince($provinceCode);
+        
+        return response()->json($districts);
+    }
+
+    /**
+     * Get communes by district (API endpoint)
+     */
+    public function getCommunes(Request $request)
+    {
+        $districtCode = $request->get('district_code');
+        
+        $communes = \App\Models\Geographic::getCommunesByDistrict($districtCode);
+        
+        return response()->json($communes);
+    }
+
+    /**
+     * Get villages by commune (API endpoint)
+     */
+    public function getVillages(Request $request)
+    {
+        $communeCode = $request->get('commune_code');
+        
+        $villages = \App\Models\Geographic::getVillagesByCommune($communeCode);
+        
+        return response()->json($villages);
+    }
+
+    /**
      * Show assessment dates management page
      */
     public function assessmentDates()
@@ -409,7 +531,7 @@ class SchoolController extends Controller
             abort(403, __('Unauthorized action.'));
         }
 
-        $schools = School::orderBy('school_name')->get();
+        $schools = School::orderBy('name')->get();
 
         return view('schools.assessment-dates', compact('schools'));
     }

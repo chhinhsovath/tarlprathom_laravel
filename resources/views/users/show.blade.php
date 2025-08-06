@@ -65,7 +65,7 @@
                                 @if($user->school)
                                     <div>
                                         <span class="text-xs text-gray-500 uppercase tracking-wider">{{ __('School') }}</span>
-                                        <p class="text-sm font-medium text-gray-900">{{ $user->school->school_name }}</p>
+                                        <p class="text-sm font-medium text-gray-900">{{ $user->school->name }}</p>
                                     </div>
                                 @endif
                                 
@@ -80,6 +80,34 @@
                                     <div>
                                         <span class="text-xs text-gray-500 uppercase tracking-wider">{{ __('Phone') }}</span>
                                         <p class="text-sm font-medium text-gray-900">{{ $user->phone }}</p>
+                                    </div>
+                                @endif
+                                
+                                @if($user->province)
+                                    <div>
+                                        <span class="text-xs text-gray-500 uppercase tracking-wider">{{ __('Province') }}</span>
+                                        <p class="text-sm font-medium text-gray-900">{{ $user->province }}</p>
+                                    </div>
+                                @endif
+                                
+                                @if($user->district)
+                                    <div>
+                                        <span class="text-xs text-gray-500 uppercase tracking-wider">{{ __('District') }}</span>
+                                        <p class="text-sm font-medium text-gray-900">{{ $user->district }}</p>
+                                    </div>
+                                @endif
+                                
+                                @if($user->commune)
+                                    <div>
+                                        <span class="text-xs text-gray-500 uppercase tracking-wider">{{ __('Commune') }}</span>
+                                        <p class="text-sm font-medium text-gray-900">{{ $user->commune }}</p>
+                                    </div>
+                                @endif
+                                
+                                @if($user->village)
+                                    <div>
+                                        <span class="text-xs text-gray-500 uppercase tracking-wider">{{ __('Village') }}</span>
+                                        <p class="text-sm font-medium text-gray-900">{{ $user->village }}</p>
                                     </div>
                                 @endif
                                 
@@ -131,7 +159,7 @@
                             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                                 @foreach($user->assignedSchools as $school)
                                     <div class="bg-gray-50 rounded-lg p-3">
-                                        <h4 class="font-medium text-gray-900">{{ $school->school_name }}</h4>
+                                        <h4 class="font-medium text-gray-900">{{ $school->name }}</h4>
                                         @if($school->province)
                                             <p class="text-sm text-gray-600">{{ $school->province }}</p>
                                         @endif

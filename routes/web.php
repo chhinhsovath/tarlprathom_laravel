@@ -94,6 +94,10 @@ Route::middleware('auth')->group(function () {
 
     // School API endpoints
     Route::get('/api/school/{school}/teachers', [SchoolController::class, 'getTeachers'])->name('api.school.teachers');
+    Route::get('/api/geographic/provinces', [SchoolController::class, 'getProvinces'])->name('api.geographic.provinces');
+    Route::get('/api/geographic/districts', [SchoolController::class, 'getDistricts'])->name('api.geographic.districts');
+    Route::get('/api/geographic/communes', [SchoolController::class, 'getCommunes'])->name('api.geographic.communes');
+    Route::get('/api/geographic/villages', [SchoolController::class, 'getVillages'])->name('api.geographic.villages');
 
     // Student Management Routes
     Route::get('/students/export', [StudentController::class, 'export'])->name('students.export');
@@ -165,6 +169,9 @@ Route::middleware('auth')->group(function () {
         Route::post('/schools/{school}/add-teacher', [SchoolController::class, 'addTeacher'])->name('schools.add-teacher');
         Route::delete('/schools/{school}/remove-teacher', [SchoolController::class, 'removeTeacher'])->name('schools.remove-teacher');
         Route::get('/schools/{school}/search-teachers', [SchoolController::class, 'searchTeachers'])->name('schools.search-teachers');
+        Route::post('/schools/{school}/add-mentor', [SchoolController::class, 'addMentor'])->name('schools.add-mentor');
+        Route::delete('/schools/{school}/remove-mentor', [SchoolController::class, 'removeMentor'])->name('schools.remove-mentor');
+        Route::get('/schools/{school}/search-mentors', [SchoolController::class, 'searchMentors'])->name('schools.search-mentors');
 
         // Resource Management (Admin only)
         Route::middleware(['auth', 'App\Http\Middleware\AdminMiddleware'])->group(function () {

@@ -24,19 +24,19 @@
                                         <option value="">{{ __('All Schools') }}</option>
                                         @foreach($schools as $school)
                                             <option value="{{ $school->id }}" {{ request('school_id') == $school->id ? 'selected' : '' }}>
-                                                {{ $school->school_name }}
+                                                {{ $school->name }}
                                             </option>
                                         @endforeach
                                     </select>
                                 </div>
                             @endif
                             <div>
-                                <select name="grade" class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                <select name="class" class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                                     <option value="">{{ __('All Grades') }}</option>
-                                    <option value="4" {{ request('grade') == 4 ? 'selected' : '' }}>
+                                    <option value="Grade 4" {{ request('class') == 'Grade 4' ? 'selected' : '' }}>
                                         {{ __('Grade') }} 4
                                     </option>
-                                    <option value="5" {{ request('grade') == 5 ? 'selected' : '' }}>
+                                    <option value="Grade 5" {{ request('class') == 'Grade 5' ? 'selected' : '' }}>
                                         {{ __('Grade') }} 5
                                     </option>
                                 </select>
@@ -52,7 +52,7 @@
                                 <button type="submit" class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
                                     {{ __('Search') }}
                                 </button>
-                                @if(request('search') || request('school_id') || request('grade') || request('gender'))
+                                @if(request('search') || request('school_id') || request('class') || request('gender'))
                                     <a href="{{ route('students.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-300 border border-transparent rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest hover:bg-gray-400 focus:bg-gray-400 active:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition ease-in-out duration-150">
                                         {{ __('Clear') }}
                                     </a>
@@ -85,8 +85,16 @@
                                         </x-sortable-header>
                                     </th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        <x-sortable-header column="grade" :current-sort="$sortField" :current-order="$sortOrder">
+                                        {{ __('Age') }}
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        <x-sortable-header column="class" :current-sort="$sortField" :current-order="$sortOrder">
                                             {{ __('Grade') }}
+                                        </x-sortable-header>
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        <x-sortable-header column="gender" :current-sort="$sortField" :current-order="$sortOrder">
+                                            {{ __('Gender') }}
                                         </x-sortable-header>
                                     </th>
                                     @if(!auth()->user()->isTeacher())
@@ -95,12 +103,10 @@
                                     </th>
                                     @endif
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        {{ __('School') }}
+                                        {{ __('Mentor(s)') }}
                                     </th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        <x-sortable-header column="gender" :current-sort="$sortField" :current-order="$sortOrder">
-                                            {{ __('Gender') }}
-                                        </x-sortable-header>
+                                        {{ __('School') }}
                                     </th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         {{ __('Actions') }}
@@ -116,7 +122,13 @@
                                             </div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm text-gray-900">{{ $student->grade }}</div>
+                                            <div class="text-sm text-gray-900">{{ $student->age ?? 'N/A' }}</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900">{{ $student->class ?? 'N/A' }}</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900">{{ ucfirst($student->gender) }}</div>
                                         </td>
                                         @if(!auth()->user()->isTeacher())
                                         <td class="px-6 py-4 whitespace-nowrap">
@@ -124,10 +136,16 @@
                                         </td>
                                         @endif
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm text-gray-900">{{ $student->school->school_name ?? 'N/A' }}</div>
+                                            <div class="text-sm text-gray-900">
+                                                @if($student->school && $student->school->assignedMentors->count() > 0)
+                                                    {{ $student->school->assignedMentors->pluck('name')->join(', ') }}
+                                                @else
+                                                    N/A
+                                                @endif
+                                            </div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm text-gray-900">{{ ucfirst($student->gender) }}</div>
+                                            <div class="text-sm text-gray-900">{{ $student->school->name ?? 'N/A' }}</div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                             <a href="{{ route('students.show', $student) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">{{ __('View') }}</a>
@@ -154,7 +172,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="6" class="px-6 py-4 text-center text-gray-500">
+                                        <td colspan="8" class="px-6 py-4 text-center text-gray-500">
                                             {{ __('No students found.') }}
                                         </td>
                                     </tr>

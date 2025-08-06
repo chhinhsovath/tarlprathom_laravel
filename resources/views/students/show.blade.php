@@ -50,7 +50,7 @@
                             </div>
                             <div>
                                 <span class="text-xs text-gray-500 uppercase tracking-wider">{{ __('Grade') }}</span>
-                                <p class="text-sm font-medium text-gray-900">{{ __('Grade') }} {{ $student->grade }}</p>
+                                <p class="text-sm font-medium text-gray-900">{{ $student->class ?? 'N/A' }}</p>
                             </div>
                         </div>
                     </div>
@@ -61,7 +61,7 @@
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                             <div>
                                 <span class="text-xs text-gray-500 uppercase tracking-wider">{{ __('School') }}</span>
-                                <p class="text-sm font-medium text-gray-900">{{ $student->school->school_name ?? 'N/A' }}</p>
+                                <p class="text-sm font-medium text-gray-900">{{ $student->school->name ?? 'N/A' }}</p>
                             </div>
                             <div>
                                 <span class="text-xs text-gray-500 uppercase tracking-wider">{{ __('District') }}</span>

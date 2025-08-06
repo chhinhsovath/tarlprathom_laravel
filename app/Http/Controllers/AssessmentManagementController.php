@@ -83,7 +83,7 @@ class AssessmentManagementController extends Controller
             $q->where('district', $request->district);
         })->when($request->filled('cluster'), function ($q) use ($request) {
             $q->where('cluster', $request->cluster);
-        })->orderBy('school_name')->get();
+        })->orderBy('name')->get();
 
         $teachers = User::whereIn('role', ['teacher', 'mentor'])
             ->when($request->filled('school_id'), function ($q) use ($request) {
@@ -163,7 +163,7 @@ class AssessmentManagementController extends Controller
             $q->where('district', $request->district);
         })->when($request->filled('cluster'), function ($q) use ($request) {
             $q->where('cluster', $request->cluster);
-        })->orderBy('school_name')->get();
+        })->orderBy('name')->get();
 
         $mentors = User::where('role', 'mentor')->orderBy('name')->get();
         $teachers = User::whereIn('role', ['teacher', 'mentor'])

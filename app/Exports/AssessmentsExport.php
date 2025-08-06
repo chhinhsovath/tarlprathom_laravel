@@ -95,7 +95,7 @@ class AssessmentsExport implements FromQuery, ShouldAutoSize, WithHeadings, With
             $assessment->student->name,
             $assessment->student->grade,
             ucfirst($assessment->student->gender),
-            $assessment->student->school->school_name ?? 'N/A',
+            $assessment->student->school->name ?? 'N/A',
             ucfirst($assessment->subject),
             ucfirst($assessment->cycle),
             $assessment->level,

@@ -61,7 +61,7 @@ class ImportController extends Controller
                 $data = array_combine($header, $row);
 
                 $validator = Validator::make($data, [
-                    'school_name' => 'required|string|max:255',
+                    'name' => 'required|string|max:255',
                     'school_code' => 'required|string|max:50|unique:schools,school_code',
                     'province' => 'required|string|max:255',
                     'district' => 'required|string|max:255',
@@ -77,8 +77,8 @@ class ImportController extends Controller
                 School::updateOrCreate(
                     ['school_code' => $data['school_code']],
                     [
-                        'name' => $data['school_name'], // Set the 'name' field for compatibility
-                        'school_name' => $data['school_name'],
+                        'name' => $data['name'], // Set the 'name' field for compatibility
+                        'name' => $data['name'],
                         'school_code' => $data['school_code'],
                         'province' => $data['province'],
                         'district' => $data['district'],
@@ -131,7 +131,7 @@ class ImportController extends Controller
                 $validator = Validator::make($data, [
                     'name' => 'required|string|max:255',
                     'email' => 'required|email|max:255|unique:users,email',
-                    'school_name' => 'required|string',
+                    'name' => 'required|string',
                     'phone' => 'nullable|string|max:20',
                     'sex' => 'nullable|in:male,female',
                 ]);
@@ -142,9 +142,9 @@ class ImportController extends Controller
                     continue;
                 }
 
-                $school = School::where('school_name', $data['school_name'])->first();
+                $school = School::where('school_name', $data['name'])->first();
                 if (! $school) {
-                    $errors[] = 'Row '.($index + 2).": School '{$data['school_name']}' not found";
+                    $errors[] = 'Row '.($index + 2).": School '{$data['name']}' not found";
 
                     continue;
                 }
@@ -206,7 +206,7 @@ class ImportController extends Controller
                     'sex' => 'required|in:male,female',
                     'age' => 'required|integer|min:3|max:20',
                     'class' => 'required|string|max:255',
-                    'school_name' => 'required|string',
+                    'name' => 'required|string',
                 ]);
 
                 if ($validator->fails()) {
@@ -215,9 +215,9 @@ class ImportController extends Controller
                     continue;
                 }
 
-                $school = School::where('school_name', $data['school_name'])->first();
+                $school = School::where('school_name', $data['name'])->first();
                 if (! $school) {
-                    $errors[] = 'Row '.($index + 2).": School '{$data['school_name']}' not found";
+                    $errors[] = 'Row '.($index + 2).": School '{$data['name']}' not found";
 
                     continue;
                 }

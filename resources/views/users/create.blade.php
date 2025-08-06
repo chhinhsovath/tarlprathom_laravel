@@ -75,7 +75,7 @@
                                         <option value="">{{ __('No School Assigned') }}</option>
                                         @foreach($schools as $school)
                                             <option value="{{ $school->id }}" {{ old('school_id') == $school->id ? 'selected' : '' }}>
-                                                {{ $school->school_name }}
+                                                {{ $school->name }}
                                             </option>
                                         @endforeach
                                     </select>
@@ -89,6 +89,49 @@
                                         <span class="ml-2 text-sm text-gray-600">{{ __('Active User') }}</span>
                                     </label>
                                     <p class="mt-1 text-sm text-gray-500">{{ __('Active users can log in and access the system.') }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Geographic Location -->
+                        <div class="border-b border-gray-200 pb-6">
+                            <h3 class="text-lg font-medium text-gray-900 mb-4">{{ __('Geographic Location') }}</h3>
+                            
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                <!-- Province -->
+                                <div>
+                                    <x-input-label for="province" :value="__('Province')" />
+                                    <select id="province" name="province" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                        <option value="">{{ __('Select Province') }}</option>
+                                    </select>
+                                    <x-input-error class="mt-2" :messages="$errors->get('province')" />
+                                </div>
+
+                                <!-- District -->
+                                <div>
+                                    <x-input-label for="district" :value="__('District')" />
+                                    <select id="district" name="district" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" disabled>
+                                        <option value="">{{ __('Select Province First') }}</option>
+                                    </select>
+                                    <x-input-error class="mt-2" :messages="$errors->get('district')" />
+                                </div>
+
+                                <!-- Commune -->
+                                <div>
+                                    <x-input-label for="commune" :value="__('Commune')" />
+                                    <select id="commune" name="commune" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" disabled>
+                                        <option value="">{{ __('Select District First') }}</option>
+                                    </select>
+                                    <x-input-error class="mt-2" :messages="$errors->get('commune')" />
+                                </div>
+
+                                <!-- Village -->
+                                <div>
+                                    <x-input-label for="village" :value="__('Village')" />
+                                    <select id="village" name="village" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" disabled>
+                                        <option value="">{{ __('Select Commune First') }}</option>
+                                    </select>
+                                    <x-input-error class="mt-2" :messages="$errors->get('village')" />
                                 </div>
                             </div>
                         </div>
@@ -194,6 +237,150 @@
                 preview.classList.add('hidden');
             }
         }
+        
+        // Geographic cascading selects
+        document.addEventListener('DOMContentLoaded', function() {
+            const provinceSelect = document.getElementById('province');
+            const districtSelect = document.getElementById('district');
+            const communeSelect = document.getElementById('commune');
+            const villageSelect = document.getElementById('village');
+            
+            // Load provinces on page load
+            fetch('{{ route("api.geographic.provinces") }}')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(provinces => {
+                    provinces.forEach(province => {
+                        const option = new Option(
+                            province.province_name_kh + ' / ' + province.province_name_en,
+                            province.province_code
+                        );
+                        provinceSelect.add(option);
+                    });
+                    
+                    // Set old value if exists
+                    const oldProvince = '{{ old("province") }}';
+                    if (oldProvince) {
+                        provinceSelect.value = oldProvince;
+                        provinceSelect.dispatchEvent(new Event('change'));
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading provinces:', error);
+                    provinceSelect.innerHTML = '<option value="">{{ __("Error loading provinces") }}</option>';
+                });
+            
+            // Province change handler
+            provinceSelect.addEventListener('change', function() {
+                const provinceCode = this.value;
+                
+                // Reset dependent selects
+                districtSelect.innerHTML = '<option value="">{{ __("Select District") }}</option>';
+                communeSelect.innerHTML = '<option value="">{{ __("Select Commune") }}</option>';
+                villageSelect.innerHTML = '<option value="">{{ __("Select Village") }}</option>';
+                communeSelect.disabled = true;
+                villageSelect.disabled = true;
+                
+                if (!provinceCode) {
+                    districtSelect.disabled = true;
+                    return;
+                }
+                
+                districtSelect.disabled = false;
+                
+                fetch(`{{ route("api.geographic.districts") }}?province_code=${provinceCode}`)
+                    .then(response => response.json())
+                    .then(districts => {
+                        districts.forEach(district => {
+                            const option = new Option(
+                                district.district_name_kh + ' / ' + district.district_name_en,
+                                district.district_code
+                            );
+                            districtSelect.add(option);
+                        });
+                        
+                        // Set old value if exists
+                        const oldDistrict = '{{ old("district") }}';
+                        if (oldDistrict && provinceCode === '{{ old("province") }}') {
+                            districtSelect.value = oldDistrict;
+                            districtSelect.dispatchEvent(new Event('change'));
+                        }
+                    });
+            });
+            
+            // District change handler
+            districtSelect.addEventListener('change', function() {
+                const districtCode = this.value;
+                
+                // Reset dependent selects
+                communeSelect.innerHTML = '<option value="">{{ __("Select Commune") }}</option>';
+                villageSelect.innerHTML = '<option value="">{{ __("Select Village") }}</option>';
+                villageSelect.disabled = true;
+                
+                if (!districtCode) {
+                    communeSelect.disabled = true;
+                    return;
+                }
+                
+                communeSelect.disabled = false;
+                
+                fetch(`{{ route("api.geographic.communes") }}?district_code=${districtCode}`)
+                    .then(response => response.json())
+                    .then(communes => {
+                        communes.forEach(commune => {
+                            const option = new Option(
+                                commune.commune_name_kh + ' / ' + commune.commune_name_en,
+                                commune.commune_code
+                            );
+                            communeSelect.add(option);
+                        });
+                        
+                        // Set old value if exists
+                        const oldCommune = '{{ old("commune") }}';
+                        if (oldCommune && districtCode === '{{ old("district") }}') {
+                            communeSelect.value = oldCommune;
+                            communeSelect.dispatchEvent(new Event('change'));
+                        }
+                    });
+            });
+            
+            // Commune change handler
+            communeSelect.addEventListener('change', function() {
+                const communeCode = this.value;
+                
+                // Reset village select
+                villageSelect.innerHTML = '<option value="">{{ __("Select Village") }}</option>';
+                
+                if (!communeCode) {
+                    villageSelect.disabled = true;
+                    return;
+                }
+                
+                villageSelect.disabled = false;
+                
+                fetch(`{{ route("api.geographic.villages") }}?commune_code=${communeCode}`)
+                    .then(response => response.json())
+                    .then(villages => {
+                        villages.forEach(village => {
+                            const option = new Option(
+                                village.village_name_kh + ' / ' + village.village_name_en,
+                                village.village_code
+                            );
+                            villageSelect.add(option);
+                        });
+                        
+                        // Set old value if exists
+                        const oldVillage = '{{ old("village") }}';
+                        if (oldVillage && communeCode === '{{ old("commune") }}') {
+                            villageSelect.value = oldVillage;
+                        }
+                    });
+            });
+        });
     </script>
     @endpush
 </x-app-layout>

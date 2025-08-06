@@ -26,7 +26,7 @@
             <!-- School Info Card -->
             <div class="bg-white overflow-hidden shadow-sm rounded-lg mb-6">
                 <div class="p-4 sm:p-6">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ $school->school_name }}</h3>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ $school->name }}</h3>
                     
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                         <div>
@@ -55,7 +55,7 @@
             </div>
 
             <!-- Statistics -->
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+            <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-6">
                 <div class="bg-white rounded-lg shadow-sm p-4">
                     <p class="text-xs text-gray-500 uppercase">{{ __('Total Users') }}</p>
                     <p class="text-2xl font-semibold text-gray-900">{{ $school->users_count ?? 0 }}</p>
@@ -69,6 +69,11 @@
                 <div class="bg-white rounded-lg shadow-sm p-4">
                     <p class="text-xs text-gray-500 uppercase">{{ __('Teachers') }}</p>
                     <p class="text-2xl font-semibold text-gray-900">{{ $teachers->count() }}</p>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-sm p-4">
+                    <p class="text-xs text-gray-500 uppercase">{{ __('Mentors') }}</p>
+                    <p class="text-2xl font-semibold text-gray-900">{{ $mentors->count() }}</p>
                 </div>
             </div>
 
@@ -123,6 +128,61 @@
                         </div>
                     @else
                         <p class="text-sm text-gray-500">{{ __('No teachers assigned to this school yet.') }}</p>
+                    @endif
+                </div>
+            </div>
+
+            <!-- Mentors Section -->
+            <div class="bg-white overflow-hidden shadow-sm rounded-lg mb-6">
+                <div class="p-4 sm:p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold text-gray-900">{{ __('Mentors') }}</h3>
+                        @if(auth()->user()->role === 'admin')
+                            <button onclick="openAddMentorModal()" class="inline-flex items-center px-3 py-1.5 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 focus:bg-indigo-700 active:bg-indigo-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                </svg>
+                                {{ __('Add Mentor') }}
+                            </button>
+                        @endif
+                    </div>
+                    
+                    @if($mentors->count() > 0)
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                            @foreach($mentors as $mentor)
+                                <div class="flex items-center gap-3 p-3 border rounded-lg relative group">
+                                    @if($mentor->profile_photo)
+                                        <div class="h-10 w-10 rounded-full overflow-hidden flex-shrink-0">
+                                            <img src="{{ Storage::url($mentor->profile_photo) }}" alt="{{ $mentor->name }}" class="h-full w-full object-cover">
+                                        </div>
+                                    @else
+                                        <div class="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0">
+                                            <svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                            </svg>
+                                        </div>
+                                    @endif
+                                    <div class="flex-1">
+                                        <p class="text-sm font-medium text-gray-900">{{ $mentor->name }}</p>
+                                        <p class="text-xs text-gray-500">{{ $mentor->email }}</p>
+                                    </div>
+                                    @if(auth()->user()->role === 'admin')
+                                        <form action="{{ route('schools.remove-mentor', $school) }}" method="POST" class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                            @csrf
+                                            @method('DELETE')
+                                            <input type="hidden" name="mentor_id" value="{{ $mentor->id }}">
+                                            <button type="submit" onclick="return confirm('Remove this mentor from the school?')" class="text-red-600 hover:text-red-900">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                                </svg>
+                                            </button>
+                                        </form>
+                                    @endif
+                                </div>
+                            @endforeach
+                        </div>
+                    @else
+                        <p class="text-sm text-gray-500">{{ __('No mentors assigned to this school yet.') }}</p>
                     @endif
                 </div>
             </div>
@@ -264,6 +324,72 @@
         </div>
     </div>
 
+    <!-- Add Mentor Modal -->
+    <div id="addMentorModal" class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity hidden z-50">
+        <div class="fixed inset-0 overflow-y-auto">
+            <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
+                <div class="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
+                    <div class="absolute right-0 top-0 pr-4 pt-4">
+                        <button type="button" onclick="closeAddMentorModal()" class="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none">
+                            <span class="sr-only">{{ __("Close") }}</span>
+                            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                    
+                    <div class="sm:flex sm:items-start">
+                        <div class="mt-3 text-center sm:mt-0 sm:text-left w-full">
+                            <h3 class="text-base font-semibold leading-6 text-gray-900 mb-4" id="modal-title">
+                                {{ __('Add Mentor to School') }}
+                            </h3>
+                            
+                            <form action="{{ route('schools.add-mentor', $school) }}" method="POST" id="addMentorForm">
+                                @csrf
+                                
+                                <div class="mb-4">
+                                    <label for="mentor_search" class="block text-sm font-medium text-gray-700 mb-2">
+                                        {{ __('Search Mentor') }}
+                                    </label>
+                                    <input type="text" id="mentor_search" placeholder="Type to search mentors..." 
+                                        class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                        onkeyup="searchMentors(this.value)">
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                        {{ __('Available Mentors') }}
+                                    </label>
+                                    <div id="mentorsList" class="max-h-60 overflow-y-auto border rounded-md p-2">
+                                        <p class="text-sm text-gray-500 text-center py-4">{{ __('Start typing to search for mentors...') }}</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                        {{ __('Selected Mentors') }}
+                                    </label>
+                                    <div id="selectedMentors" class="border rounded-md p-2 min-h-[60px]">
+                                        <p class="text-sm text-gray-500 text-center py-2">{{ __('No mentors selected') }}</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse gap-2">
+                                    <button type="submit" class="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 sm:w-auto">
+                                        {{ __('Add Mentors') }}
+                                    </button>
+                                    <button type="button" onclick="closeAddMentorModal()" class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto">
+                                        {{ __('Cancel') }}
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         let selectedTeacherIds = [];
         let searchTimeout;
@@ -332,6 +458,77 @@
                 container.innerHTML = selectedTeacherIds.map(id => 
                     `<input type="hidden" name="teacher_ids[]" value="${id}">`
                 ).join('') + `<p class="text-sm text-gray-700">${selectedTeacherIds.length} teacher(s) selected</p>`;
+            }
+        }
+
+        // Mentor Modal Functions
+        let selectedMentorIds = [];
+        let mentorSearchTimeout;
+
+        function openAddMentorModal() {
+            document.getElementById('addMentorModal').classList.remove('hidden');
+        }
+
+        function closeAddMentorModal() {
+            document.getElementById('addMentorModal').classList.add('hidden');
+            selectedMentorIds = [];
+            updateSelectedMentorsList();
+        }
+
+        function searchMentors(query) {
+            clearTimeout(mentorSearchTimeout);
+            
+            if (query.length < 2) {
+                document.getElementById('mentorsList').innerHTML = '<p class="text-sm text-gray-500 text-center py-4">Start typing to search for mentors...</p>';
+                return;
+            }
+
+            mentorSearchTimeout = setTimeout(() => {
+                fetch(`{{ route('schools.search-mentors', $school) }}?q=${query}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        let html = '';
+                        if (data.length === 0) {
+                            html = '<p class="text-sm text-gray-500 text-center py-4">No mentors found</p>';
+                        } else {
+                            data.forEach(mentor => {
+                                const isSelected = selectedMentorIds.includes(mentor.id);
+                                html += `
+                                    <div class="flex items-center justify-between p-2 hover:bg-gray-50 rounded cursor-pointer ${isSelected ? 'bg-indigo-50' : ''}" 
+                                         onclick="toggleMentor(${mentor.id}, '${mentor.name}', '${mentor.email}')">
+                                        <div>
+                                            <p class="text-sm font-medium text-gray-900">${mentor.name}</p>
+                                            <p class="text-xs text-gray-500">${mentor.email}</p>
+                                        </div>
+                                        <input type="checkbox" ${isSelected ? 'checked' : ''} class="ml-2">
+                                    </div>
+                                `;
+                            });
+                        }
+                        document.getElementById('mentorsList').innerHTML = html;
+                    });
+            }, 300);
+        }
+
+        function toggleMentor(id, name, email) {
+            const index = selectedMentorIds.indexOf(id);
+            if (index > -1) {
+                selectedMentorIds.splice(index, 1);
+            } else {
+                selectedMentorIds.push(id);
+            }
+            updateSelectedMentorsList();
+            searchMentors(document.getElementById('mentor_search').value);
+        }
+
+        function updateSelectedMentorsList() {
+            const container = document.getElementById('selectedMentors');
+            if (selectedMentorIds.length === 0) {
+                container.innerHTML = '<p class="text-sm text-gray-500 text-center py-2">No mentors selected</p>';
+            } else {
+                container.innerHTML = selectedMentorIds.map(id => 
+                    `<input type="hidden" name="mentor_ids[]" value="${id}">`
+                ).join('') + `<p class="text-sm text-gray-700">${selectedMentorIds.length} mentor(s) selected</p>`;
             }
         }
     </script>

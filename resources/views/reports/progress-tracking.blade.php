@@ -20,7 +20,7 @@
                                 <option value="">{{ __('All Schools') }}</option>
                                 @foreach($schools as $school)
                                     <option value="{{ $school->id }}" {{ $schoolId == $school->id ? 'selected' : '' }}>
-                                        {{ $school->school_name }}
+                                        {{ $school->name }}
                                     </option>
                                 @endforeach
                             </select>
@@ -115,7 +115,7 @@
                         <p class="text-sm text-gray-600 mt-1">
                             {{ __('Tracking progress in') }} <strong>{{ ucfirst($subject) }}</strong>
                             @if($schoolId)
-                                {{ __('for') }} <strong>{{ $schools->find($schoolId)->school_name ?? __('Selected School') }}</strong>
+                                {{ __('for') }} <strong>{{ $schools->find($schoolId)->name ?? __('Selected School') }}</strong>
                             @else
                                 {{ __('across all accessible schools') }}
                             @endif
@@ -143,7 +143,7 @@
                             $improved = collect($progressData)->where('level_improved', '>', 0)->count();
                             $maintained = collect($progressData)->where('level_improved', '=', 0)->count();
                             $declined = collect($progressData)->where('level_improved', '<', 0)->count();
-                            $avgScoreChange = collect($progressData)->avg('score_change');
+                            $avgLevelChange = collect($progressData)->avg('level_improved');
                         @endphp
                         
                         <div class="bg-green-50 p-4 rounded-lg border border-green-200">
@@ -249,19 +249,17 @@
                                         {{ $data['student']->name }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {{ $data['student']->school->school_name }}
+                                        {{ $data['student']->school->name }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
                                             {{ __($data['baseline_level']) }}
                                         </span>
-                                        <div class="text-xs text-gray-400">{{ __('Score') }}: {{ $data['baseline_score'] }}</div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
                                             {{ __($data['latest_level']) }}
                                         </span>
-                                        <div class="text-xs text-gray-400">{{ __('Score') }}: {{ $data['latest_score'] }}</div>
                                         <div class="text-xs text-gray-400">{{ __(ucfirst($data['latest_cycle'])) }}</div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm">
@@ -280,10 +278,10 @@
                                         @endif
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                        @if($data['score_change'] > 0)
-                                            <span class="text-green-600 font-medium">+{{ $data['score_change'] }}</span>
-                                        @elseif($data['score_change'] < 0)
-                                            <span class="text-red-600 font-medium">{{ $data['score_change'] }}</span>
+                                        @if($data['level_improved'] > 0)
+                                            <span class="text-green-600 font-medium">+{{ $data['level_improved'] }} {{ __('levels') }}</span>
+                                        @elseif($data['level_improved'] < 0)
+                                            <span class="text-red-600 font-medium">{{ $data['level_improved'] }} {{ __('levels') }}</span>
                                         @else
                                             <span class="text-gray-500">0</span>
                                         @endif

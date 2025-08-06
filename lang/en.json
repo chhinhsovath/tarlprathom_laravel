@@ -77,5 +77,6 @@
     "Row :rowNum: Sex must be male or female": "Row :rowNum: Sex must be male or female",
     "Active": "Active",
     "Inactive": "Inactive",
-    "School:": "School:"
+    "School:": "School:",
+    "Mentoring": "Mentoring"
 }

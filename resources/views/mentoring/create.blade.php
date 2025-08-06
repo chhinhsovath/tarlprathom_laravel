@@ -3,7 +3,7 @@
         <div class="w-full px-4 sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
-                    <h3 class="text-lg font-medium text-gray-900 mb-6">{{ __('Mentoring Visit Questionnaire') }}</h3>
+                    <h3 class="text-lg font-medium text-gray-900 mb-6">{{ __('Mentor Visit - Observation Form') }}</h3>
                     
                     <form id="mentoringForm" method="POST" action="{{ route('mentoring.store') }}" enctype="multipart/form-data">
                         @csrf
@@ -24,10 +24,10 @@
                             <h4 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b">{{ __('Visit Details') }}</h4>
                             
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <!-- Visit Date -->
+                                <!-- កាលបរិច្ឆេទនៃការចុះ (Visit Date) -->
                                 <div>
                                     <label for="visit_date" class="block text-sm font-medium text-gray-700 mb-2">
-                                        {{ __('Date of Visit') }} <span class="text-red-500">*</span>
+                                        {{ __('កាលបរិច្ឆេទនៃការចុះ') }} <span class="text-red-500">*</span>
                                     </label>
                                     <input type="date" 
                                            id="visit_date" 
@@ -40,70 +40,89 @@
                                     @enderror
                                 </div>
                                 
-                                <!-- Region -->
-                                <div>
-                                    <label for="region" class="block text-sm font-medium text-gray-700 mb-2">
-                                        {{ __('Region') }} <span class="text-red-500">*</span>
-                                    </label>
-                                    <input type="text" 
-                                           id="region" 
-                                           name="region" 
-                                           value="{{ old('region') }}"
-                                           class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                                           required>
-                                    @error('region')
-                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                    @enderror
-                                </div>
-                                
-                                <!-- Province -->
+                                <!-- ខេត្ត (Province) -->
                                 <div>
                                     <label for="province" class="block text-sm font-medium text-gray-700 mb-2">
-                                        {{ __('Province') }} <span class="text-red-500">*</span>
+                                        {{ __('ខេត្ត') }} <span class="text-red-500">*</span>
                                     </label>
                                     <select id="province" 
                                             name="province" 
                                             class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                                             required>
                                         <option value="">{{ __('Select Province') }}</option>
-                                        @foreach($provinces as $province)
-                                            <option value="{{ $province }}" {{ old('province') == $province ? 'selected' : '' }}>
-                                                {{ $province }}
-                                            </option>
-                                        @endforeach
                                     </select>
                                     @error('province')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
                                 </div>
                                 
-                                <!-- Mentor (for admin) -->
-                                @if(auth()->user()->isAdmin())
+                                <!-- ស្រុក/ក្រុង (District) -->
                                 <div>
-                                    <label for="mentor_id" class="block text-sm font-medium text-gray-700 mb-2">
-                                        {{ __('Name of Mentor') }} <span class="text-red-500">*</span>
+                                    <label for="district" class="block text-sm font-medium text-gray-700 mb-2">
+                                        {{ __('ស្រុក/ក្រុង') }} <span class="text-red-500">*</span>
                                     </label>
-                                    <select id="mentor_id" 
-                                            name="mentor_id" 
+                                    <select id="district" 
+                                            name="district" 
                                             class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                                            required>
-                                        <option value="">{{ __('Select Mentor') }}</option>
-                                        @foreach($mentors as $mentor)
-                                            <option value="{{ $mentor->id }}" {{ old('mentor_id') == $mentor->id ? 'selected' : '' }}>
-                                                {{ $mentor->name }}
-                                            </option>
-                                        @endforeach
+                                            required disabled>
+                                        <option value="">{{ __('Select District') }}</option>
                                     </select>
-                                    @error('mentor_id')
+                                    @error('district')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
                                 </div>
-                                @endif
                                 
-                                <!-- School -->
+                                <!-- ឃុំ/សង្កាត់ (Commune) -->
+                                <div>
+                                    <label for="commune" class="block text-sm font-medium text-gray-700 mb-2">
+                                        {{ __('ឃុំ/សង្កាត់') }} <span class="text-red-500">*</span>
+                                    </label>
+                                    <select id="commune" 
+                                            name="commune" 
+                                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                            required disabled>
+                                        <option value="">{{ __('Select Commune') }}</option>
+                                    </select>
+                                    @error('commune')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                                
+                                <!-- ភូមិ (Village) -->
+                                <div>
+                                    <label for="village" class="block text-sm font-medium text-gray-700 mb-2">
+                                        {{ __('ភូមិ') }} <span class="text-red-500">*</span>
+                                    </label>
+                                    <select id="village" 
+                                            name="village" 
+                                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                            required disabled>
+                                        <option value="">{{ __('Select Village') }}</option>
+                                    </select>
+                                    @error('village')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                                
+                                
+                                <!-- ឈ្មោះទីប្រឹក្សាគរុកោសល្យ (Mentor Name) -->
+                                <div>
+                                    <label for="mentor_name" class="block text-sm font-medium text-gray-700 mb-2">
+                                        {{ __('ឈ្មោះទីប្រឹក្សាគរុកោសល្យ') }}
+                                    </label>
+                                    <input type="text" 
+                                           id="mentor_name" 
+                                           name="mentor_name" 
+                                           value="{{ auth()->user()->name }}"
+                                           class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                           readonly>
+                                    <input type="hidden" name="mentor_id" value="{{ auth()->user()->id }}">
+                                </div>
+                                
+                                <!-- ឈ្មោះសាលា (School Name) -->
                                 <div>
                                     <label for="school_id" class="block text-sm font-medium text-gray-700 mb-2">
-                                        {{ __('School Name') }} <span class="text-red-500">*</span>
+                                        {{ __('ឈ្មោះសាលា') }} <span class="text-red-500">*</span>
                                     </label>
                                     <select id="school_id" 
                                             name="school_id" 
@@ -111,8 +130,8 @@
                                             required>
                                         <option value="">{{ __('Select School') }}</option>
                                         @foreach($schools as $school)
-                                            <option value="{{ $school->id }}" {{ $selectedSchoolId == $school->id ? 'selected' : '' }}>
-                                                {{ $school->school_name }}
+                                            <option value="{{ $school->id }}" {{ old('school_id') == $school->id ? 'selected' : '' }}>
+                                                {{ $school->name }}
                                             </option>
                                         @endforeach
                                     </select>
@@ -121,48 +140,46 @@
                                     @enderror
                                 </div>
                                 
-                                <!-- Program Type -->
+                                <!-- ឈ្មោះគ្រូបង្រៀន (Teacher Name) -->
                                 <div>
-                                    <label for="program_type" class="block text-sm font-medium text-gray-700 mb-2">
-                                        {{ __('Program Type') }} <span class="text-red-500">*</span>
+                                    <label for="teacher_id" class="block text-sm font-medium text-gray-700 mb-2">
+                                        {{ __('ឈ្មោះគ្រូបង្រៀន') }} <span class="text-red-500">*</span>
                                     </label>
-                                    <input type="text" 
-                                           id="program_type" 
-                                           name="program_type" 
-                                           value="{{ old('program_type', 'TaRL') }}"
-                                           class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                                           required>
-                                    @error('program_type')
+                                    <select id="teacher_id" 
+                                            name="teacher_id" 
+                                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                            required>
+                                        <option value="">{{ __('Select Teacher') }}</option>
+                                    </select>
+                                    @error('teacher_id')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Section 2: Program Status -->
-                        <div class="questionnaire-section mb-8" data-section="program_status">
-                            <h4 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b">{{ __('Program Status') }}</h4>
+                        <!-- TaRL Class Status -->
+                        <div class="questionnaire-section mb-8" data-section="class_status">
+                            <h4 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b">{{ __('Class Status') }}</h4>
                             
-                            <div class="space-y-6">
-                                <!-- Class Taking Place -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <!-- តើថ្នាក់រៀន TaRL មានដំណើរការនៅថ្ងៃចុះអង្កេតដែរឬទេ? -->
                                 <div>
-                                    <p class="text-sm font-medium text-gray-700 mb-3">
-                                        {{ __('Is the TaRL class taking place on the day of the visit?') }} <span class="text-red-500">*</span>
-                                    </p>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                        {{ __('តើថ្នាក់រៀន TaRL មានដំណើរការនៅថ្ងៃចុះអង្កេតដែរឬទេ?') }} <span class="text-red-500">*</span>
+                                    </label>
                                     <div class="space-y-2">
-                                        <label class="flex items-center">
-                                            <input type="radio" name="class_in_session" value="Yes" 
-                                                   class="mr-2 text-indigo-600 focus:ring-indigo-500"
-                                                   {{ old('class_in_session') == 'Yes' ? 'checked' : '' }}
-                                                   required>
-                                            <span class="text-sm text-gray-700">{{ __('Yes') }}</span>
+                                        <label class="inline-flex items-center">
+                                            <input type="radio" name="class_in_session" value="1" 
+                                                   class="form-radio" required
+                                                   {{ old('class_in_session') == '1' ? 'checked' : '' }}>
+                                            <span class="ml-2">{{ __('បាទ/ចាស') }}</span>
                                         </label>
-                                        <label class="flex items-center">
-                                            <input type="radio" name="class_in_session" value="No" 
-                                                   class="mr-2 text-indigo-600 focus:ring-indigo-500"
-                                                   {{ old('class_in_session') == 'No' ? 'checked' : '' }}
-                                                   required>
-                                            <span class="text-sm text-gray-700">{{ __('No') }}</span>
+                                        <label class="inline-flex items-center ml-6">
+                                            <input type="radio" name="class_in_session" value="0" 
+                                                   class="form-radio" required
+                                                   {{ old('class_in_session') == '0' ? 'checked' : '' }}>
+                                            <span class="ml-2">{{ __('ទេ') }}</span>
                                         </label>
                                     </div>
                                     @error('class_in_session')
@@ -170,73 +187,39 @@
                                     @enderror
                                 </div>
                                 
-                                <!-- Reason for Not Taking Place -->
-                                <div id="notTakingPlaceReason" class="hidden">
+                                <!-- ហេតុអ្វីបានជាថ្នាក់រៀន TaRL មិនដំណើរការ? -->
+                                <div id="class_not_in_session_reason_container" style="display: none;">
                                     <label for="class_not_in_session_reason" class="block text-sm font-medium text-gray-700 mb-2">
-                                        {{ __('Why is the TaRL class not taking place?') }} <span class="text-red-500">*</span>
+                                        {{ __('ហេតុអ្វីបានជាថ្នាក់រៀន TaRL មិនដំណើរការ?') }}
                                     </label>
-                                    <select id="class_not_in_session_reason" 
-                                            name="class_not_in_session_reason" 
-                                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                                        <option value="">{{ __('Select Reason') }}</option>
-                                        <option value="Teacher is Absent" {{ old('class_not_in_session_reason') == 'Teacher is Absent' ? 'selected' : '' }}>{{ __('Teacher is Absent') }}</option>
-                                        <option value="Most students are absent" {{ old('class_not_in_session_reason') == 'Most students are absent' ? 'selected' : '' }}>{{ __('Most students are absent') }}</option>
-                                        <option value="The students have exams" {{ old('class_not_in_session_reason') == 'The students have exams' ? 'selected' : '' }}>{{ __('The students have exams') }}</option>
-                                        <option value="The school has declared a holiday" {{ old('class_not_in_session_reason') == 'The school has declared a holiday' ? 'selected' : '' }}>{{ __('The school has declared a holiday') }}</option>
-                                        <option value="Others" {{ old('class_not_in_session_reason') == 'Others' ? 'selected' : '' }}>{{ __('Others') }}</option>
-                                    </select>
+                                    <textarea id="class_not_in_session_reason" 
+                                              name="class_not_in_session_reason" 
+                                              rows="3"
+                                              class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">{{ old('class_not_in_session_reason') }}</textarea>
                                     @error('class_not_in_session_reason')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
                                 </div>
                             </div>
-                        </div>
-
-                        <!-- Section 3: Teacher and Observation (shown only if class is in session) -->
-                        <div id="observationSection" class="questionnaire-section mb-8 hidden" data-section="observation">
-                            <h4 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b">{{ __('Teacher and Observation Details') }}</h4>
                             
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <!-- Teacher -->
-                                <div class="md:col-span-2">
-                                    <label for="teacher_id" class="block text-sm font-medium text-gray-700 mb-2">
-                                        {{ __('Name of Teacher') }} <span class="text-red-500">*</span>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6" id="class_details_section">
+                                <!-- តើអ្នកបានអង្កេតការបង្រៀនពេញមួយវគ្គដែរឬទេ? -->
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                        {{ __('តើអ្នកបានអង្កេតការបង្រៀនពេញមួយវគ្គដែរឬទេ?') }} <span class="text-red-500">*</span>
                                     </label>
-                                    <select id="teacher_id" 
-                                            name="teacher_id" 
-                                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                                            required>
-                                        <option value="">{{ __('Select Teacher') }}</option>
-                                        @foreach($teachers as $teacher)
-                                            <option value="{{ $teacher->id }}" 
-                                                    data-school="{{ $teacher->school_id }}"
-                                                    {{ $selectedTeacherId == $teacher->id ? 'selected' : '' }}>
-                                                {{ $teacher->name }}{{ $teacher->school ? ' (' . $teacher->school->school_name . ')' : '' }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    @error('teacher_id')
-                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                    @enderror
-                                </div>
-                                
-                                <!-- Full Session Observed -->
-                                <div class="md:col-span-2">
-                                    <p class="text-sm font-medium text-gray-700 mb-3">
-                                        {{ __('Did you observe the full session?') }} <span class="text-red-500">*</span>
-                                    </p>
                                     <div class="space-y-2">
-                                        <label class="flex items-center">
-                                            <input type="radio" name="full_session_observed" value="Yes" 
-                                                   class="mr-2 text-indigo-600 focus:ring-indigo-500"
-                                                   {{ old('full_session_observed') == 'Yes' ? 'checked' : '' }}>
-                                            <span class="text-sm text-gray-700">{{ __('Yes') }}</span>
+                                        <label class="inline-flex items-center">
+                                            <input type="radio" name="full_session_observed" value="1" 
+                                                   class="form-radio"
+                                                   {{ old('full_session_observed') == '1' ? 'checked' : '' }}>
+                                            <span class="ml-2">{{ __('បាទ/ចាស') }}</span>
                                         </label>
-                                        <label class="flex items-center">
-                                            <input type="radio" name="full_session_observed" value="No" 
-                                                   class="mr-2 text-indigo-600 focus:ring-indigo-500"
-                                                   {{ old('full_session_observed') == 'No' ? 'checked' : '' }}>
-                                            <span class="text-sm text-gray-700">{{ __('No') }}</span>
+                                        <label class="inline-flex items-center ml-6">
+                                            <input type="radio" name="full_session_observed" value="0" 
+                                                   class="form-radio"
+                                                   {{ old('full_session_observed') == '0' ? 'checked' : '' }}>
+                                            <span class="ml-2">{{ __('ទេ') }}</span>
                                         </label>
                                     </div>
                                     @error('full_session_observed')
@@ -244,35 +227,18 @@
                                     @enderror
                                 </div>
                                 
-                                <!-- Grade Group -->
+                                <!-- កម្រិតថ្នាក់ដែលបានអង្កេត -->
                                 <div>
-                                    <label for="grade_group" class="block text-sm font-medium text-gray-700 mb-2">
-                                        {{ __('Grade Group') }} <span class="text-red-500">*</span>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                        {{ __('កម្រិតថ្នាក់ដែលបានអង្កេត') }} <span class="text-red-500">*</span>
                                     </label>
-                                    <select id="grade_group" 
-                                            name="grade_group" 
-                                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                                        <option value="">{{ __('Select Grade Group') }}</option>
-                                        <option value="Std. 1-2" {{ old('grade_group') == 'Std. 1-2' ? 'selected' : '' }}>{{ __('Std. 1-2') }}</option>
-                                        <option value="Std. 3-6" {{ old('grade_group') == 'Std. 3-6' ? 'selected' : '' }}>{{ __('Std. 3-6') }}</option>
-                                    </select>
-                                    @error('grade_group')
-                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                    @enderror
-                                </div>
-                                
-                                <!-- Grades Observed -->
-                                <div>
-                                    <p class="text-sm font-medium text-gray-700 mb-2">
-                                        {{ __('Grade(s) Observed') }} <span class="text-red-500">*</span>
-                                    </p>
-                                    <div class="grid grid-cols-3 gap-2">
-                                        @foreach(['1', '2', '3', '4', '5', '6'] as $grade)
-                                        <label class="flex items-center">
+                                    <div class="space-y-2">
+                                        @foreach(['ទី៤', 'ទី៥'] as $grade)
+                                        <label class="inline-flex items-center mr-4">
                                             <input type="checkbox" name="grades_observed[]" value="{{ $grade }}" 
-                                                   class="mr-2 text-indigo-600 focus:ring-indigo-500"
+                                                   class="form-checkbox"
                                                    {{ in_array($grade, old('grades_observed', [])) ? 'checked' : '' }}>
-                                            <span class="text-sm text-gray-700">{{ __('Grade') }} {{ $grade }}</span>
+                                            <span class="ml-2">{{ $grade }}</span>
                                         </label>
                                         @endforeach
                                     </div>
@@ -281,107 +247,156 @@
                                     @enderror
                                 </div>
                                 
-                                <!-- Subject Observed -->
-                                <div class="md:col-span-2">
+                                <!-- មុខវិជ្ជាដែលបានអង្កេត -->
+                                <div>
                                     <label for="subject_observed" class="block text-sm font-medium text-gray-700 mb-2">
-                                        {{ __('Subject Observed') }} <span class="text-red-500">*</span>
+                                        {{ __('មុខវិជ្ជាដែលបានអង្កេត') }} <span class="text-red-500">*</span>
                                     </label>
                                     <select id="subject_observed" 
                                             name="subject_observed" 
                                             class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                                         <option value="">{{ __('Select Subject') }}</option>
-                                        <option value="Language" {{ old('subject_observed') == 'Language' ? 'selected' : '' }}>{{ __('Language') }}</option>
-                                        <option value="Numeracy" {{ old('subject_observed') == 'Numeracy' ? 'selected' : '' }}>{{ __('Numeracy') }}</option>
+                                        <option value="ភាសាខ្មែរ" {{ old('subject_observed') == 'ភាសាខ្មែរ' ? 'selected' : '' }}>{{ __('ភាសាខ្មែរ') }}</option>
+                                        <option value="គណិតវិទ្យា" {{ old('subject_observed') == 'គណិតវិទ្យា' ? 'selected' : '' }}>{{ __('គណិតវិទ្យា') }}</option>
                                     </select>
                                     @error('subject_observed')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
                                 </div>
                                 
-                                <!-- Language Levels -->
-                                <div id="languageLevelsDiv" class="md:col-span-2 hidden">
-                                    <p class="text-sm font-medium text-gray-700 mb-2">
-                                        {{ __('TaRL Level(s) observed (Language)') }} <span class="text-red-500">*</span>
-                                    </p>
-                                    <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
-                                        @foreach(['Beginner', 'Letter Level', 'Word', 'Paragraph', 'Story'] as $level)
-                                        <label class="flex items-center">
+                                <!-- កម្រិតសមត្ថភាព TaRL (ភាសាខ្មែរ) -->
+                                <div id="language_levels_container" style="display: none;">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                        {{ __('កម្រិតសមត្ថភាព TaRL (ភាសាខ្មែរ) ដែលបានអង្កេត') }}
+                                    </label>
+                                    <div class="space-y-2">
+                                        @foreach(['កម្រិតដំបូង', 'តួអក្សរ', 'ពាក្យ', 'កថាខណ្ឌ', 'អត្ថបទខ្លី', 'ការយល់ន័យទី១', 'ការយល់ន័យទី២'] as $level)
+                                        <label class="inline-flex items-center mr-4">
                                             <input type="checkbox" name="language_levels_observed[]" value="{{ $level }}" 
-                                                   class="mr-2 text-indigo-600 focus:ring-indigo-500"
+                                                   class="form-checkbox"
                                                    {{ in_array($level, old('language_levels_observed', [])) ? 'checked' : '' }}>
-                                            <span class="text-sm text-gray-700">{{ __($level) }}</span>
+                                            <span class="ml-2">{{ $level }}</span>
                                         </label>
                                         @endforeach
                                     </div>
-                                    @error('language_levels_observed')
+                                </div>
+                                
+                                <!-- កម្រិតសមត្ថភាព (គណិតវិទ្យា) -->
+                                <div id="numeracy_levels_container" style="display: none;">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                        {{ __('កម្រិតសមត្ថភាព (គណិតវិទ្យា) ដែលបានអង្កេត') }}
+                                    </label>
+                                    <div class="space-y-2">
+                                        @foreach(['កម្រិតដំបូង', 'លេខ១ខ្ទង់', 'លេខ២ខ្ទង់', 'ប្រមាណវិធីដក', 'ប្រមាណវិធីចែក', 'ចំណោទ'] as $level)
+                                        <label class="inline-flex items-center mr-4">
+                                            <input type="checkbox" name="numeracy_levels_observed[]" value="{{ $level }}" 
+                                                   class="form-checkbox"
+                                                   {{ in_array($level, old('numeracy_levels_observed', [])) ? 'checked' : '' }}>
+                                            <span class="ml-2">{{ $level }}</span>
+                                        </label>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6" id="student_stats_section">
+                                <!-- ចំនួនសិស្សសរុបក្នុងថ្នាក់ TaRL -->
+                                <div>
+                                    <label for="total_students_enrolled" class="block text-sm font-medium text-gray-700 mb-2">
+                                        {{ __('ចំនួនសិស្សសរុបក្នុងថ្នាក់ TaRL') }}
+                                    </label>
+                                    <input type="number" 
+                                           id="total_students_enrolled" 
+                                           name="total_students_enrolled" 
+                                           value="{{ old('total_students_enrolled') }}"
+                                           max="20"
+                                           class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                    @error('total_students_enrolled')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
                                 </div>
                                 
-                                <!-- Numeracy Levels -->
-                                <div id="numeracyLevelsDiv" class="md:col-span-2 hidden">
-                                    <p class="text-sm font-medium text-gray-700 mb-2">
-                                        {{ __('TaRL Level(s) observed (Numeracy)') }} <span class="text-red-500">*</span>
-                                    </p>
-                                    <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
-                                        @foreach(['Beginner', '1-Digit', '2-Digit', 'Subtraction', 'Division'] as $level)
-                                        <label class="flex items-center">
-                                            <input type="checkbox" name="numeracy_levels_observed[]" value="{{ $level }}" 
-                                                   class="mr-2 text-indigo-600 focus:ring-indigo-500"
-                                                   {{ in_array($level, old('numeracy_levels_observed', [])) ? 'checked' : '' }}>
-                                            <span class="text-sm text-gray-700">{{ __($level) }}</span>
-                                        </label>
-                                        @endforeach
-                                    </div>
-                                    @error('numeracy_levels_observed')
+                                <!-- ចំនួនសិស្សមានវត្តមាននៅថ្ងៃចុះអង្កេត -->
+                                <div>
+                                    <label for="students_present" class="block text-sm font-medium text-gray-700 mb-2">
+                                        {{ __('ចំនួនសិស្សមានវត្តមាននៅថ្ងៃចុះអង្កេត') }}
+                                    </label>
+                                    <input type="number" 
+                                           id="students_present" 
+                                           name="students_present" 
+                                           value="{{ old('students_present') }}"
+                                           class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                    @error('students_present')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                                
+                                <!-- ចំនួនសិស្សដែលមានការកើនឡើងសមត្ថភាពធៀបនឹងសប្តាហ៍មុន -->
+                                <div>
+                                    <label for="students_improved_from_last_week" class="block text-sm font-medium text-gray-700 mb-2">
+                                        {{ __('ចំនួនសិស្សដែលមានការកើនឡើងសមត្ថភាពធៀបនឹងសប្តាហ៍មុន') }}
+                                    </label>
+                                    <input type="number" 
+                                           id="students_improved_from_last_week" 
+                                           name="students_improved_from_last_week" 
+                                           value="{{ old('students_improved_from_last_week') }}"
+                                           class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                    @error('students_improved_from_last_week')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                                
+                                <!-- តើមានថ្នាក់រៀនប៉ុន្មានបានដំណើរការមុនថ្ងៃចុះអង្កេតនេះ? -->
+                                <div>
+                                    <label for="classes_conducted_before_visit" class="block text-sm font-medium text-gray-700 mb-2">
+                                        {{ __('តើមានថ្នាក់រៀនប៉ុន្មានបានដំណើរការមុនថ្ងៃចុះអង្កេតនេះ?') }}
+                                    </label>
+                                    <input type="number" 
+                                           id="classes_conducted_before_visit" 
+                                           name="classes_conducted_before_visit" 
+                                           value="{{ old('classes_conducted_before_visit') }}"
+                                           class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                    @error('classes_conducted_before_visit')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Section 4: Delivery Questions (shown only if class is in session) -->
-                        <div id="deliverySection" class="questionnaire-section mb-8 hidden" data-section="delivery">
+                        <!-- Delivery Questions -->
+                        <div class="questionnaire-section mb-8" data-section="delivery_questions" id="delivery_section">
                             <h4 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b">{{ __('Delivery Questions') }}</h4>
                             
-                            <div class="space-y-6">
-                                <!-- Class Started on Time -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <!-- តើថ្នាក់រៀនបានចាប់ផ្តើមទាន់ពេលដែរឬទេ (ក្នុងរយៈពេល ៥ នាទី)? -->
                                 <div>
-                                    <p class="text-sm font-medium text-gray-700 mb-3">
-                                        {{ __('Did the class start on time (i.e. within 5 minutes of the scheduled time)?') }} <span class="text-red-500">*</span>
-                                    </p>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                        {{ __('តើថ្នាក់រៀនបានចាប់ផ្តើមទាន់ពេលដែរឬទេ (ក្នុងរយៈពេល ៥ នាទី)?') }}
+                                    </label>
                                     <div class="space-y-2">
-                                        <label class="flex items-center">
-                                            <input type="radio" name="class_started_on_time" value="Yes" 
-                                                   class="mr-2 text-indigo-600 focus:ring-indigo-500"
-                                                   {{ old('class_started_on_time') == 'Yes' ? 'checked' : '' }}>
-                                            <span class="text-sm text-gray-700">{{ __('Yes') }}</span>
+                                        @foreach(['បាទ/ចាស' => 1, 'ទេ' => 0, 'មិនដឹង' => -1] as $label => $value)
+                                        <label class="inline-flex items-center mr-4">
+                                            <input type="radio" name="class_started_on_time" value="{{ $value }}" 
+                                                   class="form-radio"
+                                                   {{ old('class_started_on_time') == $value ? 'checked' : '' }}>
+                                            <span class="ml-2">{{ __($label) }}</span>
                                         </label>
-                                        <label class="flex items-center">
-                                            <input type="radio" name="class_started_on_time" value="No" 
-                                                   class="mr-2 text-indigo-600 focus:ring-indigo-500"
-                                                   {{ old('class_started_on_time') == 'No' ? 'checked' : '' }}>
-                                            <span class="text-sm text-gray-700">{{ __('No') }}</span>
-                                        </label>
+                                        @endforeach
                                     </div>
                                     @error('class_started_on_time')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
                                 </div>
                                 
-                                <!-- Late Start Reason -->
-                                <div id="lateStartReason" class="hidden">
+                                <!-- ហេតុអ្វីបានជាថ្នាក់រៀនមិនចាប់ផ្តើមទាន់ពេល? -->
+                                <div id="late_start_reason_container" style="display: none;">
                                     <label for="late_start_reason" class="block text-sm font-medium text-gray-700 mb-2">
-                                        {{ __('If no, then why did the class not start on time?') }} <span class="text-red-500">*</span>
+                                        {{ __('ហេតុអ្វីបានជាថ្នាក់រៀនមិនចាប់ផ្តើមទាន់ពេល?') }}
                                     </label>
-                                    <select id="late_start_reason" 
-                                            name="late_start_reason" 
-                                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                                        <option value="">{{ __('Select Reason') }}</option>
-                                        <option value="Teacher came late" {{ old('late_start_reason') == 'Teacher came late' ? 'selected' : '' }}>{{ __('Teacher came late') }}</option>
-                                        <option value="Pupils came late" {{ old('late_start_reason') == 'Pupils came late' ? 'selected' : '' }}>{{ __('Pupils came late') }}</option>
-                                        <option value="Others" {{ old('late_start_reason') == 'Others' ? 'selected' : '' }}>{{ __('Others') }}</option>
-                                    </select>
+                                    <textarea id="late_start_reason" 
+                                              name="late_start_reason" 
+                                              rows="3"
+                                              class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">{{ old('late_start_reason') }}</textarea>
                                     @error('late_start_reason')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
@@ -389,871 +404,527 @@
                             </div>
                         </div>
 
-                        <!-- Section 5: Classroom Related Questions (shown only if class is in session) -->
-                        <div id="classroomSection" class="questionnaire-section mb-8 hidden" data-section="classroom">
+                        <!-- Classroom Related Questions -->
+                        <div class="questionnaire-section mb-8" data-section="classroom_questions" id="classroom_section">
                             <h4 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b">{{ __('Classroom Related Questions') }}</h4>
                             
                             <div class="space-y-6">
-                                <!-- Materials Present -->
+                                <!-- តើសម្ភារឧបទេសអ្វីខ្លះដែលអ្នកបានឃើញមាននៅក្នុងថ្នាក់រៀន? -->
                                 <div>
-                                    <p class="text-sm font-medium text-gray-700 mb-2">
-                                        {{ __('Which materials did you see present in the classroom?') }}
-                                    </p>
-                                    <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
-                                        @foreach(['TaRL materials', 'Teaching aids', 'Student notebooks', 'Reading materials', 'Math manipulatives', 'Flash cards', 'Number charts', 'Letter charts', 'Story books', 'Activity sheets'] as $material)
-                                        <label class="flex items-center">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                        {{ __('តើសម្ភារឧបទេសអ្វីខ្លះដែលអ្នកបានឃើញមាននៅក្នុងថ្នាក់រៀន?') }}
+                                    </label>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                                        @php
+                                        $materials = [
+                                            'តារាងលេខ ០-៩៩',
+                                            'តារាងតម្លៃលេខតាមខ្ទង់',
+                                            'បណ្ណតម្លៃលេខតាមខ្ទង់',
+                                            'តារាងបូកលេខដោយផ្ទាល់មាត់',
+                                            'តារាងដកលេខដោយផ្ទាល់មាត់',
+                                            'តារាងគុណលេខដោយផ្ទាល់មាត់',
+                                            'ប្រាក់លេង',
+                                            'សៀវភៅគ្រូមុខវិទ្យាគណិតវិទ្យា',
+                                            'ទុយោ',
+                                            'កូនសៀវភៅចំណោទ (បូក ដក គុណ ចែក)',
+                                            'តារាងព្យាង្គ',
+                                            'បណ្ណរូបភាព',
+                                            'ការតម្រៀបល្បះ និងកូនសៀវភៅការកែតម្រូវកំហុស',
+                                            'បណ្ណពាក្យ/បណ្ណព្យាង្គ',
+                                            'បណ្ណរឿង/អត្ថបទ',
+                                            'សៀវភៅគ្រូមុខវិជ្ជាភាសាខ្មែរ'
+                                        ];
+                                        @endphp
+                                        @foreach($materials as $material)
+                                        <label class="inline-flex items-center">
                                             <input type="checkbox" name="materials_present[]" value="{{ $material }}" 
-                                                   class="mr-2 text-indigo-600 focus:ring-indigo-500"
+                                                   class="form-checkbox"
                                                    {{ in_array($material, old('materials_present', [])) ? 'checked' : '' }}>
-                                            <span class="text-sm text-gray-700">{{ __($material) }}</span>
+                                            <span class="ml-2 text-sm">{{ $material }}</span>
                                         </label>
                                         @endforeach
                                     </div>
-                                    @error('materials_present')
-                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                    @enderror
                                 </div>
                                 
-                                <!-- Children Grouped Appropriately -->
+                                <!-- តើសិស្សត្រូវបានបែងចែកជាក្រុមសមស្របតាមកម្រិតសមត្ថភាពដែរឬទេ? -->
                                 <div>
-                                    <p class="text-sm font-medium text-gray-700 mb-3">
-                                        {{ __('Were the children grouped appropriately?') }} <span class="text-red-500">*</span>
-                                    </p>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                        {{ __('តើសិស្សត្រូវបានបែងចែកជាក្រុមសមស្របតាមកម្រិតសមត្ថភាពដែរឬទេ?') }}
+                                    </label>
                                     <div class="space-y-2">
-                                        <label class="flex items-center">
-                                            <input type="radio" name="children_grouped_appropriately" value="Yes" 
-                                                   class="mr-2 text-indigo-600 focus:ring-indigo-500"
-                                                   {{ old('children_grouped_appropriately') == 'Yes' ? 'checked' : '' }}>
-                                            <span class="text-sm text-gray-700">{{ __('Yes') }}</span>
+                                        <label class="inline-flex items-center">
+                                            <input type="radio" name="children_grouped_appropriately" value="1" 
+                                                   class="form-radio"
+                                                   {{ old('children_grouped_appropriately') == '1' ? 'checked' : '' }}>
+                                            <span class="ml-2">{{ __('បាទ/ចាស') }}</span>
                                         </label>
-                                        <label class="flex items-center">
-                                            <input type="radio" name="children_grouped_appropriately" value="No" 
-                                                   class="mr-2 text-indigo-600 focus:ring-indigo-500"
-                                                   {{ old('children_grouped_appropriately') == 'No' ? 'checked' : '' }}>
-                                            <span class="text-sm text-gray-700">{{ __('No') }}</span>
+                                        <label class="inline-flex items-center ml-6">
+                                            <input type="radio" name="children_grouped_appropriately" value="0" 
+                                                   class="form-radio"
+                                                   {{ old('children_grouped_appropriately') == '0' ? 'checked' : '' }}>
+                                            <span class="ml-2">{{ __('ទេ') }}</span>
                                         </label>
                                     </div>
-                                    @error('children_grouped_appropriately')
-                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                    @enderror
                                 </div>
                                 
-                                <!-- Students Fully Involved -->
+                                <!-- តើសិស្សបានចូលរួមយ៉ាងសកម្មក្នុងសកម្មភាពដែរឬទេ? -->
                                 <div>
-                                    <p class="text-sm font-medium text-gray-700 mb-3">
-                                        {{ __('Were the students fully involved in the activities?') }} <span class="text-red-500">*</span>
-                                    </p>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                        {{ __('តើសិស្សបានចូលរួមយ៉ាងសកម្មក្នុងសកម្មភាពដែរឬទេ?') }}
+                                    </label>
                                     <div class="space-y-2">
-                                        <label class="flex items-center">
-                                            <input type="radio" name="students_fully_involved" value="Yes" 
-                                                   class="mr-2 text-indigo-600 focus:ring-indigo-500"
-                                                   {{ old('students_fully_involved') == 'Yes' ? 'checked' : '' }}>
-                                            <span class="text-sm text-gray-700">{{ __('Yes') }}</span>
+                                        <label class="inline-flex items-center">
+                                            <input type="radio" name="students_fully_involved" value="1" 
+                                                   class="form-radio"
+                                                   {{ old('students_fully_involved') == '1' ? 'checked' : '' }}>
+                                            <span class="ml-2">{{ __('បាទ/ចាស') }}</span>
                                         </label>
-                                        <label class="flex items-center">
-                                            <input type="radio" name="students_fully_involved" value="No" 
-                                                   class="mr-2 text-indigo-600 focus:ring-indigo-500"
-                                                   {{ old('students_fully_involved') == 'No' ? 'checked' : '' }}>
-                                            <span class="text-sm text-gray-700">{{ __('No') }}</span>
+                                        <label class="inline-flex items-center ml-6">
+                                            <input type="radio" name="students_fully_involved" value="0" 
+                                                   class="form-radio"
+                                                   {{ old('students_fully_involved') == '0' ? 'checked' : '' }}>
+                                            <span class="ml-2">{{ __('ទេ') }}</span>
                                         </label>
                                     </div>
-                                    @error('students_fully_involved')
-                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                    @enderror
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Section 6: Teacher Related Questions (shown only if class is in session) -->
-                        <div id="teacherQuestionsSection" class="questionnaire-section mb-8 hidden" data-section="teacher_questions">
+                        <!-- Teacher Related Questions -->
+                        <div class="questionnaire-section mb-8" data-section="teacher_questions" id="teacher_section">
                             <h4 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b">{{ __('Teacher Related Questions') }}</h4>
                             
-                            <div class="space-y-6">
-                                <!-- Has Session Plan -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <!-- តើគ្រូមានកិច្ចតែងការបង្រៀន (ផែនការមេរៀន) ដែរឬទេ? -->
                                 <div>
-                                    <p class="text-sm font-medium text-gray-700 mb-3">
-                                        {{ __('Did the teacher have a session plan?') }} <span class="text-red-500">*</span>
-                                    </p>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                        {{ __('តើគ្រូមានកិច្ចតែងការបង្រៀន (ផែនការមេរៀន) ដែរឬទេ?') }}
+                                    </label>
                                     <div class="space-y-2">
-                                        <label class="flex items-center">
-                                            <input type="radio" name="has_session_plan" value="Yes" 
-                                                   class="mr-2 text-indigo-600 focus:ring-indigo-500"
-                                                   {{ old('has_session_plan') == 'Yes' ? 'checked' : '' }}>
-                                            <span class="text-sm text-gray-700">{{ __('Yes') }}</span>
+                                        <label class="inline-flex items-center">
+                                            <input type="radio" name="has_session_plan" value="1" 
+                                                   class="form-radio"
+                                                   {{ old('has_session_plan') == '1' ? 'checked' : '' }}>
+                                            <span class="ml-2">{{ __('បាទ/ចាស') }}</span>
                                         </label>
-                                        <label class="flex items-center">
-                                            <input type="radio" name="has_session_plan" value="No" 
-                                                   class="mr-2 text-indigo-600 focus:ring-indigo-500"
-                                                   {{ old('has_session_plan') == 'No' ? 'checked' : '' }}>
-                                            <span class="text-sm text-gray-700">{{ __('No') }}</span>
+                                        <label class="inline-flex items-center ml-6">
+                                            <input type="radio" name="has_session_plan" value="0" 
+                                                   class="form-radio"
+                                                   {{ old('has_session_plan') == '0' ? 'checked' : '' }}>
+                                            <span class="ml-2">{{ __('ទេ') }}</span>
                                         </label>
                                     </div>
-                                    @error('has_session_plan')
-                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                    @enderror
                                 </div>
                                 
-                                <!-- No Session Plan Reason -->
-                                <div id="noSessionPlanReason" class="hidden">
+                                <!-- ហេតុអ្វីបានជាគ្រូមិនមានកិច្ចតែងការបង្រៀន? -->
+                                <div id="no_session_plan_reason_container" style="display: none;">
                                     <label for="no_session_plan_reason" class="block text-sm font-medium text-gray-700 mb-2">
-                                        {{ __('Why did the teacher not have a session plan?') }}
+                                        {{ __('ហេតុអ្វីបានជាគ្រូមិនមានកិច្ចតែងការបង្រៀន?') }}
                                     </label>
-                                    <input type="text" 
-                                           id="no_session_plan_reason" 
-                                           name="no_session_plan_reason" 
-                                           value="{{ old('no_session_plan_reason') }}"
-                                           class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                                    @error('no_session_plan_reason')
-                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                    @enderror
+                                    <textarea id="no_session_plan_reason" 
+                                              name="no_session_plan_reason" 
+                                              rows="3"
+                                              class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">{{ old('no_session_plan_reason') }}</textarea>
                                 </div>
-                                
-                                <!-- Followed Session Plan -->
-                                <div id="followedSessionPlanDiv" class="hidden">
-                                    <p class="text-sm font-medium text-gray-700 mb-3">
-                                        {{ __('Did the teacher follow the session plan?') }} <span class="text-red-500">*</span>
-                                    </p>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6" id="session_plan_details" style="display: none;">
+                                <!-- តើគ្រូបានបង្រៀនតាមកិច្ចតែងការបង្រៀនដែរឬទេ? -->
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                        {{ __('តើគ្រូបានបង្រៀនតាមកិច្ចតែងការបង្រៀនដែរឬទេ?') }}
+                                    </label>
                                     <div class="space-y-2">
-                                        <label class="flex items-center">
-                                            <input type="radio" name="followed_session_plan" value="Yes" 
-                                                   class="mr-2 text-indigo-600 focus:ring-indigo-500"
-                                                   {{ old('followed_session_plan') == 'Yes' ? 'checked' : '' }}>
-                                            <span class="text-sm text-gray-700">{{ __('Yes') }}</span>
+                                        <label class="inline-flex items-center">
+                                            <input type="radio" name="followed_session_plan" value="1" 
+                                                   class="form-radio"
+                                                   {{ old('followed_session_plan') == '1' ? 'checked' : '' }}>
+                                            <span class="ml-2">{{ __('បាទ/ចាស') }}</span>
                                         </label>
-                                        <label class="flex items-center">
-                                            <input type="radio" name="followed_session_plan" value="No" 
-                                                   class="mr-2 text-indigo-600 focus:ring-indigo-500"
-                                                   {{ old('followed_session_plan') == 'No' ? 'checked' : '' }}>
-                                            <span class="text-sm text-gray-700">{{ __('No') }}</span>
+                                        <label class="inline-flex items-center ml-6">
+                                            <input type="radio" name="followed_session_plan" value="0" 
+                                                   class="form-radio"
+                                                   {{ old('followed_session_plan') == '0' ? 'checked' : '' }}>
+                                            <span class="ml-2">{{ __('ទេ') }}</span>
                                         </label>
                                     </div>
-                                    @error('followed_session_plan')
-                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                    @enderror
                                 </div>
                                 
-                                <!-- No Follow Plan Reason -->
-                                <div id="noFollowPlanReason" class="hidden">
+                                <!-- ហេតុអ្វីបានជាគ្រូមិនបានបង្រៀនតាមកិច្ចតែងការបង្រៀន? -->
+                                <div id="no_follow_plan_reason_container" style="display: none;">
                                     <label for="no_follow_plan_reason" class="block text-sm font-medium text-gray-700 mb-2">
-                                        {{ __('Why did the teacher not follow the session plan?') }}
+                                        {{ __('ហេតុអ្វីបានជាគ្រូមិនបានបង្រៀនតាមកិច្ចតែងការបង្រៀន?') }}
                                     </label>
-                                    <input type="text" 
-                                           id="no_follow_plan_reason" 
-                                           name="no_follow_plan_reason" 
-                                           value="{{ old('no_follow_plan_reason') }}"
-                                           class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                                    @error('no_follow_plan_reason')
-                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                    @enderror
+                                    <textarea id="no_follow_plan_reason" 
+                                              name="no_follow_plan_reason" 
+                                              rows="3"
+                                              class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">{{ old('no_follow_plan_reason') }}</textarea>
                                 </div>
                                 
-                                <!-- Session Plan Appropriate -->
-                                <div id="sessionPlanAppropriateDiv" class="hidden">
-                                    <p class="text-sm font-medium text-gray-700 mb-3">
-                                        {{ __('Was the session plan appropriate for the children\'s learning level?') }} <span class="text-red-500">*</span>
-                                    </p>
+                                <!-- តើកិច្ចតែងការបង្រៀនសមស្របនឹងកម្រិតសមត្ថភាពរបស់សិស្សដែរឬទេ? -->
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                        {{ __('តើកិច្ចតែងការបង្រៀនសមស្របនឹងកម្រិតសមត្ថភាពរបស់សិស្សដែរឬទេ?') }}
+                                    </label>
                                     <div class="space-y-2">
-                                        <label class="flex items-center">
-                                            <input type="radio" name="session_plan_appropriate" value="Yes" 
-                                                   class="mr-2 text-indigo-600 focus:ring-indigo-500"
-                                                   {{ old('session_plan_appropriate') == 'Yes' ? 'checked' : '' }}>
-                                            <span class="text-sm text-gray-700">{{ __('Yes') }}</span>
+                                        <label class="inline-flex items-center">
+                                            <input type="radio" name="session_plan_appropriate" value="1" 
+                                                   class="form-radio"
+                                                   {{ old('session_plan_appropriate') == '1' ? 'checked' : '' }}>
+                                            <span class="ml-2">{{ __('បាទ/ចាស') }}</span>
                                         </label>
-                                        <label class="flex items-center">
-                                            <input type="radio" name="session_plan_appropriate" value="No" 
-                                                   class="mr-2 text-indigo-600 focus:ring-indigo-500"
-                                                   {{ old('session_plan_appropriate') == 'No' ? 'checked' : '' }}>
-                                            <span class="text-sm text-gray-700">{{ __('No') }}</span>
+                                        <label class="inline-flex items-center ml-6">
+                                            <input type="radio" name="session_plan_appropriate" value="0" 
+                                                   class="form-radio"
+                                                   {{ old('session_plan_appropriate') == '0' ? 'checked' : '' }}>
+                                            <span class="ml-2">{{ __('ទេ') }}</span>
                                         </label>
                                     </div>
-                                    @error('session_plan_appropriate')
-                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                    @enderror
+                                </div>
+                                
+                                <!-- កំណត់ចំណាំ/មតិកែលម្អដែលបានផ្តល់លើកិច្ចតែងការបង្រៀន -->
+                                <div>
+                                    <label for="session_plan_notes" class="block text-sm font-medium text-gray-700 mb-2">
+                                        {{ __('កំណត់ចំណាំ/មតិកែលម្អដែលបានផ្តល់លើកិច្ចតែងការបង្រៀន') }}
+                                    </label>
+                                    <textarea id="session_plan_notes" 
+                                              name="session_plan_notes" 
+                                              rows="3"
+                                              class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">{{ old('session_plan_notes') }}</textarea>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Section 7: Activity Overview (shown only if class is in session) -->
-                        <div id="activityOverviewSection" class="questionnaire-section mb-8 hidden" data-section="activity_overview">
+                        <!-- Activity Related Questions -->
+                        <div class="questionnaire-section mb-8" data-section="activities" id="activities_section">
                             <h4 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b">{{ __('Activity Related Questions') }}</h4>
                             
-                            <div>
+                            <!-- តើមានសកម្មភាពប៉ុន្មានត្រូវបានអង្កេត? -->
+                            <div class="mb-6">
                                 <label for="number_of_activities" class="block text-sm font-medium text-gray-700 mb-2">
-                                    {{ __('How many activities were conducted?') }} <span class="text-red-500">*</span>
+                                    {{ __('តើមានសកម្មភាពប៉ុន្មានត្រូវបានអង្កេត?') }}
                                 </label>
                                 <select id="number_of_activities" 
                                         name="number_of_activities" 
-                                        class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                                    <option value="">{{ __('Select Number') }}</option>
-                                    <option value="1" {{ old('number_of_activities') == '1' ? 'selected' : '' }}>1</option>
-                                    <option value="2" {{ old('number_of_activities') == '2' ? 'selected' : '' }}>2</option>
-                                    <option value="3" {{ old('number_of_activities') == '3' ? 'selected' : '' }}>3</option>
+                                        class="w-full md:w-1/3 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                    <option value="0">0</option>
+                                    <option value="1" {{ old('number_of_activities') == 1 ? 'selected' : '' }}>1</option>
+                                    <option value="2" {{ old('number_of_activities') == 2 ? 'selected' : '' }}>2</option>
+                                    <option value="3" {{ old('number_of_activities') == 3 ? 'selected' : '' }}>3</option>
                                 </select>
-                                @error('number_of_activities')
+                            </div>
+                            
+                            <!-- Activity 1 -->
+                            <div id="activity1_section" style="display: none;" class="border-l-4 border-blue-500 pl-4 mb-6">
+                                <h5 class="font-semibold text-gray-700 mb-4">{{ __('Activity 1') }}</h5>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <!-- Activity name for Khmer -->
+                                    <div id="activity1_khmer_container" style="display: none;">
+                                        <label for="activity1_name_language" class="block text-sm font-medium text-gray-700 mb-2">
+                                            {{ __('តើសកម្មភាពទីមួយណាដែលត្រូវបានអនុវត្ត? (ភាសាខ្មែរ)') }}
+                                        </label>
+                                        <select id="activity1_name_language" 
+                                                name="activity1_name_language" 
+                                                class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                            <option value="">{{ __('Select Activity') }}</option>
+                                            @php
+                                            $khmerActivities = [
+                                                'ការសន្ទនាសេរី',
+                                                'ការពណ៌នារូបភាព',
+                                                'ការអានកថាខណ្ឌ',
+                                                'ផែនទីគំនិត',
+                                                'ការចម្លងនិងសរសេរតាមអាន',
+                                                'ល្បែងបោះចូលកន្ត្រក (បោះព្យញ្ជនៈ, ស្រៈ , ពាក្យ ចូលកន្ត្រក)',
+                                                'ល្បែងត្រឡប់បណ្ណពាក្យ',
+                                                'ល្បែងលោតលើតួអក្សរ',
+                                                'ការអានតារាងព្យាង្គ',
+                                                'ការកំណត់ចំនួនព្យាង្គក្នុងពាក្យ',
+                                                'ការបង្កើតពាក្យនិងប្រយោគ',
+                                                'ពាក្យចួន',
+                                                'ល្បែងគ្រ័រ',
+                                                'ការបង្កើតពាក្យតាមសូរចុង',
+                                                'ការកែតម្រូវកំហុស',
+                                                'ការបង្កើតសាច់រឿងបន្ត',
+                                                'សកម្មភាពផ្អែកលើមេរៀន (៨ ជំហាន)'
+                                            ];
+                                            @endphp
+                                            @foreach($khmerActivities as $activity)
+                                            <option value="{{ $activity }}" {{ old('activity1_name_language') == $activity ? 'selected' : '' }}>
+                                                {{ $activity }}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    
+                                    <!-- Activity name for Math -->
+                                    <div id="activity1_math_container" style="display: none;">
+                                        <label for="activity1_name_numeracy" class="block text-sm font-medium text-gray-700 mb-2">
+                                            {{ __('តើសកម្មភាពទីមួយណាដែលត្រូវបានអនុវត្ត? (គណិតវិទ្យា)') }}
+                                        </label>
+                                        <select id="activity1_name_numeracy" 
+                                                name="activity1_name_numeracy" 
+                                                class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                            <option value="">{{ __('Select Activity') }}</option>
+                                            @php
+                                            $mathActivities = [
+                                                'ចំនួនដោយប្រើបាច់ឈើនិងឈើ',
+                                                'ការអានតារាងលេខ',
+                                                'ល្បែងកង់លេខ',
+                                                'ល្បែងលោតលើលេខ',
+                                                'ការទះដៃនិងផ្ទាត់ម្រាមដៃ',
+                                                'តារាងតម្លៃលេខតាមខ្ទង់',
+                                                'បណ្ណតម្លៃលេខតាមខ្ទង់',
+                                                'សៀវភៅកំណត់ត្រាលេខ',
+                                                'ចំនួនជាមួយប្រាក់លេង',
+                                                'ការដោះស្រាយចំណោទ',
+                                                'រកផលគុណជាមួយលេខប្រាំបួន',
+                                                'ប្រមាណវិធីបូកដោយប្រើបាច់ឈើនិងឈើ',
+                                                'ប្រមាណវិធីដកដោយប្រើបាច់ឈើនិងឈើ',
+                                                'ប្រមាណវិធីបូកដកដោយផ្ទាល់មាត់',
+                                                'ប្រមាណវិធីបូកដោយប្រើប្រាក់លេង',
+                                                'ប្រមាណវិធីដកដោយប្រើប្រាក់លេង',
+                                                'ប្រមាណវិធីគុណដោយប្រើឈើ',
+                                                'ប្រមាណវិធីគុណដោយបំបែកលេខ',
+                                                'ការសូត្រតារាងមេគុណ',
+                                                'ប្រមាណវិធីគុណក្នុងប្រអប់',
+                                                'ប្រមាណវិធីគុណដោយប្រើតារាងតម្លៃលេខតាមខ្ទង់',
+                                                'ប្រមាណវិធីចែកដោយប្រើឈើ',
+                                                'ប្រមាណវិធីចែកដោយប្រើប្រាក់លេង',
+                                                'ប្រមាណវិធីចែកដោយប្រើតារាងមេគុណ'
+                                            ];
+                                            @endphp
+                                            @foreach($mathActivities as $activity)
+                                            <option value="{{ $activity }}" {{ old('activity1_name_numeracy') == $activity ? 'selected' : '' }}>
+                                                {{ $activity }}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    
+                                    <!-- Duration -->
+                                    <div>
+                                        <label for="activity1_duration" class="block text-sm font-medium text-gray-700 mb-2">
+                                            {{ __('តើសកម្មភាពទីមួយប្រើរយៈពេលប៉ុន្មាន? (នាទី)') }}
+                                        </label>
+                                        <input type="number" 
+                                               id="activity1_duration" 
+                                               name="activity1_duration" 
+                                               value="{{ old('activity1_duration') }}"
+                                               class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                    </div>
+                                    
+                                    <!-- Clear instructions -->
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                                            {{ __('តើគ្រូបានណែនាំពីសកម្មភាពទីមួយបានច្បាស់លាស់ដែរឬទេ?') }}
+                                        </label>
+                                        <div class="space-y-2">
+                                            <label class="inline-flex items-center">
+                                                <input type="radio" name="activity1_clear_instructions" value="1" 
+                                                       class="form-radio"
+                                                       {{ old('activity1_clear_instructions') == '1' ? 'checked' : '' }}>
+                                                <span class="ml-2">{{ __('បាទ/ចាស') }}</span>
+                                            </label>
+                                            <label class="inline-flex items-center ml-6">
+                                                <input type="radio" name="activity1_clear_instructions" value="0" 
+                                                       class="form-radio"
+                                                       {{ old('activity1_clear_instructions') == '0' ? 'checked' : '' }}>
+                                                <span class="ml-2">{{ __('ទេ') }}</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- No clear instructions reason -->
+                                    <div id="activity1_no_clear_instructions_container" style="display: none;">
+                                        <label for="activity1_no_clear_instructions_reason" class="block text-sm font-medium text-gray-700 mb-2">
+                                            {{ __('ហេតុអ្វីបានជាគ្រូមិនបានណែនាំពីសកម្មភាពទីមួយបានច្បាស់លាស់?') }}
+                                        </label>
+                                        <textarea id="activity1_no_clear_instructions_reason" 
+                                                  name="activity1_no_clear_instructions_reason" 
+                                                  rows="2"
+                                                  class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">{{ old('activity1_no_clear_instructions_reason') }}</textarea>
+                                    </div>
+                                    
+                                    <!-- Followed process -->
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                                            {{ __('តើគ្រូបានអនុវត្តតាមដំណើរការនៃសកម្មភាពដូចមានក្នុងកិច្ចតែងការបង្រៀនដែរឬទេ?') }}
+                                        </label>
+                                        <div class="space-y-2">
+                                            <label class="inline-flex items-center">
+                                                <input type="radio" name="activity1_followed_process" value="1" 
+                                                       class="form-radio"
+                                                       {{ old('activity1_followed_process') == '1' ? 'checked' : '' }}>
+                                                <span class="ml-2">{{ __('បាទ/ចាស') }}</span>
+                                            </label>
+                                            <label class="inline-flex items-center ml-6">
+                                                <input type="radio" name="activity1_followed_process" value="0" 
+                                                       class="form-radio"
+                                                       {{ old('activity1_followed_process') == '0' ? 'checked' : '' }}>
+                                                <span class="ml-2">{{ __('ទេ') }}</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Not followed reason -->
+                                    <div id="activity1_not_followed_reason_container" style="display: none;">
+                                        <label for="activity1_not_followed_reason" class="block text-sm font-medium text-gray-700 mb-2">
+                                            {{ __('បើមិនបានអនុវត្តតាម, ហេតុអ្វី?') }}
+                                        </label>
+                                        <textarea id="activity1_not_followed_reason" 
+                                                  name="activity1_not_followed_reason" 
+                                                  rows="2"
+                                                  class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">{{ old('activity1_not_followed_reason') }}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Activity 2 -->
+                            <div id="activity2_section" style="display: none;" class="border-l-4 border-green-500 pl-4 mb-6">
+                                <h5 class="font-semibold text-gray-700 mb-4">{{ __('Activity 2') }}</h5>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <!-- Activity name for Khmer -->
+                                    <div id="activity2_khmer_container" style="display: none;">
+                                        <label for="activity2_name_language" class="block text-sm font-medium text-gray-700 mb-2">
+                                            {{ __('តើសកម្មភាពទីពីរណាដែលត្រូវបានអនុវត្ត? (ភាសាខ្មែរ)') }}
+                                        </label>
+                                        <select id="activity2_name_language" 
+                                                name="activity2_name_language" 
+                                                class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                            <option value="">{{ __('Select Activity') }}</option>
+                                            @foreach($khmerActivities as $activity)
+                                            <option value="{{ $activity }}" {{ old('activity2_name_language') == $activity ? 'selected' : '' }}>
+                                                {{ $activity }}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    
+                                    <!-- Activity name for Math -->
+                                    <div id="activity2_math_container" style="display: none;">
+                                        <label for="activity2_name_numeracy" class="block text-sm font-medium text-gray-700 mb-2">
+                                            {{ __('តើសកម្មភាពទីពីរណាដែលត្រូវបានអនុវត្ត? (គណិតវិទ្យា)') }}
+                                        </label>
+                                        <select id="activity2_name_numeracy" 
+                                                name="activity2_name_numeracy" 
+                                                class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                            <option value="">{{ __('Select Activity') }}</option>
+                                            @foreach($mathActivities as $activity)
+                                            <option value="{{ $activity }}" {{ old('activity2_name_numeracy') == $activity ? 'selected' : '' }}>
+                                                {{ $activity }}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    
+                                    <!-- Duration -->
+                                    <div>
+                                        <label for="activity2_duration" class="block text-sm font-medium text-gray-700 mb-2">
+                                            {{ __('តើសកម្មភាពទីពីរប្រើរយៈពេលប៉ុន្មាន? (នាទី)') }}
+                                        </label>
+                                        <input type="number" 
+                                               id="activity2_duration" 
+                                               name="activity2_duration" 
+                                               value="{{ old('activity2_duration') }}"
+                                               class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                    </div>
+                                    
+                                    <!-- Clear instructions -->
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                                            {{ __('តើគ្រូបានណែនាំពីសកម្មភាពទីពីរបានច្បាស់លាស់ដែរឬទេ?') }}
+                                        </label>
+                                        <div class="space-y-2">
+                                            <label class="inline-flex items-center">
+                                                <input type="radio" name="activity2_clear_instructions" value="1" 
+                                                       class="form-radio"
+                                                       {{ old('activity2_clear_instructions') == '1' ? 'checked' : '' }}>
+                                                <span class="ml-2">{{ __('បាទ/ចាស') }}</span>
+                                            </label>
+                                            <label class="inline-flex items-center ml-6">
+                                                <input type="radio" name="activity2_clear_instructions" value="0" 
+                                                       class="form-radio"
+                                                       {{ old('activity2_clear_instructions') == '0' ? 'checked' : '' }}>
+                                                <span class="ml-2">{{ __('ទេ') }}</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- No clear instructions reason -->
+                                    <div id="activity2_no_clear_instructions_container" style="display: none;">
+                                        <label for="activity2_no_clear_instructions_reason" class="block text-sm font-medium text-gray-700 mb-2">
+                                            {{ __('ហេតុអ្វីបានជាគ្រូមិនបានណែនាំពីសកម្មភាពទីពីរបានច្បាស់លាស់?') }}
+                                        </label>
+                                        <textarea id="activity2_no_clear_instructions_reason" 
+                                                  name="activity2_no_clear_instructions_reason" 
+                                                  rows="2"
+                                                  class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">{{ old('activity2_no_clear_instructions_reason') }}</textarea>
+                                    </div>
+                                    
+                                    <!-- Followed process -->
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                                            {{ __('តើគ្រូបានអនុវត្តតាមដំណើរនៃសកម្មភាពដូចមានក្នុងកិច្ចតែងការបង្រៀនដែរឬទេ?') }}
+                                        </label>
+                                        <div class="space-y-2">
+                                            <label class="inline-flex items-center">
+                                                <input type="radio" name="activity2_followed_process" value="1" 
+                                                       class="form-radio"
+                                                       {{ old('activity2_followed_process') == '1' ? 'checked' : '' }}>
+                                                <span class="ml-2">{{ __('បាទ/ចាស') }}</span>
+                                            </label>
+                                            <label class="inline-flex items-center ml-6">
+                                                <input type="radio" name="activity2_followed_process" value="0" 
+                                                       class="form-radio"
+                                                       {{ old('activity2_followed_process') == '0' ? 'checked' : '' }}>
+                                                <span class="ml-2">{{ __('ទេ') }}</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Not followed reason -->
+                                    <div id="activity2_not_followed_reason_container" style="display: none;">
+                                        <label for="activity2_not_followed_reason" class="block text-sm font-medium text-gray-700 mb-2">
+                                            {{ __('បើមិនបានអនុវត្តតាម, ហេតុអ្វី?') }}
+                                        </label>
+                                        <textarea id="activity2_not_followed_reason" 
+                                                  name="activity2_not_followed_reason" 
+                                                  rows="2"
+                                                  class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">{{ old('activity2_not_followed_reason') }}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Miscellaneous -->
+                        <div class="questionnaire-section mb-8" data-section="miscellaneous">
+                            <h4 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b">{{ __('Miscellaneous') }}</h4>
+                            
+                            <!-- មតិយោបល់សម្រាប់គ្រូបង្រៀន -->
+                            <div>
+                                <label for="feedback_for_teacher" class="block text-sm font-medium text-gray-700 mb-2">
+                                    {{ __('មតិយោបល់សម្រាប់គ្រូបង្រៀន (ប្រសិនបើមាន) (១០០-១២០ ពាក្យ)') }}
+                                </label>
+                                <textarea id="feedback_for_teacher" 
+                                          name="feedback_for_teacher" 
+                                          rows="4"
+                                          class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                          placeholder="{{ __('Enter feedback for the teacher (100-120 words)') }}">{{ old('feedback_for_teacher') }}</textarea>
+                                @error('feedback_for_teacher')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
                         </div>
 
-                        <!-- Activity 1 Details (shown based on number of activities) -->
-                        <div id="activity1Section" class="questionnaire-section mb-8 hidden" data-section="activity_1">
-                            <h4 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b">{{ __('Activity 1') }}</h4>
-                            
-                            <div class="space-y-6">
-                                <!-- Activity 1 Name -->
-                                <div id="activity1LanguageDiv" class="hidden">
-                                    <label for="activity1_name_language" class="block text-sm font-medium text-gray-700 mb-2">
-                                        {{ __('Which was the first activity conducted? (Language)') }} <span class="text-red-500">*</span>
-                                    </label>
-                                    <select id="activity1_name_language" 
-                                            name="activity1_name_language" 
-                                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                                        <option value="">{{ __('Select Activity') }}</option>
-                                        @foreach(['Letter recognition', 'Letter writing', 'Word building', 'Word reading', 'Sentence reading', 'Story reading', 'Comprehension activities', 'Vocabulary games', 'Phonics activities', 'Others'] as $activity)
-                                            <option value="{{ $activity }}" {{ old('activity1_name_language') == $activity ? 'selected' : '' }}>{{ __($activity) }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                
-                                <div id="activity1NumeracyDiv" class="hidden">
-                                    <label for="activity1_name_numeracy" class="block text-sm font-medium text-gray-700 mb-2">
-                                        {{ __('Which was the first activity conducted? (Numeracy)') }} <span class="text-red-500">*</span>
-                                    </label>
-                                    <select id="activity1_name_numeracy" 
-                                            name="activity1_name_numeracy" 
-                                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                                        <option value="">{{ __('Select Activity') }}</option>
-                                        @foreach([
-                                            'Number chart reading activity',
-                                            'Recognition of the numbers with symbol and objects',
-                                            'Puzzles',
-                                            'Number Jump',
-                                            'Basket game',
-                                            'Clap and Snap',
-                                            'What next - Count Before / Count After',
-                                            'Number line - Counting and find the numbers move to left and move to right',
-                                            'Fine with Nine',
-                                            'Place value - Bundle and sticks with numbers up to 20',
-                                            'Making bundles and counting 10, 20, 30, 40, …',
-                                            'Learning two digit numbers with bundle and sticks',
-                                            'Addition of single digit numbers with sticks and without any material by using frame and word problems',
-                                            'Subtraction of single digit numbers with sticks and without any material, by using and word problems',
-                                            'Word problem of two digit number of addition and subtraction without any material',
-                                            'Who is my third partner - with numbers 1 to 9'
-                                        ] as $activity)
-                                            <option value="{{ $activity }}" {{ old('activity1_name_numeracy') == $activity ? 'selected' : '' }}>{{ $activity }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                
-                                <!-- Activity 1 Duration -->
-                                <div>
-                                    <label for="activity1_duration" class="block text-sm font-medium text-gray-700 mb-2">
-                                        {{ __('What was the duration of the first activity? (Mins)') }} <span class="text-red-500">*</span>
-                                    </label>
-                                    <input type="number" 
-                                           id="activity1_duration" 
-                                           name="activity1_duration" 
-                                           value="{{ old('activity1_duration') }}"
-                                           min="1"
-                                           class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                                </div>
-                                
-                                <!-- Activity 1 Clear Instructions -->
-                                <div>
-                                    <p class="text-sm font-medium text-gray-700 mb-3">
-                                        {{ __('Did the teacher give clear instructions for the first activity?') }} <span class="text-red-500">*</span>
-                                    </p>
-                                    <div class="space-y-2">
-                                        <label class="flex items-center">
-                                            <input type="radio" name="activity1_clear_instructions" value="Yes" 
-                                                   class="mr-2 text-indigo-600 focus:ring-indigo-500"
-                                                   {{ old('activity1_clear_instructions') == 'Yes' ? 'checked' : '' }}>
-                                            <span class="text-sm text-gray-700">{{ __('Yes') }}</span>
-                                        </label>
-                                        <label class="flex items-center">
-                                            <input type="radio" name="activity1_clear_instructions" value="No" 
-                                                   class="mr-2 text-indigo-600 focus:ring-indigo-500"
-                                                   {{ old('activity1_clear_instructions') == 'No' ? 'checked' : '' }}>
-                                            <span class="text-sm text-gray-700">{{ __('No') }}</span>
-                                        </label>
-                                    </div>
-                                </div>
-                                
-                                <!-- Activity 1 No Clear Instructions Reason -->
-                                <div id="activity1NoClearInstructionsReason" class="hidden">
-                                    <label for="activity1_no_clear_instructions_reason" class="block text-sm font-medium text-gray-700 mb-2">
-                                        {{ __('Why did the teacher not give clear instructions for the first activity?') }}
-                                    </label>
-                                    <input type="text" 
-                                           id="activity1_no_clear_instructions_reason" 
-                                           name="activity1_no_clear_instructions_reason" 
-                                           value="{{ old('activity1_no_clear_instructions_reason') }}"
-                                           class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                                </div>
-                                
-                                <!-- Activity 1 Demonstrated -->
-                                <div>
-                                    <p class="text-sm font-medium text-gray-700 mb-3">
-                                        {{ __('Did the teacher demonstrate the first activity?') }} <span class="text-red-500">*</span>
-                                    </p>
-                                    <div class="space-y-2">
-                                        <label class="flex items-center">
-                                            <input type="radio" name="activity1_demonstrated" value="Yes" 
-                                                   class="mr-2 text-indigo-600 focus:ring-indigo-500"
-                                                   {{ old('activity1_demonstrated') == 'Yes' ? 'checked' : '' }}>
-                                            <span class="text-sm text-gray-700">{{ __('Yes') }}</span>
-                                        </label>
-                                        <label class="flex items-center">
-                                            <input type="radio" name="activity1_demonstrated" value="No" 
-                                                   class="mr-2 text-indigo-600 focus:ring-indigo-500"
-                                                   {{ old('activity1_demonstrated') == 'No' ? 'checked' : '' }}>
-                                            <span class="text-sm text-gray-700">{{ __('No') }}</span>
-                                        </label>
-                                    </div>
-                                </div>
-                                
-                                <!-- Activity 1 Students Practice -->
-                                <div>
-                                    <p class="text-sm font-medium text-gray-700 mb-3">
-                                        {{ __('Did the teacher make a few students practice the first activity in front of the whole class?') }} <span class="text-red-500">*</span>
-                                    </p>
-                                    <div class="space-y-2">
-                                        <label class="flex items-center">
-                                            <input type="radio" name="activity1_students_practice" value="Yes" 
-                                                   class="mr-2 text-indigo-600 focus:ring-indigo-500"
-                                                   {{ old('activity1_students_practice') == 'Yes' ? 'checked' : '' }}>
-                                            <span class="text-sm text-gray-700">{{ __('Yes') }}</span>
-                                        </label>
-                                        <label class="flex items-center">
-                                            <input type="radio" name="activity1_students_practice" value="No" 
-                                                   class="mr-2 text-indigo-600 focus:ring-indigo-500"
-                                                   {{ old('activity1_students_practice') == 'No' ? 'checked' : '' }}>
-                                            <span class="text-sm text-gray-700">{{ __('No') }}</span>
-                                        </label>
-                                        <label class="flex items-center">
-                                            <input type="radio" name="activity1_students_practice" value="Not applicable" 
-                                                   class="mr-2 text-indigo-600 focus:ring-indigo-500"
-                                                   {{ old('activity1_students_practice') == 'Not applicable' ? 'checked' : '' }}>
-                                            <span class="text-sm text-gray-700">{{ __('Not applicable') }}</span>
-                                        </label>
-                                    </div>
-                                </div>
-                                
-                                <!-- Activity 1 Small Groups -->
-                                <div>
-                                    <p class="text-sm font-medium text-gray-700 mb-3">
-                                        {{ __('Did the students perform the first activity in small groups?') }} <span class="text-red-500">*</span>
-                                    </p>
-                                    <div class="space-y-2">
-                                        <label class="flex items-center">
-                                            <input type="radio" name="activity1_small_groups" value="Yes" 
-                                                   class="mr-2 text-indigo-600 focus:ring-indigo-500"
-                                                   {{ old('activity1_small_groups') == 'Yes' ? 'checked' : '' }}>
-                                            <span class="text-sm text-gray-700">{{ __('Yes') }}</span>
-                                        </label>
-                                        <label class="flex items-center">
-                                            <input type="radio" name="activity1_small_groups" value="No" 
-                                                   class="mr-2 text-indigo-600 focus:ring-indigo-500"
-                                                   {{ old('activity1_small_groups') == 'No' ? 'checked' : '' }}>
-                                            <span class="text-sm text-gray-700">{{ __('No') }}</span>
-                                        </label>
-                                        <label class="flex items-center">
-                                            <input type="radio" name="activity1_small_groups" value="Not Applicable" 
-                                                   class="mr-2 text-indigo-600 focus:ring-indigo-500"
-                                                   {{ old('activity1_small_groups') == 'Not Applicable' ? 'checked' : '' }}>
-                                            <span class="text-sm text-gray-700">{{ __('Not Applicable') }}</span>
-                                        </label>
-                                    </div>
-                                </div>
-                                
-                                <!-- Activity 1 Individual -->
-                                <div>
-                                    <p class="text-sm font-medium text-gray-700 mb-3">
-                                        {{ __('Did the students individually perform the first activity?') }} <span class="text-red-500">*</span>
-                                    </p>
-                                    <div class="space-y-2">
-                                        <label class="flex items-center">
-                                            <input type="radio" name="activity1_individual" value="Yes" 
-                                                   class="mr-2 text-indigo-600 focus:ring-indigo-500"
-                                                   {{ old('activity1_individual') == 'Yes' ? 'checked' : '' }}>
-                                            <span class="text-sm text-gray-700">{{ __('Yes') }}</span>
-                                        </label>
-                                        <label class="flex items-center">
-                                            <input type="radio" name="activity1_individual" value="No" 
-                                                   class="mr-2 text-indigo-600 focus:ring-indigo-500"
-                                                   {{ old('activity1_individual') == 'No' ? 'checked' : '' }}>
-                                            <span class="text-sm text-gray-700">{{ __('No') }}</span>
-                                        </label>
-                                        <label class="flex items-center">
-                                            <input type="radio" name="activity1_individual" value="Not Applicable" 
-                                                   class="mr-2 text-indigo-600 focus:ring-indigo-500"
-                                                   {{ old('activity1_individual') == 'Not Applicable' ? 'checked' : '' }}>
-                                            <span class="text-sm text-gray-700">{{ __('Not Applicable') }}</span>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Activity 2 Details (shown if 2 or 3 activities) -->
-                        <div id="activity2Section" class="questionnaire-section mb-8 hidden" data-section="activity_2">
-                            <h4 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b">{{ __('Activity 2') }}</h4>
-                            
-                            <div class="space-y-6">
-                                <!-- Activity 2 Name -->
-                                <div id="activity2LanguageDiv" class="hidden">
-                                    <label for="activity2_name_language" class="block text-sm font-medium text-gray-700 mb-2">
-                                        {{ __('Which was the second activity conducted? (Language)') }} <span class="text-red-500">*</span>
-                                    </label>
-                                    <select id="activity2_name_language" 
-                                            name="activity2_name_language" 
-                                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                                        <option value="">{{ __('Select Activity') }}</option>
-                                        @foreach(['Letter recognition', 'Letter writing', 'Word building', 'Word reading', 'Sentence reading', 'Story reading', 'Comprehension activities', 'Vocabulary games', 'Phonics activities', 'Others'] as $activity)
-                                            <option value="{{ $activity }}" {{ old('activity2_name_language') == $activity ? 'selected' : '' }}>{{ __($activity) }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                
-                                <div id="activity2NumeracyDiv" class="hidden">
-                                    <label for="activity2_name_numeracy" class="block text-sm font-medium text-gray-700 mb-2">
-                                        {{ __('Which was the second activity conducted? (Numeracy)') }} <span class="text-red-500">*</span>
-                                    </label>
-                                    <select id="activity2_name_numeracy" 
-                                            name="activity2_name_numeracy" 
-                                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                                        <option value="">{{ __('Select Activity') }}</option>
-                                        @foreach([
-                                            'Number chart reading activity',
-                                            'Recognition of the numbers with symbol and objects',
-                                            'Puzzles',
-                                            'Number Jump',
-                                            'Basket game',
-                                            'Clap and Snap',
-                                            'What next - Count Before / Count After',
-                                            'Number line - Counting and find the numbers move to left and move to right',
-                                            'Fine with Nine',
-                                            'Place value - Bundle and sticks with numbers up to 20',
-                                            'Making bundles and counting 10, 20, 30, 40, …',
-                                            'Learning two digit numbers with bundle and sticks',
-                                            'Addition of single digit numbers with sticks and without any material by using frame and word problems',
-                                            'Subtraction of single digit numbers with sticks and without any material, by using and word problems',
-                                            'Word problem of two digit number of addition and subtraction without any material',
-                                            'Who is my third partner - with numbers 1 to 9'
-                                        ] as $activity)
-                                            <option value="{{ $activity }}" {{ old('activity2_name_numeracy') == $activity ? 'selected' : '' }}>{{ $activity }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                
-                                <!-- Activity 2 Duration -->
-                                <div>
-                                    <label for="activity2_duration" class="block text-sm font-medium text-gray-700 mb-2">
-                                        {{ __('What was the duration of the second activity? (Mins)') }} <span class="text-red-500">*</span>
-                                    </label>
-                                    <input type="number" 
-                                           id="activity2_duration" 
-                                           name="activity2_duration" 
-                                           value="{{ old('activity2_duration') }}"
-                                           min="1"
-                                           class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                                </div>
-                                
-                                <!-- Activity 2 Clear Instructions -->
-                                <div>
-                                    <p class="text-sm font-medium text-gray-700 mb-3">
-                                        {{ __('Did the teacher give clear instructions for the second activity?') }} <span class="text-red-500">*</span>
-                                    </p>
-                                    <div class="space-y-2">
-                                        <label class="flex items-center">
-                                            <input type="radio" name="activity2_clear_instructions" value="Yes" 
-                                                   class="mr-2 text-indigo-600 focus:ring-indigo-500"
-                                                   {{ old('activity2_clear_instructions') == 'Yes' ? 'checked' : '' }}>
-                                            <span class="text-sm text-gray-700">{{ __('Yes') }}</span>
-                                        </label>
-                                        <label class="flex items-center">
-                                            <input type="radio" name="activity2_clear_instructions" value="No" 
-                                                   class="mr-2 text-indigo-600 focus:ring-indigo-500"
-                                                   {{ old('activity2_clear_instructions') == 'No' ? 'checked' : '' }}>
-                                            <span class="text-sm text-gray-700">{{ __('No') }}</span>
-                                        </label>
-                                    </div>
-                                </div>
-                                
-                                <!-- Activity 2 No Clear Instructions Reason -->
-                                <div id="activity2NoClearInstructionsReason" class="hidden">
-                                    <label for="activity2_no_clear_instructions_reason" class="block text-sm font-medium text-gray-700 mb-2">
-                                        {{ __('Why did the teacher not give clear instructions for the second activity?') }}
-                                    </label>
-                                    <input type="text" 
-                                           id="activity2_no_clear_instructions_reason" 
-                                           name="activity2_no_clear_instructions_reason" 
-                                           value="{{ old('activity2_no_clear_instructions_reason') }}"
-                                           class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                                </div>
-                                
-                                <!-- Activity 2 Demonstrated -->
-                                <div>
-                                    <p class="text-sm font-medium text-gray-700 mb-3">
-                                        {{ __('Did the teacher demonstrate the second activity?') }} <span class="text-red-500">*</span>
-                                    </p>
-                                    <div class="space-y-2">
-                                        <label class="flex items-center">
-                                            <input type="radio" name="activity2_demonstrated" value="Yes" 
-                                                   class="mr-2 text-indigo-600 focus:ring-indigo-500"
-                                                   {{ old('activity2_demonstrated') == 'Yes' ? 'checked' : '' }}>
-                                            <span class="text-sm text-gray-700">{{ __('Yes') }}</span>
-                                        </label>
-                                        <label class="flex items-center">
-                                            <input type="radio" name="activity2_demonstrated" value="No" 
-                                                   class="mr-2 text-indigo-600 focus:ring-indigo-500"
-                                                   {{ old('activity2_demonstrated') == 'No' ? 'checked' : '' }}>
-                                            <span class="text-sm text-gray-700">{{ __('No') }}</span>
-                                        </label>
-                                    </div>
-                                </div>
-                                
-                                <!-- Activity 2 Students Practice -->
-                                <div>
-                                    <p class="text-sm font-medium text-gray-700 mb-3">
-                                        {{ __('Did the teacher make a few students practice the second activity in front of the whole class?') }} <span class="text-red-500">*</span>
-                                    </p>
-                                    <div class="space-y-2">
-                                        <label class="flex items-center">
-                                            <input type="radio" name="activity2_students_practice" value="Yes" 
-                                                   class="mr-2 text-indigo-600 focus:ring-indigo-500"
-                                                   {{ old('activity2_students_practice') == 'Yes' ? 'checked' : '' }}>
-                                            <span class="text-sm text-gray-700">{{ __('Yes') }}</span>
-                                        </label>
-                                        <label class="flex items-center">
-                                            <input type="radio" name="activity2_students_practice" value="No" 
-                                                   class="mr-2 text-indigo-600 focus:ring-indigo-500"
-                                                   {{ old('activity2_students_practice') == 'No' ? 'checked' : '' }}>
-                                            <span class="text-sm text-gray-700">{{ __('No') }}</span>
-                                        </label>
-                                    </div>
-                                </div>
-                                
-                                <!-- Activity 2 Small Groups -->
-                                <div>
-                                    <p class="text-sm font-medium text-gray-700 mb-3">
-                                        {{ __('Did the students perform the second activity in small groups?') }} <span class="text-red-500">*</span>
-                                    </p>
-                                    <div class="space-y-2">
-                                        <label class="flex items-center">
-                                            <input type="radio" name="activity2_small_groups" value="Yes" 
-                                                   class="mr-2 text-indigo-600 focus:ring-indigo-500"
-                                                   {{ old('activity2_small_groups') == 'Yes' ? 'checked' : '' }}>
-                                            <span class="text-sm text-gray-700">{{ __('Yes') }}</span>
-                                        </label>
-                                        <label class="flex items-center">
-                                            <input type="radio" name="activity2_small_groups" value="No" 
-                                                   class="mr-2 text-indigo-600 focus:ring-indigo-500"
-                                                   {{ old('activity2_small_groups') == 'No' ? 'checked' : '' }}>
-                                            <span class="text-sm text-gray-700">{{ __('No') }}</span>
-                                        </label>
-                                    </div>
-                                </div>
-                                
-                                <!-- Activity 2 Individual -->
-                                <div>
-                                    <p class="text-sm font-medium text-gray-700 mb-3">
-                                        {{ __('Did the students individually perform the second activity?') }} <span class="text-red-500">*</span>
-                                    </p>
-                                    <div class="space-y-2">
-                                        <label class="flex items-center">
-                                            <input type="radio" name="activity2_individual" value="Yes" 
-                                                   class="mr-2 text-indigo-600 focus:ring-indigo-500"
-                                                   {{ old('activity2_individual') == 'Yes' ? 'checked' : '' }}>
-                                            <span class="text-sm text-gray-700">{{ __('Yes') }}</span>
-                                        </label>
-                                        <label class="flex items-center">
-                                            <input type="radio" name="activity2_individual" value="No" 
-                                                   class="mr-2 text-indigo-600 focus:ring-indigo-500"
-                                                   {{ old('activity2_individual') == 'No' ? 'checked' : '' }}>
-                                            <span class="text-sm text-gray-700">{{ __('No') }}</span>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Activity 3 Details (shown if 3 activities) -->
-                        <div id="activity3Section" class="questionnaire-section mb-8 hidden" data-section="activity_3">
-                            <h4 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b">{{ __('Activity 3') }}</h4>
-                            
-                            <div class="space-y-6">
-                                <!-- Activity 3 Name -->
-                                <div id="activity3LanguageDiv" class="hidden">
-                                    <label for="activity3_name_language" class="block text-sm font-medium text-gray-700 mb-2">
-                                        {{ __('Which was the third activity conducted? (Language)') }} <span class="text-red-500">*</span>
-                                    </label>
-                                    <select id="activity3_name_language" 
-                                            name="activity3_name_language" 
-                                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                                        <option value="">{{ __('Select Activity') }}</option>
-                                        @foreach(['Letter recognition', 'Letter writing', 'Word building', 'Word reading', 'Sentence reading', 'Story reading', 'Comprehension activities', 'Vocabulary games', 'Phonics activities', 'Others'] as $activity)
-                                            <option value="{{ $activity }}" {{ old('activity3_name_language') == $activity ? 'selected' : '' }}>{{ __($activity) }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                
-                                <div id="activity3NumeracyDiv" class="hidden">
-                                    <label for="activity3_name_numeracy" class="block text-sm font-medium text-gray-700 mb-2">
-                                        {{ __('Which was the third activity conducted? (Numeracy)') }} <span class="text-red-500">*</span>
-                                    </label>
-                                    <select id="activity3_name_numeracy" 
-                                            name="activity3_name_numeracy" 
-                                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                                        <option value="">{{ __('Select Activity') }}</option>
-                                        @foreach([
-                                            'Number chart reading activity',
-                                            'Recognition of the numbers with symbol and objects',
-                                            'Puzzles',
-                                            'Number Jump',
-                                            'Basket game',
-                                            'Clap and Snap',
-                                            'What next - Count Before / Count After',
-                                            'Number line - Counting and find the numbers move to left and move to right',
-                                            'Fine with Nine',
-                                            'Place value - Bundle and sticks with numbers up to 20',
-                                            'Making bundles and counting 10, 20, 30, 40, …',
-                                            'Learning two digit numbers with bundle and sticks',
-                                            'Addition of single digit numbers with sticks and without any material by using frame and word problems',
-                                            'Subtraction of single digit numbers with sticks and without any material, by using and word problems',
-                                            'Word problem of two digit number of addition and subtraction without any material',
-                                            'Who is my third partner - with numbers 1 to 9'
-                                        ] as $activity)
-                                            <option value="{{ $activity }}" {{ old('activity3_name_numeracy') == $activity ? 'selected' : '' }}>{{ $activity }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                
-                                <!-- Activity 3 Duration -->
-                                <div>
-                                    <label for="activity3_duration" class="block text-sm font-medium text-gray-700 mb-2">
-                                        {{ __('What was the duration of the third activity? (Mins)') }} <span class="text-red-500">*</span>
-                                    </label>
-                                    <input type="number" 
-                                           id="activity3_duration" 
-                                           name="activity3_duration" 
-                                           value="{{ old('activity3_duration') }}"
-                                           min="1"
-                                           class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                                </div>
-                                
-                                <!-- Activity 3 Clear Instructions -->
-                                <div>
-                                    <p class="text-sm font-medium text-gray-700 mb-3">
-                                        {{ __('Did the teacher give clear instructions for the third activity?') }} <span class="text-red-500">*</span>
-                                    </p>
-                                    <div class="space-y-2">
-                                        <label class="flex items-center">
-                                            <input type="radio" name="activity3_clear_instructions" value="Yes" 
-                                                   class="mr-2 text-indigo-600 focus:ring-indigo-500"
-                                                   {{ old('activity3_clear_instructions') == 'Yes' ? 'checked' : '' }}>
-                                            <span class="text-sm text-gray-700">{{ __('Yes') }}</span>
-                                        </label>
-                                        <label class="flex items-center">
-                                            <input type="radio" name="activity3_clear_instructions" value="No" 
-                                                   class="mr-2 text-indigo-600 focus:ring-indigo-500"
-                                                   {{ old('activity3_clear_instructions') == 'No' ? 'checked' : '' }}>
-                                            <span class="text-sm text-gray-700">{{ __('No') }}</span>
-                                        </label>
-                                    </div>
-                                </div>
-                                
-                                <!-- Activity 3 No Clear Instructions Reason -->
-                                <div id="activity3NoClearInstructionsReason" class="hidden">
-                                    <label for="activity3_no_clear_instructions_reason" class="block text-sm font-medium text-gray-700 mb-2">
-                                        {{ __('Why did the teacher not give clear instructions for the third activity?') }}
-                                    </label>
-                                    <input type="text" 
-                                           id="activity3_no_clear_instructions_reason" 
-                                           name="activity3_no_clear_instructions_reason" 
-                                           value="{{ old('activity3_no_clear_instructions_reason') }}"
-                                           class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                                </div>
-                                
-                                <!-- Activity 3 Demonstrated -->
-                                <div>
-                                    <p class="text-sm font-medium text-gray-700 mb-3">
-                                        {{ __('Did the teacher demonstrate the activity?') }} <span class="text-red-500">*</span>
-                                    </p>
-                                    <div class="space-y-2">
-                                        <label class="flex items-center">
-                                            <input type="radio" name="activity3_demonstrated" value="Yes" 
-                                                   class="mr-2 text-indigo-600 focus:ring-indigo-500"
-                                                   {{ old('activity3_demonstrated') == 'Yes' ? 'checked' : '' }}>
-                                            <span class="text-sm text-gray-700">{{ __('Yes') }}</span>
-                                        </label>
-                                        <label class="flex items-center">
-                                            <input type="radio" name="activity3_demonstrated" value="No" 
-                                                   class="mr-2 text-indigo-600 focus:ring-indigo-500"
-                                                   {{ old('activity3_demonstrated') == 'No' ? 'checked' : '' }}>
-                                            <span class="text-sm text-gray-700">{{ __('No') }}</span>
-                                        </label>
-                                    </div>
-                                </div>
-                                
-                                <!-- Activity 3 Students Practice -->
-                                <div>
-                                    <p class="text-sm font-medium text-gray-700 mb-3">
-                                        {{ __('Did the teacher make a few students practice the third activity in front of the whole class?') }} <span class="text-red-500">*</span>
-                                    </p>
-                                    <div class="space-y-2">
-                                        <label class="flex items-center">
-                                            <input type="radio" name="activity3_students_practice" value="Yes" 
-                                                   class="mr-2 text-indigo-600 focus:ring-indigo-500"
-                                                   {{ old('activity3_students_practice') == 'Yes' ? 'checked' : '' }}>
-                                            <span class="text-sm text-gray-700">{{ __('Yes') }}</span>
-                                        </label>
-                                        <label class="flex items-center">
-                                            <input type="radio" name="activity3_students_practice" value="No" 
-                                                   class="mr-2 text-indigo-600 focus:ring-indigo-500"
-                                                   {{ old('activity3_students_practice') == 'No' ? 'checked' : '' }}>
-                                            <span class="text-sm text-gray-700">{{ __('No') }}</span>
-                                        </label>
-                                        <label class="flex items-center">
-                                            <input type="radio" name="activity3_students_practice" value="Not Applicable" 
-                                                   class="mr-2 text-indigo-600 focus:ring-indigo-500"
-                                                   {{ old('activity3_students_practice') == 'Not Applicable' ? 'checked' : '' }}>
-                                            <span class="text-sm text-gray-700">{{ __('Not Applicable') }}</span>
-                                        </label>
-                                    </div>
-                                </div>
-                                
-                                <!-- Activity 3 Small Groups -->
-                                <div>
-                                    <p class="text-sm font-medium text-gray-700 mb-3">
-                                        {{ __('Did the students perform the third activity in small groups?') }} <span class="text-red-500">*</span>
-                                    </p>
-                                    <div class="space-y-2">
-                                        <label class="flex items-center">
-                                            <input type="radio" name="activity3_small_groups" value="Yes" 
-                                                   class="mr-2 text-indigo-600 focus:ring-indigo-500"
-                                                   {{ old('activity3_small_groups') == 'Yes' ? 'checked' : '' }}>
-                                            <span class="text-sm text-gray-700">{{ __('Yes') }}</span>
-                                        </label>
-                                        <label class="flex items-center">
-                                            <input type="radio" name="activity3_small_groups" value="No" 
-                                                   class="mr-2 text-indigo-600 focus:ring-indigo-500"
-                                                   {{ old('activity3_small_groups') == 'No' ? 'checked' : '' }}>
-                                            <span class="text-sm text-gray-700">{{ __('No') }}</span>
-                                        </label>
-                                        <label class="flex items-center">
-                                            <input type="radio" name="activity3_small_groups" value="Not Applicable" 
-                                                   class="mr-2 text-indigo-600 focus:ring-indigo-500"
-                                                   {{ old('activity3_small_groups') == 'Not Applicable' ? 'checked' : '' }}>
-                                            <span class="text-sm text-gray-700">{{ __('Not Applicable') }}</span>
-                                        </label>
-                                    </div>
-                                </div>
-                                
-                                <!-- Activity 3 Individual -->
-                                <div>
-                                    <p class="text-sm font-medium text-gray-700 mb-3">
-                                        {{ __('Did the students individually perform the third activity?') }} <span class="text-red-500">*</span>
-                                    </p>
-                                    <div class="space-y-2">
-                                        <label class="flex items-center">
-                                            <input type="radio" name="activity3_individual" value="Yes" 
-                                                   class="mr-2 text-indigo-600 focus:ring-indigo-500"
-                                                   {{ old('activity3_individual') == 'Yes' ? 'checked' : '' }}>
-                                            <span class="text-sm text-gray-700">{{ __('Yes') }}</span>
-                                        </label>
-                                        <label class="flex items-center">
-                                            <input type="radio" name="activity3_individual" value="No" 
-                                                   class="mr-2 text-indigo-600 focus:ring-indigo-500"
-                                                   {{ old('activity3_individual') == 'No' ? 'checked' : '' }}>
-                                            <span class="text-sm text-gray-700">{{ __('No') }}</span>
-                                        </label>
-                                        <label class="flex items-center">
-                                            <input type="radio" name="activity3_individual" value="Not Applicable" 
-                                                   class="mr-2 text-indigo-600 focus:ring-indigo-500"
-                                                   {{ old('activity3_individual') == 'Not Applicable' ? 'checked' : '' }}>
-                                            <span class="text-sm text-gray-700">{{ __('Not Applicable') }}</span>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Section 8: Additional Observations -->
-                        <div class="questionnaire-section mb-8" data-section="additional">
-                            <h4 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b">{{ __('Additional Observations') }}</h4>
-                            
-                            <div class="space-y-6">
-                                <!-- General Observations -->
-                                <div>
-                                    <label for="observation" class="block text-sm font-medium text-gray-700 mb-2">
-                                        {{ __('General Observations') }}
-                                    </label>
-                                    <textarea id="observation" 
-                                              name="observation" 
-                                              rows="4"
-                                              class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                                              placeholder="{{ __('Describe your observations from the visit...') }}">{{ old('observation') }}</textarea>
-                                    @error('observation')
-                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                    @enderror
-                                </div>
-                                
-                                <!-- Action Plan -->
-                                <div>
-                                    <label for="action_plan" class="block text-sm font-medium text-gray-700 mb-2">
-                                        {{ __('Action Plan') }}
-                                    </label>
-                                    <textarea id="action_plan" 
-                                              name="action_plan" 
-                                              rows="4"
-                                              class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                                              placeholder="{{ __('Describe recommended actions and next steps...') }}">{{ old('action_plan') }}</textarea>
-                                    @error('action_plan')
-                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                    @enderror
-                                </div>
-                                
-                                <!-- Follow-up Required -->
-                                <div>
-                                    <p class="text-sm font-medium text-gray-700 mb-3">
-                                        {{ __('Is follow-up required?') }}
-                                    </p>
-                                    <div class="space-y-2">
-                                        <label class="flex items-center">
-                                            <input type="radio" name="follow_up_required" value="Yes" 
-                                                   class="mr-2 text-indigo-600 focus:ring-indigo-500"
-                                                   {{ old('follow_up_required') == 'Yes' ? 'checked' : '' }}>
-                                            <span class="text-sm text-gray-700">{{ __('Yes') }}</span>
-                                        </label>
-                                        <label class="flex items-center">
-                                            <input type="radio" name="follow_up_required" value="No" 
-                                                   class="mr-2 text-indigo-600 focus:ring-indigo-500"
-                                                   {{ old('follow_up_required') == 'No' ? 'checked' : '' }}>
-                                            <span class="text-sm text-gray-700">{{ __('No') }}</span>
-                                        </label>
-                                    </div>
-                                    @error('follow_up_required')
-                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                    @enderror
-                                </div>
-                            </div>
-                        </div>
-
                         <!-- Form Actions -->
-                        <div class="flex items-center justify-between pt-6 border-t">
+                        <div class="flex items-center justify-between">
                             <a href="{{ route('mentoring.index') }}" 
-                               class="inline-flex items-center px-4 py-2 bg-gray-300 border border-transparent rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest hover:bg-gray-400 focus:bg-gray-400 active:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                               class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg">
                                 {{ __('Cancel') }}
                             </a>
-                            
                             <button type="submit" 
-                                    class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                                </svg>
-                                {{ __('Submit Visit Report') }}
+                                    class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">
+                                {{ __('Submit') }}
                             </button>
                         </div>
                     </form>
@@ -1265,293 +936,369 @@
     @push('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // School-Teacher filtering
-            const schoolSelect = document.getElementById('school_id');
-            const teacherSelect = document.getElementById('teacher_id');
-            const teacherOptions = Array.from(teacherSelect.options);
+            // Geographic cascading selects
+            const provinceSelect = document.getElementById('province');
+            const districtSelect = document.getElementById('district');
+            const communeSelect = document.getElementById('commune');
+            const villageSelect = document.getElementById('village');
             
-            function filterTeachers() {
-                const selectedSchoolId = schoolSelect.value;
-                teacherSelect.innerHTML = '<option value="">{{ __("Select Teacher") }}</option>';
-                
-                teacherOptions.forEach(option => {
-                    if (option.value) {
-                        // Show teacher if no school is selected, or if teacher's school matches, or if teacher has no school assigned
-                        if (!selectedSchoolId || 
-                            option.dataset.school == selectedSchoolId || 
-                            !option.dataset.school || 
-                            option.dataset.school === '') {
-                            teacherSelect.appendChild(option.cloneNode(true));
-                        }
-                    }
-                });
-            }
+            // Store selected codes for API calls
+            let selectedProvinceCode = null;
+            let selectedDistrictCode = null;
+            let selectedCommuneCode = null;
             
-            schoolSelect.addEventListener('change', filterTeachers);
+            // Load provinces on page load
+            loadProvinces();
             
-            // Class in session logic
-            const classInSessionRadios = document.getElementsByName('class_in_session');
-            const notTakingPlaceReason = document.getElementById('notTakingPlaceReason');
-            const observationSection = document.getElementById('observationSection');
-            const deliverySection = document.getElementById('deliverySection');
-            const classroomSection = document.getElementById('classroomSection');
-            const teacherQuestionsSection = document.getElementById('teacherQuestionsSection');
-            const activityOverviewSection = document.getElementById('activityOverviewSection');
-            
-            function toggleClassSections() {
-                const isInSession = document.querySelector('input[name="class_in_session"]:checked')?.value === 'Yes';
-                
-                if (isInSession) {
-                    notTakingPlaceReason.classList.add('hidden');
-                    observationSection.classList.remove('hidden');
-                    deliverySection.classList.remove('hidden');
-                    classroomSection.classList.remove('hidden');
-                    teacherQuestionsSection.classList.remove('hidden');
-                    activityOverviewSection.classList.remove('hidden');
-                    document.getElementById('class_not_in_session_reason').removeAttribute('required');
-                } else {
-                    notTakingPlaceReason.classList.remove('hidden');
-                    observationSection.classList.add('hidden');
-                    deliverySection.classList.add('hidden');
-                    classroomSection.classList.add('hidden');
-                    teacherQuestionsSection.classList.add('hidden');
-                    activityOverviewSection.classList.add('hidden');
-                    document.getElementById('activity1Section').classList.add('hidden');
-                    document.getElementById('activity2Section').classList.add('hidden');
-                    document.getElementById('activity3Section').classList.add('hidden');
-                    document.getElementById('class_not_in_session_reason').setAttribute('required', 'required');
-                }
-                
-                updateProgress();
-            }
-            
-            classInSessionRadios.forEach(radio => {
-                radio.addEventListener('change', toggleClassSections);
-            });
-            
-            // Subject levels logic
-            const subjectSelect = document.getElementById('subject_observed');
-            const languageLevelsDiv = document.getElementById('languageLevelsDiv');
-            const numeracyLevelsDiv = document.getElementById('numeracyLevelsDiv');
-            
-            function toggleSubjectLevels() {
-                const selectedSubject = subjectSelect.value;
-                
-                if (selectedSubject === 'Language') {
-                    languageLevelsDiv.classList.remove('hidden');
-                    numeracyLevelsDiv.classList.add('hidden');
-                } else if (selectedSubject === 'Numeracy') {
-                    languageLevelsDiv.classList.add('hidden');
-                    numeracyLevelsDiv.classList.remove('hidden');
-                } else {
-                    languageLevelsDiv.classList.add('hidden');
-                    numeracyLevelsDiv.classList.add('hidden');
-                }
-                
-                // Also update activity sections
-                updateActivitySections();
-            }
-            
-            subjectSelect.addEventListener('change', toggleSubjectLevels);
-            
-            // Class start time logic
-            const classStartedOnTimeRadios = document.getElementsByName('class_started_on_time');
-            const lateStartReason = document.getElementById('lateStartReason');
-            
-            function toggleLateStartReason() {
-                const startedOnTime = document.querySelector('input[name="class_started_on_time"]:checked')?.value === 'Yes';
-                
-                if (startedOnTime) {
-                    lateStartReason.classList.add('hidden');
-                    document.getElementById('late_start_reason').removeAttribute('required');
-                } else {
-                    lateStartReason.classList.remove('hidden');
-                    document.getElementById('late_start_reason').setAttribute('required', 'required');
-                }
-            }
-            
-            classStartedOnTimeRadios.forEach(radio => {
-                radio.addEventListener('change', toggleLateStartReason);
-            });
-            
-            // Teacher session plan logic
-            const hasSessionPlanRadios = document.getElementsByName('has_session_plan');
-            const noSessionPlanReason = document.getElementById('noSessionPlanReason');
-            const followedSessionPlanDiv = document.getElementById('followedSessionPlanDiv');
-            const sessionPlanAppropriateDiv = document.getElementById('sessionPlanAppropriateDiv');
-            
-            function toggleSessionPlanFields() {
-                const hasSessionPlan = document.querySelector('input[name="has_session_plan"]:checked')?.value === 'Yes';
-                
-                if (hasSessionPlan) {
-                    noSessionPlanReason.classList.add('hidden');
-                    followedSessionPlanDiv.classList.remove('hidden');
-                    sessionPlanAppropriateDiv.classList.remove('hidden');
-                } else {
-                    noSessionPlanReason.classList.remove('hidden');
-                    followedSessionPlanDiv.classList.add('hidden');
-                    sessionPlanAppropriateDiv.classList.add('hidden');
-                    document.getElementById('noFollowPlanReason').classList.add('hidden');
-                }
-            }
-            
-            hasSessionPlanRadios.forEach(radio => {
-                radio.addEventListener('change', toggleSessionPlanFields);
-            });
-            
-            // Follow session plan logic
-            const followedSessionPlanRadios = document.getElementsByName('followed_session_plan');
-            const noFollowPlanReason = document.getElementById('noFollowPlanReason');
-            
-            function toggleFollowPlanReason() {
-                const followedPlan = document.querySelector('input[name="followed_session_plan"]:checked')?.value === 'Yes';
-                
-                if (followedPlan) {
-                    noFollowPlanReason.classList.add('hidden');
-                } else {
-                    noFollowPlanReason.classList.remove('hidden');
-                }
-            }
-            
-            followedSessionPlanRadios.forEach(radio => {
-                radio.addEventListener('change', toggleFollowPlanReason);
-            });
-            
-            // Number of activities logic
-            const numberOfActivitiesSelect = document.getElementById('number_of_activities');
-            
-            function toggleActivitySections() {
-                const numActivities = parseInt(numberOfActivitiesSelect.value) || 0;
-                const activity1Section = document.getElementById('activity1Section');
-                const activity2Section = document.getElementById('activity2Section');
-                const activity3Section = document.getElementById('activity3Section');
-                
-                if (numActivities >= 1) {
-                    activity1Section.classList.remove('hidden');
-                } else {
-                    activity1Section.classList.add('hidden');
-                }
-                
-                if (numActivities >= 2) {
-                    activity2Section.classList.remove('hidden');
-                } else {
-                    activity2Section.classList.add('hidden');
-                }
-                
-                if (numActivities >= 3) {
-                    activity3Section.classList.remove('hidden');
-                } else {
-                    activity3Section.classList.add('hidden');
-                }
-                
-                updateActivitySections();
-            }
-            
-            numberOfActivitiesSelect.addEventListener('change', toggleActivitySections);
-            
-            // Update activity sections based on subject
-            function updateActivitySections() {
-                const selectedSubject = subjectSelect.value;
-                const numActivities = parseInt(numberOfActivitiesSelect.value) || 0;
-                
-                // Activity 1
-                if (numActivities >= 1) {
-                    if (selectedSubject === 'Language') {
-                        document.getElementById('activity1LanguageDiv').classList.remove('hidden');
-                        document.getElementById('activity1NumeracyDiv').classList.add('hidden');
-                    } else if (selectedSubject === 'Numeracy') {
-                        document.getElementById('activity1LanguageDiv').classList.add('hidden');
-                        document.getElementById('activity1NumeracyDiv').classList.remove('hidden');
-                    } else {
-                        document.getElementById('activity1LanguageDiv').classList.add('hidden');
-                        document.getElementById('activity1NumeracyDiv').classList.add('hidden');
-                    }
-                }
-                
-                // Activity 2
-                if (numActivities >= 2) {
-                    if (selectedSubject === 'Language') {
-                        document.getElementById('activity2LanguageDiv').classList.remove('hidden');
-                        document.getElementById('activity2NumeracyDiv').classList.add('hidden');
-                    } else if (selectedSubject === 'Numeracy') {
-                        document.getElementById('activity2LanguageDiv').classList.add('hidden');
-                        document.getElementById('activity2NumeracyDiv').classList.remove('hidden');
-                    } else {
-                        document.getElementById('activity2LanguageDiv').classList.add('hidden');
-                        document.getElementById('activity2NumeracyDiv').classList.add('hidden');
-                    }
-                }
-                
-                // Activity 3
-                if (numActivities >= 3) {
-                    if (selectedSubject === 'Language') {
-                        document.getElementById('activity3LanguageDiv').classList.remove('hidden');
-                        document.getElementById('activity3NumeracyDiv').classList.add('hidden');
-                    } else if (selectedSubject === 'Numeracy') {
-                        document.getElementById('activity3LanguageDiv').classList.add('hidden');
-                        document.getElementById('activity3NumeracyDiv').classList.remove('hidden');
-                    } else {
-                        document.getElementById('activity3LanguageDiv').classList.add('hidden');
-                        document.getElementById('activity3NumeracyDiv').classList.add('hidden');
-                    }
-                }
-            }
-            
-            // Activity clear instructions logic
-            function setupActivityInstructionsLogic(activityNum) {
-                const clearInstructionsRadios = document.getElementsByName(`activity${activityNum}_clear_instructions`);
-                const noClearInstructionsReason = document.getElementById(`activity${activityNum}NoClearInstructionsReason`);
-                
-                clearInstructionsRadios.forEach(radio => {
-                    radio.addEventListener('change', function() {
-                        const hasClearInstructions = document.querySelector(`input[name="activity${activityNum}_clear_instructions"]:checked`)?.value === 'Yes';
+            function loadProvinces() {
+                fetch('{{ route("api.geographic.provinces") }}')
+                    .then(response => response.json())
+                    .then(data => {
+                        provinceSelect.innerHTML = '<option value="">{{ __("ជ្រើសរើសខេត្ត") }}</option>';
+                        data.forEach(province => {
+                            const option = document.createElement('option');
+                            option.value = province.province_name_kh;
+                            option.dataset.code = province.province_code;
+                            option.textContent = province.province_name_kh;
+                            provinceSelect.appendChild(option);
+                        });
                         
-                        if (hasClearInstructions) {
-                            noClearInstructionsReason.classList.add('hidden');
-                        } else {
-                            noClearInstructionsReason.classList.remove('hidden');
+                        // If there's an old value, select it
+                        const oldProvince = '{{ old("province") }}';
+                        if (oldProvince) {
+                            provinceSelect.value = oldProvince;
+                            provinceSelect.dispatchEvent(new Event('change'));
                         }
                     });
-                });
             }
             
-            // Setup for all 3 activities
-            setupActivityInstructionsLogic(1);
-            setupActivityInstructionsLogic(2);
-            setupActivityInstructionsLogic(3);
+            // Province change event
+            provinceSelect.addEventListener('change', function() {
+                const selectedOption = this.options[this.selectedIndex];
+                selectedProvinceCode = selectedOption.dataset.code;
+                
+                // Reset dependent selects
+                districtSelect.innerHTML = '<option value="">{{ __("ជ្រើសរើសស្រុក/ក្រុង") }}</option>';
+                districtSelect.disabled = true;
+                communeSelect.innerHTML = '<option value="">{{ __("ជ្រើសរើសឃុំ/សង្កាត់") }}</option>';
+                communeSelect.disabled = true;
+                villageSelect.innerHTML = '<option value="">{{ __("ជ្រើសរើសភូមិ") }}</option>';
+                villageSelect.disabled = true;
+                
+                if (selectedProvinceCode) {
+                    // Load districts for selected province
+                    fetch(`{{ route("api.geographic.districts") }}?province_code=${selectedProvinceCode}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            districtSelect.innerHTML = '<option value="">{{ __("ជ្រើសរើសស្រុក/ក្រុង") }}</option>';
+                            data.forEach(district => {
+                                const option = document.createElement('option');
+                                option.value = district.district_name_kh;
+                                option.dataset.code = district.district_code;
+                                option.textContent = district.district_name_kh;
+                                districtSelect.appendChild(option);
+                            });
+                            districtSelect.disabled = false;
+                            
+                            // If there's an old value, select it
+                            const oldDistrict = '{{ old("district") }}';
+                            if (oldDistrict) {
+                                districtSelect.value = oldDistrict;
+                                districtSelect.dispatchEvent(new Event('change'));
+                            }
+                        });
+                }
+            });
             
-            // Progress tracking
+            // District change event
+            districtSelect.addEventListener('change', function() {
+                const selectedOption = this.options[this.selectedIndex];
+                selectedDistrictCode = selectedOption.dataset.code;
+                
+                // Reset dependent selects
+                communeSelect.innerHTML = '<option value="">{{ __("ជ្រើសរើសឃុំ/សង្កាត់") }}</option>';
+                communeSelect.disabled = true;
+                villageSelect.innerHTML = '<option value="">{{ __("ជ្រើសរើសភូមិ") }}</option>';
+                villageSelect.disabled = true;
+                
+                if (selectedDistrictCode) {
+                    // Load communes for selected district
+                    fetch(`{{ route("api.geographic.communes") }}?district_code=${selectedDistrictCode}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            communeSelect.innerHTML = '<option value="">{{ __("ជ្រើសរើសឃុំ/សង្កាត់") }}</option>';
+                            data.forEach(commune => {
+                                const option = document.createElement('option');
+                                option.value = commune.commune_name_kh;
+                                option.dataset.code = commune.commune_code;
+                                option.textContent = commune.commune_name_kh;
+                                communeSelect.appendChild(option);
+                            });
+                            communeSelect.disabled = false;
+                            
+                            // If there's an old value, select it
+                            const oldCommune = '{{ old("commune") }}';
+                            if (oldCommune) {
+                                communeSelect.value = oldCommune;
+                                communeSelect.dispatchEvent(new Event('change'));
+                            }
+                        });
+                }
+            });
+            
+            // Commune change event
+            communeSelect.addEventListener('change', function() {
+                const selectedOption = this.options[this.selectedIndex];
+                selectedCommuneCode = selectedOption.dataset.code;
+                
+                // Reset village select
+                villageSelect.innerHTML = '<option value="">{{ __("ជ្រើសរើសភូមិ") }}</option>';
+                villageSelect.disabled = true;
+                
+                if (selectedCommuneCode) {
+                    // Load villages for selected commune
+                    fetch(`{{ route("api.geographic.villages") }}?commune_code=${selectedCommuneCode}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            villageSelect.innerHTML = '<option value="">{{ __("ជ្រើសរើសភូមិ") }}</option>';
+                            data.forEach(village => {
+                                const option = document.createElement('option');
+                                option.value = village.village_name_kh;
+                                option.dataset.code = village.village_code;
+                                option.textContent = village.village_name_kh;
+                                villageSelect.appendChild(option);
+                            });
+                            villageSelect.disabled = false;
+                            
+                            // If there's an old value, select it
+                            const oldVillage = '{{ old("village") }}';
+                            if (oldVillage) {
+                                villageSelect.value = oldVillage;
+                            }
+                        });
+                }
+            });
+            
+            // Update progress bar
             function updateProgress() {
-                const requiredFields = document.querySelectorAll('[required]:not([type="hidden"]):not(.hidden [required])');
-                const filledFields = Array.from(requiredFields).filter(field => {
-                    if (field.type === 'checkbox' || field.type === 'radio') {
-                        return document.querySelector(`[name="${field.name}"]:checked`);
+                const form = document.getElementById('mentoringForm');
+                const inputs = form.querySelectorAll('input[required], select[required], textarea[required]');
+                const filledInputs = Array.from(inputs).filter(input => {
+                    if (input.type === 'radio') {
+                        return form.querySelector(`input[name="${input.name}"]:checked`) !== null;
+                    } else if (input.type === 'checkbox') {
+                        return form.querySelector(`input[name="${input.name}"]:checked`) !== null;
                     }
-                    return field.value.trim() !== '';
+                    return input.value.trim() !== '';
                 });
                 
-                const progress = Math.round((filledFields.length / requiredFields.length) * 100);
+                const progress = Math.round((filledInputs.length / inputs.length) * 100);
                 document.getElementById('progressPercent').textContent = progress;
                 document.getElementById('progressBar').style.width = progress + '%';
             }
             
-            // Add progress tracking to all inputs
-            document.querySelectorAll('input, select, textarea').forEach(element => {
-                element.addEventListener('change', updateProgress);
-                element.addEventListener('input', updateProgress);
+            // Dynamic form fields based on conditions
+            
+            // School-Teacher relationship
+            const schoolSelect = document.getElementById('school_id');
+            const teacherSelect = document.getElementById('teacher_id');
+            
+            if (schoolSelect) {
+                schoolSelect.addEventListener('change', function() {
+                    const schoolId = this.value;
+                    teacherSelect.innerHTML = '<option value="">{{ __("Select Teacher") }}</option>';
+                    
+                    if (schoolId) {
+                        fetch(`/api/school/${schoolId}/teachers`)
+                            .then(response => response.json())
+                            .then(data => {
+                                data.forEach(teacher => {
+                                    const option = document.createElement('option');
+                                    option.value = teacher.id;
+                                    option.textContent = teacher.name;
+                                    teacherSelect.appendChild(option);
+                                });
+                            });
+                    }
+                });
+            }
+            
+            // Class in session logic
+            const classInSessionRadios = document.querySelectorAll('input[name="class_in_session"]');
+            const classNotInSessionReasonContainer = document.getElementById('class_not_in_session_reason_container');
+            const classDetailsSections = ['class_details_section', 'student_stats_section', 'delivery_section', 
+                                         'classroom_section', 'teacher_section', 'activities_section'];
+            
+            classInSessionRadios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    if (this.value === '0') {
+                        classNotInSessionReasonContainer.style.display = 'block';
+                        classDetailsSections.forEach(id => {
+                            const element = document.getElementById(id);
+                            if (element) element.style.display = 'none';
+                        });
+                    } else {
+                        classNotInSessionReasonContainer.style.display = 'none';
+                        classDetailsSections.forEach(id => {
+                            const element = document.getElementById(id);
+                            if (element) element.style.display = 'block';
+                        });
+                    }
+                    updateProgress();
+                });
             });
             
-            // Initialize
-            filterTeachers();
-            toggleClassSections();
-            toggleSubjectLevels();
-            toggleLateStartReason();
-            toggleSessionPlanFields();
-            toggleFollowPlanReason();
-            toggleActivitySections();
+            // Subject observed logic
+            const subjectObserved = document.getElementById('subject_observed');
+            const languageLevelsContainer = document.getElementById('language_levels_container');
+            const numeracyLevelsContainer = document.getElementById('numeracy_levels_container');
+            
+            if (subjectObserved) {
+                subjectObserved.addEventListener('change', function() {
+                    if (this.value === 'ភាសាខ្មែរ') {
+                        languageLevelsContainer.style.display = 'block';
+                        numeracyLevelsContainer.style.display = 'none';
+                        // Show/hide activity fields
+                        document.querySelectorAll('[id*="_khmer_container"]').forEach(el => el.style.display = 'block');
+                        document.querySelectorAll('[id*="_math_container"]').forEach(el => el.style.display = 'none');
+                    } else if (this.value === 'គណិតវិទ្យា') {
+                        languageLevelsContainer.style.display = 'none';
+                        numeracyLevelsContainer.style.display = 'block';
+                        // Show/hide activity fields
+                        document.querySelectorAll('[id*="_khmer_container"]').forEach(el => el.style.display = 'none');
+                        document.querySelectorAll('[id*="_math_container"]').forEach(el => el.style.display = 'block');
+                    } else {
+                        languageLevelsContainer.style.display = 'none';
+                        numeracyLevelsContainer.style.display = 'none';
+                        document.querySelectorAll('[id*="_khmer_container"]').forEach(el => el.style.display = 'none');
+                        document.querySelectorAll('[id*="_math_container"]').forEach(el => el.style.display = 'none');
+                    }
+                });
+            }
+            
+            // Class started on time logic
+            const classStartedOnTimeRadios = document.querySelectorAll('input[name="class_started_on_time"]');
+            const lateStartReasonContainer = document.getElementById('late_start_reason_container');
+            
+            classStartedOnTimeRadios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    lateStartReasonContainer.style.display = this.value === '0' ? 'block' : 'none';
+                });
+            });
+            
+            // Has session plan logic
+            const hasSessionPlanRadios = document.querySelectorAll('input[name="has_session_plan"]');
+            const noSessionPlanReasonContainer = document.getElementById('no_session_plan_reason_container');
+            const sessionPlanDetails = document.getElementById('session_plan_details');
+            
+            hasSessionPlanRadios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    if (this.value === '1') {
+                        noSessionPlanReasonContainer.style.display = 'none';
+                        sessionPlanDetails.style.display = 'block';
+                    } else {
+                        noSessionPlanReasonContainer.style.display = 'block';
+                        sessionPlanDetails.style.display = 'none';
+                    }
+                });
+            });
+            
+            // Followed session plan logic
+            const followedSessionPlanRadios = document.querySelectorAll('input[name="followed_session_plan"]');
+            const noFollowPlanReasonContainer = document.getElementById('no_follow_plan_reason_container');
+            
+            followedSessionPlanRadios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    noFollowPlanReasonContainer.style.display = this.value === '0' ? 'block' : 'none';
+                });
+            });
+            
+            // Number of activities logic
+            const numberOfActivities = document.getElementById('number_of_activities');
+            
+            if (numberOfActivities) {
+                numberOfActivities.addEventListener('change', function() {
+                    const num = parseInt(this.value);
+                    
+                    // Show/hide activity sections
+                    for (let i = 1; i <= 3; i++) {
+                        const section = document.getElementById(`activity${i}_section`);
+                        if (section) {
+                            section.style.display = i <= num ? 'block' : 'none';
+                        }
+                    }
+                });
+            }
+            
+            // Activity clear instructions logic
+            for (let i = 1; i <= 2; i++) {
+                const clearInstructionsRadios = document.querySelectorAll(`input[name="activity${i}_clear_instructions"]`);
+                const noClearInstructionsContainer = document.getElementById(`activity${i}_no_clear_instructions_container`);
+                
+                clearInstructionsRadios.forEach(radio => {
+                    radio.addEventListener('change', function() {
+                        noClearInstructionsContainer.style.display = this.value === '0' ? 'block' : 'none';
+                    });
+                });
+                
+                // Activity followed process logic
+                const followedProcessRadios = document.querySelectorAll(`input[name="activity${i}_followed_process"]`);
+                const notFollowedReasonContainer = document.getElementById(`activity${i}_not_followed_reason_container`);
+                
+                followedProcessRadios.forEach(radio => {
+                    radio.addEventListener('change', function() {
+                        notFollowedReasonContainer.style.display = this.value === '0' ? 'block' : 'none';
+                    });
+                });
+            }
+            
+            // Validation for student numbers
+            const totalStudents = document.getElementById('total_students_enrolled');
+            const studentsPresent = document.getElementById('students_present');
+            const studentsImproved = document.getElementById('students_improved_from_last_week');
+            
+            if (totalStudents && studentsPresent) {
+                studentsPresent.addEventListener('input', function() {
+                    const total = parseInt(totalStudents.value) || 0;
+                    const present = parseInt(this.value) || 0;
+                    
+                    if (present > total) {
+                        this.setCustomValidity('Students present cannot exceed total students enrolled');
+                    } else {
+                        this.setCustomValidity('');
+                    }
+                });
+            }
+            
+            if (totalStudents && studentsImproved) {
+                studentsImproved.addEventListener('input', function() {
+                    const total = parseInt(totalStudents.value) || 0;
+                    const improved = parseInt(this.value) || 0;
+                    
+                    if (improved > total) {
+                        this.setCustomValidity('Students improved cannot exceed total students enrolled');
+                    } else {
+                        this.setCustomValidity('');
+                    }
+                });
+            }
+            
+            // Update progress on input change
+            const formInputs = document.querySelectorAll('#mentoringForm input, #mentoringForm select, #mentoringForm textarea');
+            formInputs.forEach(input => {
+                input.addEventListener('change', updateProgress);
+                input.addEventListener('input', updateProgress);
+            });
+            
+            // Initial progress update
             updateProgress();
+            
+            // Trigger initial state
+            const checkedClassInSession = document.querySelector('input[name="class_in_session"]:checked');
+            if (checkedClassInSession) {
+                checkedClassInSession.dispatchEvent(new Event('change'));
+            }
         });
-        
     </script>
     @endpush
 </x-app-layout>

@@ -112,10 +112,10 @@ class MentoringVisitController extends Controller
         $user = $request->user();
         if ($user->isMentor()) {
             // Mentors can only see their assigned schools
-            $schools = $user->assignedSchools()->orderBy('school_name')->get();
+            $schools = $user->assignedSchools()->orderBy('name')->get();
         } else {
             // Admins can see all schools
-            $schools = School::orderBy('school_name')->get();
+            $schools = School::orderBy('name')->get();
         }
 
         // Get provinces from schools table (distinct values)
@@ -258,10 +258,10 @@ class MentoringVisitController extends Controller
         }
         if ($user->isMentor()) {
             // Mentors can only see their assigned schools
-            $schools = $user->assignedSchools()->orderBy('school_name')->get();
+            $schools = $user->assignedSchools()->orderBy('name')->get();
         } else {
             // Admins can see all schools
-            $schools = School::orderBy('school_name')->get();
+            $schools = School::orderBy('name')->get();
         }
 
         // Get provinces from schools table (distinct values)

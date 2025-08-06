@@ -39,12 +39,12 @@ class DashboardController extends Controller
                 $districts = collect([]);
                 $clusters = collect([]);
             } else {
-                $schools = School::whereIn('id', $schoolIds)->orderBy('school_name')->get();
+                $schools = School::whereIn('id', $schoolIds)->orderBy('name')->get();
 
-                // Get unique provinces, districts, and clusters from accessible schools
+                // Get unique provinces and districts from accessible schools
                 $provinces = School::whereIn('id', $schoolIds)->distinct()->orderBy('province')->pluck('province')->filter()->values();
                 $districts = School::whereIn('id', $schoolIds)->distinct()->orderBy('district')->pluck('district')->filter()->values();
-                $clusters = School::whereIn('id', $schoolIds)->distinct()->orderBy('cluster')->pluck('cluster')->filter()->values();
+                $clusters = collect([]); // Cluster column doesn't exist yet
             }
         }
 
@@ -119,20 +119,20 @@ class DashboardController extends Controller
                 $schoolQuery->where('district', $request->district);
             }
 
-            // Filter by cluster
-            if ($request->has('cluster') && $request->cluster) {
-                $filterQuery = School::where('cluster', $request->cluster);
-                if (! $user->isAdmin()) {
-                    $filterQuery->whereIn('id', $accessibleSchoolIds);
-                }
-                $schoolIds = $filterQuery->pluck('id');
-                $studentQuery->whereIn('school_id', $schoolIds);
-                $assessmentQuery->whereHas('student', function ($q) use ($schoolIds) {
-                    $q->whereIn('school_id', $schoolIds);
-                });
-                $mentoringQuery->whereIn('school_id', $schoolIds);
-                $schoolQuery->where('cluster', $request->cluster);
-            }
+            // Filter by cluster (commented out - cluster column doesn't exist yet)
+            // if ($request->has('cluster') && $request->cluster) {
+            //     $filterQuery = School::where('cluster', $request->cluster);
+            //     if (! $user->isAdmin()) {
+            //         $filterQuery->whereIn('id', $accessibleSchoolIds);
+            //     }
+            //     $schoolIds = $filterQuery->pluck('id');
+            //     $studentQuery->whereIn('school_id', $schoolIds);
+            //     $assessmentQuery->whereHas('student', function ($q) use ($schoolIds) {
+            //         $q->whereIn('school_id', $schoolIds);
+            //     });
+            //     $mentoringQuery->whereIn('school_id', $schoolIds);
+            //     $schoolQuery->where('cluster', $request->cluster);
+            // }
 
             // Filter by selected school
             if ($request->has('school_id') && $request->school_id) {
@@ -212,17 +212,17 @@ class DashboardController extends Controller
                 });
             }
 
-            // Filter by cluster
-            if ($request->has('cluster') && $request->cluster) {
-                $filterQuery = School::where('cluster', $request->cluster);
-                if (! $user->isAdmin()) {
-                    $filterQuery->whereIn('id', $accessibleSchoolIds);
-                }
-                $schoolIds = $filterQuery->pluck('id');
-                $query->whereHas('student', function ($q) use ($schoolIds) {
-                    $q->whereIn('school_id', $schoolIds);
-                });
-            }
+            // Filter by cluster (commented out - cluster column doesn't exist yet)
+            // if ($request->has('cluster') && $request->cluster) {
+            //     $filterQuery = School::where('cluster', $request->cluster);
+            //     if (! $user->isAdmin()) {
+            //         $filterQuery->whereIn('id', $accessibleSchoolIds);
+            //     }
+            //     $schoolIds = $filterQuery->pluck('id');
+            //     $query->whereHas('student', function ($q) use ($schoolIds) {
+            //         $q->whereIn('school_id', $schoolIds);
+            //     });
+            // }
 
             // Filter by selected school
             if ($request->has('school_id') && $request->school_id) {
@@ -305,7 +305,7 @@ class DashboardController extends Controller
         $accessibleSchoolIds = $user->getAccessibleSchoolIds();
 
         // Get schools with filters
-        $schoolQuery = School::orderBy('school_name');
+        $schoolQuery = School::orderBy('name');
 
         // Apply access restrictions for mentors
         if (! $user->isAdmin()) {
@@ -326,9 +326,10 @@ class DashboardController extends Controller
             $schoolQuery->where('district', $request->district);
         }
 
-        if ($request->has('cluster') && $request->cluster) {
-            $schoolQuery->where('cluster', $request->cluster);
-        }
+        // Filter by cluster (commented out - cluster column doesn't exist yet)
+        // if ($request->has('cluster') && $request->cluster) {
+        //     $schoolQuery->where('cluster', $request->cluster);
+        // }
 
         if ($request->has('school_id') && $request->school_id) {
             $schoolQuery->where('id', $request->school_id);

@@ -46,7 +46,7 @@
                                 </div>
                                 <div class="flex justify-between items-center py-1">
                                     <dt class="text-xs font-medium text-gray-500">{{ __('School') }}</dt>
-                                    <dd class="text-xs text-gray-900 truncate max-w-[150px]" title="{{ $mentoringVisit->school->school_name }}">{{ $mentoringVisit->school->school_name }}</dd>
+                                    <dd class="text-xs text-gray-900 truncate max-w-[150px]" title="{{ $mentoringVisit->school->name }}">{{ $mentoringVisit->school->name }}</dd>
                                 </div>
                                 <div class="flex justify-between items-center py-1">
                                     <dt class="text-xs font-medium text-gray-500">{{ __('Mentor') }}</dt>

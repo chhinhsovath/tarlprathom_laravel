@@ -18,7 +18,7 @@
                                     <option value="">{{ __('All Schools') }}</option>
                                     @foreach($schools as $school)
                                         <option value="{{ $school->id }}" {{ $schoolId == $school->id ? 'selected' : '' }}>
-                                            {{ $school->school_name }}
+                                            {{ $school->name }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -167,7 +167,7 @@
                                 @foreach($schoolPerformanceData as $data)
                                 <tr class="hover:bg-gray-50">
                                     <td class="px-8 py-6 whitespace-nowrap text-base font-medium text-gray-900">
-                                        {{ $data['school']->school_name }}
+                                        {{ $data['school']->name }}
                                     </td>
                                     
                                     <!-- Language Performance -->

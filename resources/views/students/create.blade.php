@@ -28,17 +28,17 @@
 
                             <!-- Grade -->
                             <div>
-                                <x-input-label for="grade" :value="__('Grade')" class="text-sm font-medium" />
-                                <select id="grade" name="grade" class="mt-1 block w-full text-sm rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
+                                <x-input-label for="class" :value="__('Grade')" class="text-sm font-medium" />
+                                <select id="class" name="class" class="mt-1 block w-full text-sm rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
                                     <option value="">{{ __('Select Grade') }}</option>
-                                    <option value="4" {{ old('grade') == 4 ? 'selected' : '' }}>
+                                    <option value="Grade 4" {{ old('class') == 'Grade 4' ? 'selected' : '' }}>
                                         {{ __('Grade') }} 4
                                     </option>
-                                    <option value="5" {{ old('grade') == 5 ? 'selected' : '' }}>
+                                    <option value="Grade 5" {{ old('class') == 'Grade 5' ? 'selected' : '' }}>
                                         {{ __('Grade') }} 5
                                     </option>
                                 </select>
-                                <x-input-error class="mt-1" :messages="$errors->get('grade')" />
+                                <x-input-error class="mt-1" :messages="$errors->get('class')" />
                             </div>
 
                             <!-- Gender -->
@@ -67,7 +67,7 @@
                                         <option value="">{{ __('Select School') }}</option>
                                         @foreach($schools as $school)
                                             <option value="{{ $school->id }}" {{ old('school_id') == $school->id ? 'selected' : '' }}>
-                                                {{ $school->school_name }}
+                                                {{ $school->name }}
                                             </option>
                                         @endforeach
                                     </select>
@@ -78,7 +78,7 @@
                                 <div>
                                     <x-input-label :value="__('School')" class="text-sm font-medium" />
                                     <div class="mt-1 px-3 py-2 text-sm bg-gray-50 border border-gray-300 rounded-md text-gray-700">
-                                        {{ $schools->first()->school_name }}
+                                        {{ $schools->first()->name }}
                                     </div>
                                 </div>
                             @endif

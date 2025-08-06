@@ -29,35 +29,41 @@
             </div>
 
             <!-- Summary Statistics -->
-            <div class="grid grid-cols-1 md:grid-cols-5 gap-6 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                    <div class="p-6">
+                    <div class="p-4">
                         <dt class="text-sm font-medium text-gray-500 truncate">{{ __('Total Visits') }}</dt>
-                        <dd class="mt-1 text-3xl font-semibold text-gray-900">{{ $stats['total_visits'] }}</dd>
+                        <dd class="mt-1 text-2xl font-semibold text-gray-900">{{ $stats['total_visits'] }}</dd>
                     </div>
                 </div>
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                    <div class="p-6">
+                    <div class="p-4">
                         <dt class="text-sm font-medium text-gray-500 truncate">{{ __('Schools Visited') }}</dt>
-                        <dd class="mt-1 text-3xl font-semibold text-gray-900">{{ $stats['schools_visited'] }}</dd>
+                        <dd class="mt-1 text-2xl font-semibold text-gray-900">{{ $stats['schools_visited'] }}</dd>
                     </div>
                 </div>
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                    <div class="p-6">
+                    <div class="p-4">
                         <dt class="text-sm font-medium text-gray-500 truncate">{{ __('Teachers Mentored') }}</dt>
-                        <dd class="mt-1 text-3xl font-semibold text-gray-900">{{ $stats['teachers_mentored'] }}</dd>
+                        <dd class="mt-1 text-2xl font-semibold text-gray-900">{{ $stats['teachers_mentored'] }}</dd>
                     </div>
                 </div>
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                    <div class="p-6">
-                        <dt class="text-sm font-medium text-gray-500 truncate">{{ __('Average Score') }}</dt>
-                        <dd class="mt-1 text-3xl font-semibold text-gray-900">{{ number_format($stats['average_score'], 1) }}%</dd>
+                    <div class="p-4">
+                        <dt class="text-sm font-medium text-gray-500 truncate">{{ __('Classes in Session') }}</dt>
+                        <dd class="mt-1 text-2xl font-semibold text-green-600">{{ $stats['classes_in_session'] }}</dd>
                     </div>
                 </div>
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                    <div class="p-6">
+                    <div class="p-4">
+                        <dt class="text-sm font-medium text-gray-500 truncate">{{ __('Full Sessions') }}</dt>
+                        <dd class="mt-1 text-2xl font-semibold text-blue-600">{{ $stats['full_sessions_observed'] }}</dd>
+                    </div>
+                </div>
+                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                    <div class="p-4">
                         <dt class="text-sm font-medium text-gray-500 truncate">{{ __('Follow-up Required') }}</dt>
-                        <dd class="mt-1 text-3xl font-semibold text-red-600">{{ $stats['follow_up_required'] }}</dd>
+                        <dd class="mt-1 text-2xl font-semibold text-red-600">{{ $stats['follow_up_required'] }}</dd>
                     </div>
                 </div>
             </div>
@@ -84,13 +90,16 @@
                                         {{ __('School') }}
                                     </th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        {{ __('Total Visits') }}
+                                        {{ __('Visits') }}
                                     </th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         {{ __('Teachers') }}
                                     </th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        {{ __('Average Score') }}
+                                        {{ __('Avg Students') }}
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        {{ __('Improved') }}
                                     </th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         {{ __('Actions') }}
@@ -101,7 +110,7 @@
                                 @foreach($visitsBySchool as $schoolData)
                                 <tr>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                        {{ $schoolData['school']->school_name }}
+                                        {{ $schoolData['school']->name }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                         {{ $schoolData['total_visits'] }}
@@ -110,7 +119,14 @@
                                         {{ $schoolData['teachers']->count() }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        {{ number_format($schoolData['average_score'], 1) }}%
+                                        {{ number_format($schoolData['avg_students_present'], 0) }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        @if($schoolData['avg_students_improved'] > 0)
+                                            <span class="text-green-600">+{{ number_format($schoolData['avg_students_improved'], 0) }}</span>
+                                        @else
+                                            <span class="text-gray-400">-</span>
+                                        @endif
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                         <a href="{{ route('reports.school-visits', ['school_id' => $schoolData['school']->id]) }}" 
@@ -144,7 +160,10 @@
                                         {{ __('Teacher') }}
                                     </th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        {{ __('Score') }}
+                                        {{ __('Subject') }}
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        {{ __('Students') }}
                                     </th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         {{ __('Follow-up') }}
@@ -161,19 +180,20 @@
                                         {{ $visit->visit_date->format('Y-m-d') }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        {{ $visit->school->school_name }}
+                                        {{ $visit->school->name }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                         {{ $visit->teacher->name }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
-                                            @if($visit->score >= 80) bg-green-100 text-green-800
-                                            @elseif($visit->score >= 60) bg-yellow-100 text-yellow-800
-                                            @else bg-red-100 text-red-800
-                                            @endif">
-                                            {{ $visit->score }}%
-                                        </span>
+                                        {{ $visit->subject_observed ?? '-' }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        @if($visit->students_present && $visit->total_students_enrolled)
+                                            {{ $visit->students_present }}/{{ $visit->total_students_enrolled }}
+                                        @else
+                                            -
+                                        @endif
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                         @if($visit->follow_up_required)

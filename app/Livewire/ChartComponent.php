@@ -49,7 +49,7 @@ class ChartComponent extends Component
             ->get();
 
         return [
-            'labels' => $data->pluck('school_name')->toArray(),
+            'labels' => $data->pluck('name')->toArray(),
             'datasets' => [[
                 'label' => 'Students',
                 'data' => $data->pluck('count')->toArray(),

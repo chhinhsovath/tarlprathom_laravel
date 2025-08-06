@@ -23,6 +23,10 @@ class User extends Authenticatable
         'password',
         'role', // 'admin', 'coordinator', 'mentor', 'teacher', 'viewer'
         'school_id',
+        'province',
+        'district',
+        'commune',
+        'village',
         'phone',
         'is_active',
         'profile_photo',

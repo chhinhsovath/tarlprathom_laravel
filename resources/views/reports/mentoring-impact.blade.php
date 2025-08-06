@@ -47,10 +47,9 @@
                         <h3 class="text-sm font-medium text-blue-800">{{ __('How We Calculate Impact') }}</h3>
                         <div class="mt-2 text-sm text-blue-700">
                             <ul class="list-disc list-inside space-y-1">
-                                <li><strong>{{ __('Baseline Average') }}:</strong> {{ __('Average assessment score of all students in a school during their baseline (initial) assessment') }}</li>
-                                <li><strong>{{ __('Latest Average') }}:</strong> {{ __('Average assessment score from the most recent assessment cycle (midline or endline)') }}</li>
-                                <li><strong>{{ __('Improvement') }}:</strong> {{ __('Latest Average minus Baseline Average. Positive values indicate improvement') }}</li>
-                                <li><strong>{{ __('Mentoring Score') }}:</strong> {{ __('Average score given by mentors during their visits (0-100%)') }}</li>
+                                <li><strong>{{ __('Baseline Percentage') }}:</strong> {{ __('Percentage of students at advanced levels (above Beginner/Letter/1-Digit) during baseline assessment') }}</li>
+                                <li><strong>{{ __('Latest Percentage') }}:</strong> {{ __('Percentage of students at advanced levels from the most recent assessment cycle (midline or endline)') }}</li>
+                                <li><strong>{{ __('Improvement') }}:</strong> {{ __('Latest Percentage minus Baseline Percentage. Positive values indicate improvement') }}</li>
                             </ul>
                             <p class="mt-2">{{ __('The scatter plot shows the relationship between the number of mentoring visits and the performance improvement for each school.') }}</p>
                         </div>
@@ -69,7 +68,7 @@
                     </div>
                     
                     <div class="mt-4 text-sm text-gray-600">
-                        <p>{{ __('Each point represents a school. The X-axis shows the number of mentoring visits received, and the Y-axis shows the improvement in average student assessment scores.') }}</p>
+                        <p>{{ __('Each point represents a school. The X-axis shows the number of mentoring visits received, and the Y-axis shows the improvement in percentage of students at advanced levels.') }}</p>
                     </div>
                 </div>
             </div>
@@ -94,7 +93,7 @@
                                 <span class="font-semibold">{{ __('Avg Mentoring Score') }}:</span> {{ __('Average score given by mentors (quality of teaching observed)') }}
                             </div>
                             <div>
-                                <span class="font-semibold">{{ __('Baseline/Latest Avg') }}:</span> {{ __('Average student assessment scores') }}
+                                <span class="font-semibold">{{ __('Baseline/Latest %') }}:</span> {{ __('Percentage of students at advanced levels') }}
                             </div>
                         </div>
                     </div>
@@ -115,16 +114,20 @@
                                         <span class="normal-case text-gray-400" title="{{ __('Unique teachers who received mentoring') }}">ⓘ</span>
                                     </th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        {{ __('Avg Mentoring Score') }}
-                                        <span class="normal-case text-gray-400" title="{{ __('Average score from mentor evaluations') }}">ⓘ</span>
+                                        {{ __('Classes In Session') }}
+                                        <span class="normal-case text-gray-400" title="{{ __('Percentage of visits where class was in session') }}">ⓘ</span>
                                     </th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        {{ __('Baseline Avg') }}
-                                        <span class="normal-case text-gray-400" title="{{ __('Average student score at baseline assessment') }}">ⓘ</span>
+                                        {{ __('Session Plans') }}
+                                        <span class="normal-case text-gray-400" title="{{ __('Percentage of teachers with session plans') }}">ⓘ</span>
                                     </th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        {{ __('Latest Avg') }}
-                                        <span class="normal-case text-gray-400" title="{{ __('Average student score at most recent assessment') }}">ⓘ</span>
+                                        {{ __('Baseline %') }}
+                                        <span class="normal-case text-gray-400" title="{{ __('Percentage of students at advanced levels at baseline') }}">ⓘ</span>
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        {{ __('Latest %') }}
+                                        <span class="normal-case text-gray-400" title="{{ __('Percentage of students at advanced levels at most recent assessment') }}">ⓘ</span>
                                     </th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         {{ __('Improvement') }}
@@ -136,7 +139,7 @@
                                 @forelse($schoolsWithImprovements as $data)
                                 <tr>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                        {{ $data['school']->school_name }}
+                                        {{ $data['school']->name }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         {{ number_format($data['total_visits']) }}
@@ -145,13 +148,16 @@
                                         {{ number_format($visitsBySchool[$data['school']->id]['unique_teachers'] ?? 0) }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {{ number_format($data['avg_mentoring_score'], 1) }}%
+                                        {{ number_format($visitsBySchool[$data['school']->id]['classes_in_session_rate'] ?? 0, 0) }}%
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {{ number_format($data['baseline_avg'], 1) }}
+                                        {{ number_format($visitsBySchool[$data['school']->id]['has_session_plan_rate'] ?? 0, 0) }}%
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {{ number_format($data['latest_avg'], 1) }}
+                                        {{ number_format($data['baseline_percentage'], 1) }}%
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        {{ number_format($data['latest_percentage'], 1) }}%
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm">
                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
@@ -159,7 +165,7 @@
                                             @elseif($data['improvement'] < 0) bg-red-100 text-red-800
                                             @else bg-gray-100 text-gray-800
                                             @endif">
-                                            @if($data['improvement'] > 0)+@endif{{ number_format($data['improvement'], 1) }}
+                                            @if($data['improvement'] > 0)+@endif{{ number_format($data['improvement'], 1) }}%
                                         </span>
                                     </td>
                                 </tr>
@@ -176,7 +182,7 @@
                     
                     @if(count($schoolsWithImprovements) > 0)
                     <div class="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg text-sm text-yellow-800">
-                        <p><strong>{{ __('Note') }}:</strong> {{ __('This analysis compares baseline assessment scores with the most recent assessment scores (midline or endline). Schools without both baseline and follow-up assessments are not included in this table.') }}</p>
+                        <p><strong>{{ __('Note') }}:</strong> {{ __('This analysis compares the percentage of students at advanced levels between baseline and the most recent assessment (midline or endline). Schools without both baseline and follow-up assessments are not included in this table.') }}</p>
                     </div>
                     @endif
                 </div>
@@ -191,13 +197,13 @@
                     <div class="space-y-4">
                         @foreach($visitsBySchool as $schoolId => $data)
                         <div class="border rounded-lg p-4">
-                            <h5 class="font-medium text-gray-900 mb-2">{{ $data['school']->school_name }}</h5>
+                            <h5 class="font-medium text-gray-900 mb-2">{{ $data['school']->name }}</h5>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
                                     <p class="text-sm text-gray-600">
                                         {{ __('Total Visits') }}: {{ $data['total_visits'] }} | 
                                         {{ __('Teachers') }}: {{ $data['unique_teachers'] }} |
-                                        {{ __('Avg Score') }}: {{ number_format($data['average_score'], 1) }}%
+                                        {{ __('Follow-up Required') }}: {{ $data['follow_up_required'] }}
                                     </p>
                                 </div>
                                 <div class="text-right">
@@ -217,8 +223,9 @@
                                         <tr>
                                             <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{{ __('Date') }}</th>
                                             <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{{ __('Teacher') }}</th>
-                                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{{ __('Mentor') }}</th>
-                                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{{ __('Score') }}</th>
+                                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{{ __('Subject') }}</th>
+                                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{{ __('Session') }}</th>
+                                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{{ __('Follow-up') }}</th>
                                         </tr>
                                     </thead>
                                     <tbody class="divide-y divide-gray-200">
@@ -226,8 +233,15 @@
                                         <tr>
                                             <td class="px-4 py-2 text-sm text-gray-500">{{ $visit->visit_date->format('Y-m-d') }}</td>
                                             <td class="px-4 py-2 text-sm text-gray-900">{{ $visit->teacher->name }}</td>
-                                            <td class="px-4 py-2 text-sm text-gray-500">{{ $visit->mentor->name }}</td>
-                                            <td class="px-4 py-2 text-sm text-gray-500">{{ $visit->score }}%</td>
+                                            <td class="px-4 py-2 text-sm text-gray-500">{{ $visit->subject_observed ?? '-' }}</td>
+                                            <td class="px-4 py-2 text-sm text-gray-500">
+                                                @if($visit->class_in_session)
+                                                    <span class="text-green-600">✓</span>
+                                                @else
+                                                    <span class="text-red-600">✗</span>
+                                                @endif
+                                            </td>
+                                            <td class="px-4 py-2 text-sm text-gray-500">{{ $visit->follow_up_required ? __('Yes') : __('No') }}</td>
                                         </tr>
                                         @endforeach
                                     </tbody>

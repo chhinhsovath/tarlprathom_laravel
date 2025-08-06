@@ -19,7 +19,7 @@
                     <select wire:model.live="filterSchool" class="w-full rounded-md border-gray-300 shadow-sm">
                         <option value="">{{ __('All Schools') }}</option>
                         @foreach($schools as $school)
-                            <option value="{{ $school->id }}">{{ $school->school_name }}</option>
+                            <option value="{{ $school->id }}">{{ $school->name }}</option>
                         @endforeach
                     </select>
                 </div>

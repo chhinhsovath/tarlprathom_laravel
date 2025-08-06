@@ -38,7 +38,7 @@
                         </div>
                         <div>
                             <span class="font-semibold text-gray-600">{{ __('School') }}:</span> 
-                            {{ $student->school ? $student->school->school_name : 'N/A' }}
+                            {{ $student->school ? $student->school->name : 'N/A' }}
                         </div>
                         @if($student->teacher)
                         <div class="md:col-span-2 lg:col-span-3">

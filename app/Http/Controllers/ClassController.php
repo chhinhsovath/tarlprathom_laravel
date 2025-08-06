@@ -53,7 +53,7 @@ class ClassController extends Controller
         );
 
         $classes = $query->paginate(20)->withQueryString();
-        $schools = $user->isAdmin() ? School::orderBy('school_name')->get() : collect();
+        $schools = $user->isAdmin() ? School::orderBy('name')->get() : collect();
 
         return view('classes.index', compact('classes', 'schools') + $sortData);
     }
@@ -68,7 +68,7 @@ class ClassController extends Controller
             abort(403, __('Unauthorized action.'));
         }
 
-        $schools = School::orderBy('school_name')->get();
+        $schools = School::orderBy('name')->get();
         $teachers = User::where('role', 'teacher')->orderBy('name')->get();
 
         return view('classes.create', compact('schools', 'teachers'));
@@ -127,7 +127,7 @@ class ClassController extends Controller
             abort(403, __('Unauthorized action.'));
         }
 
-        $schools = School::orderBy('school_name')->get();
+        $schools = School::orderBy('name')->get();
         $teachers = User::where('role', 'teacher')
             ->where('school_id', $class->school_id)
             ->orderBy('name')

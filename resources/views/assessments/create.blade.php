@@ -199,23 +199,14 @@
                     <!-- Floating Column Headers (Mobile) -->
                     <div class="md:hidden fixed bottom-4 left-4 right-4 bg-white rounded-lg shadow-lg p-3 z-50" style="display: none;" id="floatingHeaders">
                         <div class="text-xs text-gray-600 font-medium">
-                            <div class="flex justify-around items-center">
-                                <div class="text-center">
-                                    <div class="text-gray-500">{{ __('Gender') }}</div>
-                                    <div class="flex gap-2 mt-1">
-                                        <span>👨 {{ __('M') }}</span>
-                                        <span>👩 {{ __('F') }}</span>
-                                    </div>
-                                </div>
-                                <div class="text-center">
-                                    <div class="text-gray-500">{{ __('Levels') }}</div>
-                                    <div class="text-xs mt-1">
-                                        @if($subject === 'khmer')
-                                            {{ __('Beg → Let → Wrd → Par → Sto → C1 → C2') }}
-                                        @else
-                                            {{ __('Beg → 1D → 2D → Sub → Div → WP') }}
-                                        @endif
-                                    </div>
+                            <div class="text-center">
+                                <div class="text-gray-500">{{ __('Levels') }}</div>
+                                <div class="text-xs mt-1">
+                                    @if($subject === 'khmer')
+                                        {{ __('Beg → Let → Wrd → Par → Sto → C1 → C2') }}
+                                    @else
+                                        {{ __('Beg → 1D → 2D → Sub → Div → WP') }}
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -230,20 +221,16 @@
                                     <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sticky left-0 bg-gray-50 z-20">
                                         {{ __('Student Name') }}
                                     </th>
-                                    <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider" colspan="2">
-                                        {{ __('Student Gender') }}
+                                    <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        {{ __('Latest Level') }}
                                     </th>
                                     <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider" colspan="7">
                                         {{ __('Student Level') }}
                                     </th>
-                                    <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        
-                                    </th>
                                 </tr>
                                 <tr class="sticky top-0 z-10 shadow-sm bg-gray-50">
                                     <th class="px-4 py-2 sticky left-0 bg-gray-50 z-20 border-b-2 border-gray-300"></th>
-                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ __('Male') }}</th>
-                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ __('Female') }}</th>
+                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300"></th>
                                     @if($subject === 'khmer')
                                     <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ __('Beginner') }}</th>
                                     <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ __('Letter') }}</th>
@@ -259,15 +246,13 @@
                                     <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ __('Subtraction') }}</th>
                                     <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ __('Division') }}</th>
                                     <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ __('Word Problem') }}</th>
-                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300"></th>
                                     @endif
-                                    <th class="px-4 py-2 bg-gray-50 border-b-2 border-gray-300"></th>
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
                                 @foreach($students as $student)
                                 <tr class="student-row {{ $student->is_assessment_locked ? 'opacity-60' : '' }}" data-student-id="{{ $student->id }}" data-saved="false" {{ $student->is_assessment_locked ? 'data-locked="true"' : '' }}>
-                                    <td class="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900 sticky left-0 bg-white z-10">
+                                    <td class="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900 sticky left-0 bg-white z-10" data-student-gender="{{ $student->gender }}">
                                         <div class="flex items-center">
                                             {{ $student->name }}
                                             @if($student->has_assessment)
@@ -286,77 +271,61 @@
                                             @endif
                                         </div>
                                     </td>
-                                    <!-- Gender -->
+                                    <!-- Previous Assessment -->
                                     <td class="px-2 py-4 text-center">
-                                        <input type="radio" name="gender_{{ $student->id }}" value="male" 
-                                               {{ $student->gender === 'male' ? 'checked' : '' }}
-                                               {{ $student->is_assessment_locked ? 'disabled' : '' }}
-                                               class="gender-radio">
-                                    </td>
-                                    <td class="px-2 py-4 text-center">
-                                        <input type="radio" name="gender_{{ $student->id }}" value="female" 
-                                               {{ $student->gender === 'female' ? 'checked' : '' }}
-                                               {{ $student->is_assessment_locked ? 'disabled' : '' }}
-                                               class="gender-radio">
+                                        <div class="text-sm">
+                                            @if($student->previous_assessment)
+                                                <span class="font-medium text-gray-700">{{ $student->previous_assessment->level }}</span>
+                                                <br>
+                                                <span class="text-xs text-gray-500">{{ ucfirst($student->previous_assessment->cycle) }}</span>
+                                            @else
+                                                <span class="text-gray-400">-</span>
+                                            @endif
+                                        </div>
                                     </td>
                                     <!-- Levels -->
                                     @if($subject === 'khmer')
                                     <td class="px-2 py-4 text-center">
-                                        <input type="radio" name="level_{{ $student->id }}" value="Beginner" {{ $student->is_assessment_locked ? 'disabled' : '' }} {{ $student->assessment_level == 'Beginner' ? 'checked' : '' }} class="level-radio">
+                                        <input type="radio" name="level_{{ $student->id }}" value="Beginner" {{ $student->is_assessment_locked ? 'disabled' : '' }} {{ $student->has_assessment && $student->assessment_level == 'Beginner' ? 'checked' : '' }} class="level-radio">
                                     </td>
                                     <td class="px-2 py-4 text-center">
-                                        <input type="radio" name="level_{{ $student->id }}" value="Reader" {{ $student->is_assessment_locked ? 'disabled' : '' }} {{ $student->assessment_level == 'Reader' ? 'checked' : '' }} class="level-radio">
+                                        <input type="radio" name="level_{{ $student->id }}" value="Reader" {{ $student->is_assessment_locked ? 'disabled' : '' }} {{ $student->has_assessment && $student->assessment_level == 'Reader' ? 'checked' : '' }} class="level-radio">
                                     </td>
                                     <td class="px-2 py-4 text-center">
-                                        <input type="radio" name="level_{{ $student->id }}" value="Word" {{ $student->is_assessment_locked ? 'disabled' : '' }} {{ $student->assessment_level == 'Word' ? 'checked' : '' }} class="level-radio">
+                                        <input type="radio" name="level_{{ $student->id }}" value="Word" {{ $student->is_assessment_locked ? 'disabled' : '' }} {{ $student->has_assessment && $student->assessment_level == 'Word' ? 'checked' : '' }} class="level-radio">
                                     </td>
                                     <td class="px-2 py-4 text-center">
-                                        <input type="radio" name="level_{{ $student->id }}" value="Paragraph" {{ $student->is_assessment_locked ? 'disabled' : '' }} {{ $student->assessment_level == 'Paragraph' ? 'checked' : '' }} class="level-radio">
+                                        <input type="radio" name="level_{{ $student->id }}" value="Paragraph" {{ $student->is_assessment_locked ? 'disabled' : '' }} {{ $student->has_assessment && $student->assessment_level == 'Paragraph' ? 'checked' : '' }} class="level-radio">
                                     </td>
                                     <td class="px-2 py-4 text-center">
-                                        <input type="radio" name="level_{{ $student->id }}" value="Story" {{ $student->is_assessment_locked ? 'disabled' : '' }} {{ $student->assessment_level == 'Story' ? 'checked' : '' }} class="level-radio">
+                                        <input type="radio" name="level_{{ $student->id }}" value="Story" {{ $student->is_assessment_locked ? 'disabled' : '' }} {{ $student->has_assessment && $student->assessment_level == 'Story' ? 'checked' : '' }} class="level-radio">
                                     </td>
                                     <td class="px-2 py-4 text-center">
-                                        <input type="radio" name="level_{{ $student->id }}" value="Comp. 1" {{ $student->is_assessment_locked ? 'disabled' : '' }} {{ $student->assessment_level == 'Comp. 1' ? 'checked' : '' }} class="level-radio">
+                                        <input type="radio" name="level_{{ $student->id }}" value="Comp. 1" {{ $student->is_assessment_locked ? 'disabled' : '' }} {{ $student->has_assessment && $student->assessment_level == 'Comp. 1' ? 'checked' : '' }} class="level-radio">
                                     </td>
                                     <td class="px-2 py-4 text-center">
-                                        <input type="radio" name="level_{{ $student->id }}" value="Comp. 2" {{ $student->is_assessment_locked ? 'disabled' : '' }} {{ $student->assessment_level == 'Comp. 2' ? 'checked' : '' }} class="level-radio">
+                                        <input type="radio" name="level_{{ $student->id }}" value="Comp. 2" {{ $student->is_assessment_locked ? 'disabled' : '' }} {{ $student->has_assessment && $student->assessment_level == 'Comp. 2' ? 'checked' : '' }} class="level-radio">
                                     </td>
                                     @else
                                     <td class="px-2 py-4 text-center">
-                                        <input type="radio" name="level_{{ $student->id }}" value="Beginner" {{ $student->is_assessment_locked ? 'disabled' : '' }} {{ $student->assessment_level == 'Beginner' ? 'checked' : '' }} class="level-radio">
+                                        <input type="radio" name="level_{{ $student->id }}" value="Beginner" {{ $student->is_assessment_locked ? 'disabled' : '' }} {{ $student->has_assessment && $student->assessment_level == 'Beginner' ? 'checked' : '' }} class="level-radio">
                                     </td>
                                     <td class="px-2 py-4 text-center">
-                                        <input type="radio" name="level_{{ $student->id }}" value="1-Digit" {{ $student->is_assessment_locked ? 'disabled' : '' }} {{ $student->assessment_level == '1-Digit' ? 'checked' : '' }} class="level-radio">
+                                        <input type="radio" name="level_{{ $student->id }}" value="1-Digit" {{ $student->is_assessment_locked ? 'disabled' : '' }} {{ $student->has_assessment && $student->assessment_level == '1-Digit' ? 'checked' : '' }} class="level-radio">
                                     </td>
                                     <td class="px-2 py-4 text-center">
-                                        <input type="radio" name="level_{{ $student->id }}" value="2-Digit" {{ $student->is_assessment_locked ? 'disabled' : '' }} {{ $student->assessment_level == '2-Digit' ? 'checked' : '' }} class="level-radio">
+                                        <input type="radio" name="level_{{ $student->id }}" value="2-Digit" {{ $student->is_assessment_locked ? 'disabled' : '' }} {{ $student->has_assessment && $student->assessment_level == '2-Digit' ? 'checked' : '' }} class="level-radio">
                                     </td>
                                     <td class="px-2 py-4 text-center">
-                                        <input type="radio" name="level_{{ $student->id }}" value="Subtraction" {{ $student->is_assessment_locked ? 'disabled' : '' }} {{ $student->assessment_level == 'Subtraction' ? 'checked' : '' }} class="level-radio">
+                                        <input type="radio" name="level_{{ $student->id }}" value="Subtraction" {{ $student->is_assessment_locked ? 'disabled' : '' }} {{ $student->has_assessment && $student->assessment_level == 'Subtraction' ? 'checked' : '' }} class="level-radio">
                                     </td>
                                     <td class="px-2 py-4 text-center">
-                                        <input type="radio" name="level_{{ $student->id }}" value="Division" {{ $student->is_assessment_locked ? 'disabled' : '' }} {{ $student->assessment_level == 'Division' ? 'checked' : '' }} class="level-radio">
+                                        <input type="radio" name="level_{{ $student->id }}" value="Division" {{ $student->is_assessment_locked ? 'disabled' : '' }} {{ $student->has_assessment && $student->assessment_level == 'Division' ? 'checked' : '' }} class="level-radio">
                                     </td>
                                     <td class="px-2 py-4 text-center">
-                                        <input type="radio" name="level_{{ $student->id }}" value="Word Problem" {{ $student->is_assessment_locked ? 'disabled' : '' }} {{ $student->assessment_level == 'Word Problem' ? 'checked' : '' }} class="level-radio">
-                                    </td>
-                                    <td class="px-2 py-4 text-center">
-                                        <!-- Empty cell for Math to align with submit button -->
+                                        <input type="radio" name="level_{{ $student->id }}" value="Word Problem" {{ $student->is_assessment_locked ? 'disabled' : '' }} {{ $student->has_assessment && $student->assessment_level == 'Word Problem' ? 'checked' : '' }} class="level-radio">
                                     </td>
                                     @endif
-                                    <td class="px-4 py-4 text-center">
-                                        @if($student->is_assessment_locked)
-                                            <span class="text-xs text-gray-500">{{ __('Locked') }}</span>
-                                        @else
-                                            <button type="button" 
-                                                    class="submit-btn inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
-                                                    onclick="submitStudent({{ $student->id }})"
-                                                    disabled>
-                                                {{ __('Submit') }}
-                                            </button>
-                                        @endif
-                                    </td>
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -364,14 +333,36 @@
                     </div>
 
                     <!-- Submit All Button -->
-                    <div class="mt-6 flex justify-center">
-                        <button type="button" 
-                                id="submitAllBtn"
-                                class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                                onclick="submitAll()">
-                            {{ __('Submit') }}
-                        </button>
-                    </div>
+                    @php
+                        $showSubmitButton = true;
+                        if(auth()->user()->school && !auth()->user()->isAdmin()) {
+                            $periodStatus = auth()->user()->school->getAssessmentPeriodStatus($cycle);
+                            $showSubmitButton = in_array($periodStatus, ['active']);
+                        }
+                    @endphp
+                    
+                    @if($showSubmitButton)
+                        <div class="mt-6 flex justify-center">
+                            <button type="button" 
+                                    id="submitAllBtn"
+                                    class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                    onclick="submitAll()">
+                                {{ __('Submit') }}
+                            </button>
+                        </div>
+                    @else
+                        <div class="mt-6 text-center">
+                            <p class="text-sm text-gray-500">
+                                @if($periodStatus === 'not_set')
+                                    {{ __('Submit button is disabled. Assessment dates have not been set for your school.') }}
+                                @elseif($periodStatus === 'upcoming')
+                                    {{ __('Submit button will be enabled when the assessment period begins.') }}
+                                @elseif($periodStatus === 'expired')
+                                    {{ __('Submit button is disabled. The assessment period has ended.') }}
+                                @endif
+                            </p>
+                        </div>
+                    @endif
                     @else
                     <div class="text-center py-8">
                         <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -441,8 +432,8 @@
                 });
             }
             
-            // Enable submit button when both gender and level are selected
-            $('.gender-radio, .level-radio').change(function() {
+            // Track changes when level is selected
+            $('.level-radio').change(function() {
                 const row = $(this).closest('tr');
                 const studentId = row.data('student-id');
                 
@@ -451,22 +442,20 @@
                     return;
                 }
                 
-                const hasGender = $(`input[name="gender_${studentId}"]:checked`).length > 0;
                 const hasLevel = $(`input[name="level_${studentId}"]:checked`).length > 0;
                 const selectedLevel = $(`input[name="level_${studentId}"]:checked`).val();
                 const currentLevel = row.attr('data-current-level');
                 
-                if (hasGender && hasLevel) {
-                    row.find('.submit-btn').prop('disabled', false);
+                if (hasLevel) {
+                    // Mark row as having unsaved changes
+                    row.addClass('bg-yellow-50');
                     
-                    // If this is an update and level changed, highlight the button
+                    // If this is an update and level changed, add visual indicator
                     if (currentLevel && selectedLevel !== currentLevel) {
-                        row.find('.submit-btn').removeClass('bg-yellow-600').addClass('bg-orange-600');
+                        row.addClass('border-l-4 border-orange-500');
                     } else if (currentLevel) {
-                        row.find('.submit-btn').removeClass('bg-orange-600').addClass('bg-yellow-600');
+                        row.removeClass('border-l-4 border-orange-500');
                     }
-                } else {
-                    row.find('.submit-btn').prop('disabled', true);
                 }
             });
             
@@ -513,10 +502,7 @@
                                 row.attr('data-saved', 'true');
                                 row.attr('data-current-level', assessment.level);
                                 row.addClass('bg-green-50');
-                                row.find('.submit-btn').text('{{ __("Update") }}').removeClass('bg-blue-600').addClass('bg-yellow-600');
-                                
-                                // Enable the button since it's already saved
-                                row.find('.submit-btn').prop('disabled', false);
+                                row.removeClass('bg-yellow-50 border-l-4 border-orange-500');
                             }
                         });
                     }
@@ -528,99 +514,58 @@
             });
         }
         
-        function submitStudent(studentId) {
-            const row = $(`.student-row[data-student-id="${studentId}"]`);
-            
-            // Skip if locked
-            if (row.attr('data-locked') === 'true') {
-                return;
-            }
-            const gender = $(`input[name="gender_${studentId}"]:checked`).val();
-            const level = $(`input[name="level_${studentId}"]:checked`).val();
-            const subject = $('#subject').val();
-            const cycle = $('#cycle').val();
-            
-            if (!gender || !level) {
-                Swal.fire({
-                    icon: 'error',
-                    title: '{{ __("Error") }}',
-                    text: '{{ __("Please select both gender and level") }}'
-                });
-                return;
-            }
-            
-            // Show loading on button
-            const btn = row.find('.submit-btn');
-            setButtonLoading(btn, true);
-            
-            $.ajax({
-                url: '{{ route("api.assessments.save-student") }}',
-                method: 'POST',
-                data: {
-                    student_id: studentId,
-                    gender: gender,
-                    level: level,
-                    subject: subject,
-                    cycle: cycle,
-                    _token: '{{ csrf_token() }}'
-                },
-                success: function(response) {
-                    if (response.success) {
-                        const previousLevel = row.attr('data-current-level');
-                        const wasUpdate = previousLevel && previousLevel !== level;
-                        
-                        row.attr('data-saved', 'true');
-                        row.attr('data-current-level', level);
-                        row.addClass('bg-green-50');
-                        btn.text('{{ __("Update") }}').removeClass('bg-blue-600 bg-yellow-600').addClass('bg-yellow-600');
-                        updateSavedCount();
-                        
-                        // Show toast
-                        const Toast = Swal.mixin({
-                            toast: true,
-                            position: 'top-end',
-                            showConfirmButton: false,
-                            timer: 2000,
-                            timerProgressBar: true
-                        });
-                        
-                        Toast.fire({
-                            icon: 'success',
-                            title: wasUpdate ? '{{ __("Assessment updated") }}' : '{{ __("Assessment saved") }}'
-                        });
-                    }
-                },
-                error: function(xhr) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: '{{ __("Error") }}',
-                        text: xhr.responseJSON?.message || '{{ __("Failed to save assessment") }}'
-                    });
-                },
-                complete: function() {
-                    setButtonLoading(btn, false);
-                }
-            });
-        }
-        
         function updateSavedCount() {
             savedCount = $('.student-row[data-saved="true"]').length;
             $('#savedCount').text(savedCount);
         }
         
         function submitAll() {
-            if (savedCount === 0) {
+            // Collect all assessments with selected levels
+            const assessments = [];
+            let hasUnsavedChanges = false;
+            
+            $('.student-row').each(function() {
+                const row = $(this);
+                const studentId = row.data('student-id');
+                
+                // Skip if locked
+                if (row.attr('data-locked') === 'true') {
+                    return;
+                }
+                
+                const level = $(`input[name="level_${studentId}"]:checked`).val();
+                const gender = row.find('td:first').data('student-gender') || 'unknown';
+                
+                if (level) {
+                    assessments.push({
+                        student_id: studentId,
+                        gender: gender,
+                        level: level
+                    });
+                    
+                    // Check if this is unsaved
+                    if (row.attr('data-saved') !== 'true' || row.attr('data-current-level') !== level) {
+                        hasUnsavedChanges = true;
+                    }
+                }
+            });
+            
+            if (assessments.length === 0) {
                 Swal.fire({
                     icon: 'warning',
                     title: '{{ __("Warning") }}',
-                    text: '{{ __("No assessments have been saved yet") }}'
+                    text: '{{ __("No assessments selected") }}'
                 });
                 return;
             }
             
+            const confirmText = hasUnsavedChanges 
+                ? `{{ __("You have assessed") }} ${assessments.length} {{ __("out of") }} ${totalCount} {{ __("students") }}. {{ __("Do you want to save and submit?") }}`
+                : `{{ __("All assessments are already saved. Do you want to submit?") }}`;
+            
             Swal.fire({
                 title: '{{ __("Submit All Assessments?") }}',
-                text: `{{ __("You have assessed") }} ${savedCount} {{ __("out of") }} ${totalCount} {{ __("students") }}. {{ __("Do you want to submit?") }}`,
+                text: confirmText,
                 icon: 'question',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -630,16 +575,39 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     showLoading('{{ __("Submitting assessments...") }}');
-                    $.ajax({
-                        url: '{{ route("api.assessments.submit-all") }}',
-                        method: 'POST',
-                        data: {
-                            subject: $('#subject').val(),
-                            cycle: $('#cycle').val(),
-                            submitted_count: savedCount,
-                            _token: '{{ csrf_token() }}'
-                        },
-                        success: function(response) {
+                    
+                    // Save all assessments
+                    const savePromises = assessments.map(assessment => {
+                        return $.ajax({
+                            url: '{{ route("api.assessments.save-student") }}',
+                            method: 'POST',
+                            data: {
+                                student_id: assessment.student_id,
+                                gender: assessment.gender,
+                                level: assessment.level,
+                                subject: $('#subject').val(),
+                                cycle: $('#cycle').val(),
+                                _token: '{{ csrf_token() }}'
+                            }
+                        });
+                    });
+                    
+                    // Wait for all saves to complete
+                    Promise.all(savePromises)
+                        .then(() => {
+                            // Now submit all
+                            return $.ajax({
+                                url: '{{ route("api.assessments.submit-all") }}',
+                                method: 'POST',
+                                data: {
+                                    subject: $('#subject').val(),
+                                    cycle: $('#cycle').val(),
+                                    submitted_count: assessments.length,
+                                    _token: '{{ csrf_token() }}'
+                                }
+                            });
+                        })
+                        .then(response => {
                             if (response.success) {
                                 Swal.fire({
                                     icon: 'success',
@@ -650,18 +618,17 @@
                                     window.location.href = response.redirect;
                                 });
                             }
-                        },
-                        error: function(xhr) {
+                        })
+                        .catch(error => {
                             Swal.fire({
                                 icon: 'error',
                                 title: '{{ __("Error") }}',
-                                text: xhr.responseJSON?.message || '{{ __("Failed to submit assessments") }}'
+                                text: error.responseJSON?.message || '{{ __("Failed to submit assessments") }}'
                             });
-                        },
-                        complete: function() {
+                        })
+                        .finally(() => {
                             hideLoading();
-                        }
-                    });
+                        });
                 }
             });
         }

@@ -14,7 +14,7 @@ class StudentTemplateExport implements FromArray, WithColumnWidths, WithHeadings
 {
     public function array(): array
     {
-        $schools = School::orderBy('school_name')->pluck('school_name')->toArray();
+        $schools = School::orderBy('name')->pluck('name')->toArray();
         $firstSchool = $schools[0] ?? 'School Name';
 
         // Get teachers for the first school as examples

@@ -78,7 +78,7 @@
             </div>
 
             <!-- Additional Statistics - Second Row (if applicable) -->
-            @if(isset($stats['total_visits']) || isset($stats['schools_visited']) || isset($stats['teachers_mentored']) || isset($stats['avg_mentoring_score']))
+            @if(isset($stats['total_visits']) || isset($stats['schools_visited']) || isset($stats['teachers_mentored']) || isset($stats['mentoring_visits']))
             <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem;" class="mb-6">
                 @if(isset($stats['total_visits']))
                 <div class="bg-white overflow-hidden shadow-lg rounded-xl p-6 border-l-4 border-indigo-500">
@@ -135,12 +135,12 @@
                 </div>
                 @endif
                 
-                @if(isset($stats['avg_mentoring_score']))
+                @if(isset($stats['mentoring_visits']))
                 <div class="bg-white overflow-hidden shadow-lg rounded-xl p-6 border-l-4 border-red-500">
                     <div class="flex items-center">
                         <div class="flex-1">
-                            <div class="text-3xl font-bold text-gray-900">{{ number_format($stats['avg_mentoring_score'], 1) }}%</div>
-                            <div class="text-sm font-medium text-gray-600 mt-1">{{ __('Average Score') }}</div>
+                            <div class="text-3xl font-bold text-gray-900">{{ number_format($stats['mentoring_visits']) }}</div>
+                            <div class="text-sm font-medium text-gray-600 mt-1">{{ __('Mentoring Visits') }}</div>
                         </div>
                         <div class="ml-4">
                             <div class="p-3 bg-red-100 rounded-full">
@@ -295,7 +295,7 @@
                                         </a>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {{ $assessment->student->school->school_name ?? '-' }}
+                                        {{ $assessment->student->school->name ?? '-' }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         {{ __($assessment->subject === 'khmer' ? 'Khmer' : 'Math') }}

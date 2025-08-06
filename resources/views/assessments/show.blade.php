@@ -129,7 +129,7 @@
                                 <div class="sm:col-span-2 lg:col-span-3">
                                     <p class="text-xs text-gray-500 uppercase tracking-wider">{{ __('School') }}</p>
                                     <p class="mt-1 text-sm font-medium text-gray-900">
-                                        {{ $assessment->student->school->school_name ?? 'N/A' }}
+                                        {{ $assessment->student->school->name ?? 'N/A' }}
                                     </p>
                                 </div>
                             </div>

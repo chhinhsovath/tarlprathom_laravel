@@ -194,6 +194,7 @@
     "Admin": "អ្នកគ្រប់គ្រង",
     "Viewer": "អ្នកមើល",
     "Mentoring": "ការណែនាំ",
+    "Coordinator": "អ្នកសម្របសម្រួល",
     "Profile": "ប្រវត្តិរូប",
     "Log Out": "ចាកចេញ",
     "Language": "ភាសា",
@@ -331,5 +332,10 @@
     "Row :rowNum: Sex must be male or female": "ជួរ :rowNum៖ ភេទត្រូវតែជា ប្រុស ឬ ស្រី",
     "Active": "សកម្ម",
     "Inactive": "អសកម្ម",
-    "School:": "សាលា៖"
+    "School:": "សាលា៖",
+    "Submit button is disabled. Assessment dates have not been set for your school.": "ប៊ូតុងដាក់ស្នើត្រូវបានបិទ។ កាលបរិច្ឆេទវាយតម្លៃមិនទាន់បានកំណត់សម្រាប់សាលារបស់អ្នកទេ។",
+    "Assessment dates have not been set for your school. Please contact your administrator.": "កាលបរិច្ឆេទវាយតម្លៃមិនទាន់បានកំណត់សម្រាប់សាលារបស់អ្នកទេ។ សូមទាក់ទងអ្នកគ្រប់គ្រងរបស់អ្នក។",
+    "Submit button will be enabled when the assessment period begins.": "ប៊ូតុងដាក់ស្នើនឹងត្រូវបានបើកនៅពេលរយៈពេលវាយតម្លៃចាប់ផ្តើម។",
+    "Submit button is disabled. The assessment period has ended.": "ប៊ូតុងដាក់ស្នើត្រូវបានបិទ។ រយៈពេលវាយតម្លៃបានបញ្ចប់ហើយ។",
+    "Coordinator Workspace": "កន្លែងធ្វើការអ្នកសម្របសម្រួល"
 }

@@ -79,7 +79,7 @@ class StudentsExport implements FromQuery, ShouldAutoSize, WithHeadings, WithMap
             $student->grade,
             ucfirst($student->gender),
             $student->date_of_birth ? $student->date_of_birth->format('Y-m-d') : '',
-            $student->school->school_name ?? 'N/A',
+            $student->school->name ?? 'N/A',
             $student->address ?? '',
             $student->parent_name ?? '',
             $student->contact_number ?? '',

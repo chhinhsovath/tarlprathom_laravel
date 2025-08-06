@@ -5,7 +5,7 @@
     <div class="bg-white shadow-sm rounded-lg">
         <div class="px-6 py-4 border-b border-gray-200">
             <h4 class="text-xl font-semibold text-gray-900">{{ __('Bulk Data Import') }}</h4>
-            <p class="text-gray-600 mt-1">Import schools, teachers, mentors, and students from CSV files</p>
+            <p class="text-gray-600 mt-1">{{ __('Import schools, teachers, mentors, and students from CSV files') }}</p>
         </div>
 
         <div class="px-6 py-6">
@@ -35,19 +35,19 @@
                         </h5>
                     </div>
                     <div class="p-6">
-                        <p class="text-gray-600 mb-4">Upload CSV files to import school data including location and administrative information.</p>
+                        <p class="text-gray-600 mb-4">{{ __('Upload CSV files to import school data including location and administrative information.') }}</p>
                         <div class="space-y-3">
                             <div class="text-sm text-gray-500">
-                                <strong>Columns:</strong> school_name, school_code, province, district, cluster
+                                <strong>{{ __('Columns:') }}</strong> {{ __('school_name, school_code, province, district, cluster') }}
                             </div>
                             <div class="flex justify-between items-center">
                                 <a href="{{ route('imports.template', 'schools') }}" 
                                    class="export-btn text-blue-600 hover:text-blue-800 text-sm font-medium border border-blue-300 px-3 py-2 rounded hover:bg-blue-50 transition">
-                                    <i class="fas fa-download mr-1"></i>Template
+                                    <i class="fas fa-download mr-1"></i>{{ __('Template') }}
                                 </a>
                                 <a href="{{ route('imports.schools.show') }}" 
                                    class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition font-medium">
-                                    <i class="fas fa-arrow-right mr-2"></i>Import Schools
+                                    <i class="fas fa-arrow-right mr-2"></i>{{ __('Import Schools') }}
                                 </a>
                             </div>
                         </div>
@@ -63,25 +63,25 @@
                         </h5>
                     </div>
                     <div class="p-6">
-                        <p class="text-gray-600 mb-4">Upload CSV files to import teachers and mentors with their school assignments.</p>
+                        <p class="text-gray-600 mb-4">{{ __('Upload CSV files to import teachers and mentors with their school assignments.') }}</p>
                         <div class="space-y-3">
                             <div class="text-sm text-gray-500">
-                                <strong>Columns:</strong> name, email, school_name, phone, sex
+                                <strong>{{ __('Columns:') }}</strong> {{ __('name, email, school_name, phone, sex') }}
                             </div>
                             <div class="flex justify-between items-center">
                                 <div class="space-x-2">
                                     <a href="{{ route('imports.template', 'teachers') }}" 
                                        class="export-btn text-green-600 hover:text-green-800 text-xs font-medium border border-green-300 px-2 py-1 rounded hover:bg-green-50 transition">
-                                        Teachers
+                                        {{ __('Teachers') }}
                                     </a>
                                     <a href="{{ route('imports.template', 'mentors') }}" 
                                        class="export-btn text-yellow-600 hover:text-yellow-800 text-xs font-medium border border-yellow-300 px-2 py-1 rounded hover:bg-yellow-50 transition">
-                                        Mentors
+                                        {{ __('Mentors') }}
                                     </a>
                                 </div>
                                 <a href="{{ route('imports.users.show') }}" 
                                    class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition font-medium">
-                                    <i class="fas fa-arrow-right mr-2"></i>Import Users
+                                    <i class="fas fa-arrow-right mr-2"></i>{{ __('Import Users') }}
                                 </a>
                             </div>
                         </div>
@@ -97,19 +97,19 @@
                         </h5>
                     </div>
                     <div class="p-6">
-                        <p class="text-gray-600 mb-4">Upload CSV files to import student information including demographics and school enrollment.</p>
+                        <p class="text-gray-600 mb-4">{{ __('Upload CSV files to import student information including demographics and school enrollment.') }}</p>
                         <div class="space-y-3">
                             <div class="text-sm text-gray-500">
-                                <strong>Columns:</strong> name, sex, age, class, school_name
+                                <strong>{{ __('Columns:') }}</strong> {{ __('name, sex, age, class, school_name') }}
                             </div>
                             <div class="flex justify-between items-center">
                                 <a href="{{ route('imports.template', 'students') }}" 
                                    class="export-btn text-cyan-600 hover:text-cyan-800 text-sm font-medium border border-cyan-300 px-3 py-2 rounded hover:bg-cyan-50 transition">
-                                    <i class="fas fa-download mr-1"></i>Template
+                                    <i class="fas fa-download mr-1"></i>{{ __('Template') }}
                                 </a>
                                 <a href="{{ route('imports.students.show') }}" 
                                    class="bg-cyan-600 text-white px-4 py-2 rounded hover:bg-cyan-700 transition font-medium">
-                                    <i class="fas fa-arrow-right mr-2"></i>Import Students
+                                    <i class="fas fa-arrow-right mr-2"></i>{{ __('Import Students') }}
                                 </a>
                             </div>
                         </div>
@@ -125,19 +125,19 @@
                         </h5>
                     </div>
                     <div class="p-6">
-                        <p class="text-gray-600 mb-4">Access commonly used import tools and resources.</p>
+                        <p class="text-gray-600 mb-4">{{ __('Access commonly used import tools and resources.') }}</p>
                         <div class="space-y-3">
                             <a href="{{ route('imports.schools.show') }}" 
                                class="block w-full text-left px-3 py-2 text-blue-600 hover:bg-blue-50 rounded transition">
-                                <i class="fas fa-school w-4 mr-2"></i>Schools Import Tool
+                                <i class="fas fa-school w-4 mr-2"></i>{{ __('Schools Import Tool') }}
                             </a>
                             <a href="{{ route('imports.users.show') }}" 
                                class="block w-full text-left px-3 py-2 text-green-600 hover:bg-green-50 rounded transition">
-                                <i class="fas fa-users w-4 mr-2"></i>Users Import Tool
+                                <i class="fas fa-users w-4 mr-2"></i>{{ __('Users Import Tool') }}
                             </a>
                             <a href="{{ route('imports.students.show') }}" 
                                class="block w-full text-left px-3 py-2 text-cyan-600 hover:bg-cyan-50 rounded transition">
-                                <i class="fas fa-user-graduate w-4 mr-2"></i>Students Import Tool
+                                <i class="fas fa-user-graduate w-4 mr-2"></i>{{ __('Students Import Tool') }}
                             </a>
                         </div>
                     </div>
@@ -151,32 +151,32 @@
                         <h5 class="text-lg font-semibold">{{ __('Language Context Management') }}</h5>
                     </div>
                     <div class="p-6">
-                        <p class="text-gray-600 mb-6">Manage localization and language settings for the application.</p>
+                        <p class="text-gray-600 mb-6">{{ __('Manage localization and language settings for the application.') }}</p>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                <h6 class="text-base font-medium text-gray-900 mb-3">Current Language Settings</h6>
+                                <h6 class="text-base font-medium text-gray-900 mb-3">{{ __('Current Language Settings') }}</h6>
                                 <div class="space-y-2">
                                     <div class="flex justify-between items-center py-2 px-3 bg-gray-50 rounded">
-                                        <span class="text-gray-700">Default Language</span>
+                                        <span class="text-gray-700">{{ __('Default Language') }}</span>
                                         <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">{{ app()->getLocale() }}</span>
                                     </div>
                                     <div class="flex justify-between items-center py-2 px-3 bg-gray-50 rounded">
-                                        <span class="text-gray-700">Available Languages</span>
-                                        <span class="bg-cyan-100 text-cyan-800 text-xs font-medium px-2.5 py-0.5 rounded">English, Khmer</span>
+                                        <span class="text-gray-700">{{ __('Available Languages') }}</span>
+                                        <span class="bg-cyan-100 text-cyan-800 text-xs font-medium px-2.5 py-0.5 rounded">{{ __('English, Khmer') }}</span>
                                     </div>
                                 </div>
                             </div>
                             <div>
-                                <h6 class="text-base font-medium text-gray-900 mb-3">Language Actions</h6>
+                                <h6 class="text-base font-medium text-gray-900 mb-3">{{ __('Language Actions') }}</h6>
                                 <div class="space-y-2">
                                     <a href="{{ route('settings.index') }}" class="block w-full text-center bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-50 transition">
-                                        Manage Language Settings
+                                        {{ __('Manage Language Settings') }}
                                     </a>
                                     <button type="button" class="w-full bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-50 transition" onclick="exportTranslations()">
-                                        Export Translation Files
+                                        {{ __('Export Translation Files') }}
                                     </button>
                                     <button type="button" class="w-full bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-50 transition" onclick="importTranslations()">
-                                        Import Translation Files
+                                        {{ __('Import Translation Files') }}
                                     </button>
                                 </div>
                             </div>
@@ -194,43 +194,43 @@
                     <div class="p-6">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                <h6 class="text-base font-medium text-gray-900 mb-3">File Format Requirements</h6>
+                                <h6 class="text-base font-medium text-gray-900 mb-3">{{ __('File Format Requirements') }}</h6>
                                 <ul class="space-y-2 text-gray-700">
                                     <li class="flex items-center">
                                         <i class="fas fa-check-circle text-green-500 mr-2"></i>
-                                        Files must be in CSV format
+                                        {{ __('Files must be in CSV format') }}
                                     </li>
                                     <li class="flex items-center">
                                         <i class="fas fa-check-circle text-green-500 mr-2"></i>
-                                        First row must contain column headers
+                                        {{ __('First row must contain column headers') }}
                                     </li>
                                     <li class="flex items-center">
                                         <i class="fas fa-check-circle text-green-500 mr-2"></i>
-                                        Use UTF-8 encoding for special characters
+                                        {{ __('Use UTF-8 encoding for special characters') }}
                                     </li>
                                     <li class="flex items-center">
                                         <i class="fas fa-check-circle text-green-500 mr-2"></i>
-                                        Date format: YYYY-MM-DD
+                                        {{ __('Date format: YYYY-MM-DD') }}
                                     </li>
                                 </ul>
                             </div>
                             <div>
-                                <h6 class="text-base font-medium text-gray-900 mb-3">Import Order</h6>
+                                <h6 class="text-base font-medium text-gray-900 mb-3">{{ __('Import Order') }}</h6>
                                 <ol class="space-y-2 text-gray-700">
                                     <li class="flex items-center">
                                         <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full mr-3">1</span>
-                                        Import Schools first
+                                        {{ __('Import Schools first') }}
                                     </li>
                                     <li class="flex items-center">
                                         <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full mr-3">2</span>
-                                        Import Teachers and Mentors
+                                        {{ __('Import Teachers and Mentors') }}
                                     </li>
                                     <li class="flex items-center">
                                         <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full mr-3">3</span>
-                                        Import Students last
+                                        {{ __('Import Students last') }}
                                     </li>
                                 </ol>
-                                <small class="text-gray-500 mt-2 block">This order ensures all dependencies are met.</small>
+                                <small class="text-gray-500 mt-2 block">{{ __('This order ensures all dependencies are met.') }}</small>
                             </div>
                         </div>
                     </div>
@@ -242,11 +242,11 @@
 
 <script>
 function exportTranslations() {
-    alert('Translation export functionality will be implemented based on your localization needs.');
+    alert("{{ __('Translation export functionality will be implemented based on your localization needs.') }}");
 }
 
 function importTranslations() {
-    alert('Translation import functionality will be implemented based on your localization needs.');
+    alert("{{ __('Translation import functionality will be implemented based on your localization needs.') }}");
 }
 </script>
 @endsection

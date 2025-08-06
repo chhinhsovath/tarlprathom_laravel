@@ -52,9 +52,9 @@ class ReportController extends Controller
             $stats['total_teachers'] = User::where('role', 'teacher')->count();
             $stats['total_mentors'] = User::where('role', 'mentor')->count();
 
-            // Average assessment scores by subject
-            $stats['avg_scores_by_subject'] = Assessment::select('subject', DB::raw('AVG(score) as avg_score'))
-                ->groupBy('subject')
+            // Assessment levels by subject (TaRL uses levels, not scores)
+            $stats['levels_by_subject'] = Assessment::select('subject', 'level', DB::raw('COUNT(*) as count'))
+                ->groupBy('subject', 'level')
                 ->get();
 
             // Recent assessments
@@ -76,12 +76,12 @@ class ReportController extends Controller
                 $q->where('school_id', $user->school_id);
             })->count();
 
-            // Average assessment scores by subject for their school
-            $stats['avg_scores_by_subject'] = Assessment::select('subject', DB::raw('AVG(score) as avg_score'))
+            // Assessment levels by subject for their school (TaRL uses levels, not scores)
+            $stats['levels_by_subject'] = Assessment::select('subject', 'level', DB::raw('COUNT(*) as count'))
                 ->whereHas('student', function ($q) use ($user) {
                     $q->where('school_id', $user->school_id);
                 })
-                ->groupBy('subject')
+                ->groupBy('subject', 'level')
                 ->get();
 
             // Recent assessments for their school
@@ -93,8 +93,8 @@ class ReportController extends Controller
                 ->limit(10)
                 ->get();
 
-            // Mentoring visits where they were the teacher
-            $stats['my_mentoring_visits'] = MentoringVisit::where('teacher_id', $user->id)
+            // Mentoring visits at the teacher's school
+            $stats['my_mentoring_visits'] = MentoringVisit::where('school_id', $user->school_id)
                 ->with(['mentor', 'school'])
                 ->orderBy('visit_date', 'desc')
                 ->limit(5)
@@ -114,16 +114,15 @@ class ReportController extends Controller
                 $stats['schools_visited'] = MentoringVisit::whereIn('school_id', $accessibleSchoolIds)
                     ->distinct('school_id')
                     ->count('school_id');
-                $stats['teachers_mentored'] = MentoringVisit::whereIn('school_id', $accessibleSchoolIds)
-                    ->distinct('teacher_id')
-                    ->count('teacher_id');
+                $stats['mentoring_visits'] = MentoringVisit::whereIn('school_id', $accessibleSchoolIds)
+                    ->count();
 
-                // Average assessment scores by subject for their schools
-                $stats['avg_scores_by_subject'] = Assessment::select('subject', DB::raw('AVG(score) as avg_score'))
+                // Assessment levels by subject for their schools (TaRL uses levels, not scores)
+                $stats['levels_by_subject'] = Assessment::select('subject', 'level', DB::raw('COUNT(*) as count'))
                     ->whereHas('student', function ($q) use ($accessibleSchoolIds) {
                         $q->whereIn('school_id', $accessibleSchoolIds);
                     })
-                    ->groupBy('subject')
+                    ->groupBy('subject', 'level')
                     ->get();
 
                 // Recent assessments for their schools
@@ -143,8 +142,7 @@ class ReportController extends Controller
                     ->get();
 
                 // Average mentoring scores for their schools
-                $stats['avg_mentoring_score'] = MentoringVisit::whereIn('school_id', $accessibleSchoolIds)
-                    ->avg('score');
+                $stats['avg_mentoring_score'] = 0; // Score column not available
             } else {
                 // No schools assigned, show empty stats
                 $stats['total_students'] = 0;
@@ -262,9 +260,9 @@ class ReportController extends Controller
         // Get schools for filter based on user access
         $accessibleSchoolIds = $user->getAccessibleSchoolIds();
         if ($user->isAdmin()) {
-            $schools = School::orderBy('school_name')->get();
+            $schools = School::orderBy('name')->get();
         } else {
-            $schools = School::whereIn('id', $accessibleSchoolIds)->orderBy('school_name')->get();
+            $schools = School::whereIn('id', $accessibleSchoolIds)->orderBy('name')->get();
         }
 
         // Build query
@@ -404,10 +402,9 @@ class ReportController extends Controller
                 $levelCounts = $assessments->groupBy('level')->map->count();
 
                 $comparisonData[] = [
-                    'school' => $school->school_name,
+                    'school' => $school->name,
                     'total_assessed' => $total,
                     'levels' => $levelCounts,
-                    'average_score' => $assessments->avg('score') ?? 0,
                 ];
             }
         }
@@ -499,8 +496,8 @@ class ReportController extends Controller
             }
         }
 
-        if ($user->isTeacher()) {
-            $query->where('teacher_id', $user->id);
+        if ($user->isTeacher() && $user->school_id) {
+            $query->where('school_id', $user->school_id);
         }
 
         $visits = $query->get();
@@ -533,8 +530,13 @@ class ReportController extends Controller
                 'school' => $schoolVisits->first()->school,
                 'total_visits' => $schoolVisits->count(),
                 'unique_teachers' => $schoolVisits->pluck('teacher_id')->unique()->count(),
-                'average_score' => $schoolVisits->avg('score'),
+                'unique_mentors' => $schoolVisits->pluck('mentor_id')->unique()->count(),
+                'follow_up_required' => $schoolVisits->where('follow_up_required', true)->count(),
                 'visits' => $schoolVisits,
+                'avg_students_enrolled' => $schoolVisits->avg('total_students_enrolled') ?? 0,
+                'avg_students_present' => $schoolVisits->avg('students_present') ?? 0,
+                'classes_in_session_rate' => $schoolVisits->count() > 0 ? ($schoolVisits->where('class_in_session', true)->count() / $schoolVisits->count()) * 100 : 0,
+                'has_session_plan_rate' => $schoolVisits->count() > 0 ? ($schoolVisits->where('has_session_plan', true)->count() / $schoolVisits->count()) * 100 : 0,
             ];
         });
 
@@ -543,12 +545,19 @@ class ReportController extends Controller
         foreach ($visitsBySchool as $schoolId => $data) {
             $school = $data['school'];
 
-            // Get baseline and latest assessment data
-            $baselineAvg = Assessment::whereHas('student', function ($q) use ($schoolId) {
+            // Get baseline and latest assessment data (TaRL level-based)
+            $baselineTotal = Assessment::whereHas('student', function ($q) use ($schoolId) {
                 $q->where('school_id', $schoolId);
             })
                 ->where('cycle', 'baseline')
-                ->avg('score');
+                ->count();
+                
+            $baselineAdvanced = Assessment::whereHas('student', function ($q) use ($schoolId) {
+                $q->where('school_id', $schoolId);
+            })
+                ->where('cycle', 'baseline')
+                ->whereNotIn('level', ['Beginner', 'Letter', '1-Digit'])
+                ->count();
 
             $latestCycle = Assessment::whereHas('student', function ($q) use ($schoolId) {
                 $q->where('school_id', $schoolId);
@@ -558,19 +567,29 @@ class ReportController extends Controller
                 ->first();
 
             if ($latestCycle) {
-                $latestAvg = Assessment::whereHas('student', function ($q) use ($schoolId) {
+                $latestTotal = Assessment::whereHas('student', function ($q) use ($schoolId) {
                     $q->where('school_id', $schoolId);
                 })
                     ->where('cycle', $latestCycle->cycle)
-                    ->avg('score');
+                    ->count();
+                    
+                $latestAdvanced = Assessment::whereHas('student', function ($q) use ($schoolId) {
+                    $q->where('school_id', $schoolId);
+                })
+                    ->where('cycle', $latestCycle->cycle)
+                    ->whereNotIn('level', ['Beginner', 'Letter', '1-Digit'])
+                    ->count();
+
+                $baselinePercentage = $baselineTotal > 0 ? ($baselineAdvanced / $baselineTotal) * 100 : 0;
+                $latestPercentage = $latestTotal > 0 ? ($latestAdvanced / $latestTotal) * 100 : 0;
 
                 $schoolsWithImprovements[] = [
                     'school' => $school,
-                    'baseline_avg' => $baselineAvg,
-                    'latest_avg' => $latestAvg,
-                    'improvement' => $latestAvg - $baselineAvg,
+                    'baseline_percentage' => round($baselinePercentage, 1),
+                    'latest_percentage' => round($latestPercentage, 1),
+                    'improvement' => round($latestPercentage - $baselinePercentage, 1),
                     'total_visits' => $data['total_visits'],
-                    'avg_mentoring_score' => $data['average_score'],
+                    'avg_mentoring_score' => 0, // Score column not available
                 ];
             }
         }
@@ -605,9 +624,9 @@ class ReportController extends Controller
         // Get schools for filter based on user access
         $accessibleSchoolIds = $user->getAccessibleSchoolIds();
         if ($user->isAdmin()) {
-            $schools = School::orderBy('school_name')->get();
+            $schools = School::orderBy('name')->get();
         } else {
-            $schools = School::whereIn('id', $accessibleSchoolIds)->orderBy('school_name')->get();
+            $schools = School::whereIn('id', $accessibleSchoolIds)->orderBy('name')->get();
         }
 
         // Build query for students with multiple assessments
@@ -650,20 +669,17 @@ class ReportController extends Controller
                     $progressData[] = [
                         'student' => $student,
                         'baseline_level' => $baseline->level,
-                        'baseline_score' => $baseline->score,
                         'latest_cycle' => $latest->cycle,
                         'latest_level' => $latest->level,
-                        'latest_score' => $latest->score,
-                        'score_change' => $latest->score - $baseline->score,
                         'level_improved' => $this->calculateLevelImprovement($baseline->level, $latest->level, $subject),
                     ];
                 }
             }
         }
 
-        // Sort by improvement
+        // Sort by level improvement
         usort($progressData, function ($a, $b) {
-            return $b['score_change'] <=> $a['score_change'];
+            return $b['level_improved'] <=> $a['level_improved'];
         });
 
         return view('reports.progress-tracking', compact(
@@ -707,8 +723,10 @@ class ReportController extends Controller
             'total_visits' => $visits->count(),
             'schools_visited' => $visits->pluck('school_id')->unique()->count(),
             'teachers_mentored' => $visits->pluck('teacher_id')->unique()->count(),
-            'average_score' => $visits->avg('score'),
+            'average_score' => $visits->avg('score') ?? 0,
             'follow_up_required' => $visits->where('follow_up_required', true)->count(),
+            'classes_in_session' => $visits->where('class_in_session', true)->count(),
+            'full_sessions_observed' => $visits->where('full_session_observed', true)->count(),
         ];
 
         // Group visits by school
@@ -717,8 +735,11 @@ class ReportController extends Controller
                 'school' => $schoolVisits->first()->school,
                 'visits' => $schoolVisits,
                 'total_visits' => $schoolVisits->count(),
-                'average_score' => $schoolVisits->avg('score'),
                 'teachers' => $schoolVisits->pluck('teacher')->unique(),
+                'average_score' => $schoolVisits->avg('score') ?? 0,
+                'follow_up_required' => $schoolVisits->where('follow_up_required', true)->count(),
+                'avg_students_present' => $schoolVisits->avg('students_present') ?? 0,
+                'avg_students_improved' => $schoolVisits->avg('students_improved_from_last_week') ?? 0,
             ];
         });
 
@@ -729,7 +750,9 @@ class ReportController extends Controller
             return [
                 'month' => $month,
                 'count' => $monthVisits->count(),
-                'average_score' => $monthVisits->avg('score'),
+                'average_score' => $monthVisits->avg('score') ?? 0,
+                'follow_up_required' => $monthVisits->where('follow_up_required', true)->count(),
+                'classes_in_session' => $monthVisits->where('class_in_session', true)->count(),
             ];
         })->sortKeys();
 
@@ -786,7 +809,6 @@ class ReportController extends Controller
         $performanceBySubject = $assessments->groupBy('subject')->map(function ($subjectAssessments) {
             return [
                 'count' => $subjectAssessments->count(),
-                'average_score' => $subjectAssessments->avg('score'),
                 'levels' => $subjectAssessments->groupBy('level')->map->count(),
             ];
         });
@@ -885,7 +907,7 @@ class ReportController extends Controller
             ->pluck('school_id');
 
         $schools = School::whereIn('id', $schoolIds)
-            ->orderBy('school_name')
+            ->orderBy('name')
             ->get();
 
         $visitData = null;
@@ -899,7 +921,7 @@ class ReportController extends Controller
                 ->get();
 
             // Get unique teachers mentored at this school
-            $teachers = $visits->pluck('teacher')->unique();
+            $mentors = $visits->pluck('mentor')->unique();
 
             // Calculate trends
             $visitTrends = $visits->groupBy(function ($visit) {
@@ -907,16 +929,16 @@ class ReportController extends Controller
             })->map(function ($monthVisits) {
                 return [
                     'count' => $monthVisits->count(),
-                    'average_score' => $monthVisits->avg('score'),
+                    'follow_up_required' => $monthVisits->where('follow_up_required', true)->count(),
                 ];
             });
 
             $visitData = [
                 'school' => School::find($schoolId),
                 'visits' => $visits,
-                'teachers' => $teachers,
+                'mentors' => $mentors,
                 'total_visits' => $visits->count(),
-                'average_score' => $visits->avg('score'),
+                'follow_up_required' => $visits->where('follow_up_required', true)->count(),
                 'visit_trends' => $visitTrends,
             ];
         }
@@ -945,9 +967,9 @@ class ReportController extends Controller
         // Get schools for filter based on user access
         $accessibleSchoolIds = $user->getAccessibleSchoolIds();
         if ($user->isAdmin()) {
-            $schools = School::orderBy('school_name')->get();
+            $schools = School::orderBy('name')->get();
         } else {
-            $schools = School::whereIn('id', $accessibleSchoolIds)->orderBy('school_name')->get();
+            $schools = School::whereIn('id', $accessibleSchoolIds)->orderBy('name')->get();
         }
 
         // Build base query for assessments

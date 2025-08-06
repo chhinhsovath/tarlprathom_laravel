@@ -126,12 +126,12 @@ class AssessmentController extends Controller
         // Get schools for filter dropdown (based on access)
         $schools = [];
         if ($request->user()->isAdmin()) {
-            $schools = School::orderBy('school_name')->get();
+            $schools = School::orderBy('name')->get();
         } elseif ($request->user()->isMentor()) {
             if (empty($accessibleSchoolIds)) {
                 $schools = collect([]);  // Empty collection if no schools accessible
             } else {
-                $schools = School::whereIn('id', $accessibleSchoolIds)->orderBy('school_name')->get();
+                $schools = School::whereIn('id', $accessibleSchoolIds)->orderBy('name')->get();
             }
         }
 
@@ -213,12 +213,26 @@ class AssessmentController extends Controller
             ->get()
             ->keyBy('student_id');
 
+        // Get latest assessments for each student (most recent level)
+        $latestAssessments = Assessment::whereIn('student_id', $studentIds)
+            ->where('subject', $subject)
+            ->where('cycle', '!=', $cycle) // Exclude current cycle
+            ->orderBy('assessed_at', 'desc')
+            ->get()
+            ->groupBy('student_id')
+            ->map(function ($assessments) {
+                return $assessments->first(); // Get the most recent assessment
+            });
+
         // Add assessment status to each student
-        $students->transform(function ($student) use ($existingAssessments) {
+        $students->transform(function ($student) use ($existingAssessments, $latestAssessments) {
             $existingAssessment = $existingAssessments->get($student->id);
             $student->has_assessment = $existingAssessment !== null;
             $student->is_assessment_locked = $existingAssessment && (\Schema::hasColumn('assessments', 'is_locked') ? ($existingAssessment->is_locked ?? false) : false);
             $student->assessment_level = $existingAssessment ? $existingAssessment->level : null;
+            
+            // Add latest assessment data
+            $student->previous_assessment = $latestAssessments->get($student->id);
 
             return $student;
         });
@@ -602,7 +616,7 @@ class AssessmentController extends Controller
             ->pluck('student_id')
             ->toArray();
 
-        $schools = School::orderBy('school_name')->get();
+        $schools = School::orderBy('name')->get();
 
         return view('assessments.select-students', compact(
             'students',
