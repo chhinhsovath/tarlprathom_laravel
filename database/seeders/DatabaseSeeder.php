@@ -17,6 +17,10 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             StudentSeeder::class,
             ComprehensiveAssessmentSeeder::class,
+            EnhancedTranslationsSeeder::class,
+            LearningOutcomesSeeder::class,
+            InterventionProgramsSeeder::class,
+            TeachingActivitiesSeeder::class,
         ]);
     }
 }

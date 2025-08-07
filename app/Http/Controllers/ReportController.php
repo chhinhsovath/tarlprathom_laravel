@@ -349,7 +349,7 @@ class ReportController extends Controller
         $khmerLevels = ['Beginner', 'Letter', 'Word', 'Paragraph', 'Story', 'Comp. 1', 'Comp. 2'];
         $mathLevels = ['Beginner', '1-Digit', '2-Digit', 'Subtraction', 'Division', 'Word Problem'];
 
-        return view('reports.student-performance', compact(
+        return view('reports.student-performance-localized', compact(
             'schools',
             'schoolId',
             'subject',
@@ -409,7 +409,7 @@ class ReportController extends Controller
             }
         }
 
-        return view('reports.school-comparison', compact('comparisonData', 'subject', 'cycle'));
+        return view('reports.school-comparison-localized', compact('comparisonData', 'subject', 'cycle'));
     }
 
     /**
@@ -599,7 +599,7 @@ class ReportController extends Controller
             return $b['improvement'] <=> $a['improvement'];
         });
 
-        return view('reports.mentoring-impact', compact(
+        return view('reports.mentoring-impact-localized', compact(
             'visitsBySchool',
             'schoolsWithImprovements',
             'startDate',
@@ -682,11 +682,15 @@ class ReportController extends Controller
             return $b['level_improved'] <=> $a['level_improved'];
         });
 
-        return view('reports.progress-tracking', compact(
+        // Calculate average score change (using level improvement as score change for now)
+        $avgScoreChange = ! empty($progressData) ? collect($progressData)->avg('level_improved') : 0;
+
+        return view('reports.progress-tracking-localized', compact(
             'schools',
             'schoolId',
             'subject',
-            'progressData'
+            'progressData',
+            'avgScoreChange'
         ));
     }
 
@@ -1045,7 +1049,7 @@ class ReportController extends Controller
             ];
         }
 
-        return view('reports.performance-calculation', compact(
+        return view('reports.performance-calculation-localized', compact(
             'schools',
             'schoolId',
             'cycle',

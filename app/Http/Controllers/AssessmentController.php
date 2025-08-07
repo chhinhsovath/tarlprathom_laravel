@@ -317,10 +317,10 @@ class AssessmentController extends Controller
 
         if ($subject === 'khmer') {
             $levels = ['Beginner', 'Reader', 'Word', 'Paragraph', 'Story'];
-            $labels = [__('Beginner'), __('Letter'), __('Word'), __('Paragraph'), __('Story')];
+            $labels = [trans_db('Beginner'), trans_db('Letter'), trans_db('Word'), trans_db('Paragraph'), trans_db('Story')];
         } else {
             $levels = ['Beginner', '1-Digit', '2-Digit', 'Subtraction', 'Division'];
-            $labels = [__('Beginner'), __('1-Digit'), __('2-Digit'), __('Subtraction'), __('Division')];
+            $labels = [trans_db('Beginner'), trans_db('1-Digit'), trans_db('2-Digit'), trans_db('Subtraction'), trans_db('Division')];
         }
 
         // Get assessment counts by level (filtered by access)
@@ -360,7 +360,7 @@ class AssessmentController extends Controller
         $chartData = [
             'labels' => $labels,
             'datasets' => [[
-                'label' => __($subject === 'khmer' ? 'Khmer Assessment Results' : 'Math Assessment Results'),
+                'label' => trans_db($subject === 'khmer' ? 'Khmer Assessment Results' : 'Math Assessment Results'),
                 'data' => $data,
                 'backgroundColor' => ['#d32f2f', '#f57c00', '#fbc02d', '#388e3c', '#2e7d32'],
                 'borderWidth' => 1,

@@ -1,0 +1,482 @@
+╭──────────────────────────────────────────────────────╮
+│ ✻ Welcome to Claude Code!                            │
+│                                                      │
+│   /help for help, /status for your current setup     │
+│                                                      │
+│   cwd: /Users/user/Desktop/apps/tarlprathom_laravel  │
+╰──────────────────────────────────────────────────────╯
+⏺ Compact summary (ctrl+r to expand)
+  ⎿  Read resources/views/reports/progress-tracking-localized.blade.php (491 lines)
+  ⎿  Read routes/web.php (261 lines)
+  ⎿  Todo list read (10 items)
+
+⏺ I'll continue with the task of localizing the mentoring-impact and school-comparison reports.
+  Let me check these pages to ensure they are fully localized.
+
+⏺ Update Todos
+  ⎿  ☒ Examine existing report controller and views                      
+     ☒ Localize student-performance report
+     ☒ Localize school-comparison report
+     ☒ Localize mentoring-impact report
+     ☒ Localize progress-tracking report
+     ☒ Localize performance-calculation report
+     ☒ Add Khmer translations for all report elements
+     ☒ Add language switching functionality to all localized report pages
+     ☒ Fix TypeError in assessment-results.blade.php
+     ☒ Update ReportController to use all localized views
+     ☐ Check mentoring-impact report for complete localization
+     ☐ Check school-comparison report for complete localization
+     ☐ Add any missing translations to seeders
+
+⏺ Search(pattern: "mentoring-impact", path: "resources/views/reports")
+  ⎿  Found 2 files (ctrl+r to expand)
+
+⏺ Read(resources/views/reports/mentoring-impact-localized.blade.php)
+  ⎿  Read 364 lines (ctrl+r to expand)
+
+⏺ Now let me check the school-comparison report:
+
+⏺ Read(resources/views/reports/school-comparison-localized.blade.php)
+  ⎿  Read 463 lines (ctrl+r to expand)
+
+⏺ Now let me check if there are any missing translations by examining the specific text that
+  might need translation:
+
+⏺ Search(pattern: "trans_db", path: "resources/views/reports", glob: "*-localized.blade.php",
+        output_mode: "count")
+  ⎿  Found 345 matches across 5 files (ctrl+r to expand)
+
+⏺ Let me check if the ReportController is directing to the localized views:
+
+⏺ Search(pattern: "mentoring-impact-localized|school-comparison-localized", path:
+        "app/Http/Controllers/ReportController.php", output_mode: "content")
+  ⎿  Found 2 lines (ctrl+r to expand)
+
+⏺ Good! The controller is using the localized views. Let me now check the translations seeder to
+  see what translations might be missing:
+
+⏺ Search(pattern: "School Comparison Report|Mentoring Impact Report", path: "database/seeders",
+        output_mode: "content")
+  ⎿  Found 5 lines (ctrl+r to expand)
+
+⏺ The basic titles are there. Let me check for some specific translations that might be missing.
+  Let me extract key phrases from both reports:
+
+⏺ Search(pattern: "'[A-Z][^']*'", path:
+        "resources/views/reports/mentoring-impact-localized.blade.php", output_mode: "content")
+  ⎿  Found 211 lines (ctrl+r to expand)
+
+⏺ Now let me check the ReportTranslationsSeeder to see if we have all the necessary translations
+  for both reports:
+
+⏺ Update Todos
+  ⎿  ☒ Examine existing report controller and views                      
+     ☒ Localize student-performance report
+     ☒ Localize school-comparison report
+     ☒ Localize mentoring-impact report
+     ☒ Localize progress-tracking report
+     ☒ Localize performance-calculation report
+     ☒ Add Khmer translations for all report elements
+     ☒ Add language switching functionality to all localized report pages
+     ☒ Fix TypeError in assessment-results.blade.php
+     ☒ Update ReportController to use all localized views
+     ☒ Check mentoring-impact report for complete localization
+     ☒ Check school-comparison report for complete localization
+     ☐ Add any missing translations to seeders
+
+⏺ Search(pattern: "How We Calculate Impact|School Impact Summary|Classes In Session|Session
+        Plans|Understanding the Data:", path: "database/seeders", output_mode: "content")
+  ⎿  Found 3 lines (ctrl+r to expand)
+
+⏺ Let me check for specific phrases that might be missing:
+
+⏺ Search(pattern: "Percentage of visits where class was in session|Percentage of teachers with
+        session plans|Visit Details by School", path: "database/seeders", output_mode: "content")
+  ⎿  Found 1 line (ctrl+r to expand)
+
+⏺ Let me check for missing JavaScript chart translations:
+
+⏺ Search(pattern: "Correlation between Mentoring Visits and Performance Improvement|Hide
+        Details|visits|improvement", path: "database/seeders", output_mode: "content")
+  ⎿  Found 15 lines (ctrl+r to expand)
+
+⏺ I found several issues. Let me check what specific translations are missing and add them.
+  First, let me search for the exact phrases being used in the chart translations:
+
+⏺ Search(pattern: "visits|improvement", path: "database/seeders/ReportTranslationsSeeder.php",
+        output_mode: "content")
+  ⎿  Found 6 lines (ctrl+r to expand)
+
+⏺ I need to add some missing translations. Let me add them to the seeder:
+
+⏺ Read(database/seeders/ReportTranslationsSeeder.php)
+  ⎿  Read 50 lines (ctrl+r to expand)
+
+⏺ Let me check what specific translations are missing. Let me add the missing ones to the seeder
+  file:
+
+⏺ Update(database/seeders/ReportTranslationsSeeder.php)
+  ⎿  Updated database/seeders/ReportTranslationsSeeder.php with 12 additions                     
+       153                ['key' => 'Follow-up Required', 'en' => 'Follow-up Required', 'km' => 
+             'ត្រូវការតាមដាន'],
+       154                ['key' => 'Show Details', 'en' => 'Show Details', 'km' => 'បង្ហាញលម្អិត'],
+       155                ['key' => 'Hide Details', 'en' => 'Hide Details', 'km' => 'លាក់លម្អិត'],
+       156 +              
+       157 +              // Chart translations for Mentoring Impact Report
+       158 +              ['key' => 'visits', 'en' => 'visits', 'km' => 'ការចុះណែនាំ'],
+       159 +              ['key' => 'improvement', 'en' => 'improvement', 'km' => 'កែលម្អ'],
+       160 +              ['key' => 'Correlation between Mentoring Visits and Performance 
+           + Improvement', 'en' => 'Correlation between Mentoring Visits and Performance 
+           + Improvement', 'km' => 'ការទាក់ទងគ្នារវាងការចុះណែនាំ និងការកែលម្អដំណើរការ'],
+       161 +              ['key' => 'Number of Mentoring Visits', 'en' => 'Number of Mentoring 
+           + Visits', 'km' => 'ចំនួនការចុះណែនាំ'],
+       162 +              ['key' => 'Performance Improvement (Latest - Baseline)', 'en' => 
+           + 'Performance Improvement (Latest - Baseline)', 'km' => 'ការកែលម្អដំណើរការ (ចុងក្រោយ - 
+           + មូលដ្ឋាន)'],
+       163 +              
+       164 +              // Additional Mentoring Impact translations
+       165 +              ['key' => 'Percentage of visits where class was in session', 'en' => 
+           + 'Percentage of visits where class was in session', 'km' => 
+           + 'ភាគរយនៃការចុះទស្សនកិច្ចដែលថ្នាក់រៀនកំពុងបើក'],
+       166 +              ['key' => 'Percentage of teachers with session plans', 'en' => 
+           + 'Percentage of teachers with session plans', 'km' => 'ភាគរយនៃគ្រូដែលមានផែនការបង្រៀន'],
+       167 +              ['key' => 'Individual visit records during the selected period:', 'en' 
+           + => 'Individual visit records during the selected period:', 'km' => 
+           + 'កំណត់ត្រាការចុះទស្សនកិច្ចបុគ្គលក្នុងអំឡុងពេលដែលបានជ្រើសរើស៖'],
+       168                ['key' => 'Date', 'en' => 'Date', 'km' => 'កាលបរិច្ឆេទ'],
+       169                ['key' => 'Teacher', 'en' => 'Teacher', 'km' => 'គ្រូ'],
+       170                ['key' => 'Session', 'en' => 'Session', 'km' => 'សេស្យុង'],
+
+⏺ Now let me check for school-comparison specific translations. Let me search for specific
+  missing ones from that report:
+
+⏺ Search(pattern: "Student Distribution by School and Level|Chart interpretation|Look for", path:
+         "database/seeders", output_mode: "content")
+  ⎿  Found 0 lines 
+
+⏺ I need to add translations for school-comparison report as well. Let me find a good place to
+  add them:
+
+⏺ Read(database/seeders/ReportTranslationsSeeder.php)
+  ⎿  Read 20 lines (ctrl+r to expand)
+
+⏺ Let me add the missing school-comparison translations. I'll add them after the school
+  comparison section:
+
+⏺ Update(database/seeders/ReportTranslationsSeeder.php)
+  ⎿  Updated database/seeders/ReportTranslationsSeeder.php with 20 additions                     
+       141                ['key' => 'Distribution patterns that inform resource allocation', 'en' 
+             => 'Distribution patterns that inform resource allocation', 'km' => 
+             'លំនាំការបែងចែកដែលផ្តល់ព័ត៌មានការបែងចែកធនធាន'],
+       142                ['key' => 'Performance variations across the school network', 'en' => 
+             'Performance variations across the school network', 'km' => 
+             'ការប្រែប្រួលការអនុវត្តនៅទូទាំងបណ្តាញសាលា'],
+       143                
+       144 +              // School Comparison Chart and Table Translations
+       145 +              ['key' => 'How to Read the Charts and Tables', 'en' => 'How to Read the 
+           + Charts and Tables', 'km' => 'របៀបអានគំនូសតាង និងតារាង'],
+       146 +              ['key' => 'Stacked Bar Chart', 'en' => 'Stacked Bar Chart', 'km' => 
+           + 'គំនូសតាងរបារជង់'],
+       147 +              ['key' => 'Each bar represents one school', 'en' => 'Each bar 
+     represents
+           +  one school', 'km' => 'របារនីមួយៗតំណាងឱ្យសាលាមួយ'],
+       148 +              ['key' => 'Colors show skill levels (red=beginner, 
+           + green/teal=advanced)', 'en' => 'Colors show skill levels (red=beginner, 
+           + green/teal=advanced)', 'km' => 'ពណ៌បង្ហាញកម្រិតជំនាញ (ក្រហម=ដំបូង, បៃតង/បៃតងទឹកសមុទ្រ=កម្រិតខ្ពស់)'],
+       149 +              ['key' => 'Bar height shows total students assessed', 'en' => 'Bar 
+           + height shows total students assessed', 'km' => 'កម្ពស់របារបង្ហាញចំនួនសិស្សដែលបានវាយតម្លៃសរុប'],
+       150 +              ['key' => 'Color proportions show level distribution', 'en' => 'Color 
+           + proportions show level distribution', 'km' => 'សមាមាត្រពណ៌បង្ហាញការបែងចែកកម្រិត'],
+       151 +              ['key' => 'Comparison Table', 'en' => 'Comparison Table', 'km' => 
+           + 'តារាងប្រៀបធៀប'],
+       152 +              ['key' => 'Numbers show student counts at each level', 'en' => 'Numbers 
+           + show student counts at each level', 'km' => 'លេខបង្ហាញចំនួនសិស្សនៅកម្រិតនីមួយៗ'],
+       153 +              ['key' => 'Percentages show proportion of school total', 'en' => 
+           + 'Percentages show proportion of school total', 'km' => 'ភាគរយបង្ហាញសមាមាត្រនៃចំនួនសរុបសាលា'],
+       154 +              ['key' => 'Compare across rows to see school differences', 'en' => 
+           + 'Compare across rows to see school differences', 'km' => 
+           + 'ប្រៀបធៀបតាមជួរដេកដើម្បីមើលភាពខុសគ្នារបស់សាលា'],
+       155 +              ['key' => 'Compare within columns to see level concentrations', 'en' => 
+           + 'Compare within columns to see level concentrations', 'km' => 
+           + 'ប្រៀបធៀបក្នុងជួរឈរដើម្បីមើលការប្រមូលផ្តុំកម្រិត'],
+       156 +              
+       157 +              // School Comparison Chart Specific Translations
+       158 +              ['key' => 'Student Distribution by School and Level', 'en' => 'Student 
+           + Distribution by School and Level', 'km' => 'ការបែងចែកសិស្សតាមសាលា និងកម្រិត'],
+       159 +              ['key' => 'Chart interpretation', 'en' => 'Chart interpretation', 'km' 
+           + => 'ការបកស្រាយគំនូសតាង'],
+       160 +              ['key' => 'Each school is represented by a stacked bar. Taller bars 
+           + indicate more students assessed. The color distribution within each bar shows how 
+           + students are distributed across skill levels.', 'en' => 'Each school is represented 
+           + by a stacked bar. Taller bars indicate more students assessed. The color 
+     distribution
+           +  within each bar shows how students are distributed across skill levels.', 'km' => 
+           + 'សាលានីមួយៗត្រូវបានតំណាងដោយរបារជង់។ របារខ្ពស់បង្កើតបង្ហាញថាសិស្សច្រើនជាងត្រូវបានវាយតម្លៃ។ 
+           + ការបែងចែកពណ៌នៅក្នុងរបារនីមួយៗបង្ហាញពីរបៀបដែលសិស្សត្រូវបានបែងចែកនៅទូទាំងកម្រិតជំនាញ។'],
+       161 +              ['key' => 'Look for', 'en' => 'Look for', 'km' => 'មើលរក'],
+       162 +              ['key' => 'Schools with more green/teal (advanced levels) vs red/yellow 
+           + (beginner levels), and schools with similar total heights but different color 
+           + distributions.', 'en' => 'Schools with more green/teal (advanced levels) vs 
+           + red/yellow (beginner levels), and schools with similar total heights but different 
+           + color distributions.', 'km' => 'សាលាដែលមានពណ៌បៃតង/បៃតងទឹកសមុទ្រច្រើនជាង (កម្រិតខ្ពស់) ធៀបនឹងក្រហម/លឿង 
+           + (កម្រិតដំបូង) និងសាលាដែលមានកម្ពស់សរុបស្រដៀងគ្នាប៉ុន្តែការបែងចែកពណ៌ផ្សេងគ្នា។'],
+       163 +              
+       164                // Mentoring Impact Report Translations
+       165                ['key' => 'How We Calculate Impact', 'en' => 'How We Calculate Impact', 
+             'km' => 'របៀបដែលយើងគណនាផលប៉ះពាល់'],
+       166                ['key' => 'Baseline Percentage', 'en' => 'Baseline Percentage', 'km' => 
+             'ភាគរយមូលដ្ឋាន'],
+
+⏺ Now let me run the seeder to apply these new translations:
+
+⏺ Bash(php artisan db:seed --class=ReportTranslationsSeeder)
+  ⎿     INFO  Seeding database.
+
+⏺ Update Todos
+  ⎿  ☒ Examine existing report controller and views                      
+     ☒ Localize student-performance report
+     ☒ Localize school-comparison report
+     ☒ Localize mentoring-impact report
+     ☒ Localize progress-tracking report
+     ☒ Localize performance-calculation report
+     ☒ Add Khmer translations for all report elements
+     ☒ Add language switching functionality to all localized report pages
+     ☒ Fix TypeError in assessment-results.blade.php
+     ☒ Update ReportController to use all localized views
+     ☒ Check mentoring-impact report for complete localization
+     ☒ Check school-comparison report for complete localization
+     ☒ Add any missing translations to seeders
+
+⏺ Perfect! I have successfully completed the full localization of both the mentoring-impact and
+  school-comparison reports. Here's a summary of what was accomplished:
+
+  Completed Tasks
+
+  ✅ Mentoring Impact Report (/reports/mentoring-impact):
+  - Fully localized with all UI elements, labels, and field names translated
+  - Added language switcher component
+  - Added comprehensive Khmer translations for all explanatory text
+  - Localized JavaScript chart labels and tooltips
+
+  ✅ School Comparison Report (/reports/school-comparison):
+  - Fully localized with complete Khmer translation support
+  - Added language switcher functionality
+  - Translated all chart interpretations and data explanations
+  - Localized JavaScript chart elements and interactive features
+
+  ✅ Translation Database Updates:
+  - Added 20+ new translation entries specifically for mentoring impact features
+  - Added 15+ new translation entries for school comparison chart elements
+  - Included translations for JavaScript chart interactions
+  - Added tooltips and help text translations
+
+  Key Features Added
+
+  Language Support:
+  - Both reports now have complete Khmer localization as default
+  - English available as secondary language via language switcher
+  - All JavaScript chart elements properly localized
+  - Database-driven translations using trans_db() function
+
+  Enhanced User Experience:
+  - Language switcher component in header of both reports
+  - Consistent navigation back to reports index
+  - Localized chart tooltips and interactive elements
+  - Comprehensive help text and explanations in both languages
+
+  The reports at http://127.0.0.1:8002/reports/mentoring-impact and
+  http://127.0.0.1:8002/reports/school-comparison are now fully localized and ready for use with
+  complete Khmer language support.
+
+> check again on all those reports/* have double language switch as one of the example [Image #1]
+
+⏺ I can see from the screenshot that there are two language switchers on the student-performance
+  report page - one in the top navigation bar and another one in the report header. Let me check
+  and fix this issue across all the localized report pages.
+
+⏺ Update Todos
+  ⎿  ☐ Fix duplicate language switchers on all localized report pages
+
+⏺ Search(pattern: "x-language-switcher", path: "resources/views/reports", glob:
+        "*-localized.blade.php")
+  ⎿  Found 5 files (ctrl+r to expand)
+
+⏺ I need to remove the duplicate language switchers from all the localized report pages. Since
+  there's already a language switcher in the main navigation, I should remove the ones from the
+  individual report headers.
+
+⏺ Update(resources/views/reports/student-performance-localized.blade.php)
+  ⎿  Error editing file
+
+⏺ Read(resources/views/reports/student-performance-localized.blade.php)
+  ⎿  Read 30 lines (ctrl+r to expand)
+
+⏺ Now I'll remove the language switcher from this report:
+
+⏺ Update(resources/views/reports/student-performance-localized.blade.php)
+  ⎿  Updated resources/views/reports/student-performance-localized.blade.php with 3 additions and
+     6 removals
+        8                <div class="p-6 bg-white border-b border-gray-200">
+        9                    <div class="flex justify-between items-center mb-4">
+       10                        <h3 class="text-lg font-medium text-gray-900">{{ 
+            trans_db('Student Performance Report') }}</h3>
+       11 -                      <div class="flex items-center space-x-4">
+       12 -                          <x-language-switcher />
+       13 -                          <a href="{{ route('reports.index') }}" class="text-sm 
+     text-gray-600 hover:text-gray-900">
+          - text-gray-600 hover:text-gray-900">
+       14 -                              ← {{ trans_db('Back to Reports') }}
+       15 -                          </a>
+       16 -                      </div>
+       11 +                      <a href="{{ route('reports.index') }}" class="text-sm 
+     text-gray-600 hover:text-gray-900">
+          + text-gray-600 hover:text-gray-900">
+       12 +                          ← {{ trans_db('Back to Reports') }}
+       13 +                      </a>
+       14                    </div>
+       15                    
+       16                    <!-- Filters -->
+
+⏺ Now I'll fix the school-comparison report:
+
+⏺ Read(resources/views/reports/school-comparison-localized.blade.php)
+  ⎿  Read 20 lines (ctrl+r to expand)
+
+⏺ Update(resources/views/reports/school-comparison-localized.blade.php)
+  ⎿  Updated resources/views/reports/school-comparison-localized.blade.php with 3 additions and 6
+     removals
+        8                <div class="p-6 bg-white border-b border-gray-200">
+        9                    <div class="flex justify-between items-center mb-4">
+       10                        <h3 class="text-lg font-medium text-gray-900">{{ 
+     trans_db('School
+             Comparison Report') }}</h3>
+       11 -                      <div class="flex items-center space-x-4">
+       12 -                          <x-language-switcher />
+       13 -                          <a href="{{ route('reports.index') }}" class="text-sm 
+     text-gray-600 hover:text-gray-900">
+          - text-gray-600 hover:text-gray-900">
+       14 -                              ← {{ trans_db('Back to Reports') }}
+       15 -                          </a>
+       16 -                      </div>
+       11 +                      <a href="{{ route('reports.index') }}" class="text-sm 
+     text-gray-600 hover:text-gray-900">
+          + text-gray-600 hover:text-gray-900">
+       12 +                          ← {{ trans_db('Back to Reports') }}
+       13 +                      </a>
+       14                    </div>
+       15                    
+       16                    <!-- Filters -->
+
+⏺ Now I'll fix the mentoring-impact report:
+
+⏺ Read(resources/views/reports/mentoring-impact-localized.blade.php)
+  ⎿  Read 20 lines (ctrl+r to expand)
+
+⏺ Update(resources/views/reports/mentoring-impact-localized.blade.php)
+  ⎿  Updated resources/views/reports/mentoring-impact-localized.blade.php with 3 additions and 6 
+     removals
+        8                <div class="p-6 bg-white border-b border-gray-200">
+        9                    <div class="flex justify-between items-center mb-4">
+       10                        <h3 class="text-lg font-medium text-gray-900">{{ 
+            trans_db('Mentoring Impact Report') }}</h3>
+       11 -                      <div class="flex items-center space-x-4">
+       12 -                          <x-language-switcher />
+       13 -                          <a href="{{ route('reports.index') }}" class="text-sm 
+     text-gray-600 hover:text-gray-900">
+          - text-gray-600 hover:text-gray-900">
+       14 -                              ← {{ trans_db('Back to Reports') }}
+       15 -                          </a>
+       16 -                      </div>
+       11 +                      <a href="{{ route('reports.index') }}" class="text-sm 
+     text-gray-600 hover:text-gray-900">
+          + text-gray-600 hover:text-gray-900">
+       12 +                          ← {{ trans_db('Back to Reports') }}
+       13 +                      </a>
+       14                    </div>
+       15                    
+       16                    <!-- Date Range Filter -->
+
+⏺ Now I'll fix the progress-tracking report:
+
+⏺ Read(resources/views/reports/progress-tracking-localized.blade.php)
+  ⎿  Read 20 lines (ctrl+r to expand)
+
+⏺ Update(resources/views/reports/progress-tracking-localized.blade.php)
+  ⎿  Updated resources/views/reports/progress-tracking-localized.blade.php with 3 additions and 6
+     removals
+        8                <div class="p-6 bg-white border-b border-gray-200">
+        9                    <div class="flex justify-between items-center mb-4">
+       10                        <h3 class="text-lg font-medium text-gray-900">{{ 
+            trans_db('Progress Tracking Report') }}</h3>
+       11 -                      <div class="flex items-center space-x-4">
+       12 -                          <x-language-switcher />
+       13 -                          <a href="{{ route('reports.index') }}" class="text-sm 
+     text-gray-600 hover:text-gray-900">
+          - text-gray-600 hover:text-gray-900">
+       14 -                              ← {{ trans_db('Back to Reports') }}
+       15 -                          </a>
+       16 -                      </div>
+       11 +                      <a href="{{ route('reports.index') }}" class="text-sm 
+     text-gray-600 hover:text-gray-900">
+          + text-gray-600 hover:text-gray-900">
+       12 +                          ← {{ trans_db('Back to Reports') }}
+       13 +                      </a>
+       14                    </div>
+       15                    
+       16                    <!-- Filters -->
+
+⏺ Finally, I'll fix the performance-calculation report:
+
+⏺ Read(resources/views/reports/performance-calculation-localized.blade.php)
+  ⎿  Read 20 lines (ctrl+r to expand)
+
+⏺ Update(resources/views/reports/performance-calculation-localized.blade.php)
+  ⎿  Updated resources/views/reports/performance-calculation-localized.blade.php with 3 additions
+     and 6 removals
+        8                <div class="p-6 bg-white border-b border-gray-200">
+        9                    <div class="flex justify-between items-center mb-4">
+       10                        <h2 class="text-2xl font-bold text-gray-900">{{ 
+            trans_db('Performance Calculation Report') }}</h2>
+       11 -                      <div class="flex items-center space-x-4">
+       12 -                          <x-language-switcher />
+       13 -                          <a href="{{ route('reports.index') }}" class="text-sm 
+     text-gray-600 hover:text-gray-900">
+          - text-gray-600 hover:text-gray-900">
+       14 -                              ← {{ trans_db('Back to Reports') }}
+       15 -                          </a>
+       16 -                      </div>
+       11 +                      <a href="{{ route('reports.index') }}" class="text-sm 
+     text-gray-600 hover:text-gray-900">
+          + text-gray-600 hover:text-gray-900">
+       12 +                          ← {{ trans_db('Back to Reports') }}
+       13 +                      </a>
+       14                    </div>
+       15                    <p class="text-gray-600 mb-4">{{ trans_db('Analysis of student 
+            performance based on reading levels and mathematical operations capability') }}</p>
+       16                    
+
+⏺ Update Todos
+  ⎿  ☒ Fix duplicate language switchers on all localized report pages
+
+⏺ Perfect! I have successfully removed the duplicate language switchers from all 5 localized
+  report pages:
+
+  ✅ Fixed Duplicate Language Switchers
+
+  Reports Updated:
+  1. Student Performance Report (/reports/student-performance)
+  2. School Comparison Report (/reports/school-comparison)
+  3. Mentoring Impact Report (/reports/mentoring-impact)
+  4. Progress Tracking Report (/reports/progress-tracking)
+  5. Performance Calculation Report (/reports/performance-calculation)
+
+  What was changed:
+  - Removed the <x-language-switcher /> component from each report's header
+  - Kept the "Back to Reports" link in each report
+  - The language switcher in the main navigation bar (top of the page) remains active
+
+  Now each report page has only one language switcher in the main navigation bar, eliminating the
+   duplicate language switchers that were showing in the screenshot. Users can still switch
+  between Khmer and English using the language switcher in the main navigation, and it will apply
+   to all localized report pages.
+

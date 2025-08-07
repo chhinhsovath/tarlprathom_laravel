@@ -1,0 +1,565 @@
+@extends('layouts.app')
+
+@section('content')
+<div class="py-6">
+    <div class="w-full px-4 sm:px-6 lg:px-8">
+        <!-- Header -->
+        <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
+            <div class="p-6 bg-white border-b border-gray-200">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-medium text-gray-900">{{ trans_db('Student Performance Report') }}</h3>
+                    <a href="{{ route('reports.index') }}" class="text-sm text-gray-600 hover:text-gray-900">
+                        ← {{ trans_db('Back to Reports') }}
+                    </a>
+                </div>
+                
+                <!-- Filters -->
+                <form method="GET" action="{{ route('reports.student-performance') }}" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div>
+                        <label for="school_id" class="block text-sm font-medium text-gray-700 mb-1">{{ trans_db('School') }}</label>
+                        <select name="school_id" id="school_id" class="w-full h-11 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                            <option value="">{{ trans_db('All Schools') }}</option>
+                            @foreach($schools as $school)
+                                <option value="{{ $school->id }}" {{ $schoolId == $school->id ? 'selected' : '' }}>
+                                    {{ $school->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label for="subject" class="block text-sm font-medium text-gray-700 mb-1">{{ trans_db('Subject') }}</label>
+                        <select name="subject" id="subject" class="w-full h-11 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                            <option value="all" {{ $subject == 'all' ? 'selected' : '' }}>{{ trans_db('All Subjects') }}</option>
+                            <option value="khmer" {{ $subject == 'khmer' ? 'selected' : '' }}>{{ trans_db('Khmer') }}</option>
+                            <option value="math" {{ $subject == 'math' ? 'selected' : '' }}>{{ trans_db('Math') }}</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label for="cycle" class="block text-sm font-medium text-gray-700 mb-1">{{ trans_db('Test Cycle') }}</label>
+                        <select name="cycle" id="cycle" class="w-full h-11 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                            <option value="all" {{ $cycle == 'all' ? 'selected' : '' }}>{{ trans_db('All Cycles') }}</option>
+                            <option value="baseline" {{ $cycle == 'baseline' ? 'selected' : '' }}>{{ trans_db('baseline') }}</option>
+                            <option value="midline" {{ $cycle == 'midline' ? 'selected' : '' }}>{{ trans_db('midline') }}</option>
+                            <option value="endline" {{ $cycle == 'endline' ? 'selected' : '' }}>{{ trans_db('endline') }}</option>
+                        </select>
+                    </div>
+                    
+                    <div class="flex items-end">
+                        <button type="submit" class="w-full h-11 inline-flex justify-center items-center px-4 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition">
+                            {{ trans_db('Apply Filters') }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Understanding the Assessment System -->
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+            <div class="flex">
+                <div class="flex-shrink-0">
+                    <svg class="h-5 w-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div class="ml-3">
+                    <h3 class="text-sm font-medium text-blue-800">{{ trans_db('Understanding Student Performance Levels') }}</h3>
+                    <div class="mt-2 text-sm text-blue-700">
+                        <p class="mb-2">{{ trans_db('This report shows how students are distributed across different skill levels in Khmer and Math subjects. Each level represents a specific learning milestone:') }}</p>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
+                            <div>
+                                <h4 class="font-semibold text-blue-800">{{ trans_db('Khmer Levels') }}</h4>
+                                <ul class="list-disc list-inside text-xs mt-1 space-y-0.5">
+                                    <li><strong>{{ trans_db('Beginner') }}:</strong> {{ trans_db('Cannot read letters or words') }}</li>
+                                    <li><strong>{{ trans_db('Letter') }}:</strong> {{ trans_db('Can identify individual letters') }}</li>
+                                    <li><strong>{{ trans_db('Word') }}:</strong> {{ trans_db('Can read simple words') }}</li>
+                                    <li><strong>{{ trans_db('Paragraph') }}:</strong> {{ trans_db('Can read simple paragraphs') }}</li>
+                                    <li><strong>{{ trans_db('Story') }}:</strong> {{ trans_db('Can read complete stories') }}</li>
+                                    <li><strong>{{ trans_db('Comp. 1') }}:</strong> {{ trans_db('Basic reading comprehension') }}</li>
+                                    <li><strong>{{ trans_db('Comp. 2') }}:</strong> {{ trans_db('Advanced reading comprehension') }}</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-blue-800">{{ trans_db('Math Levels') }}</h4>
+                                <ul class="list-disc list-inside text-xs mt-1 space-y-0.5">
+                                    <li><strong>{{ trans_db('Beginner') }}:</strong> {{ trans_db('Cannot perform basic math operations') }}</li>
+                                    <li><strong>{{ trans_db('1-Digit') }}:</strong> {{ trans_db('Can work with single-digit numbers') }}</li>
+                                    <li><strong>{{ trans_db('2-Digit') }}:</strong> {{ trans_db('Can work with two-digit numbers') }}</li>
+                                    <li><strong>{{ trans_db('Subtraction') }}:</strong> {{ trans_db('Can perform subtraction operations') }}</li>
+                                    <li><strong>{{ trans_db('Division') }}:</strong> {{ trans_db('Can perform division operations') }}</li>
+                                    <li><strong>{{ trans_db('Word Problem') }}:</strong> {{ trans_db('Can solve mathematical word problems') }}</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Assessment Cycles Explanation -->
+        <div class="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
+            <div class="flex">
+                <div class="flex-shrink-0">
+                    <svg class="h-5 w-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div class="ml-3">
+                    <h3 class="text-sm font-medium text-green-800">{{ trans_db('Assessment Cycles') }}</h3>
+                    <div class="mt-2 text-sm text-green-700">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                            <div>
+                                <span class="font-semibold">{{ trans_db('baseline') }}:</span> {{ trans_db('Initial assessment to determine starting skill levels') }}
+                            </div>
+                            <div>
+                                <span class="font-semibold">{{ trans_db('midline') }}:</span> {{ trans_db('Mid-program assessment to track progress') }}
+                            </div>
+                            <div>
+                                <span class="font-semibold">{{ trans_db('endline') }}:</span> {{ trans_db('Final assessment to measure overall improvement') }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        @if($subject === 'all')
+            <!-- Performance by Level - Khmer -->
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
+                <div class="p-6 bg-white border-b border-gray-200">
+                    <h4 class="text-md font-medium text-gray-900 mb-4">{{ trans_db('Khmer Performance by Level') }}</h4>
+                    
+                    <div class="mb-4 p-3 bg-gray-50 rounded-lg text-sm text-gray-600">
+                        <p><strong>{{ trans_db('What this shows') }}:</strong> {{ trans_db('Distribution of students across Khmer reading levels. Colors progress from red (lowest) to teal (highest) to visually represent skill progression.') }}</p>
+                    </div>
+                    
+                    <div class="relative" style="height: 300px;">
+                        <canvas id="khmerPerformanceChart"></canvas>
+                    </div>
+                    
+                    <!-- Summary Table -->
+                    <div class="mt-6 overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        {{ trans_db('Level') }}
+                                        <span class="normal-case text-gray-400" title="{{ trans_db('Khmer reading skill level') }}">ⓘ</span>
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        {{ trans_db('Number of Students') }}
+                                        <span class="normal-case text-gray-400" title="{{ trans_db('Total students assessed at this level') }}">ⓘ</span>
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        {{ trans_db('Percentage') }}
+                                        <span class="normal-case text-gray-400" title="{{ trans_db('Percentage of all Khmer assessments') }}">ⓘ</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                @php
+                                    $khmerData = $performanceByLevelAndSubject['khmer'] ?? collect();
+                                    $khmerTotal = $khmerData->sum('count');
+                                @endphp
+                                @foreach($khmerLevels as $level)
+                                    @php
+                                        $levelData = $khmerData->firstWhere('level', $level);
+                                        $count = $levelData ? $levelData->count : 0;
+                                    @endphp
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                            {{ trans_db($level) }}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            {{ number_format($count) }}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            {{ $khmerTotal > 0 ? number_format(($count / $khmerTotal) * 100, 1) : 0 }}%
+                                        </td>
+                                    </tr>
+                                @endforeach
+                                <tr class="bg-gray-50 font-semibold">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ trans_db('Total') }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ number_format($khmerTotal) }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">100.0%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Performance by Level - Math -->
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
+                <div class="p-6 bg-white border-b border-gray-200">
+                    <h4 class="text-md font-medium text-gray-900 mb-4">{{ trans_db('Math Performance by Level') }}</h4>
+                    
+                    <div class="mb-4 p-3 bg-gray-50 rounded-lg text-sm text-gray-600">
+                        <p><strong>{{ trans_db('What this shows') }}:</strong> {{ trans_db('Distribution of students across Math skill levels. Colors progress from red (lowest) to emerald (highest) to visually represent skill progression.') }}</p>
+                    </div>
+                    
+                    <div class="relative" style="height: 300px;">
+                        <canvas id="mathPerformanceChart"></canvas>
+                    </div>
+                    
+                    <!-- Summary Table -->
+                    <div class="mt-6 overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        {{ trans_db('Level') }}
+                                        <span class="normal-case text-gray-400" title="{{ trans_db('Math skill level') }}">ⓘ</span>
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        {{ trans_db('Number of Students') }}
+                                        <span class="normal-case text-gray-400" title="{{ trans_db('Total students assessed at this level') }}">ⓘ</span>
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        {{ trans_db('Percentage') }}
+                                        <span class="normal-case text-gray-400" title="{{ trans_db('Percentage of all Math assessments') }}">ⓘ</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                @php
+                                    $mathData = $performanceByLevelAndSubject['math'] ?? collect();
+                                    $mathTotal = $mathData->sum('count');
+                                @endphp
+                                @foreach($mathLevels as $level)
+                                    @php
+                                        $levelData = $mathData->firstWhere('level', $level);
+                                        $count = $levelData ? $levelData->count : 0;
+                                    @endphp
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                            {{ trans_db($level) }}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            {{ number_format($count) }}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            {{ $mathTotal > 0 ? number_format(($count / $mathTotal) * 100, 1) : 0 }}%
+                                        </td>
+                                    </tr>
+                                @endforeach
+                                <tr class="bg-gray-50 font-semibold">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ trans_db('Total') }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ number_format($mathTotal) }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">100.0%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        @else
+            <!-- Performance by Level - Single Subject -->
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
+                <div class="p-6 bg-white border-b border-gray-200">
+                    <h4 class="text-md font-medium text-gray-900 mb-4">{{ trans_db('Performance by Level') }} - {{ trans_db(ucfirst($subject)) }}</h4>
+                    
+                    <div class="mb-4 p-3 bg-gray-50 rounded-lg text-sm text-gray-600">
+                        <p><strong>{{ trans_db('What this shows') }}:</strong> 
+                            @if($subject === 'khmer')
+                                {{ trans_db('Distribution of students across Khmer reading levels. Each student is assessed and placed at the level that best matches their reading ability.') }}
+                            @else
+                                {{ trans_db('Distribution of students across Math skill levels. Each student is assessed and placed at the level that best matches their mathematical ability.') }}
+                            @endif
+                        </p>
+                        <p class="mt-1"><strong>{{ trans_db('Color coding') }}:</strong> {{ trans_db('Colors progress from red (beginner) to green/teal (advanced) to show skill progression.') }}</p>
+                    </div>
+                    
+                    <div class="relative" style="height: 300px;">
+                        <canvas id="performanceChart"></canvas>
+                    </div>
+                    
+                    <!-- Summary Table -->
+                    <div class="mt-6 overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        {{ trans_db('Level') }}
+                                        <span class="normal-case text-gray-400" title="{{ trans_db('Skill level determined by assessment') }}">ⓘ</span>
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        {{ trans_db('Number of Students') }}
+                                        <span class="normal-case text-gray-400" title="{{ trans_db('Total students assessed at this level') }}">ⓘ</span>
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        {{ trans_db('Percentage') }}
+                                        <span class="normal-case text-gray-400" title="{{ trans_db('Percentage of all assessments for this subject') }}">ⓘ</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                @php
+                                    $total = $performanceByLevel->sum('count');
+                                    $levels = $subject === 'khmer' ? $khmerLevels : $mathLevels;
+                                @endphp
+                                @foreach($levels as $level)
+                                    @php
+                                        $levelData = $performanceByLevel->firstWhere('level', $level);
+                                        $count = $levelData ? $levelData->count : 0;
+                                    @endphp
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                            {{ trans_db($level) }}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            {{ number_format($count) }}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            {{ $total > 0 ? number_format(($count / $total) * 100, 1) : 0 }}%
+                                        </td>
+                                    </tr>
+                                @endforeach
+                                <tr class="bg-gray-50 font-semibold">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ trans_db('Total') }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ number_format($total) }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">100.0%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        @endif
+
+        <!-- Data Interpretation Guide -->
+        <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+            <div class="flex">
+                <div class="flex-shrink-0">
+                    <svg class="h-5 w-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div class="ml-3">
+                    <h3 class="text-sm font-medium text-yellow-800">{{ trans_db('How to Interpret This Data') }}</h3>
+                    <div class="mt-2 text-sm text-yellow-700">
+                        <ul class="list-disc list-inside space-y-1">
+                            <li><strong>{{ trans_db('Higher level distributions') }}:</strong> {{ trans_db('More students at advanced levels indicates stronger overall performance') }}</li>
+                            <li><strong>{{ trans_db('Beginner concentrations') }}:</strong> {{ trans_db('Large numbers at beginner level may indicate need for foundational support') }}</li>
+                            <li><strong>{{ trans_db('Even distributions') }}:</strong> {{ trans_db('Students spread across levels suggests mixed abilities requiring differentiated instruction') }}</li>
+                            <li><strong>{{ trans_db('Filter usage') }}:</strong> {{ trans_db('Use school, subject, and cycle filters to analyze specific groups or track progress over time') }}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Export Options -->
+        <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+            <div class="p-6 bg-white border-b border-gray-200">
+                <h4 class="text-md font-medium text-gray-900 mb-4">{{ trans_db('Export Options') }}</h4>
+                
+                <div class="mb-3 text-sm text-gray-600">
+                    <p>{{ trans_db('Save charts and data for presentations, reports, or further analysis.') }}</p>
+                </div>
+                
+                <div class="flex gap-4">
+                    <button onclick="exportCharts()" class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 002 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                        {{ trans_db('Export Charts as Images') }}
+                    </button>
+                    
+                    <button onclick="window.print()" class="inline-flex items-center px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
+                        </svg>
+                        {{ trans_db('Print Report') }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+<script>
+// Translation strings for JavaScript charts
+const chartTranslations = {
+    'Number of Students': @json(trans_db('Number of Students')),
+    'Student Distribution by Level': @json(trans_db('Student Distribution by Level')),
+    'students': @json(trans_db('students')),
+    'Skill Level': @json(trans_db('Skill Level')),
+    'Beginner to Advanced': @json(trans_db('Beginner to Advanced')),
+    'Khmer': @json(trans_db('Khmer')),
+    'Math': @json(trans_db('Math'))
+};
+
+$(document).ready(function() {
+    const khmerLevels = @json($khmerLevels);
+    const mathLevels = @json($mathLevels);
+    const subject = '{{ $subject }}';
+    
+    if (subject === 'all') {
+        // Create Khmer chart
+        const khmerData = @json($performanceByLevelAndSubject['khmer'] ?? collect());
+        createChart('khmerPerformanceChart', khmerData, khmerLevels, chartTranslations['Khmer'], 'khmer');
+        
+        // Create Math chart
+        const mathData = @json($performanceByLevelAndSubject['math'] ?? collect());
+        createChart('mathPerformanceChart', mathData, mathLevels, chartTranslations['Math'], 'math');
+    } else {
+        // Create single subject chart
+        const performanceData = @json($performanceByLevel);
+        const levels = subject === 'khmer' ? khmerLevels : mathLevels;
+        const subjectName = subject === 'khmer' ? chartTranslations['Khmer'] : chartTranslations['Math'];
+        createChart('performanceChart', performanceData, levels, subjectName, subject);
+    }
+    
+    function createChart(canvasId, data, levelOrder, subjectName, subjectType) {
+        // Prepare data in correct order
+        const chartData = levelOrder.map(level => {
+            const item = data.find(d => d.level === level);
+            return item ? item.count : 0;
+        });
+        
+        // Color schemes
+        const khmerColors = [
+            '#ef4444', // red for beginner
+            '#f59e0b', // amber for letter
+            '#eab308', // yellow for word
+            '#84cc16', // lime for paragraph
+            '#22c55e', // green for story
+            '#10b981', // emerald for comp 1
+            '#14b8a6'  // teal for comp 2
+        ];
+        
+        const mathColors = [
+            '#ef4444', // red for beginner
+            '#f59e0b', // amber for 1-digit
+            '#eab308', // yellow for 2-digit
+            '#84cc16', // lime for subtraction
+            '#22c55e', // green for division
+            '#10b981', // emerald for word problem
+        ];
+        
+        const colors = subjectType === 'khmer' ? khmerColors : mathColors;
+        
+        // Translate level labels
+        const translatedLabels = levelOrder.map(level => @json(trans_db('${level}')));
+        
+        // Create chart
+        const ctx = document.getElementById(canvasId).getContext('2d');
+        window[canvasId + 'Chart'] = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: translatedLabels,
+                datasets: [{
+                    label: chartTranslations['Number of Students'],
+                    data: chartData,
+                    backgroundColor: colors.slice(0, levelOrder.length),
+                    borderWidth: 1,
+                    borderColor: colors.slice(0, levelOrder.length).map(color => color + 'DD')
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    title: {
+                        display: true,
+                        text: subjectName + ' - ' + chartTranslations['Student Distribution by Level'],
+                        font: {
+                            size: 16,
+                            weight: 'bold'
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = total > 0 ? ((context.parsed.y / total) * 100).toFixed(1) : 0;
+                                return context.parsed.y + ' ' + chartTranslations['students'] + ' (' + percentage + '%)';
+                            }
+                        }
+                    },
+                    datalabels: {
+                        display: function(context) {
+                            return context.dataset.data[context.dataIndex] > 0;
+                        },
+                        color: 'black',
+                        font: {
+                            weight: 'bold',
+                            size: 11
+                        },
+                        formatter: function(value) {
+                            return value;
+                        },
+                        anchor: 'end',
+                        align: 'top'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: chartTranslations['Number of Students'],
+                            font: {
+                                size: 12,
+                                weight: 'bold'
+                            }
+                        },
+                        ticks: {
+                            stepSize: 1
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: chartTranslations['Skill Level'] + ' (' + chartTranslations['Beginner to Advanced'] + ')',
+                            font: {
+                                size: 12,
+                                weight: 'bold'
+                            }
+                        }
+                    }
+                }
+            },
+            plugins: [ChartDataLabels]
+        });
+    }
+    
+    // Export charts function
+    window.exportCharts = function() {
+        const subject = '{{ $subject }}';
+        const date = new Date().toISOString().split('T')[0];
+        
+        if (subject === 'all') {
+            // Export both charts
+            const khmerLink = document.createElement('a');
+            khmerLink.download = 'khmer-performance-chart-' + date + '.png';
+            khmerLink.href = window.khmerPerformanceChartChart.toBase64Image();
+            khmerLink.click();
+            
+            setTimeout(() => {
+                const mathLink = document.createElement('a');
+                mathLink.download = 'math-performance-chart-' + date + '.png';
+                mathLink.href = window.mathPerformanceChartChart.toBase64Image();
+                mathLink.click();
+            }, 500);
+        } else {
+            // Export single chart
+            const link = document.createElement('a');
+            link.download = subject + '-performance-chart-' + date + '.png';
+            link.href = window.performanceChartChart.toBase64Image();
+            link.click();
+        }
+    };
+});
+</script>
+@endpush
+@endsection

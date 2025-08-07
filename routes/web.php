@@ -12,6 +12,7 @@ use App\Http\Controllers\LocalizationController;
 use App\Http\Controllers\MentoringVisitController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\ResourceController;
 use App\Http\Controllers\SchoolController;
 use App\Http\Controllers\SettingController;
@@ -143,6 +144,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/reports/my-mentoring', [ReportController::class, 'myMentoring'])->name('reports.my-mentoring');
     Route::get('/reports/school-visits', [ReportController::class, 'schoolVisits'])->name('reports.school-visits');
     Route::get('/reports/export/{type}', [ReportController::class, 'export'])->name('reports.export');
+    
+    // Enhanced Reports Routes
+    Route::get('/reports/dashboard', [ReportsController::class, 'dashboard'])->name('reports.dashboard');
+    Route::get('/reports/student-progress', [ReportsController::class, 'studentProgress'])->name('reports.student-progress');
+    Route::get('/reports/assessment-analysis', [ReportsController::class, 'assessmentAnalysis'])->name('reports.assessment-analysis');
+    Route::get('/reports/attendance-report', [ReportsController::class, 'attendanceReport'])->name('reports.attendance');
+    Route::get('/reports/intervention-report', [ReportsController::class, 'interventionReport'])->name('reports.intervention');
+    Route::post('/reports/export', [ReportsController::class, 'exportReport'])->name('reports.export-data');
 
     // Administration Routes (Admin only)
     Route::get('/administration', [AdministrationController::class, 'index'])->name('administration.index');

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     
-    <title>{{ __('TaRL Project') }} - {{ __('Assessment Results') }}</title>
+    <title>{{ trans_db('TaRL Project') }} - {{ trans_db('Assessment Results') }}</title>
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -48,7 +48,7 @@
             <div class="w-full px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between h-16">
                     <div class="flex items-center">
-                        <h1 class="text-xl font-semibold">{{ __('TaRL Project') }}</h1>
+                        <h1 class="text-xl font-semibold">{{ trans_db('TaRL Project') }}</h1>
                     </div>
                     <div class="flex items-center space-x-4">
 
@@ -60,16 +60,16 @@
            focus:outline-none focus:text-gray-700 
            focus:border-gray-300 transition duration-150 
            ease-in-out">
-                                 {{ __('PLP') }}
+                                 {{ trans_db('PLP') }}
                              </a> 
                              
                         @if (Route::has('login'))
                             @auth
-                                <a href="{{ url('/dashboard') }}" class="text-sm text-gray-700 hover:text-gray-900">{{ __('Dashboard') }}</a>
+                                <a href="{{ url('/dashboard') }}" class="text-sm text-gray-700 hover:text-gray-900">{{ trans_db('Dashboard') }}</a>
                             @else
-                                <a href="{{ route('login') }}" class="text-sm text-gray-700 hover:text-gray-900">{{ __('Log in') }}</a>
+                                <a href="{{ route('login') }}" class="text-sm text-gray-700 hover:text-gray-900">{{ trans_db('Log in') }}</a>
                                 @if (Route::has('register'))
-                                    <a href="{{ route('register') }}" class="text-sm text-gray-700 hover:text-gray-900">{{ __('Register') }}</a>
+                                    <a href="{{ route('register') }}" class="text-sm text-gray-700 hover:text-gray-900">{{ trans_db('Register') }}</a>
                                 @endif
                             @endauth
                         @endif
@@ -82,17 +82,17 @@
         <main>
             <div class="max-w-4xl mx-auto mt-10 p-6 border shadow rounded-lg bg-white">
                 <!-- Header -->
-                <h2 class="text-xl font-semibold text-center mb-4">{{ __('Assessment Results') }}</h2>
+                <h2 class="text-xl font-semibold text-center mb-4">{{ trans_db('Assessment Results') }}</h2>
                 
                 <!-- Subject Selector -->
                 <div class="flex justify-center gap-2 mb-6">
                     <button id="khmerBtn" data-subject="khmer" 
                             class="subject-btn px-3 py-1 rounded transition-all duration-200 bg-blue-500 text-white">
-                        {{ __('Khmer') }}
+                        {{ trans_db('Khmer') }}
                     </button>
                     <button id="mathBtn" data-subject="math" 
                             class="subject-btn px-3 py-1 rounded transition-all duration-200 bg-gray-200 text-gray-700 hover:bg-gray-300">
-                        {{ __('Math') }}
+                        {{ trans_db('Math') }}
                     </button>
                 </div>
                 
@@ -108,15 +108,15 @@
                 <table class="table-auto mt-4 border mx-auto text-sm">
                     <thead>
                         <tr class="bg-gray-100">
-                            <th class="border px-4 py-2">{{ __('Test Cycle') }}</th>
-                            <th class="border px-4 py-2">{{ __('Baseline') }}</th>
-                            <th class="border px-4 py-2">{{ __('Midline') }}</th>
-                            <th class="border px-4 py-2">{{ __('Endline') }}</th>
+                            <th class="border px-4 py-2">{{ trans_db('Test Cycle') }}</th>
+                            <th class="border px-4 py-2">{{ trans_db('Baseline') }}</th>
+                            <th class="border px-4 py-2">{{ trans_db('Midline') }}</th>
+                            <th class="border px-4 py-2">{{ trans_db('Endline') }}</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td class="border px-4 py-2 font-medium">{{ __('Students') }}</td>
+                            <td class="border px-4 py-2 font-medium">{{ trans_db('Students') }}</td>
                             <td class="border px-4 py-2 text-center" id="baseline">—</td>
                             <td class="border px-4 py-2 text-center" id="midline">—</td>
                             <td class="border px-4 py-2 text-center" id="endline">—</td>
@@ -126,7 +126,7 @@
                 
                 <!-- Total Students -->
                 <p class="text-center mt-4 text-sm text-gray-600">
-                    {{ __('Total Students Assessed') }}: <span class="font-semibold" id="totalStudents">0</span>
+                    {{ trans_db('Total Students Assessed') }}: <span class="font-semibold" id="totalStudents">0</span>
                 </p>
             </div>
         </main>
@@ -170,7 +170,7 @@
                         $('#totalStudents').text(response.cycleData.total || 0);
                     },
                     error: function(xhr, status, error) {
-                        alert('{{ __("Error loading assessment data") }}');
+                        alert('{{ trans_db("Error loading assessment data") }}');
                     },
                     complete: function() {
                         $('#chartContainer').removeClass('loading');
@@ -216,13 +216,13 @@
                                 beginAtZero: true,
                                 title: {
                                     display: true,
-                                    text: '{{ __("Number of Students") }}'
+                                    text: '{{ trans_db("Number of Students") }}'
                                 }
                             },
                             y: {
                                 title: {
                                     display: true,
-                                    text: '{{ __("Reading Level") }}'
+                                    text: '{{ trans_db("Reading Level") }}'
                                 }
                             }
                         }
