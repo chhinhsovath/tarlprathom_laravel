@@ -1,0 +1,192 @@
+<?php
+
+return [
+    // Main Headers and Navigation
+    'Students' => 'សិស្ស',
+    'Student Management' => 'ការគ្រប់គ្រងសិស្ស',
+    'Student List' => 'បញ្ជីសិស្ស',
+    'Add New Student' => 'បន្ថែមសិស្សថ្មី',
+    'Create Student' => 'បង្កើតសិស្សថ្មី',
+    'Edit Student' => 'កែសម្រួលព័ត៌មានសិស្ស',
+    'Student Details' => 'ព័ត៌មានលម្អិតសិស្ស',
+    'View Student' => 'មើលព័ត៌មានសិស្ស',
+    
+    // Search and Filters
+    'Search by name...' => 'ស្វែងរកតាមឈ្មោះ...',
+    'All Schools' => 'សាលាទាំងអស់',
+    'All Grades' => 'ថ្នាក់ទាំងអស់',
+    'All Genders' => 'ភេទទាំងអស់',
+    'Search' => 'ស្វែងរក',
+    'Clear' => 'សម្អាត',
+    'Export to Excel' => 'នាំចេញទៅ Excel',
+    'Filter Students' => 'ត្រងសិស្ស',
+    'Select School' => 'ជ្រើសរើសសាលា',
+    'Select Grade' => 'ជ្រើសរើសថ្នាក់',
+    'Select Gender' => 'ជ្រើសរើសភេទ',
+    
+    // Table Headers
+    'Name' => 'ឈ្មោះ',
+    'Age' => 'អាយុ',
+    'Grade' => 'ថ្នាក់',
+    'Gender' => 'ភេទ',
+    'Teacher' => 'គ្រូ',
+    'Mentor(s)' => 'អ្នកណែនាំ',
+    'School' => 'សាលា',
+    'Actions' => 'សកម្មភាព',
+    'Date of Birth' => 'ថ្ងៃខែឆ្នាំកំណើត',
+    'Enrollment Date' => 'ថ្ងៃចុះឈ្មោះ',
+    'Student ID' => 'លេខសម្គាល់សិស្ស',
+    'Status' => 'ស្ថានភាព',
+    
+    // Gender Options
+    'Male' => 'ប្រុស',
+    'Female' => 'ស្រី',
+    'male' => 'ប្រុស',
+    'female' => 'ស្រី',
+    
+    // Grade Options
+    'Grade 1' => 'ថ្នាក់ទី១',
+    'Grade 2' => 'ថ្នាក់ទី២',
+    'Grade 3' => 'ថ្នាក់ទី៣',
+    'Grade 4' => 'ថ្នាក់ទី៤',
+    'Grade 5' => 'ថ្នាក់ទី៥',
+    'Grade 6' => 'ថ្នាក់ទី៦',
+    
+    // Actions
+    'View' => 'មើល',
+    'Edit' => 'កែសម្រួល',
+    'Delete' => 'លុប',
+    'Save' => 'រក្សាទុក',
+    'Update' => 'ធ្វើបច្ចុប្បន្នភាព',
+    'Cancel' => 'បោះបង់',
+    'Back' => 'ត្រឡប់ក្រោយ',
+    'Back to List' => 'ត្រឡប់ទៅបញ្ជី',
+    
+    // Form Fields
+    'Student Name' => 'ឈ្មោះសិស្ស',
+    'Full Name' => 'ឈ្មោះពេញ',
+    'First Name' => 'នាមខ្លួន',
+    'Last Name' => 'នាមត្រកូល',
+    'Date of Birth' => 'ថ្ងៃខែឆ្នាំកំណើត',
+    'Age' => 'អាយុ',
+    'Select Teacher' => 'ជ្រើសរើសគ្រូ',
+    'Parent/Guardian Name' => 'ឈ្មោះមាតាបិតា/អាណាព្យាបាល',
+    'Parent Phone' => 'លេខទូរស័ព្ទមាតាបិតា',
+    'Address' => 'អាសយដ្ឋាន',
+    'Province' => 'ខេត្ត',
+    'District' => 'ស្រុក/ក្រុង',
+    'Commune' => 'ឃុំ/សង្កាត់',
+    'Village' => 'ភូមិ',
+    'Photo' => 'រូបថត',
+    'Student Photo' => 'រូបថតសិស្ស',
+    'Upload Photo' => 'ផ្ទុកឡើងរូបថត',
+    'Change Photo' => 'ប្តូររូបថត',
+    'Notes' => 'កំណត់ចំណាំ',
+    'Additional Notes' => 'កំណត់ចំណាំបន្ថែម',
+    
+    // Status Labels
+    'Active' => 'សកម្ម',
+    'Inactive' => 'អសកម្ម',
+    'Graduated' => 'បានបញ្ចប់',
+    'Transferred' => 'បានផ្ទេរ',
+    'Dropped Out' => 'បានបោះបង់',
+    'Has Assessments' => 'មានការវាយតម្លៃ',
+    
+    // Messages
+    'No students found.' => 'រកមិនឃើញសិស្សទេ។',
+    'Student created successfully.' => 'បានបង្កើតសិស្សដោយជោគជ័យ។',
+    'Student updated successfully.' => 'បានធ្វើបច្ចុប្បន្នភាពព័ត៌មានសិស្សដោយជោគជ័យ។',
+    'Student deleted successfully.' => 'បានលុបសិស្សដោយជោគជ័យ។',
+    'Are you sure you want to delete this student?' => 'តើអ្នកប្រាកដថាចង់លុបសិស្សនេះមែនទេ?',
+    'Cannot delete student with assessments' => 'មិនអាចលុបសិស្សដែលមានការវាយតម្លៃបានទេ',
+    'This action cannot be undone.' => 'សកម្មភាពនេះមិនអាចត្រឡប់វិញបានទេ។',
+    
+    // Assessment Related
+    'Assessment History' => 'ប្រវត្តិការវាយតម្លៃ',
+    'Baseline Assessment' => 'ការវាយតម្លៃមូលដ្ឋាន',
+    'Midline Assessment' => 'ការវាយតម្លៃពាក់កណ្តាល',
+    'Endline Assessment' => 'ការវាយតម្លៃចុងក្រោយ',
+    'Assessment Date' => 'កាលបរិច្ឆេទវាយតម្លៃ',
+    'Assessment Type' => 'ប្រភេទការវាយតម្លៃ',
+    'Khmer Score' => 'ពិន្ទុភាសាខ្មែរ',
+    'Math Score' => 'ពិន្ទុគណិតវិទ្យា',
+    'Total Score' => 'ពិន្ទុសរុប',
+    'View Assessment' => 'មើលការវាយតម្លៃ',
+    'Add Assessment' => 'បន្ថែមការវាយតម្លៃ',
+    'No assessments found' => 'រកមិនឃើញការវាយតម្លៃទេ',
+    
+    // Import/Export
+    'Import Students' => 'នាំចូលសិស្ស',
+    'Export Students' => 'នាំចេញសិស្ស',
+    'Bulk Import' => 'នាំចូលច្រើន',
+    'Download Template' => 'ទាញយកគំរូ',
+    'Select File' => 'ជ្រើសរើសឯកសារ',
+    'Import' => 'នាំចូល',
+    'Students imported successfully' => 'បាននាំចូលសិស្សដោយជោគជ័យ',
+    
+    // Validation Messages
+    'Name is required' => 'ត្រូវការឈ្មោះ',
+    'Please select a school' => 'សូមជ្រើសរើសសាលា',
+    'Please select a teacher' => 'សូមជ្រើសរើសគ្រូ',
+    'Please select a grade' => 'សូមជ្រើសរើសថ្នាក់',
+    'Please select gender' => 'សូមជ្រើសរើសភេទ',
+    'Invalid date of birth' => 'ថ្ងៃខែឆ្នាំកំណើតមិនត្រឹមត្រូវ',
+    'Photo must be an image' => 'រូបថតត្រូវតែជាឯកសាររូបភាព',
+    'Photo size must be less than 2MB' => 'ទំហំរូបថតត្រូវតែតូចជាង 2MB',
+    
+    // Statistics
+    'Total Students' => 'សិស្សសរុប',
+    'Male Students' => 'សិស្សប្រុស',
+    'Female Students' => 'សិស្សស្រី',
+    'Average Age' => 'អាយុមធ្យម',
+    'Students by Grade' => 'សិស្សតាមថ្នាក់',
+    'Students by School' => 'សិស្សតាមសាលា',
+    
+    // Additional Fields
+    'Emergency Contact' => 'ទំនាក់ទំនងពេលអាសន្ន',
+    'Medical Information' => 'ព័ត៌មានសុខភាព',
+    'Special Needs' => 'តម្រូវការពិសេស',
+    'Enrollment Status' => 'ស្ថានភាពចុះឈ្មោះ',
+    'Academic Year' => 'ឆ្នាំសិក្សា',
+    'Previous School' => 'សាលាមុន',
+    'Transfer Date' => 'កាលបរិច្ឆេទផ្ទេរ',
+    'Graduation Date' => 'កាលបរិច្ឆេទបញ្ចប់',
+    'Dropout Date' => 'កាលបរិច្ឆេទបោះបង់',
+    'Dropout Reason' => 'មូលហេតុបោះបង់',
+    'Optional' => 'ស្រេចចិត្ត',
+    'Student ID will be automatically generated upon creation.' => 'លេខសម្គាល់សិស្សនឹងត្រូវបានបង្កើតដោយស្វ័យប្រវត្តិនៅពេលបង្កើត។',
+    
+    // Placeholders
+    'Enter student name' => 'បញ្ចូលឈ្មោះសិស្ស',
+    'Enter parent name' => 'បញ្ចូលឈ្មោះមាតាបិតា',
+    'Enter phone number' => 'បញ្ចូលលេខទូរស័ព្ទ',
+    'Enter address' => 'បញ្ចូលអាសយដ្ឋាន',
+    'Enter notes' => 'បញ្ចូលកំណត់ចំណាំ',
+    'Select date' => 'ជ្រើសរើសកាលបរិច្ឆេទ',
+    
+    // Student Profile
+    'Student Profile' => 'ប្រវត្តិរូបសិស្ស',
+    'Personal Information' => 'ព័ត៌មានផ្ទាល់ខ្លួន',
+    'Contact Information' => 'ព័ត៌មានទំនាក់ទំនង',
+    'Academic Information' => 'ព័ត៌មានសិក្សា',
+    'School Information' => 'ព័ត៌មានសាលា',
+    'Assessment Results' => 'លទ្ធផលវាយតម្លៃ',
+    'Performance History' => 'ប្រវត្តិការសិក្សា',
+    'Attendance Record' => 'កំណត់ត្រាវត្តមាន',
+    'Cluster' => 'ក្រុម',
+    'School Code' => 'លេខកូដសាលា',
+    'Total Assessments' => 'ការវាយតម្លៃសរុប',
+    'Avg Math Score' => 'ពិន្ទុគណិតមធ្យម',
+    'Avg Khmer Score' => 'ពិន្ទុខ្មែរមធ្យម',
+    'Latest Assessment' => 'ការវាយតម្លៃចុងក្រោយ',
+    'Current Assessments' => 'ការវាយតម្លៃបច្ចុប្បន្ន',
+    'No assessments found for this student.' => 'រកមិនឃើញការវាយតម្លៃសម្រាប់សិស្សនេះទេ។',
+    
+    // Reports
+    'Student Report' => 'របាយការណ៍សិស្ស',
+    'Progress Report' => 'របាយការណ៍វឌ្ឍនភាព',
+    'Performance Summary' => 'សង្ខេបការសិក្សា',
+    'Generate Report' => 'បង្កើតរបាយការណ៍',
+    'Print Report' => 'បោះពុម្ពរបាយការណ៍',
+    'Download Report' => 'ទាញយករបាយការណ៍',
+];

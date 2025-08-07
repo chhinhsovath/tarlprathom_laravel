@@ -6,7 +6,7 @@
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('dashboard') }}" class="text-xl font-bold text-gray-800">
-                        {{ __('TaRL Project') }}
+                        {{ trans_db('tarl_project') }}
                     </a>
                 </div>
 
@@ -21,47 +21,47 @@
            focus:outline-none focus:text-gray-700 
            focus:border-gray-300 transition duration-150 
            ease-in-out">
-                                 {{ __('PLP') }}
+                                 {{ trans_db('plp') }}
                              </a>
                     @if(auth()->check() && !auth()->user()->isCoordinator())
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
+                        {{ trans_db('dashboard') }}
                     </x-nav-link>
                     @endif
                     
                     @if(auth()->check() && in_array(auth()->user()->role, ['admin', 'teacher', 'mentor', 'viewer']))
                     <x-nav-link :href="route('assessments.index')" :active="request()->routeIs('assessments.*')">
-                        {{ __('Assessments') }}
+                        {{ trans_db('assessments') }}
                     </x-nav-link>
                     @endif
                     
                     @if(auth()->check() && in_array(auth()->user()->role, ['admin', 'teacher']))
                     <x-nav-link :href="route('students.index')" :active="request()->routeIs('students.*')">
-                        {{ __('Students') }}
+                        {{ trans_db('students') }}
                     </x-nav-link>
                     @endif
                     
                     @if(auth()->check() && in_array(auth()->user()->role, ['admin', 'mentor']))
                     <x-nav-link :href="route('mentoring.index')" :active="request()->routeIs('mentoring.*')">
-                        {{ __('Mentoring') }}
+                        {{ trans_db('mentoring') }}
                     </x-nav-link>
                     @endif
                     
                     @if(auth()->check() && !auth()->user()->isCoordinator())
                     <x-nav-link :href="route('reports.index')" :active="request()->routeIs('reports.*')">
-                        {{ __('Reports') }}
+                        {{ trans_db('reports') }}
                     </x-nav-link>
                     @endif
                     
                     @if(auth()->check() && in_array(auth()->user()->role, ['admin', 'coordinator']))
                     <x-nav-link :href="route('coordinator.workspace')" :active="request()->routeIs('coordinator.*') || request()->routeIs('imports.*') || request()->routeIs('localization.*')">
-                        {{ __('Coordinator Workspace') }}
+                        {{ trans_db('coordinator_workspace') }}
                     </x-nav-link>
                     @endif
                     
                     @if(auth()->check() && auth()->user()->role === 'admin')
                     <x-nav-link :href="route('administration.index')" :active="request()->routeIs('administration.*')">
-                        {{ __('Administration') }}
+                        {{ trans_db('administration') }}
                     </x-nav-link>
                     @endif
                 </div>
@@ -77,7 +77,7 @@
                         <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
                             <div>
                                 <div>{{ auth()->check() ? Auth::user()->name : 'Guest' }}</div>
-                                <div class="text-xs text-gray-400">{{ auth()->check() ? __(ucfirst(Auth::user()->role)) : 'Guest' }}</div>
+                                <div class="text-xs text-gray-400">{{ auth()->check() ? trans_db(Auth::user()->role) : 'Guest' }}</div>
                             </div>
 
                             <div class="ms-1">
@@ -103,14 +103,14 @@
                                 <svg class="w-4 h-4 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                                 </svg>
-                                {{ __('My Profile') }}
+                                {{ trans_db('my_profile') }}
                             </a>
                             
                             <a href="{{ route('profile.edit') }}#password-update" class="flex items-center px-3 py-2 text-sm text-gray-700 rounded-md hover:bg-gray-100 transition-colors duration-150">
                                 <svg class="w-4 h-4 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path>
                                 </svg>
-                                {{ __('Change Password') }}
+                                {{ trans_db('change_password') }}
                             </a>
                         </div>
                         
@@ -122,14 +122,14 @@
                                 <svg class="w-4 h-4 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                 </svg>
-                                {{ __('Help & Support') }}
+                                {{ trans_db('help_support') }}
                             </a>
                             
                             <a href="{{ route('about') }}" class="flex items-center px-3 py-2 text-sm text-gray-700 rounded-md hover:bg-gray-100 transition-colors duration-150">
                                 <svg class="w-4 h-4 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                 </svg>
-                                {{ __('About') }}
+                                {{ trans_db('about') }}
                             </a>
                         </div>
 
@@ -142,7 +142,7 @@
                                     <svg class="w-4 h-4 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
                                     </svg>
-                                    {{ __('Sign Out') }}
+                                    {{ trans_db('sign_out') }}
                                 </button>
                             </form>
                         </div>
@@ -167,43 +167,43 @@
         <div class="pt-2 pb-3 space-y-1">
             @if(auth()->check() && !auth()->user()->isCoordinator())
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                {{ __('Dashboard') }}
+                {{ trans_db('dashboard') }}
             </x-responsive-nav-link>
             @endif
             
             @if(auth()->check() && in_array(auth()->user()->role, ['admin', 'teacher', 'mentor', 'viewer']))
             <x-responsive-nav-link :href="route('assessments.index')" :active="request()->routeIs('assessments.*')">
-                {{ __('Assessments') }}
+                {{ trans_db('assessments') }}
             </x-responsive-nav-link>
             @endif
             
             @if(auth()->check() && (auth()->user()->role === 'admin' || auth()->user()->role === 'teacher'))
             <x-responsive-nav-link :href="route('students.index')" :active="request()->routeIs('students.*')">
-                {{ __('Students') }}
+                {{ trans_db('students') }}
             </x-responsive-nav-link>
             @endif
             
             @if(auth()->check() && (auth()->user()->role === 'admin' || auth()->user()->role === 'mentor'))
             <x-responsive-nav-link :href="route('mentoring.index')" :active="request()->routeIs('mentoring.*')">
-                {{ __('Mentoring') }}
+                {{ trans_db('mentoring') }}
             </x-responsive-nav-link>
             @endif
             
             @if(auth()->check() && !auth()->user()->isCoordinator())
             <x-responsive-nav-link :href="route('reports.index')" :active="request()->routeIs('reports.*')">
-                {{ __('Reports') }}
+                {{ trans_db('reports') }}
             </x-responsive-nav-link>
             @endif
             
             @if(auth()->check() && in_array(auth()->user()->role, ['admin', 'coordinator']))
             <x-responsive-nav-link :href="route('coordinator.workspace')" :active="request()->routeIs('coordinator.*') || request()->routeIs('imports.*') || request()->routeIs('localization.*')">
-                {{ __('Coordinator Workspace') }}
+                {{ trans_db('coordinator_workspace') }}
             </x-responsive-nav-link>
             @endif
             
             @if(auth()->check() && auth()->user()->role === 'admin')
             <x-responsive-nav-link :href="route('administration.index')" :active="request()->routeIs('administration.*')">
-                {{ __('Administration') }}
+                {{ trans_db('administration') }}
             </x-responsive-nav-link>
             @endif
         </div>
@@ -213,12 +213,12 @@
             <div class="px-4">
                 <div class="font-medium text-base text-gray-800">{{ auth()->check() ? Auth::user()->name : 'Guest' }}</div>
                 <div class="font-medium text-sm text-gray-500">{{ auth()->check() ? Auth::user()->email : 'guest@example.com' }}</div>
-                <div class="text-xs text-gray-400 mt-1">{{ auth()->check() ? __(ucfirst(Auth::user()->role)) : 'Guest' }}</div>
+                <div class="text-xs text-gray-400 mt-1">{{ auth()->check() ? trans_db(Auth::user()->role) : 'Guest' }}</div>
             </div>
 
             <!-- Language Switcher in Mobile Menu -->
             <div class="px-4 mt-3">
-                <div class="text-xs text-gray-400 mb-2">{{ __('Language') }}</div>
+                <div class="text-xs text-gray-400 mb-2">{{ trans_db('language') }}</div>
                 <div class="flex space-x-2">
                     <a href="{{ url('/language/en') }}" class="flex-1 flex items-center justify-center px-3 py-2 border {{ app()->getLocale() == 'en' ? 'border-indigo-500 bg-indigo-50' : 'border-gray-300' }} rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50">
                         <img src="https://flagcdn.com/w20/gb.png" alt="English" class="w-5 h-3 mr-2">
@@ -236,14 +236,14 @@
                     <svg class="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                     </svg>
-                    {{ __('My Profile') }}
+                    {{ trans_db('my_profile') }}
                 </x-responsive-nav-link>
                 
                 <x-responsive-nav-link :href="route('profile.edit') . '#password-update'">
                     <svg class="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path>
                     </svg>
-                    {{ __('Change Password') }}
+                    {{ trans_db('change_password') }}
                 </x-responsive-nav-link>
                 
                 
@@ -252,14 +252,14 @@
                     <svg class="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
-                    {{ __('Help & Support') }}
+                    {{ trans_db('help_support') }}
                 </x-responsive-nav-link>
                 
                 <x-responsive-nav-link :href="route('about')">
                     <svg class="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
-                    {{ __('About') }}
+                    {{ trans_db('about') }}
                 </x-responsive-nav-link>
 
                 <!-- Authentication -->
@@ -273,7 +273,7 @@
                         <svg class="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
                         </svg>
-                        {{ __('Sign Out') }}
+                        {{ trans_db('sign_out') }}
                     </x-responsive-nav-link>
                 </form>
             </div>

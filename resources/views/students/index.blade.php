@@ -15,13 +15,13 @@
                         <div class="flex gap-4">
                             <div class="flex-1">
                                 <input type="text" name="search" value="{{ request('search') }}" 
-                                    placeholder="{{ __('Search by name...') }}" 
+                                    placeholder="{{ __('students.Search by name...') }}" 
                                     class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                             </div>
                             @if(auth()->user()->isAdmin())
                                 <div>
                                     <select name="school_id" class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                                        <option value="">{{ __('All Schools') }}</option>
+                                        <option value="">{{ __('students.All Schools') }}</option>
                                         @foreach($schools as $school)
                                             <option value="{{ $school->id }}" {{ request('school_id') == $school->id ? 'selected' : '' }}>
                                                 {{ $school->name }}
@@ -32,34 +32,34 @@
                             @endif
                             <div>
                                 <select name="class" class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                                    <option value="">{{ __('All Grades') }}</option>
+                                    <option value="">{{ __('students.All Grades') }}</option>
                                     <option value="Grade 4" {{ request('class') == 'Grade 4' ? 'selected' : '' }}>
-                                        {{ __('Grade') }} 4
+                                        {{ __('students.Grade 4') }}
                                     </option>
                                     <option value="Grade 5" {{ request('class') == 'Grade 5' ? 'selected' : '' }}>
-                                        {{ __('Grade') }} 5
+                                        {{ __('students.Grade 5') }}
                                     </option>
                                 </select>
                             </div>
                             <div>
                                 <select name="gender" class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                                    <option value="">{{ __('All Genders') }}</option>
-                                    <option value="male" {{ request('gender') == 'male' ? 'selected' : '' }}>{{ __('Male') }}</option>
-                                    <option value="female" {{ request('gender') == 'female' ? 'selected' : '' }}>{{ __('Female') }}</option>
+                                    <option value="">{{ __('students.All Genders') }}</option>
+                                    <option value="male" {{ request('gender') == 'male' ? 'selected' : '' }}>{{ __('students.Male') }}</option>
+                                    <option value="female" {{ request('gender') == 'female' ? 'selected' : '' }}>{{ __('students.Female') }}</option>
                                 </select>
                             </div>
                             <div class="flex gap-2">
                                 <button type="submit" class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                                    {{ __('Search') }}
+                                    {{ __('students.Search') }}
                                 </button>
                                 @if(request('search') || request('school_id') || request('class') || request('gender'))
                                     <a href="{{ route('students.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-300 border border-transparent rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest hover:bg-gray-400 focus:bg-gray-400 active:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                                        {{ __('Clear') }}
+                                        {{ __('students.Clear') }}
                                     </a>
                                 @endif
                                 @can('create', App\Models\Student::class)
                                     <a href="{{ route('students.create') }}" class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                                        {{ __('Add New Student') }}
+                                        {{ __('students.Add New Student') }}
                                     </a>
                                 @endcan
                                 @can('viewAny', App\Models\Student::class)
@@ -67,7 +67,7 @@
                                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                                         </svg>
-                                        {{ __('Export to Excel') }}
+                                        {{ __('students.Export to Excel') }}
                                     </a>
                                 @endcan
                             </div>
@@ -81,35 +81,35 @@
                                 <tr>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         <x-sortable-header column="name" :current-sort="$sortField" :current-order="$sortOrder">
-                                            {{ __('Name') }}
+                                            {{ __('students.Name') }}
                                         </x-sortable-header>
                                     </th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        {{ __('Age') }}
+                                        {{ __('students.Age') }}
                                     </th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         <x-sortable-header column="class" :current-sort="$sortField" :current-order="$sortOrder">
-                                            {{ __('Grade') }}
+                                            {{ __('students.Grade') }}
                                         </x-sortable-header>
                                     </th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         <x-sortable-header column="gender" :current-sort="$sortField" :current-order="$sortOrder">
-                                            {{ __('Gender') }}
+                                            {{ __('students.Gender') }}
                                         </x-sortable-header>
                                     </th>
                                     @if(!auth()->user()->isTeacher())
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        {{ __('Teacher') }}
+                                        {{ __('students.Teacher') }}
                                     </th>
                                     @endif
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        {{ __('Mentor(s)') }}
+                                        {{ __('students.Mentor(s)') }}
                                     </th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        {{ __('School') }}
+                                        {{ __('students.School') }}
                                     </th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        {{ __('Actions') }}
+                                        {{ __('students.Actions') }}
                                     </th>
                                 </tr>
                             </thead>
@@ -148,9 +148,9 @@
                                             <div class="text-sm text-gray-900">{{ $student->school->name ?? 'N/A' }}</div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                            <a href="{{ route('students.show', $student) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">{{ __('View') }}</a>
+                                            <a href="{{ route('students.show', $student) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">{{ __('students.View') }}</a>
                                             @can('update', $student)
-                                                <a href="{{ route('students.edit', $student) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">{{ __('Edit') }}</a>
+                                                <a href="{{ route('students.edit', $student) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">{{ __('students.Edit') }}</a>
                                             @endcan
                                             @can('delete', $student)
                                                 @if($student->assessments_count == 0)
@@ -158,13 +158,13 @@
                                                         @csrf
                                                         @method('DELETE')
                                                         <button type="submit" class="text-red-600 hover:text-red-900" 
-                                                            onclick="return confirm('{{ __('Are you sure you want to delete this student?') }}')">
-                                                            {{ __('Delete') }}
+                                                            onclick="return confirm('{{ __('students.Are you sure you want to delete this student?') }}')">
+                                                            {{ __('students.Delete') }}
                                                         </button>
                                                     </form>
                                                 @else
-                                                    <span class="text-gray-400 text-sm" title="{{ __('Cannot delete student with assessments') }}">
-                                                        {{ __('Has Assessments') }}
+                                                    <span class="text-gray-400 text-sm" title="{{ __('students.Cannot delete student with assessments') }}">
+                                                        {{ __('students.Has Assessments') }}
                                                     </span>
                                                 @endif
                                             @endcan
@@ -173,7 +173,7 @@
                                 @empty
                                     <tr>
                                         <td colspan="8" class="px-6 py-4 text-center text-gray-500">
-                                            {{ __('No students found.') }}
+                                            {{ __('students.No students found.') }}
                                         </td>
                                     </tr>
                                 @endforelse

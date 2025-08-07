@@ -6,8 +6,8 @@
         <!-- Header -->
         <div class="flex justify-between items-center mb-6">
             <div>
-                <h1 class="text-3xl font-bold text-gray-900">{{ __('Coordinator Dashboard') }}</h1>
-                <p class="mt-1 text-sm text-gray-600">{{ __('System overview and data management center') }}</p>
+                <h1 class="text-3xl font-bold text-gray-900">{{ trans_db('coordinator_dashboard') }}</h1>
+                <p class="mt-1 text-sm text-gray-600">{{ trans_db('system_overview_and_data_management_center') }}</p>
             </div>
             <div>
                 <span class="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium bg-indigo-100 text-indigo-800">
@@ -21,29 +21,29 @@
             <div class="bg-white rounded-lg shadow-sm border-2 border-blue-200 p-6">
                 <div class="text-center">
                     <div class="text-4xl font-bold text-blue-600 mb-2">{{ $stats['total_schools'] }}</div>
-                    <h3 class="text-lg font-semibold text-blue-800">{{ __('Schools') }}</h3>
-                    <p class="text-sm text-gray-600">{{ __('Total registered') }}</p>
+                    <h3 class="text-lg font-semibold text-blue-800">{{ trans_db('schools') }}</h3>
+                    <p class="text-sm text-gray-600">{{ trans_db('total_registered') }}</p>
                 </div>
             </div>
             <div class="bg-white rounded-lg shadow-sm border-2 border-green-200 p-6">
                 <div class="text-center">
                     <div class="text-4xl font-bold text-green-600 mb-2">{{ $stats['total_teachers'] }}</div>
-                    <h3 class="text-lg font-semibold text-green-800">{{ __('Teachers') }}</h3>
-                    <p class="text-sm text-gray-600">{{ __('Active accounts') }}</p>
+                    <h3 class="text-lg font-semibold text-green-800">{{ trans_db('teachers') }}</h3>
+                    <p class="text-sm text-gray-600">{{ trans_db('active_accounts') }}</p>
                 </div>
             </div>
             <div class="bg-white rounded-lg shadow-sm border-2 border-yellow-200 p-6">
                 <div class="text-center">
                     <div class="text-4xl font-bold text-yellow-600 mb-2">{{ $stats['total_mentors'] }}</div>
-                    <h3 class="text-lg font-semibold text-yellow-800">{{ __('Mentors') }}</h3>
-                    <p class="text-sm text-gray-600">{{ __('Active accounts') }}</p>
+                    <h3 class="text-lg font-semibold text-yellow-800">{{ trans_db('mentors') }}</h3>
+                    <p class="text-sm text-gray-600">{{ trans_db('active_accounts') }}</p>
                 </div>
             </div>
             <div class="bg-white rounded-lg shadow-sm border-2 border-purple-200 p-6">
                 <div class="text-center">
                     <div class="text-4xl font-bold text-purple-600 mb-2">{{ $stats['total_coordinators'] }}</div>
-                    <h3 class="text-lg font-semibold text-purple-800">{{ __('Coordinators') }}</h3>
-                    <p class="text-sm text-gray-600">{{ __('Active accounts') }}</p>
+                    <h3 class="text-lg font-semibold text-purple-800">{{ trans_db('coordinators') }}</h3>
+                    <p class="text-sm text-gray-600">{{ trans_db('active_accounts') }}</p>
                 </div>
             </div>
         </div>
@@ -52,34 +52,34 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
             <div class="bg-white rounded-lg shadow-sm border border-gray-200">
                 <div class="bg-gray-50 px-6 py-3 border-b border-gray-200">
-                    <h3 class="text-lg font-semibold text-gray-900">{{ __('This Month Activity') }}</h3>
+                    <h3 class="text-lg font-semibold text-gray-900">{{ trans_db('this_month_activity') }}</h3>
                 </div>
                 <div class="p-6">
                     <div class="grid grid-cols-2 gap-6 text-center">
                         <div>
                             <div class="text-3xl font-bold text-blue-600">{{ $stats['import_stats']['schools_this_month'] }}</div>
-                            <p class="text-sm text-gray-600 mt-1">{{ __('Schools Added') }}</p>
+                            <p class="text-sm text-gray-600 mt-1">{{ trans_db('schools_added') }}</p>
                         </div>
                         <div>
                             <div class="text-3xl font-bold text-green-600">{{ $stats['import_stats']['users_this_month'] }}</div>
-                            <p class="text-sm text-gray-600 mt-1">{{ __('Users Added') }}</p>
+                            <p class="text-sm text-gray-600 mt-1">{{ trans_db('users_added') }}</p>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="bg-white rounded-lg shadow-sm border border-gray-200">
                 <div class="bg-gray-50 px-6 py-3 border-b border-gray-200">
-                    <h3 class="text-lg font-semibold text-gray-900">{{ __('Today Activity') }}</h3>
+                    <h3 class="text-lg font-semibold text-gray-900">{{ trans_db('today_activity') }}</h3>
                 </div>
                 <div class="p-6">
                     <div class="grid grid-cols-2 gap-6 text-center">
                         <div>
                             <div class="text-3xl font-bold text-blue-600">{{ $stats['import_stats']['schools_today'] }}</div>
-                            <p class="text-sm text-gray-600 mt-1">{{ __('Schools Added') }}</p>
+                            <p class="text-sm text-gray-600 mt-1">{{ trans_db('schools_added') }}</p>
                         </div>
                         <div>
                             <div class="text-3xl font-bold text-green-600">{{ $stats['import_stats']['users_today'] }}</div>
-                            <p class="text-sm text-gray-600 mt-1">{{ __('Users Added') }}</p>
+                            <p class="text-sm text-gray-600 mt-1">{{ trans_db('users_added') }}</p>
                         </div>
                     </div>
                 </div>
@@ -95,7 +95,7 @@
                         <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
                         </svg>
-                        {{ __('Data Import Center') }}
+                        {{ trans_db('data_import_center') }}
                     </h3>
                 </div>
                 <div class="p-6">
@@ -107,7 +107,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
                                 </svg>
                             </div>
-                            <span class="font-semibold text-gray-900">{{ __('Schools') }}</span>
+                            <span class="font-semibold text-gray-900">{{ trans_db('schools_import') }}</span>
                         </a>
                         <a href="{{ route('imports.index') }}#teachers" class="group relative bg-green-50 hover:bg-green-100 rounded-lg p-6 text-center transition-colors duration-200">
                             <div class="text-green-600 mb-3">
@@ -115,7 +115,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
                                 </svg>
                             </div>
-                            <span class="font-semibold text-gray-900">{{ __('Teachers') }}</span>
+                            <span class="font-semibold text-gray-900">{{ trans_db('teachers_import') }}</span>
                         </a>
                         <a href="{{ route('imports.index') }}#mentors" class="group relative bg-yellow-50 hover:bg-yellow-100 rounded-lg p-6 text-center transition-colors duration-200">
                             <div class="text-yellow-600 mb-3">
@@ -123,7 +123,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
                                 </svg>
                             </div>
-                            <span class="font-semibold text-gray-900">{{ __('Mentors') }}</span>
+                            <span class="font-semibold text-gray-900">{{ trans_db('mentors_import') }}</span>
                         </a>
                         <a href="{{ route('imports.index') }}" class="group relative bg-purple-50 hover:bg-purple-100 rounded-lg p-6 text-center transition-colors duration-200">
                             <div class="text-purple-600 mb-3">
@@ -131,28 +131,28 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                                 </svg>
                             </div>
-                            <span class="font-semibold text-gray-900">{{ __('Templates') }}</span>
+                            <span class="font-semibold text-gray-900">{{ trans_db('templates') }}</span>
                         </a>
                     </div>
 
                     <!-- Quick Templates -->
                     <div class="border-t pt-4">
-                        <h4 class="text-sm font-medium text-gray-700 mb-3">{{ __('Quick Download') }}</h4>
+                        <h4 class="text-sm font-medium text-gray-700 mb-3">{{ trans_db('quick_download') }}</h4>
                         <div class="space-y-2">
                             <a href="{{ route('imports.template', 'schools') }}" class="flex items-center justify-between px-3 py-2 text-sm border border-gray-200 rounded-md hover:bg-gray-50 transition-colors">
-                                <span class="text-gray-700">{{ __('Schools Template') }}</span>
+                                <span class="text-gray-700">{{ trans_db('schools_template') }}</span>
                                 <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"></path>
                                 </svg>
                             </a>
                             <a href="{{ route('imports.template', 'teachers') }}" class="flex items-center justify-between px-3 py-2 text-sm border border-gray-200 rounded-md hover:bg-gray-50 transition-colors">
-                                <span class="text-gray-700">{{ __('Teachers Template') }}</span>
+                                <span class="text-gray-700">{{ trans_db('teachers_template') }}</span>
                                 <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"></path>
                                 </svg>
                             </a>
                             <a href="{{ route('imports.template', 'mentors') }}" class="flex items-center justify-between px-3 py-2 text-sm border border-gray-200 rounded-md hover:bg-gray-50 transition-colors">
-                                <span class="text-gray-700">{{ __('Mentors Template') }}</span>
+                                <span class="text-gray-700">{{ trans_db('mentors_template') }}</span>
                                 <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"></path>
                                 </svg>
@@ -169,17 +169,17 @@
                         <svg class="w-6 h-6 mr-2 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color: #ffffff !important;">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
-                        {{ __('Language Center') }}
+                        {{ trans_db('language_center') }}
                     </h3>
                 </div>
                 <div class="p-6">
                     <!-- Language Status -->
                     <div class="text-center mb-6">
                         <div class="text-5xl font-extrabold text-purple-700 mb-3" style="color: #6b21a8 !important;">{{ count($stats['system_languages']['available']) }}</div>
-                        <p class="text-lg font-bold text-gray-900 mb-2" style="color: #111827 !important;">{{ __('Available Languages') }}</p>
+                        <p class="text-lg font-bold text-gray-900 mb-2" style="color: #111827 !important;">{{ trans_db('available_languages') }}</p>
                         <div class="mt-4">
                             <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-bold bg-purple-200 text-purple-900 border-2 border-purple-300" style="color: #581c87 !important; background-color: #e9d5ff !important;">
-                                {{ __('Current') }}: {{ $stats['system_languages']['current_name'] }}
+                                {{ trans_db('current') }}: {{ $stats['system_languages']['current_name'] }}
                             </span>
                         </div>
                     </div>
@@ -193,7 +193,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                 </svg>
                             </div>
-                            <span class="font-extrabold text-black text-lg" style="color: #000000 !important;">{{ __('Settings') }}</span>
+                            <span class="font-extrabold text-black text-lg" style="color: #000000 !important;">{{ trans_db('settings') }}</span>
                         </a>
                         <button type="button" onclick="showLanguageModal()" class="group relative bg-purple-50 hover:bg-purple-100 rounded-lg p-6 text-center transition-colors duration-200 border-2 border-purple-300">
                             <div class="text-purple-700 mb-3">
@@ -201,16 +201,16 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
                                 </svg>
                             </div>
-                            <span class="font-extrabold text-black text-lg" style="color: #000000 !important;">{{ __('Switch') }}</span>
+                            <span class="font-extrabold text-black text-lg" style="color: #000000 !important;">{{ trans_db('switch') }}</span>
                         </button>
                     </div>
 
                     <!-- Translation Tools -->
                     <div class="border-t-2 border-gray-300 pt-4">
-                        <h4 class="text-lg font-extrabold text-black mb-3" style="color: #000000 !important;">{{ __('Translation Tools') }}</h4>
+                        <h4 class="text-lg font-extrabold text-black mb-3" style="color: #000000 !important;">{{ trans_db('translation_tools') }}</h4>
                         <div class="space-y-2">
                             <a href="{{ route('localization.edit') }}" class="flex items-center justify-between px-4 py-3 text-base font-bold border-2 border-purple-300 rounded-lg hover:bg-purple-50 transition-colors bg-white">
-                                <span class="text-black font-extrabold" style="color: #000000 !important;">{{ __('Open Translation Editor') }}</span>
+                                <span class="text-black font-extrabold" style="color: #000000 !important;">{{ trans_db('open_translation_editor') }}</span>
                                 <svg class="w-6 h-6 text-purple-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                 </svg>
@@ -225,19 +225,19 @@
         <div class="bg-gray-50 rounded-lg p-8">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
                 <div>
-                    <h3 class="text-sm font-medium text-gray-500 uppercase tracking-wider">{{ __('Total System Users') }}</h3>
+                    <h3 class="text-sm font-medium text-gray-500 uppercase tracking-wider">{{ trans_db('total_system_users') }}</h3>
                     <div class="mt-2 text-4xl font-bold text-gray-900">{{ $stats['total_users'] }}</div>
-                    <p class="mt-1 text-sm text-gray-600">{{ __('Teachers + Mentors + Coordinators') }}</p>
+                    <p class="mt-1 text-sm text-gray-600">{{ trans_db('teachers_mentors_coordinators') }}</p>
                 </div>
                 <div>
-                    <h3 class="text-sm font-medium text-gray-500 uppercase tracking-wider">{{ __('Current Language') }}</h3>
+                    <h3 class="text-sm font-medium text-gray-500 uppercase tracking-wider">{{ trans_db('current_language') }}</h3>
                     <div class="mt-2 text-3xl font-bold text-gray-900">{{ strtoupper($stats['system_languages']['current']) }}</div>
                     <p class="mt-1 text-sm text-gray-600">{{ $stats['system_languages']['current_name'] }}</p>
                 </div>
                 <div>
-                    <h3 class="text-sm font-medium text-gray-500 uppercase tracking-wider">{{ __('Your Role') }}</h3>
-                    <div class="mt-2 text-3xl font-bold text-gray-900">{{ __('COORDINATOR') }}</div>
-                    <p class="mt-1 text-sm text-gray-600">{{ __('Data Management Access') }}</p>
+                    <h3 class="text-sm font-medium text-gray-500 uppercase tracking-wider">{{ trans_db('your_role') }}</h3>
+                    <div class="mt-2 text-3xl font-bold text-gray-900">{{ trans_db('coordinator') }}</div>
+                    <p class="mt-1 text-sm text-gray-600">{{ trans_db('data_management_access') }}</p>
                 </div>
             </div>
         </div>
@@ -251,7 +251,7 @@
         <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
         <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-sm sm:w-full">
             <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">{{ __('Switch Language') }}</h3>
+                <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">{{ trans_db('switch_language') }}</h3>
                 <div class="space-y-2">
                     @foreach($stats['system_languages']['available'] as $code => $name)
                         @if($code === $stats['system_languages']['current'])
@@ -259,7 +259,7 @@
                                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                                 </svg>
-                                {{ $name }} ({{ __('Current') }})
+                                {{ $name }} ({{ trans_db('current') }})
                             </button>
                         @else
                             <a href="{{ route('localization.set', $code) }}" class="w-full inline-flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
@@ -271,7 +271,7 @@
             </div>
             <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
                 <button type="button" onclick="closeLanguageModal()" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
-                    {{ __('Close') }}
+                    {{ trans_db('close') }}
                 </button>
             </div>
         </div>

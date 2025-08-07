@@ -2,10 +2,10 @@
     <x-slot name="header">
         <div class="flex justify-between items-center">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{ __('Add New Student') }}
+                {{ __('students.Add New Student') }}
             </h2>
             <a href="{{ route('students.index') }}" class="text-sm text-gray-600 hover:text-gray-900">
-                ← {{ __('Back to Students') }}
+                ← {{ __('students.Back to List') }}
             </a>
         </div>
     </x-slot>
@@ -21,21 +21,21 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <!-- Name -->
                             <div class="col-span-1 md:col-span-2">
-                                <x-input-label for="name" :value="__('Student Name')" class="text-sm font-medium" />
+                                <x-input-label for="name" :value="__('students.Student Name')" class="text-sm font-medium" />
                                 <x-text-input id="name" name="name" type="text" class="mt-1 block w-full text-sm" :value="old('name')" required autofocus autocomplete="name" />
                                 <x-input-error class="mt-1" :messages="$errors->get('name')" />
                             </div>
 
                             <!-- Grade -->
                             <div>
-                                <x-input-label for="class" :value="__('Grade')" class="text-sm font-medium" />
+                                <x-input-label for="class" :value="__('students.Grade')" class="text-sm font-medium" />
                                 <select id="class" name="class" class="mt-1 block w-full text-sm rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
-                                    <option value="">{{ __('Select Grade') }}</option>
+                                    <option value="">{{ __('students.Select Grade') }}</option>
                                     <option value="Grade 4" {{ old('class') == 'Grade 4' ? 'selected' : '' }}>
-                                        {{ __('Grade') }} 4
+                                        {{ __('students.Grade 4') }}
                                     </option>
                                     <option value="Grade 5" {{ old('class') == 'Grade 5' ? 'selected' : '' }}>
-                                        {{ __('Grade') }} 5
+                                        {{ __('students.Grade 5') }}
                                     </option>
                                 </select>
                                 <x-input-error class="mt-1" :messages="$errors->get('class')" />
@@ -43,18 +43,18 @@
 
                             <!-- Gender -->
                             <div>
-                                <x-input-label for="gender" :value="__('Gender')" class="text-sm font-medium" />
+                                <x-input-label for="gender" :value="__('students.Gender')" class="text-sm font-medium" />
                                 <select id="gender" name="gender" class="mt-1 block w-full text-sm rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
-                                    <option value="">{{ __('Select Gender') }}</option>
-                                    <option value="male" {{ old('gender') == 'male' ? 'selected' : '' }}>{{ __('Male') }}</option>
-                                    <option value="female" {{ old('gender') == 'female' ? 'selected' : '' }}>{{ __('Female') }}</option>
+                                    <option value="">{{ __('students.Select Gender') }}</option>
+                                    <option value="male" {{ old('gender') == 'male' ? 'selected' : '' }}>{{ __('students.Male') }}</option>
+                                    <option value="female" {{ old('gender') == 'female' ? 'selected' : '' }}>{{ __('students.Female') }}</option>
                                 </select>
                                 <x-input-error class="mt-1" :messages="$errors->get('gender')" />
                             </div>
 
                             <!-- Age -->
                             <div>
-                                <x-input-label for="age" :value="__('Age')" class="text-sm font-medium" />
+                                <x-input-label for="age" :value="__('students.Age')" class="text-sm font-medium" />
                                 <x-text-input id="age" name="age" type="number" min="3" max="18" class="mt-1 block w-full text-sm" :value="old('age')" required />
                                 <x-input-error class="mt-1" :messages="$errors->get('age')" />
                             </div>
@@ -62,9 +62,9 @@
                             <!-- School -->
                             @if($schools->count() > 1)
                                 <div>
-                                    <x-input-label for="school_id" :value="__('School')" class="text-sm font-medium" />
+                                    <x-input-label for="school_id" :value="__('students.School')" class="text-sm font-medium" />
                                     <select id="school_id" name="school_id" class="mt-1 block w-full text-sm rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required onchange="loadTeachers(this.value)">
-                                        <option value="">{{ __('Select School') }}</option>
+                                        <option value="">{{ __('students.Select School') }}</option>
                                         @foreach($schools as $school)
                                             <option value="{{ $school->id }}" {{ old('school_id') == $school->id ? 'selected' : '' }}>
                                                 {{ $school->name }}
@@ -76,7 +76,7 @@
                             @else
                                 <input type="hidden" name="school_id" value="{{ $schools->first()->id }}">
                                 <div>
-                                    <x-input-label :value="__('School')" class="text-sm font-medium" />
+                                    <x-input-label :value="__('students.School')" class="text-sm font-medium" />
                                     <div class="mt-1 px-3 py-2 text-sm bg-gray-50 border border-gray-300 rounded-md text-gray-700">
                                         {{ $schools->first()->name }}
                                     </div>
@@ -85,9 +85,9 @@
 
                             <!-- Teacher (appears after school selection) -->
                             <div id="teacherDiv" style="{{ old('school_id') || $schools->count() == 1 ? '' : 'display: none;' }}">
-                                <x-input-label for="teacher_id" :value="__('Teacher')" class="text-sm font-medium" />
+                                <x-input-label for="teacher_id" :value="__('students.Teacher')" class="text-sm font-medium" />
                                 <select id="teacher_id" name="teacher_id" class="mt-1 block w-full text-sm rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                                    <option value="">{{ __('Select Teacher (Optional)') }}</option>
+                                    <option value="">{{ __('students.Select Teacher') }} ({{ __('students.Optional') }})</option>
                                     @if(old('school_id') || $schools->count() == 1)
                                         @php
                                             $selectedSchoolId = old('school_id') ?? $schools->first()->id;
@@ -117,7 +117,7 @@
                                 </div>
                                 <div class="ml-3">
                                     <p class="text-sm text-blue-800">
-                                        {{ __('Student ID will be automatically generated upon creation.') }}
+                                        {{ __('students.Student ID will be automatically generated upon creation.') }}
                                     </p>
                                 </div>
                             </div>
@@ -126,10 +126,10 @@
                         <!-- Action Buttons -->
                         <div class="flex items-center justify-end gap-3 pt-4 border-t border-gray-200">
                             <a href="{{ route('students.index') }}" class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                                {{ __('Cancel') }}
+                                {{ __('students.Cancel') }}
                             </a>
                             <x-primary-button class="text-xs uppercase tracking-widest">
-                                {{ __('Create Student') }}
+                                {{ __('students.Create Student') }}
                             </x-primary-button>
                         </div>
                     </form>

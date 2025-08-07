@@ -3,7 +3,7 @@
         <div class="w-full px-4 sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
-                    <h3 class="text-lg font-medium text-gray-900 mb-6">{{ __('Edit Mentoring Visit') }}</h3>
+                    <h3 class="text-lg font-medium text-gray-900 mb-6">{{ __('mentoring.Edit Mentoring Visit') }}</h3>
                     
                     <form id="mentoringForm" method="POST" action="{{ route('mentoring.update', $mentoringVisit) }}" enctype="multipart/form-data">
                         @csrf
@@ -12,7 +12,7 @@
                         <!-- Progress Indicator -->
                         <div class="mb-8">
                             <div class="flex items-center justify-between">
-                                <span class="text-sm text-gray-600">{{ __('Progress') }}</span>
+                                <span class="text-sm text-gray-600">{{ __('mentoring.Progress') }}</span>
                                 <span class="text-sm text-gray-600"><span id="progressPercent">0</span>%</span>
                             </div>
                             <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
@@ -22,13 +22,13 @@
 
                         <!-- Section 1: Visit Details -->
                         <div class="questionnaire-section mb-8" data-section="visit_details">
-                            <h4 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b">{{ __('Visit Details') }}</h4>
+                            <h4 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b">{{ __('mentoring.Visit Details') }}</h4>
                             
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <!-- Visit Date -->
                                 <div>
                                     <label for="visit_date" class="block text-sm font-medium text-gray-700 mb-2">
-                                        {{ __('Date of Visit') }} <span class="text-red-500">*</span>
+                                        {{ __('mentoring.Visit Date') }} <span class="text-red-500">*</span>
                                     </label>
                                     <input type="date" 
                                            id="visit_date" 
@@ -44,7 +44,7 @@
                                 <!-- Region -->
                                 <div>
                                     <label for="region" class="block text-sm font-medium text-gray-700 mb-2">
-                                        {{ __('Region') }} <span class="text-red-500">*</span>
+                                        {{ __('mentoring.Region') }} <span class="text-red-500">*</span>
                                     </label>
                                     <input type="text" 
                                            id="region" 
@@ -60,13 +60,13 @@
                                 <!-- Province -->
                                 <div>
                                     <label for="province" class="block text-sm font-medium text-gray-700 mb-2">
-                                        {{ __('Province') }} <span class="text-red-500">*</span>
+                                        {{ __('mentoring.Province') }} <span class="text-red-500">*</span>
                                     </label>
                                     <select id="province" 
                                             name="province" 
                                             class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                                             required>
-                                        <option value="">{{ __('Select Province') }}</option>
+                                        <option value="">{{ __('mentoring.Select Province') }}</option>
                                         @foreach($provinces as $province)
                                             <option value="{{ $province }}" {{ old('province', $mentoringVisit->province) == $province ? 'selected' : '' }}>
                                                 {{ $province }}
@@ -82,13 +82,13 @@
                                 @if(auth()->user()->isAdmin())
                                 <div>
                                     <label for="mentor_id" class="block text-sm font-medium text-gray-700 mb-2">
-                                        {{ __('Name of Mentor') }} <span class="text-red-500">*</span>
+                                        {{ __('mentoring.Select Mentor') }} <span class="text-red-500">*</span>
                                     </label>
                                     <select id="mentor_id" 
                                             name="mentor_id" 
                                             class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                                             required>
-                                        <option value="">{{ __('Select Mentor') }}</option>
+                                        <option value="">{{ __('mentoring.Select Mentor') }}</option>
                                         @foreach($mentors as $mentor)
                                             <option value="{{ $mentor->id }}" {{ old('mentor_id', $mentoringVisit->mentor_id) == $mentor->id ? 'selected' : '' }}>
                                                 {{ $mentor->name }}

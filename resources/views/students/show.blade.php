@@ -2,28 +2,28 @@
     <x-slot name="header">
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
             <h2 class="font-semibold text-lg sm:text-xl text-gray-800 leading-tight">
-                {{ __('Student Details') }}
+                {{ __('students.Student Details') }}
             </h2>
             <div class="flex gap-2">
                 <a href="{{ route('students.assessment-history', $student) }}" class="inline-flex items-center px-3 py-1.5 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150">
                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                     </svg>
-                    {{ __('Assessment History') }}
+                    {{ __('students.Assessment History') }}
                 </a>
                 @can('update', $student)
                     <a href="{{ route('students.edit', $student) }}" class="inline-flex items-center px-3 py-1.5 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
                         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                         </svg>
-                        {{ __('Edit') }}
+                        {{ __('students.Edit') }}
                     </a>
                 @endcan
                 <a href="{{ route('students.index') }}" class="inline-flex items-center px-3 py-1.5 bg-gray-300 border border-transparent rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest hover:bg-gray-400 focus:bg-gray-400 active:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition ease-in-out duration-150">
                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18"></path>
                     </svg>
-                    {{ __('Back') }}
+                    {{ __('students.Back') }}
                 </a>
             </div>
         </div>
@@ -38,18 +38,18 @@
                     
                     <!-- Personal Information -->
                     <div class="mb-4">
-                        <h4 class="text-sm font-medium text-gray-700 uppercase tracking-wider mb-2">{{ __('Personal Information') }}</h4>
+                        <h4 class="text-sm font-medium text-gray-700 uppercase tracking-wider mb-2">{{ __('students.Personal Information') }}</h4>
                         <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
                             <div>
-                                <span class="text-xs text-gray-500 uppercase tracking-wider">{{ __('Age') }}</span>
+                                <span class="text-xs text-gray-500 uppercase tracking-wider">{{ __('students.Age') }}</span>
                                 <p class="text-sm font-medium text-gray-900">{{ $student->age ?? 'N/A' }}</p>
                             </div>
                             <div>
-                                <span class="text-xs text-gray-500 uppercase tracking-wider">{{ __('Gender') }}</span>
+                                <span class="text-xs text-gray-500 uppercase tracking-wider">{{ __('students.Gender') }}</span>
                                 <p class="text-sm font-medium text-gray-900">{{ ucfirst($student->gender) }}</p>
                             </div>
                             <div>
-                                <span class="text-xs text-gray-500 uppercase tracking-wider">{{ __('Grade') }}</span>
+                                <span class="text-xs text-gray-500 uppercase tracking-wider">{{ __('students.Grade') }}</span>
                                 <p class="text-sm font-medium text-gray-900">{{ $student->class ?? 'N/A' }}</p>
                             </div>
                         </div>
@@ -57,30 +57,30 @@
                     
                     <!-- School Information -->
                     <div class="mb-4 border-t pt-4">
-                        <h4 class="text-sm font-medium text-gray-700 uppercase tracking-wider mb-2">{{ __('School Information') }}</h4>
+                        <h4 class="text-sm font-medium text-gray-700 uppercase tracking-wider mb-2">{{ __('students.School Information') }}</h4>
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                             <div>
-                                <span class="text-xs text-gray-500 uppercase tracking-wider">{{ __('School') }}</span>
+                                <span class="text-xs text-gray-500 uppercase tracking-wider">{{ __('students.School') }}</span>
                                 <p class="text-sm font-medium text-gray-900">{{ $student->school->name ?? 'N/A' }}</p>
                             </div>
                             <div>
-                                <span class="text-xs text-gray-500 uppercase tracking-wider">{{ __('District') }}</span>
+                                <span class="text-xs text-gray-500 uppercase tracking-wider">{{ __('students.District') }}</span>
                                 <p class="text-sm font-medium text-gray-900">{{ $student->school->district ?? 'N/A' }}</p>
                             </div>
                             <div>
-                                <span class="text-xs text-gray-500 uppercase tracking-wider">{{ __('Cluster') }}</span>
+                                <span class="text-xs text-gray-500 uppercase tracking-wider">{{ __('students.Cluster') }}</span>
                                 <p class="text-sm font-medium text-gray-900">{{ $student->school->cluster ?? 'N/A' }}</p>
                             </div>
                             <div>
-                                <span class="text-xs text-gray-500 uppercase tracking-wider">{{ __('Province') }}</span>
+                                <span class="text-xs text-gray-500 uppercase tracking-wider">{{ __('students.Province') }}</span>
                                 <p class="text-sm font-medium text-gray-900">{{ $student->school->province ?? 'N/A' }}</p>
                             </div>
                             <div>
-                                <span class="text-xs text-gray-500 uppercase tracking-wider">{{ __('Teacher') }}</span>
+                                <span class="text-xs text-gray-500 uppercase tracking-wider">{{ __('students.Teacher') }}</span>
                                 <p class="text-sm font-medium text-gray-900">{{ $student->teacher->name ?? 'N/A' }}</p>
                             </div>
                             <div>
-                                <span class="text-xs text-gray-500 uppercase tracking-wider">{{ __('School Code') }}</span>
+                                <span class="text-xs text-gray-500 uppercase tracking-wider">{{ __('students.School Code') }}</span>
                                 <p class="text-sm font-medium text-gray-900">{{ $student->school->school_code ?? 'N/A' }}</p>
                             </div>
                         </div>
@@ -98,26 +98,26 @@
                     @endphp
                     
                     <div class="bg-white rounded-lg shadow-sm p-4">
-                        <p class="text-xs text-gray-500 uppercase">{{ __('Total Assessments') }}</p>
+                        <p class="text-xs text-gray-500 uppercase">{{ __('students.Total Assessments') }}</p>
                         <p class="text-2xl font-semibold text-gray-900">{{ $student->assessments->count() }}</p>
                     </div>
                     
                     <div class="bg-white rounded-lg shadow-sm p-4">
-                        <p class="text-xs text-gray-500 uppercase">{{ __('Avg Math Score') }}</p>
+                        <p class="text-xs text-gray-500 uppercase">{{ __('students.Avg Math Score') }}</p>
                         <p class="text-2xl font-semibold text-gray-900">
                             {{ $mathScores->count() > 0 ? round($mathScores->avg()) : '-' }}%
                         </p>
                     </div>
                     
                     <div class="bg-white rounded-lg shadow-sm p-4">
-                        <p class="text-xs text-gray-500 uppercase">{{ __('Avg Khmer Score') }}</p>
+                        <p class="text-xs text-gray-500 uppercase">{{ __('students.Avg Khmer Score') }}</p>
                         <p class="text-2xl font-semibold text-gray-900">
                             {{ $khmerScores->count() > 0 ? round($khmerScores->avg()) : '-' }}%
                         </p>
                     </div>
                     
                     <div class="bg-white rounded-lg shadow-sm p-4">
-                        <p class="text-xs text-gray-500 uppercase">{{ __('Latest Assessment') }}</p>
+                        <p class="text-xs text-gray-500 uppercase">{{ __('students.Latest Assessment') }}</p>
                         <p class="text-sm font-semibold text-gray-900">
                             {{ $latestAssessment && $latestAssessment->assessed_at ? $latestAssessment->assessed_at->format('M d, Y') : '-' }}
                         </p>
@@ -129,7 +129,7 @@
             <div class="bg-white overflow-hidden shadow-sm rounded-lg">
                 <div class="p-4 sm:p-6">
                     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
-                        <h3 class="text-lg font-semibold text-gray-900">{{ __('Current Assessments') }}</h3>
+                        <h3 class="text-lg font-semibold text-gray-900">{{ __('students.Current Assessments') }}</h3>
                         <div class="flex gap-4">
                             @if($student->assessments->count() > 0)
                                 <span class="text-sm text-gray-500 mt-1 sm:mt-0">
@@ -253,7 +253,7 @@
                             <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                             </svg>
-                            <p class="mt-2 text-sm text-gray-500">{{ __('No assessments found for this student.') }}</p>
+                            <p class="mt-2 text-sm text-gray-500">{{ __('students.No assessments found for this student.') }}</p>
                         </div>
                     @endif
                 </div>

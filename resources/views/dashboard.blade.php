@@ -4,15 +4,15 @@
             <!-- Filters for Mentors/Admins -->
             @if(in_array(auth()->user()->role, ['mentor', 'admin']))
             <div class="bg-white shadow-sm sm:rounded-lg mb-6 p-4">
-                <h3 class="text-sm font-medium text-gray-700 mb-3">{{ __('Filter Data') }}:</h3>
+                <h3 class="text-sm font-medium text-gray-700 mb-3">{{ trans_db('filter_data') }}:</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     <!-- Province Filter -->
                     <div>
                         <label for="provinceFilter" class="block text-xs font-medium text-gray-700 mb-1">
-                            {{ __('Province') }}:
+                            {{ trans_db('province') }}:
                         </label>
                         <select id="provinceFilter" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
-                            <option value="">{{ __('All Provinces') }}</option>
+                            <option value="">{{ trans_db('all_provinces') }}</option>
                             @foreach($provinces as $province)
                                 <option value="{{ $province }}">{{ $province }}</option>
                             @endforeach
@@ -22,30 +22,30 @@
                     <!-- District Filter -->
                     <div>
                         <label for="districtFilter" class="block text-xs font-medium text-gray-700 mb-1">
-                            {{ __('District') }}:
+                            {{ trans_db('district') }}:
                         </label>
                         <select id="districtFilter" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
-                            <option value="">{{ __('All Districts') }}</option>
+                            <option value="">{{ trans_db('all_districts') }}</option>
                         </select>
                     </div>
                     
                     <!-- Cluster Filter -->
                     <div>
                         <label for="clusterFilter" class="block text-xs font-medium text-gray-700 mb-1">
-                            {{ __('Cluster') }}:
+                            {{ trans_db('cluster') }}:
                         </label>
                         <select id="clusterFilter" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
-                            <option value="">{{ __('All Clusters') }}</option>
+                            <option value="">{{ trans_db('all_clusters') }}</option>
                         </select>
                     </div>
                     
                     <!-- School Filter -->
                     <div>
                         <label for="schoolFilter" class="block text-xs font-medium text-gray-700 mb-1">
-                            {{ __('School') }}:
+                            {{ trans_db('school') }}:
                         </label>
                         <select id="schoolFilter" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
-                            <option value="">{{ __('All Schools') }}</option>
+                            <option value="">{{ trans_db('all_schools') }}</option>
                             @foreach($schools as $school)
                                 <option value="{{ $school->id }}" 
                                     data-province="{{ $school->province }}" 
@@ -71,7 +71,7 @@
                         </div>
                         <div class="ml-5">
                             <dl>
-                                <dt class="text-sm font-medium text-gray-500 truncate">{{ __('Total Students') }}</dt>
+                                <dt class="text-sm font-medium text-gray-500 truncate">{{ trans_db('total_students') }}</dt>
                                 <dd class="text-3xl font-semibold text-gray-900" id="totalStudents">—</dd>
                             </dl>
                         </div>
@@ -87,7 +87,7 @@
                         </div>
                         <div class="ml-5">
                             <dl>
-                                <dt class="text-sm font-medium text-gray-500 truncate">{{ __('Assessments') }}</dt>
+                                <dt class="text-sm font-medium text-gray-500 truncate">{{ trans_db('assessments') }}</dt>
                                 <dd class="text-3xl font-semibold text-gray-900" id="totalAssessments">—</dd>
                             </dl>
                         </div>
@@ -103,7 +103,7 @@
                         </div>
                         <div class="ml-5">
                             <dl>
-                                <dt class="text-sm font-medium text-gray-500 truncate">{{ __('Schools') }}</dt>
+                                <dt class="text-sm font-medium text-gray-500 truncate">{{ trans_db('schools') }}</dt>
                                 <dd class="text-3xl font-semibold text-gray-900" id="totalSchools">—</dd>
                             </dl>
                         </div>
@@ -119,7 +119,7 @@
                         </div>
                         <div class="ml-5">
                             <dl>
-                                <dt class="text-sm font-medium text-gray-500 truncate">{{ __('Mentoring Visits') }}</dt>
+                                <dt class="text-sm font-medium text-gray-500 truncate">{{ trans_db('mentoring_visits') }}</dt>
                                 <dd class="text-3xl font-semibold text-gray-900" id="totalMentoringVisits">—</dd>
                             </dl>
                         </div>
@@ -130,22 +130,22 @@
             <!-- Assessment Results Section -->
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
                 <div class="p-6">
-                    <h3 class="text-lg font-medium text-gray-900 mb-4">{{ __('Assessment Results') }}</h3>
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">{{ trans_db('assessment_results') }}</h3>
                     
                     <!-- Subject Toggle -->
                     <div class="flex justify-center gap-2 mb-6">
                         <button class="subject-btn px-4 py-2 rounded transition-all duration-200 bg-blue-500 text-white" data-subject="khmer">
-                            {{ __('Khmer') }}
+                            {{ trans_db('khmer') }}
                         </button>
                         <button class="subject-btn px-4 py-2 rounded transition-all duration-200 bg-gray-200 text-gray-700 hover:bg-gray-300" data-subject="math">
-                            {{ __('Math') }}
+                            {{ trans_db('math') }}
                         </button>
                     </div>
                     
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         <!-- Overall Results Chart -->
                         <div class="bg-gray-50 p-4 rounded-lg">
-                            <h4 class="text-center font-medium mb-4">{{ __('Overall Results') }}</h4>
+                            <h4 class="text-center font-medium mb-4">{{ trans_db('overall_results') }}</h4>
                             <div class="relative" style="height: 300px;">
                                 <canvas id="overallResultsChart"></canvas>
                             </div>
@@ -153,15 +153,15 @@
                             <table class="mt-4 w-full text-sm">
                                 <thead>
                                     <tr class="bg-gray-100">
-                                        <th class="px-2 py-1 text-left">{{ __('Test Cycle') }}</th>
-                                        <th class="px-2 py-1 text-center">{{ __('Baseline') }}</th>
-                                        <th class="px-2 py-1 text-center">{{ __('Midline') }}</th>
-                                        <th class="px-2 py-1 text-center">{{ __('Endline') }}</th>
+                                        <th class="px-2 py-1 text-left">{{ trans_db('test_cycle') }}</th>
+                                        <th class="px-2 py-1 text-center">{{ trans_db('baseline') }}</th>
+                                        <th class="px-2 py-1 text-center">{{ trans_db('midline') }}</th>
+                                        <th class="px-2 py-1 text-center">{{ trans_db('endline') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td class="px-2 py-1 font-medium">{{ __('Students') }}</td>
+                                        <td class="px-2 py-1 font-medium">{{ trans_db('students') }}</td>
                                         <td class="px-2 py-1 text-center" id="overallBaseline">—</td>
                                         <td class="px-2 py-1 text-center" id="overallMidline">—</td>
                                         <td class="px-2 py-1 text-center" id="overallEndline">—</td>
@@ -173,7 +173,7 @@
                         <!-- Results by School Chart (for mentors/admins) -->
                         @if(in_array(auth()->user()->role, ['mentor', 'admin']))
                         <div class="bg-gray-50 p-4 rounded-lg">
-                            <h4 class="text-center font-medium mb-4">{{ __('Results by School') }}</h4>
+                            <h4 class="text-center font-medium mb-4">{{ trans_db('results_by_school') }}</h4>
                             <!-- Cycle selector -->
                             <div class="flex justify-center gap-2 mb-4">
                                 <button class="cycle-btn px-3 py-1 text-sm rounded transition-all duration-200 bg-indigo-500 text-white" data-cycle="baseline">
@@ -200,14 +200,14 @@
             <!-- Quick Actions -->
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6">
-                    <h3 class="text-lg font-medium text-gray-900 mb-4">{{ __('Quick Actions') }}</h3>
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">{{ trans_db('quick_actions') }}</h3>
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                         @if(in_array(auth()->user()->role, ['admin', 'teacher']))
                         <a href="{{ route('students.create') }}" class="text-center p-4 border rounded-lg hover:bg-gray-50 transition">
                             <svg class="w-8 h-8 mx-auto mb-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
                             </svg>
-                            <span class="text-sm">{{ __('Add Student') }}</span>
+                            <span class="text-sm">{{ trans_db('add_student') }}</span>
                         </a>
                         @endif
                         
@@ -216,7 +216,7 @@
                             <svg class="w-8 h-8 mx-auto mb-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
                             </svg>
-                            <span class="text-sm">{{ __('New Assessment') }}</span>
+                            <span class="text-sm">{{ trans_db('new_assessment') }}</span>
                         </a>
                         @endif
                         
@@ -225,7 +225,7 @@
                             <svg class="w-8 h-8 mx-auto mb-2 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
                             </svg>
-                            <span class="text-sm">{{ __('Log Visit') }}</span>
+                            <span class="text-sm">{{ trans_db('log_visit') }}</span>
                         </a>
                         @endif
                         
@@ -233,7 +233,7 @@
                             <svg class="w-8 h-8 mx-auto mb-2 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                             </svg>
-                            <span class="text-sm">{{ __('View Reports') }}</span>
+                            <span class="text-sm">{{ trans_db('view_reports') }}</span>
                         </a>
                     </div>
                 </div>
@@ -276,8 +276,8 @@
                 selectedSchoolId = '';
                 
                 // Reset dependent filters
-                $('#districtFilter').html('<option value="">{{ __('All Districts') }}</option>');
-                $('#clusterFilter').html('<option value="">{{ __('All Clusters') }}</option>');
+                $('#districtFilter').html('<option value="">{{ trans_db('all_districts') }}</option>');
+                $('#clusterFilter').html('<option value="">{{ trans_db('all_clusters') }}</option>');
                 $('#schoolFilter').val('');
                 
                 // Populate districts for selected province
@@ -302,7 +302,7 @@
                 selectedSchoolId = '';
                 
                 // Reset dependent filters
-                $('#clusterFilter').html('<option value="">{{ __('All Clusters') }}</option>');
+                $('#clusterFilter').html('<option value="">{{ trans_db('all_clusters') }}</option>');
                 $('#schoolFilter').val('');
                 
                 // Populate clusters for selected district
@@ -406,7 +406,7 @@
             
             // Load dashboard statistics
             function loadDashboardStats() {
-                showLoading('{{ __("Loading statistics...") }}');
+                showLoading('{{ trans_db("loading_statistics") }}');
                 $.ajax({
                     url: '{{ route("api.dashboard.stats") }}',
                     data: { 
@@ -501,7 +501,7 @@
                                 beginAtZero: true,
                                 title: {
                                     display: true,
-                                    text: '{{ __("Number of Students") }}'
+                                    text: '{{ trans_db("number_of_students") }}'
                                 }
                             }
                         },
@@ -535,7 +535,7 @@
                             tooltip: {
                                 callbacks: {
                                     afterTitle: function() {
-                                        return '{{ __("Students") }}';
+                                        return '{{ trans_db("students") }}';
                                     }
                                 }
                             }
@@ -577,7 +577,7 @@
                                 beginAtZero: true,
                                 title: {
                                     display: true,
-                                    text: '{{ __("Percentage (%)") }}'
+                                    text: '{{ trans_db("percentage") }}'
                                 },
                                 max: 100
                             },
