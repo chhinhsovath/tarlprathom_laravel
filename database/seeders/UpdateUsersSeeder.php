@@ -62,7 +62,7 @@ class UpdateUsersSeeder extends Seeder
         
         // Assign schools to mentor (assign first 10 schools)
         if ($mentor) {
-            $schoolIds = School::take(10)->pluck('id')->toArray();
+            $schoolIds = School::take(10)->pluck('sclAutoID')->toArray();
             $mentor->assignedSchools()->sync($schoolIds);
             $this->command->info('✓ Mentor account created/updated and assigned to 10 schools');
         }

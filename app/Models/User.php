@@ -193,11 +193,11 @@ class User extends Authenticatable
     public function getAccessibleSchoolIds()
     {
         if ($this->isAdmin() || $this->isCoordinator()) {
-            return School::pluck('id')->toArray();
+            return School::pluck('sclAutoID')->toArray();
         }
 
         if ($this->isMentor()) {
-            return $this->assignedSchools()->pluck('schools.id')->toArray();
+            return $this->assignedSchools()->pluck('tbl_tarl_schools.sclAutoID')->toArray();
         }
 
         // Teachers only see their own school

@@ -74,7 +74,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Get schools list for dropdown
-            let schools = @json(\App\Models\School::orderBy('name')->pluck('name', 'id')->toArray());
+            let schools = @json(\App\Models\School::orderBy('sclName')->pluck('sclName', 'sclAutoID')->toArray());
             let schoolNames = Object.values(schools);
             schoolNames.unshift(''); // Add empty option for admin users
             

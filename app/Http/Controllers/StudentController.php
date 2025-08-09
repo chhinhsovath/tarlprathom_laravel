@@ -92,9 +92,9 @@ class StudentController extends Controller
 
         // Get schools for filter dropdown (for admins and mentors)
         if ($user->isAdmin()) {
-            $schools = School::orderBy('name')->get();
+            $schools = School::orderBy('sclName')->get();
         } elseif ($user->isMentor()) {
-            $schools = School::whereIn('id', $accessibleSchoolIds)->orderBy('name')->get();
+            $schools = School::whereIn('sclAutoID', $accessibleSchoolIds)->orderBy('sclName')->get();
         } else {
             $schools = collect();
         }
@@ -114,7 +114,7 @@ class StudentController extends Controller
         $accessibleSchoolIds = $user->getAccessibleSchoolIds();
 
         if (! empty($accessibleSchoolIds)) {
-            $schools = School::whereIn('id', $accessibleSchoolIds)->orderBy('name')->get();
+            $schools = School::whereIn('sclAutoID', $accessibleSchoolIds)->orderBy('sclName')->get();
         } else {
             $schools = collect();
         }
@@ -179,7 +179,7 @@ class StudentController extends Controller
         $accessibleSchoolIds = $user->getAccessibleSchoolIds();
 
         if (! empty($accessibleSchoolIds)) {
-            $schools = School::whereIn('id', $accessibleSchoolIds)->orderBy('name')->get();
+            $schools = School::whereIn('sclAutoID', $accessibleSchoolIds)->orderBy('sclName')->get();
         } else {
             $schools = collect();
         }
@@ -274,7 +274,7 @@ class StudentController extends Controller
     {
         $this->authorize('create', Student::class);
 
-        $schools = School::orderBy('name')->pluck('name', 'id');
+        $schools = School::orderBy('sclName')->pluck('sclName', 'sclAutoID');
         $teachers = \App\Models\User::where('role', 'teacher')
             ->select('id', 'name', 'school_id')
             ->get();

@@ -126,12 +126,12 @@ class AssessmentController extends Controller
         // Get schools for filter dropdown (based on access)
         $schools = [];
         if ($request->user()->isAdmin()) {
-            $schools = School::orderBy('name')->get();
+            $schools = School::orderBy('sclName')->get();
         } elseif ($request->user()->isMentor()) {
             if (empty($accessibleSchoolIds)) {
                 $schools = collect([]);  // Empty collection if no schools accessible
             } else {
-                $schools = School::whereIn('id', $accessibleSchoolIds)->orderBy('name')->get();
+                $schools = School::whereIn('sclAutoID', $accessibleSchoolIds)->orderBy('sclName')->get();
             }
         }
 
@@ -612,7 +612,7 @@ class AssessmentController extends Controller
             ->pluck('student_id')
             ->toArray();
 
-        $schools = School::orderBy('name')->get();
+        $schools = School::orderBy('sclName')->get();
 
         return view('assessments.select-students', compact(
             'students',

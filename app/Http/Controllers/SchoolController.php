@@ -538,7 +538,7 @@ class SchoolController extends Controller
             abort(403, __('Unauthorized action.'));
         }
 
-        $schools = School::orderBy('name')->get();
+        $schools = School::orderBy('sclName')->get();
 
         return view('schools.assessment-dates', compact('schools'));
     }
@@ -579,7 +579,7 @@ class SchoolController extends Controller
         }
 
         // Update selected schools
-        School::whereIn('id', $validated['school_ids'])
+        School::whereIn('sclAutoID', $validated['school_ids'])
             ->update($updateData);
 
         return redirect()->route('schools.assessment-dates')

@@ -260,9 +260,9 @@ class ReportController extends Controller
         // Get schools for filter based on user access
         $accessibleSchoolIds = $user->getAccessibleSchoolIds();
         if ($user->isAdmin()) {
-            $schools = School::orderBy('name')->get();
+            $schools = School::orderBy('sclName')->get();
         } else {
-            $schools = School::whereIn('id', $accessibleSchoolIds)->orderBy('name')->get();
+            $schools = School::whereIn('sclAutoID', $accessibleSchoolIds)->orderBy('sclName')->get();
         }
 
         // Build query
@@ -624,9 +624,9 @@ class ReportController extends Controller
         // Get schools for filter based on user access
         $accessibleSchoolIds = $user->getAccessibleSchoolIds();
         if ($user->isAdmin()) {
-            $schools = School::orderBy('name')->get();
+            $schools = School::orderBy('sclName')->get();
         } else {
-            $schools = School::whereIn('id', $accessibleSchoolIds)->orderBy('name')->get();
+            $schools = School::whereIn('sclAutoID', $accessibleSchoolIds)->orderBy('sclName')->get();
         }
 
         // Build query for students with multiple assessments
@@ -910,7 +910,7 @@ class ReportController extends Controller
             ->distinct()
             ->pluck('school_id');
 
-        $schools = School::whereIn('id', $schoolIds)
+        $schools = School::whereIn('sclAutoID', $schoolIds)
             ->orderBy('name')
             ->get();
 
@@ -971,9 +971,9 @@ class ReportController extends Controller
         // Get schools for filter based on user access
         $accessibleSchoolIds = $user->getAccessibleSchoolIds();
         if ($user->isAdmin()) {
-            $schools = School::orderBy('name')->get();
+            $schools = School::orderBy('sclName')->get();
         } else {
-            $schools = School::whereIn('id', $accessibleSchoolIds)->orderBy('name')->get();
+            $schools = School::whereIn('sclAutoID', $accessibleSchoolIds)->orderBy('sclName')->get();
         }
 
         // Build base query for assessments
@@ -1002,7 +1002,7 @@ class ReportController extends Controller
         // Get performance data by school
         $schoolPerformanceData = [];
 
-        $targetSchools = $schoolId ? School::where('id', $schoolId)->get() : $schools;
+        $targetSchools = $schoolId ? School::where('sclAutoID', $schoolId)->get() : $schools;
 
         foreach ($targetSchools as $school) {
             if (! $user->isAdmin() && ! $user->canAccessSchool($school->id)) {
