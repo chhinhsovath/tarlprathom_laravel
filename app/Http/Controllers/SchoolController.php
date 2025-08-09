@@ -32,7 +32,7 @@ class SchoolController extends Controller
         if ($user->isMentor()) {
             $accessibleSchoolIds = $user->getAccessibleSchoolIds();
             if (! empty($accessibleSchoolIds)) {
-                $query->whereIn('id', $accessibleSchoolIds);
+                $query->whereIn('sclAutoID', $accessibleSchoolIds);
             } else {
                 // No schools assigned, show empty result
                 $query->whereRaw('1 = 0');
@@ -43,15 +43,15 @@ class SchoolController extends Controller
         if ($request->filled('search')) {
             $search = $request->get('search');
             $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                    ->orWhere('school_code', 'like', "%{$search}%")
-                    ->orWhere('province', 'like', "%{$search}%")
-                    ->orWhere('district', 'like', "%{$search}%");
+                $q->where('sclName', 'like', "%{$search}%")
+                    ->orWhere('sclCode', 'like', "%{$search}%")
+                    ->orWhere('sclProvinceName', 'like', "%{$search}%")
+                    ->orWhere('sclDistrictName', 'like', "%{$search}%");
             });
         }
 
         // Apply sorting
-        $sortData = $this->applySorting($query, $request, ['name', 'school_code', 'province', 'district', 'created_at'], 'name');
+        $sortData = $this->applySorting($query, $request, ['sclName', 'sclCode', 'sclProvinceName', 'sclDistrictName', 'created_at'], 'sclName');
 
         $schools = $query->paginate(20)->withQueryString();
 
@@ -83,11 +83,11 @@ class SchoolController extends Controller
             abort(403, __('Unauthorized action.'));
         }
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'school_code' => ['required', 'string', 'max:255', 'unique:tbl_tarl_schools,sclCode'],
-            'province' => ['required', 'string', 'max:255'],
-            'district' => ['required', 'string', 'max:255'],
-            'cluster' => ['nullable', 'string', 'max:255'],
+            'sclName' => ['required', 'string', 'max:255'],
+            'sclCode' => ['required', 'string', 'max:255', 'unique:tbl_tarl_schools,sclCode'],
+            'sclProvinceName' => ['required', 'string', 'max:255'],
+            'sclDistrictName' => ['required', 'string', 'max:255'],
+            'sclClusterName' => ['nullable', 'string', 'max:255'],
         ]);
 
         School::create($validated);
@@ -112,7 +112,7 @@ class SchoolController extends Controller
         $teachers = $school->users()->where('role', 'teacher')->get();
         $mentors = User::where('role', 'mentor')
             ->whereHas('assignedSchools', function ($query) use ($school) {
-                $query->where('schools.id', $school->id);
+                $query->where('schools.sclAutoID', $school->sclAutoID);
             })
             ->get();
         $recentStudents = $school->students()->latest()->limit(10)->get();
@@ -149,11 +149,11 @@ class SchoolController extends Controller
             abort(403, __('Unauthorized action.'));
         }
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'school_code' => ['required', 'string', 'max:255', 'unique:tbl_tarl_schools,sclCode,'.$school->sclAutoID.',sclAutoID'],
-            'province' => ['required', 'string', 'max:255'],
-            'district' => ['required', 'string', 'max:255'],
-            'cluster' => ['nullable', 'string', 'max:255'],
+            'sclName' => ['required', 'string', 'max:255'],
+            'sclCode' => ['required', 'string', 'max:255', 'unique:tbl_tarl_schools,sclCode,'.$school->sclAutoID.',sclAutoID'],
+            'sclProvinceName' => ['required', 'string', 'max:255'],
+            'sclDistrictName' => ['required', 'string', 'max:255'],
+            'sclClusterName' => ['nullable', 'string', 'max:255'],
             // Assessment date validations - these fields don't exist in tbl_tarl_schools
             // You may want to store these in a separate table
             // 'baseline_start_date' => ['nullable', 'date'],
@@ -419,11 +419,11 @@ class SchoolController extends Controller
 
         $request->validate([
             'schools' => 'required|array',
-            'schools.*.name' => 'required|string|max:255',
-            'schools.*.school_code' => 'required|string|max:255',
-            'schools.*.province' => 'required|string|max:255',
-            'schools.*.district' => 'required|string|max:255',
-            'schools.*.cluster' => 'nullable|string|max:255',
+            'schools.*.sclName' => 'required|string|max:255',
+            'schools.*.sclCode' => 'required|string|max:255',
+            'schools.*.sclProvinceName' => 'required|string|max:255',
+            'schools.*.sclDistrictName' => 'required|string|max:255',
+            'schools.*.sclClusterName' => 'nullable|string|max:255',
         ]);
 
         $imported = 0;
@@ -433,19 +433,19 @@ class SchoolController extends Controller
         foreach ($request->schools as $index => $schoolData) {
             try {
                 // Check if school code already exists
-                if (School::where('sclCode', $schoolData['school_code'])->exists()) {
+                if (School::where('sclCode', $schoolData['sclCode'])->exists()) {
                     $failed++;
-                    $errors[] = 'Row '.($index + 1).": School code {$schoolData['school_code']} already exists";
+                    $errors[] = 'Row '.($index + 1).": School code {$schoolData['sclCode']} already exists";
 
                     continue;
                 }
 
                 School::create([
-                    'name' => $schoolData['name'],
-                    'school_code' => $schoolData['school_code'],
-                    'province' => $schoolData['province'],
-                    'district' => $schoolData['district'],
-                    'cluster' => $schoolData['cluster'] ?? null,
+                    'sclName' => $schoolData['sclName'],
+                    'sclCode' => $schoolData['sclCode'],
+                    'sclProvinceName' => $schoolData['sclProvinceName'],
+                    'sclDistrictName' => $schoolData['sclDistrictName'],
+                    'sclClusterName' => $schoolData['sclClusterName'] ?? null,
                 ]);
                 $imported++;
             } catch (\Exception $e) {

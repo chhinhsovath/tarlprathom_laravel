@@ -39,6 +39,7 @@ class School extends Model
         'sclName',
         'sclCode',
         'sclCluster',
+        'sclClusterName',
         'sclCommune',
         'sclDistrict',
         'sclProvince',
@@ -157,19 +158,19 @@ class School extends Model
     }
 
     /**
-     * Get the cluster attribute (alias for sclCluster).
+     * Get the cluster attribute (alias for sclClusterName).
      */
     public function getClusterAttribute()
     {
-        return $this->sclCluster;
+        return $this->sclClusterName ?? $this->sclCluster;
     }
 
     /**
-     * Set the cluster attribute (alias for sclCluster).
+     * Set the cluster attribute (alias for sclClusterName).
      */
     public function setClusterAttribute($value)
     {
-        $this->attributes['sclCluster'] = $value;
+        $this->attributes['sclClusterName'] = $value;
     }
 
     /**

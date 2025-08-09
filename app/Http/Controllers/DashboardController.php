@@ -42,8 +42,8 @@ class DashboardController extends Controller
                 $schools = School::whereIn('sclAutoID', $schoolIds)->orderBy('sclName')->get();
 
                 // Get unique provinces and districts from accessible schools
-                $provinces = School::whereIn('sclAutoID', $schoolIds)->distinct()->orderBy('province')->pluck('province')->filter()->values();
-                $districts = School::whereIn('sclAutoID', $schoolIds)->distinct()->orderBy('district')->pluck('district')->filter()->values();
+                $provinces = School::whereIn('sclAutoID', $schoolIds)->distinct()->orderBy('sclProvinceName')->pluck('sclProvinceName')->filter()->values();
+                $districts = School::whereIn('sclAutoID', $schoolIds)->distinct()->orderBy('sclDistrictName')->pluck('sclDistrictName')->filter()->values();
                 $clusters = collect([]); // Cluster column doesn't exist yet
             }
         }
@@ -91,7 +91,7 @@ class DashboardController extends Controller
         if ($user->role === 'mentor' || $user->role === 'admin') {
             // Filter by province
             if ($request->has('province') && $request->province) {
-                $filterQuery = School::where('province', $request->province);
+                $filterQuery = School::where('sclProvinceName', $request->province);
                 if (! $user->isAdmin()) {
                     $filterQuery->whereIn('sclAutoID', $accessibleSchoolIds);
                 }
@@ -101,12 +101,12 @@ class DashboardController extends Controller
                     $q->whereIn('school_id', $schoolIds);
                 });
                 $mentoringQuery->whereIn('school_id', $schoolIds);
-                $schoolQuery->where('province', $request->province);
+                $schoolQuery->where('sclProvinceName', $request->province);
             }
 
             // Filter by district
             if ($request->has('district') && $request->district) {
-                $filterQuery = School::where('district', $request->district);
+                $filterQuery = School::where('sclDistrictName', $request->district);
                 if (! $user->isAdmin()) {
                     $filterQuery->whereIn('sclAutoID', $accessibleSchoolIds);
                 }
@@ -116,7 +116,7 @@ class DashboardController extends Controller
                     $q->whereIn('school_id', $schoolIds);
                 });
                 $mentoringQuery->whereIn('school_id', $schoolIds);
-                $schoolQuery->where('district', $request->district);
+                $schoolQuery->where('sclDistrictName', $request->district);
             }
 
             // Filter by cluster (commented out - cluster column doesn't exist yet)
@@ -190,7 +190,7 @@ class DashboardController extends Controller
         if ($user->role === 'mentor' || $user->role === 'admin') {
             // Filter by province
             if ($request->has('province') && $request->province) {
-                $filterQuery = School::where('province', $request->province);
+                $filterQuery = School::where('sclProvinceName', $request->province);
                 if (! $user->isAdmin()) {
                     $filterQuery->whereIn('sclAutoID', $accessibleSchoolIds);
                 }
@@ -202,7 +202,7 @@ class DashboardController extends Controller
 
             // Filter by district
             if ($request->has('district') && $request->district) {
-                $filterQuery = School::where('district', $request->district);
+                $filterQuery = School::where('sclDistrictName', $request->district);
                 if (! $user->isAdmin()) {
                     $filterQuery->whereIn('sclAutoID', $accessibleSchoolIds);
                 }
@@ -322,11 +322,11 @@ class DashboardController extends Controller
 
         // Apply filters
         if ($request->has('province') && $request->province) {
-            $schoolQuery->where('province', $request->province);
+            $schoolQuery->where('sclProvinceName', $request->province);
         }
 
         if ($request->has('district') && $request->district) {
-            $schoolQuery->where('district', $request->district);
+            $schoolQuery->where('sclDistrictName', $request->district);
         }
 
         // Filter by cluster (commented out - cluster column doesn't exist yet)
