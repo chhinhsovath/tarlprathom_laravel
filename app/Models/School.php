@@ -10,24 +10,49 @@ class School extends Model
     use HasFactory;
 
     /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'tbl_tarl_schools';
+
+    /**
+     * The primary key associated with the table.
+     *
+     * @var string
+     */
+    protected $primaryKey = 'sclAutoID';
+
+    /**
+     * Indicates if the IDs are auto-incrementing.
+     *
+     * @var bool
+     */
+    public $incrementing = true;
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
     protected $fillable = [
-        'province',
-        'district',
-        'commune',
-        'village',
-        'cluster',
-        'school_name',
-        'school_code',
-        'baseline_start_date',
-        'baseline_end_date',
-        'midline_start_date',
-        'midline_end_date',
-        'endline_start_date',
-        'endline_end_date',
+        'sclName',
+        'sclCode',
+        'sclCluster',
+        'sclCommune',
+        'sclDistrict',
+        'sclProvince',
+        'sclZone',
+        'sclOrder',
+        'sclStatus',
+        'sclImage',
+        'sclZoneName',
+        'sclProvinceName',
+        'sclDistrictName',
+        'total_students',
+        'total_teachers',
+        'total_teachers_female',
+        'total_students_female',
     ];
 
     /**
@@ -36,20 +61,123 @@ class School extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'baseline_start_date' => 'date',
-        'baseline_end_date' => 'date',
-        'midline_start_date' => 'date',
-        'midline_end_date' => 'date',
-        'endline_start_date' => 'date',
-        'endline_end_date' => 'date',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'deleted_at' => 'datetime',
     ];
+
+    /**
+     * Get the id attribute (alias for sclAutoID).
+     */
+    public function getIdAttribute()
+    {
+        return $this->sclAutoID;
+    }
+
+    /**
+     * Get the name attribute (alias for sclName).
+     */
+    public function getNameAttribute()
+    {
+        return $this->sclName;
+    }
+
+    /**
+     * Set the name attribute (alias for sclName).
+     */
+    public function setNameAttribute($value)
+    {
+        $this->attributes['sclName'] = $value;
+    }
+
+    /**
+     * Get the school_code attribute (alias for sclCode).
+     */
+    public function getSchoolCodeAttribute()
+    {
+        return $this->sclCode;
+    }
+
+    /**
+     * Set the school_code attribute (alias for sclCode).
+     */
+    public function setSchoolCodeAttribute($value)
+    {
+        $this->attributes['sclCode'] = $value;
+    }
+
+    /**
+     * Get the province attribute (alias for sclProvinceName).
+     */
+    public function getProvinceAttribute()
+    {
+        // If province name is empty, try to get it from Geographic table using province ID
+        if (empty($this->sclProvinceName) && !empty($this->sclProvince)) {
+            $geographic = Geographic::where('province_code', $this->sclProvince)
+                ->whereNull('district_code')
+                ->first();
+            if ($geographic) {
+                return $geographic->province_name_en;
+            }
+        }
+        return $this->sclProvinceName;
+    }
+
+    /**
+     * Set the province attribute (alias for sclProvinceName).
+     */
+    public function setProvinceAttribute($value)
+    {
+        $this->attributes['sclProvinceName'] = $value;
+    }
+
+    /**
+     * Get the district attribute (alias for sclDistrictName).
+     */
+    public function getDistrictAttribute()
+    {
+        // If district name is empty, try to get it from Geographic table using district ID
+        if (empty($this->sclDistrictName) && !empty($this->sclDistrict)) {
+            $geographic = Geographic::where('district_code', $this->sclDistrict)
+                ->whereNull('commune_code')
+                ->first();
+            if ($geographic) {
+                return $geographic->district_name_en;
+            }
+        }
+        return $this->sclDistrictName;
+    }
+
+    /**
+     * Set the district attribute (alias for sclDistrictName).
+     */
+    public function setDistrictAttribute($value)
+    {
+        $this->attributes['sclDistrictName'] = $value;
+    }
+
+    /**
+     * Get the cluster attribute (alias for sclCluster).
+     */
+    public function getClusterAttribute()
+    {
+        return $this->sclCluster;
+    }
+
+    /**
+     * Set the cluster attribute (alias for sclCluster).
+     */
+    public function setClusterAttribute($value)
+    {
+        $this->attributes['sclCluster'] = $value;
+    }
 
     /**
      * Get the students for the school.
      */
     public function students()
     {
-        return $this->hasMany(Student::class);
+        return $this->hasMany(Student::class, 'school_id', 'sclAutoID');
     }
 
     /**
@@ -57,7 +185,7 @@ class School extends Model
      */
     public function mentoringVisits()
     {
-        return $this->hasMany(MentoringVisit::class);
+        return $this->hasMany(MentoringVisit::class, 'school_id', 'sclAutoID');
     }
 
     /**
@@ -65,7 +193,7 @@ class School extends Model
      */
     public function teachers()
     {
-        return $this->hasMany(User::class)->where('role', 'teacher');
+        return $this->hasMany(User::class, 'school_id', 'sclAutoID')->where('role', 'teacher');
     }
 
     /**
@@ -73,7 +201,7 @@ class School extends Model
      */
     public function users()
     {
-        return $this->hasMany(User::class);
+        return $this->hasMany(User::class, 'school_id', 'sclAutoID');
     }
 
     /**
@@ -81,7 +209,7 @@ class School extends Model
      */
     public function classes()
     {
-        return $this->hasMany(SchoolClass::class);
+        return $this->hasMany(SchoolClass::class, 'school_id', 'sclAutoID');
     }
 
     /**
@@ -95,6 +223,11 @@ class School extends Model
     }
 
     /**
+     * Assessment period methods - these fields don't exist in tbl_tarl_schools
+     * You may need to create a separate table for assessment dates or add these columns
+     */
+    
+    /**
      * Check if an assessment type is currently active for this school.
      *
      * @param  string  $cycle
@@ -102,21 +235,9 @@ class School extends Model
      */
     public function isAssessmentPeriodActive($cycle)
     {
-        $today = now()->startOfDay();
-
-        switch ($cycle) {
-            case 'baseline':
-                return $this->baseline_start_date && $this->baseline_end_date
-                    && $today->between($this->baseline_start_date, $this->baseline_end_date);
-            case 'midline':
-                return $this->midline_start_date && $this->midline_end_date
-                    && $today->between($this->midline_start_date, $this->midline_end_date);
-            case 'endline':
-                return $this->endline_start_date && $this->endline_end_date
-                    && $today->between($this->endline_start_date, $this->endline_end_date);
-            default:
-                return false;
-        }
+        // For now, return true to allow all assessments
+        // You can implement this later with a separate assessment_dates table
+        return true;
     }
 
     /**
@@ -127,37 +248,56 @@ class School extends Model
      */
     public function getAssessmentPeriodStatus($cycle)
     {
-        $today = now()->startOfDay();
-        $startDate = null;
-        $endDate = null;
+        // For now, return 'active' to allow all assessments
+        // You can implement this later with a separate assessment_dates table
+        return 'active';
+    }
 
-        switch ($cycle) {
-            case 'baseline':
-                $startDate = $this->baseline_start_date;
-                $endDate = $this->baseline_end_date;
-                break;
-            case 'midline':
-                $startDate = $this->midline_start_date;
-                $endDate = $this->midline_end_date;
-                break;
-            case 'endline':
-                $startDate = $this->endline_start_date;
-                $endDate = $this->endline_end_date;
-                break;
-        }
+    /**
+     * Accessor for baseline_start_date (temporary - returns null)
+     */
+    public function getBaselineStartDateAttribute()
+    {
+        return null;
+    }
 
-        if (! $startDate || ! $endDate) {
-            return 'not_set';
-        }
+    /**
+     * Accessor for baseline_end_date (temporary - returns null)
+     */
+    public function getBaselineEndDateAttribute()
+    {
+        return null;
+    }
 
-        if ($today->lt($startDate)) {
-            return 'upcoming';
-        }
+    /**
+     * Accessor for midline_start_date (temporary - returns null)
+     */
+    public function getMidlineStartDateAttribute()
+    {
+        return null;
+    }
 
-        if ($today->between($startDate, $endDate)) {
-            return 'active';
-        }
+    /**
+     * Accessor for midline_end_date (temporary - returns null)
+     */
+    public function getMidlineEndDateAttribute()
+    {
+        return null;
+    }
 
-        return 'expired';
+    /**
+     * Accessor for endline_start_date (temporary - returns null)
+     */
+    public function getEndlineStartDateAttribute()
+    {
+        return null;
+    }
+
+    /**
+     * Accessor for endline_end_date (temporary - returns null)
+     */
+    public function getEndlineEndDateAttribute()
+    {
+        return null;
     }
 }

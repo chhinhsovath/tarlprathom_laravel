@@ -3040,7 +3040,7 @@
        52        'Calculate and analyze performance metrics' => 'គណនា 
             និងវិភាគរង្វាស់លទ្ធផល',
        53 +      'TaRL methodology performance indicators using level 
-          + aggregation. Formula: Language_Readers_% = 
+          + aggregation. Formula: Language_Letters_% = 
           + (Para+Story+Comp1+Comp2)/Total_Students×100, Math_Operations_% = 
           + (Subtraction+Division+WordProblem)/Total_Students×100. Expected 
           + Result: Standardized performance percentages enabling comparison 

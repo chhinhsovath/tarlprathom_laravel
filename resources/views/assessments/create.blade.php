@@ -289,7 +289,7 @@
                                         <input type="radio" name="level_{{ $student->id }}" value="Beginner" {{ $student->is_assessment_locked ? 'disabled' : '' }} {{ $student->has_assessment && $student->assessment_level == 'Beginner' ? 'checked' : '' }} class="level-radio">
                                     </td>
                                     <td class="px-2 py-4 text-center">
-                                        <input type="radio" name="level_{{ $student->id }}" value="Reader" {{ $student->is_assessment_locked ? 'disabled' : '' }} {{ $student->has_assessment && $student->assessment_level == 'Reader' ? 'checked' : '' }} class="level-radio">
+                                        <input type="radio" name="level_{{ $student->id }}" value="Letter" {{ $student->is_assessment_locked ? 'disabled' : '' }} {{ $student->has_assessment && $student->assessment_level == 'Letter' ? 'checked' : '' }} class="level-radio">
                                     </td>
                                     <td class="px-2 py-4 text-center">
                                         <input type="radio" name="level_{{ $student->id }}" value="Word" {{ $student->is_assessment_locked ? 'disabled' : '' }} {{ $student->has_assessment && $student->assessment_level == 'Word' ? 'checked' : '' }} class="level-radio">

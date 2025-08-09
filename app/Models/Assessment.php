@@ -51,6 +51,10 @@ class Assessment extends Model
     {
         parent::boot();
 
+        // Temporarily disable history tracking until the table structure is fixed
+        // The assessment_histories table doesn't match the expected structure
+        return;
+
         // Track history when creating a new assessment
         static::created(function ($assessment) {
             $assessment->createHistory('created');

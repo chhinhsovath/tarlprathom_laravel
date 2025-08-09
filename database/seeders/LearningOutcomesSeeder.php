@@ -104,7 +104,7 @@ class LearningOutcomesSeeder extends Seeder
                 'minimum_mastery_score' => 65,
                 'target_weeks_to_achieve' => 6,
                 'teaching_strategies' => ['Guided reading', 'Repeated reading', 'Comprehension questions'],
-                'learning_resources' => ['Graded readers', 'Story books', 'Reading passages'],
+                'learning_resources' => ['Graded Letters', 'Story books', 'Reading passages'],
                 'is_core_outcome' => true,
                 'difficulty_level' => 'intermediate',
             ],

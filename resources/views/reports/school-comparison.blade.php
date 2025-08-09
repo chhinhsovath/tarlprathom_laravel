@@ -153,7 +153,7 @@
                         @if($subject === 'khmer')
                         <div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
                             <div><strong>{{ __('Beginner') }}:</strong> {{ __('Pre-reading') }}</div>
-                            <div><strong>{{ __('Reader') }}:</strong> {{ __('Letter recognition') }}</div>
+                            <div><strong>{{ __('Letter') }}:</strong> {{ __('Letter recognition') }}</div>
                             <div><strong>{{ __('Word') }}:</strong> {{ __('Simple words') }}</div>
                             <div><strong>{{ __('Paragraph') }}:</strong> {{ __('Basic reading') }}</div>
                             <div><strong>{{ __('Story') }}:</strong> {{ __('Fluent reading') }}</div>
@@ -186,7 +186,7 @@
                                     </th>
                                     @php
                                         $allLevels = $subject === 'khmer' 
-                                            ? ['Beginner', 'Reader', 'Word', 'Paragraph', 'Story', 'Comp. 1', 'Comp. 2']
+                                            ? ['Beginner', 'Letter', 'Word', 'Paragraph', 'Story', 'Comp. 1', 'Comp. 2']
                                             : ['Beginner', '1-Digit', '2-Digit', 'Subtraction', 'Division', 'Word Problem'];
                                     @endphp
                                     @foreach($allLevels as $level)
@@ -316,7 +316,7 @@
                 // Prepare data for chart
                 const schools = comparisonData.map(d => d.school);
                 const levels = subject === 'khmer' 
-                    ? ['Beginner', 'Reader', 'Word', 'Paragraph', 'Story', 'Comp. 1', 'Comp. 2']
+                    ? ['Beginner', 'Letter', 'Word', 'Paragraph', 'Story', 'Comp. 1', 'Comp. 2']
                     : ['Beginner', '1-Digit', '2-Digit', 'Subtraction', 'Division', 'Word Problem'];
                 
                 const datasets = levels.map((level, index) => {

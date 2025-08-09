@@ -122,9 +122,9 @@ class TeachingActivitiesSeeder extends Seeder
                     'Record new vocabulary learned'
                 ],
                 'differentiation_strategies' => [
-                    'Shorter sentences for struggling readers',
+                    'Shorter sentences for struggling Letters',
                     'Allow re-reading for confidence',
-                    'Pair strong readers with weaker ones'
+                    'Pair strong Letters with weaker ones'
                 ],
                 'extension_activities' => [
                     'Act out parts of the story',

@@ -192,7 +192,7 @@ class ReportController extends Controller
                 ],
                 [
                     'name' => 'Performance Calculation Report',
-                    'description' => 'TaRL methodology performance indicators using level aggregation. Formula: Language_Readers_% = (Para+Story+Comp1+Comp2)/Total_Students×100, Math_Operations_% = (Subtraction+Division+WordProblem)/Total_Students×100. Expected Result: Standardized performance percentages enabling comparison with national TaRL benchmarks.',
+                    'description' => 'TaRL methodology performance indicators using level aggregation. Formula: Language_Letters_% = (Para+Story+Comp1+Comp2)/Total_Students×100, Math_Operations_% = (Subtraction+Division+WordProblem)/Total_Students×100. Expected Result: Standardized performance percentages enabling comparison with national TaRL benchmarks.',
                     'route' => 'reports.performance-calculation',
                 ],
             ];
@@ -233,7 +233,7 @@ class ReportController extends Controller
                 ],
                 [
                     'name' => 'Performance Calculation Report',
-                    'description' => 'TaRL performance indicators for mentor\'s school portfolio. Formula: Portfolio Performance = Σ(Language_Readers_% + Math_Operations_%) / COUNT(assigned_schools). Expected Result: Aggregated TaRL performance metrics across assigned schools for strategic mentoring planning and resource allocation.',
+                    'description' => 'TaRL performance indicators for mentor\'s school portfolio. Formula: Portfolio Performance = Σ(Language_Letters_% + Math_Operations_%) / COUNT(assigned_schools). Expected Result: Aggregated TaRL performance metrics across assigned schools for strategic mentoring planning and resource allocation.',
                     'route' => 'reports.performance-calculation',
                 ],
             ];
@@ -819,7 +819,7 @@ class ReportController extends Controller
 
         // Get classes for filter
         $classes = \App\Models\SchoolClass::where('school_id', $user->school_id)
-            ->orderBy('grade_level')
+            ->orderBy('grade')
             ->orderBy('name')
             ->get();
 
@@ -851,7 +851,7 @@ class ReportController extends Controller
 
         // Get classes
         $classes = \App\Models\SchoolClass::where('school_id', $user->school_id)
-            ->orderBy('grade_level')
+            ->orderBy('grade')
             ->orderBy('name')
             ->get();
 
@@ -1020,7 +1020,7 @@ class ReportController extends Controller
             $khmerAssessments = $schoolAssessments->where('subject', 'khmer');
             $totalKhmerStudents = $khmerAssessments->count();
 
-            $languageReaders = $khmerAssessments->whereIn('level', ['Paragraph', 'Story', 'Comp. 1', 'Comp. 2'])->count();
+            $languageLetters = $khmerAssessments->whereIn('level', ['Paragraph', 'Story', 'Comp. 1', 'Comp. 2'])->count();
             $languageBeginners = $khmerAssessments->whereIn('level', ['Beginner', 'Letter'])->count();
 
             // Math Performance Calculation
@@ -1034,9 +1034,9 @@ class ReportController extends Controller
                 'school' => $school,
                 'language' => [
                     'total_students' => $totalKhmerStudents,
-                    'readers' => $languageReaders,
+                    'Letters' => $languageLetters,
                     'beginners' => $languageBeginners,
-                    'readers_percentage' => $totalKhmerStudents > 0 ? round(($languageReaders / $totalKhmerStudents) * 100, 1) : 0,
+                    'Letters_percentage' => $totalKhmerStudents > 0 ? round(($languageLetters / $totalKhmerStudents) * 100, 1) : 0,
                     'beginners_percentage' => $totalKhmerStudents > 0 ? round(($languageBeginners / $totalKhmerStudents) * 100, 1) : 0,
                 ],
                 'math' => [
@@ -1063,7 +1063,7 @@ class ReportController extends Controller
     private function calculateLevelImprovement($baselineLevel, $currentLevel, $subject)
     {
         $levels = $subject === 'khmer'
-            ? ['Beginner' => 0, 'Reader' => 1, 'Word' => 2, 'Paragraph' => 3, 'Story' => 4, 'Comp. 1' => 5, 'Comp. 2' => 6]
+            ? ['Beginner' => 0, 'Letter' => 1, 'Word' => 2, 'Paragraph' => 3, 'Story' => 4, 'Comp. 1' => 5, 'Comp. 2' => 6]
             : ['Beginner' => 0, '1-Digit' => 1, '2-Digit' => 2, 'Subtraction' => 3, 'Division' => 4, 'Word Problem' => 5];
 
         $baselineIndex = $levels[$baselineLevel] ?? 0;

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\SchoolTemplateExport;
+use App\Models\Geographic;
 use App\Models\School;
 use App\Models\User;
 use App\Traits\Sortable;
@@ -42,7 +43,7 @@ class SchoolController extends Controller
         if ($request->filled('search')) {
             $search = $request->get('search');
             $query->where(function ($q) use ($search) {
-                $q->where('school_name', 'like', "%{$search}%")
+                $q->where('name', 'like', "%{$search}%")
                     ->orWhere('school_code', 'like', "%{$search}%")
                     ->orWhere('province', 'like', "%{$search}%")
                     ->orWhere('district', 'like', "%{$search}%");
@@ -50,7 +51,7 @@ class SchoolController extends Controller
         }
 
         // Apply sorting
-        $sortData = $this->applySorting($query, $request, ['school_name', 'school_code', 'province', 'district', 'created_at'], 'school_name');
+        $sortData = $this->applySorting($query, $request, ['name', 'school_code', 'province', 'district', 'created_at'], 'name');
 
         $schools = $query->paginate(20)->withQueryString();
 
@@ -67,7 +68,9 @@ class SchoolController extends Controller
             abort(403, __('Unauthorized action.'));
         }
 
-        return view('schools.create');
+        $provinces = Geographic::getProvinces();
+
+        return view('schools.create', compact('provinces'));
     }
 
     /**
@@ -81,7 +84,7 @@ class SchoolController extends Controller
         }
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'school_code' => ['required', 'string', 'max:255', 'unique:schools'],
+            'school_code' => ['required', 'string', 'max:255', 'unique:tbl_tarl_schools,sclCode'],
             'province' => ['required', 'string', 'max:255'],
             'district' => ['required', 'string', 'max:255'],
             'cluster' => ['nullable', 'string', 'max:255'],
@@ -131,7 +134,9 @@ class SchoolController extends Controller
             $query->where('role', 'teacher')->select('users.id', 'name', 'email');
         }]);
 
-        return view('schools.edit', compact('school'));
+        $provinces = Geographic::getProvinces();
+
+        return view('schools.edit', compact('school', 'provinces'));
     }
 
     /**
@@ -145,17 +150,18 @@ class SchoolController extends Controller
         }
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'school_code' => ['required', 'string', 'max:255', 'unique:schools,school_code,'.$school->id],
+            'school_code' => ['required', 'string', 'max:255', 'unique:tbl_tarl_schools,sclCode,'.$school->sclAutoID.',sclAutoID'],
             'province' => ['required', 'string', 'max:255'],
             'district' => ['required', 'string', 'max:255'],
             'cluster' => ['nullable', 'string', 'max:255'],
-            // Assessment date validations
-            'baseline_start_date' => ['nullable', 'date'],
-            'baseline_end_date' => ['nullable', 'date', 'after_or_equal:baseline_start_date'],
-            'midline_start_date' => ['nullable', 'date', 'after_or_equal:baseline_end_date'],
-            'midline_end_date' => ['nullable', 'date', 'after_or_equal:midline_start_date'],
-            'endline_start_date' => ['nullable', 'date', 'after_or_equal:midline_end_date'],
-            'endline_end_date' => ['nullable', 'date', 'after_or_equal:endline_start_date'],
+            // Assessment date validations - these fields don't exist in tbl_tarl_schools
+            // You may want to store these in a separate table
+            // 'baseline_start_date' => ['nullable', 'date'],
+            // 'baseline_end_date' => ['nullable', 'date', 'after_or_equal:baseline_start_date'],
+            // 'midline_start_date' => ['nullable', 'date', 'after_or_equal:baseline_end_date'],
+            // 'midline_end_date' => ['nullable', 'date', 'after_or_equal:midline_start_date'],
+            // 'endline_start_date' => ['nullable', 'date', 'after_or_equal:midline_end_date'],
+            // 'endline_end_date' => ['nullable', 'date', 'after_or_equal:endline_start_date'],
         ]);
 
         $school->update($validated);
@@ -413,7 +419,7 @@ class SchoolController extends Controller
 
         $request->validate([
             'schools' => 'required|array',
-            'schools.*.school_name' => 'required|string|max:255',
+            'schools.*.name' => 'required|string|max:255',
             'schools.*.school_code' => 'required|string|max:255',
             'schools.*.province' => 'required|string|max:255',
             'schools.*.district' => 'required|string|max:255',
@@ -427,7 +433,7 @@ class SchoolController extends Controller
         foreach ($request->schools as $index => $schoolData) {
             try {
                 // Check if school code already exists
-                if (School::where('school_code', $schoolData['school_code'])->exists()) {
+                if (School::where('sclCode', $schoolData['school_code'])->exists()) {
                     $failed++;
                     $errors[] = 'Row '.($index + 1).": School code {$schoolData['school_code']} already exists";
 

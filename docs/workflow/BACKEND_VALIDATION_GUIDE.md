@@ -39,7 +39,7 @@ public function withValidator($validator)
 {
     $validator->after(function ($validator) {
         if ($this->subject === 'khmer') {
-            $validLevels = ['Beginner', 'Reader', 'Word', 'Paragraph', 'Story', 'Comp. 1', 'Comp. 2'];
+            $validLevels = ['Beginner', 'Letter', 'Word', 'Paragraph', 'Story', 'Comp. 1', 'Comp. 2'];
         } else {
             $validLevels = ['Beginner', '1-Digit', '2-Digit', 'Subtraction', 'Division', 'Word Problem'];
         }
@@ -96,7 +96,7 @@ private function getEligibleStudents($subject, $cycle, $schoolId = null)
     
     // For midline/endline, check baseline performance
     $eligibleLevels = $subject === 'khmer' 
-        ? ['Beginner', 'Reader', 'Word', 'Paragraph', 'Story']
+        ? ['Beginner', 'Letter', 'Word', 'Paragraph', 'Story']
         : ['Beginner', '1-Digit', '2-Digit', 'Subtraction'];
     
     return Student::whereHas('assessments', function($q) use ($subject, $eligibleLevels) {
@@ -215,7 +215,7 @@ function validateAssessmentData(data) {
     }
     
     if (data.subject === 'khmer') {
-        const validLevels = ['Beginner', 'Reader', 'Word', 'Paragraph', 'Story', 'Comp. 1', 'Comp. 2'];
+        const validLevels = ['Beginner', 'Letter', 'Word', 'Paragraph', 'Story', 'Comp. 1', 'Comp. 2'];
         if (!validLevels.includes(data.level)) {
             errors.level = 'Invalid level for Khmer';
         }

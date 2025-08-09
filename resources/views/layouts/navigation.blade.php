@@ -23,6 +23,10 @@
            ease-in-out">
                                  {{ trans_db('plp') }}
                              </a>
+                    
+                    <x-nav-link :href="route('showcase')" :active="request()->routeIs('showcase')">
+                        {{ __('showcase.title') }}
+                    </x-nav-link>
                     @if(auth()->check() && !auth()->user()->isCoordinator())
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ trans_db('dashboard') }}
@@ -165,6 +169,10 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
+            <x-responsive-nav-link :href="route('showcase')" :active="request()->routeIs('showcase')">
+                {{ __('showcase.title') }}
+            </x-responsive-nav-link>
+            
             @if(auth()->check() && !auth()->user()->isCoordinator())
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ trans_db('dashboard') }}

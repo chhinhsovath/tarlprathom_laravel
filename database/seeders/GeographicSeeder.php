@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use App\Models\Geographic;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use League\Csv\Reader;
+use League\Csv\Letter;
 
 class GeographicSeeder extends Seeder
 {
@@ -27,7 +27,7 @@ class GeographicSeeder extends Seeder
         }
 
         // Read the CSV file
-        $csv = Reader::createFromPath($csvFile, 'r');
+        $csv = Letter::createFromPath($csvFile, 'r');
         $csv->setHeaderOffset(0); // First row contains headers
 
         $records = $csv->getRecords();

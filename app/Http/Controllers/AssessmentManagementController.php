@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Assessment;
+use App\Models\Geographic;
 use App\Models\MentoringVisit;
 use App\Models\School;
 use App\Models\User;
@@ -65,25 +66,22 @@ class AssessmentManagementController extends Controller
             ->paginate(50)
             ->appends($request->query());
 
-        // Get filter options
-        $provinces = School::distinct()->orderBy('province')->pluck('province');
+        // Get filter options from Geographic table
+        $provinces = Geographic::getProvinces()->pluck('province_name_en', 'province_name_en');
         $districts = School::when($request->filled('province'), function ($q) use ($request) {
             $q->where('province', $request->province);
         })->distinct()->orderBy('district')->pluck('district');
 
-        $clusters = School::when($request->filled('province'), function ($q) use ($request) {
-            $q->where('province', $request->province);
-        })->when($request->filled('district'), function ($q) use ($request) {
-            $q->where('district', $request->district);
-        })->distinct()->orderBy('cluster')->pluck('cluster');
+        // Cluster column doesn't exist in schools table - return empty collection
+        $clusters = collect([]);
 
         $schools = School::when($request->filled('province'), function ($q) use ($request) {
             $q->where('province', $request->province);
         })->when($request->filled('district'), function ($q) use ($request) {
             $q->where('district', $request->district);
-        })->when($request->filled('cluster'), function ($q) use ($request) {
-            $q->where('cluster', $request->cluster);
-        })->orderBy('name')->get();
+        })
+        // Cluster filtering removed - column doesn't exist
+        ->orderBy('name')->get();
 
         $teachers = User::whereIn('role', ['teacher', 'mentor'])
             ->when($request->filled('school_id'), function ($q) use ($request) {
@@ -145,25 +143,22 @@ class AssessmentManagementController extends Controller
             ->paginate(50)
             ->appends($request->query());
 
-        // Get filter options
-        $provinces = School::distinct()->orderBy('province')->pluck('province');
+        // Get filter options from Geographic table
+        $provinces = Geographic::getProvinces()->pluck('province_name_en', 'province_name_en');
         $districts = School::when($request->filled('province'), function ($q) use ($request) {
             $q->where('province', $request->province);
         })->distinct()->orderBy('district')->pluck('district');
 
-        $clusters = School::when($request->filled('province'), function ($q) use ($request) {
-            $q->where('province', $request->province);
-        })->when($request->filled('district'), function ($q) use ($request) {
-            $q->where('district', $request->district);
-        })->distinct()->orderBy('cluster')->pluck('cluster');
+        // Cluster column doesn't exist in schools table - return empty collection
+        $clusters = collect([]);
 
         $schools = School::when($request->filled('province'), function ($q) use ($request) {
             $q->where('province', $request->province);
         })->when($request->filled('district'), function ($q) use ($request) {
             $q->where('district', $request->district);
-        })->when($request->filled('cluster'), function ($q) use ($request) {
-            $q->where('cluster', $request->cluster);
-        })->orderBy('name')->get();
+        })
+        // Cluster filtering removed - column doesn't exist
+        ->orderBy('name')->get();
 
         $mentors = User::where('role', 'mentor')->orderBy('name')->get();
         $teachers = User::whereIn('role', ['teacher', 'mentor'])

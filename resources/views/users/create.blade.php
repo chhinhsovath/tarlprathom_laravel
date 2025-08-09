@@ -227,12 +227,12 @@
                     return;
                 }
                 
-                const reader = new FileReader();
-                reader.onload = function(e) {
+                const Letter = new FileLetter();
+                Letter.onload = function(e) {
                     previewImage.src = e.target.result;
                     preview.classList.remove('hidden');
                 };
-                reader.readAsDataURL(file);
+                Letter.readAsDataURL(file);
             } else {
                 preview.classList.add('hidden');
             }

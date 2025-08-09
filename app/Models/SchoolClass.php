@@ -23,11 +23,11 @@ class SchoolClass extends Model
      */
     protected $fillable = [
         'name',
-        'grade_level',
+        'grade',
         'school_id',
         'teacher_id',
+        'section',
         'academic_year',
-        'is_active',
     ];
 
     /**
@@ -36,8 +36,7 @@ class SchoolClass extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'is_active' => 'boolean',
-        'grade_level' => 'integer',
+        'grade' => 'integer',
     ];
 
     /**
@@ -89,10 +88,31 @@ class SchoolClass extends Model
     }
 
     /**
+     * Get the grade_level attribute (alias for grade).
+     *
+     * @return int|null
+     */
+    public function getGradeLevelAttribute()
+    {
+        return $this->grade;
+    }
+
+    /**
+     * Set the grade_level attribute (alias for grade).
+     *
+     * @param  int  $value
+     * @return void
+     */
+    public function setGradeLevelAttribute($value)
+    {
+        $this->attributes['grade'] = $value;
+    }
+
+    /**
      * Get the full name with grade level.
      */
     public function getFullNameAttribute()
     {
-        return "Grade {$this->grade_level} - {$this->name}";
+        return "Grade {$this->grade} - {$this->name}";
     }
 }

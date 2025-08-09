@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exports\MentoringVisitsExport;
 use App\Http\Requests\StoreMentoringVisitRequest;
+use App\Models\Geographic;
 use App\Models\MentoringVisit;
 use App\Models\School;
 use App\Models\User;
@@ -118,12 +119,8 @@ class MentoringVisitController extends Controller
             $schools = School::orderBy('name')->get();
         }
 
-        // Get provinces from schools table (distinct values)
-        $provinces = School::distinct()
-            ->whereNotNull('province')
-            ->where('province', '!=', '')
-            ->orderBy('province')
-            ->pluck('province');
+        // Get provinces from Geographic table
+        $provinces = Geographic::getProvinces()->pluck('province_name_en', 'province_name_en');
 
         // Get teachers for dropdown
         $teachers = User::where('role', 'teacher')
@@ -264,12 +261,8 @@ class MentoringVisitController extends Controller
             $schools = School::orderBy('name')->get();
         }
 
-        // Get provinces from schools table (distinct values)
-        $provinces = School::distinct()
-            ->whereNotNull('province')
-            ->where('province', '!=', '')
-            ->orderBy('province')
-            ->pluck('province');
+        // Get provinces from Geographic table
+        $provinces = Geographic::getProvinces()->pluck('province_name_en', 'province_name_en');
 
         // Get teachers for dropdown
         $teachers = User::where('role', 'teacher')

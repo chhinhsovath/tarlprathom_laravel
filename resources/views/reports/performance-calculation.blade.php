@@ -58,7 +58,7 @@
                             <h4 class="font-semibold text-blue-900 mb-3 text-lg">{{ __('a. Language -') }}</h4>
                             <div class="text-base text-blue-800 space-y-2">
                                 <div class="ml-4">
-                                    <span class="font-medium">i.</span> {{ __('Readers = Para + Story + Comp 1 + Comp 2') }}
+                                    <span class="font-medium">i.</span> {{ __('Letters = Para + Story + Comp 1 + Comp 2') }}
                                 </div>
                                 <div class="ml-4">
                                     <span class="font-medium">ii.</span> {{ __('Beginners = Beginner + Letter') }}
@@ -147,7 +147,7 @@
                                         {{ __('Total Students') }}
                                     </th>
                                     <th class="px-8 py-3 text-center text-sm font-medium text-gray-500 uppercase tracking-wider">
-                                        {{ __('Readers') }}
+                                        {{ __('Letters') }}
                                     </th>
                                     <th class="px-8 py-3 text-center text-sm font-medium text-gray-500 uppercase tracking-wider">
                                         {{ __('Beginners') }}
@@ -175,8 +175,8 @@
                                         {{ $data['language']['total_students'] }}
                                     </td>
                                     <td class="px-8 py-6 whitespace-nowrap text-base text-center">
-                                        <div class="text-gray-900 font-medium">{{ $data['language']['readers'] }}</div>
-                                        <div class="text-sm text-gray-500">({{ $data['language']['readers_percentage'] }}%)</div>
+                                        <div class="text-gray-900 font-medium">{{ $data['language']['Letters'] }}</div>
+                                        <div class="text-sm text-gray-500">({{ $data['language']['Letters_percentage'] }}%)</div>
                                     </td>
                                     <td class="px-8 py-6 whitespace-nowrap text-base text-center">
                                         <div class="text-gray-900 font-medium">{{ $data['language']['beginners'] }}</div>
@@ -226,7 +226,7 @@
             
             // Sample data for demonstration - in real implementation this would come from multiple cycles
             const schoolNames = @json(array_column($schoolPerformanceData, 'school'));
-            const languageReaderPercentages = @json(array_column(array_column($schoolPerformanceData, 'language'), 'readers_percentage'));
+            const languageLetterPercentages = @json(array_column(array_column($schoolPerformanceData, 'language'), 'Letters_percentage'));
             
             // For now, using current cycle data, but in real implementation you'd need data from all three cycles
             const chart = new Chart(ctx, {
@@ -235,7 +235,7 @@
                     labels: schoolNames.map(school => school.school_name),
                     datasets: [{
                         label: '{{ __(ucfirst($cycle)) }}',
-                        data: languageReaderPercentages,
+                        data: languageLetterPercentages,
                         backgroundColor: 
                             @if($cycle === 'baseline')
                                 'rgba(251, 146, 60, 0.8)'

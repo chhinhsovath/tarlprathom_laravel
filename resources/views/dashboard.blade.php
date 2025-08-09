@@ -469,7 +469,12 @@
                         cluster: selectedCluster
                     },
                     success: function(response) {
+                        console.log('School results response:', response);
                         updateSchoolChart(response.chartData);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error loading school results:', error);
+                        console.error('Response:', xhr.responseText);
                     },
                     complete: function() {
                         $('#schoolResultsChart').parent().removeClass('loading');
@@ -486,9 +491,30 @@
                     overallChart.destroy();
                 }
                 
+                // Convert data to percentages
+                const convertedData = JSON.parse(JSON.stringify(data)); // Deep copy
+                
+                // Calculate totals for each cycle
+                const cycleTotals = [];
+                for (let i = 0; i < convertedData.labels.length; i++) {
+                    let total = 0;
+                    convertedData.datasets.forEach(dataset => {
+                        total += dataset.data[i] || 0;
+                    });
+                    cycleTotals.push(total);
+                }
+                
+                // Convert each dataset to percentages
+                convertedData.datasets.forEach(dataset => {
+                    dataset.data = dataset.data.map((value, index) => {
+                        const total = cycleTotals[index];
+                        return total > 0 ? (value / total) * 100 : 0;
+                    });
+                });
+                
                 overallChart = new Chart(ctx, {
                     type: 'bar',
-                    data: data,
+                    data: convertedData,
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
@@ -499,9 +525,15 @@
                             y: {
                                 stacked: true,
                                 beginAtZero: true,
+                                max: 100,
                                 title: {
                                     display: true,
-                                    text: '{{ trans_db("number_of_students") }}'
+                                    text: '{{ trans_db("percentage_of_students") }}'
+                                },
+                                ticks: {
+                                    callback: function(value) {
+                                        return value + '%';
+                                    }
                                 }
                             }
                         },
@@ -522,20 +554,24 @@
                                     weight: 'bold',
                                     size: 11
                                 },
-                                formatter: function(value, context) {
-                                    // Calculate percentage for this segment
-                                    const dataArray = context.chart.data.datasets.map(dataset => dataset.data[context.dataIndex]);
-                                    const total = dataArray.reduce((sum, val) => sum + val, 0);
-                                    const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
-                                    return percentage > 0 ? percentage + '%' : '';
+                                formatter: function(value) {
+                                    // Value is already a percentage
+                                    return value > 0 ? Math.round(value) + '%' : '';
                                 },
                                 anchor: 'center',
                                 align: 'center'
                             },
                             tooltip: {
                                 callbacks: {
-                                    afterTitle: function() {
-                                        return '{{ trans_db("students") }}';
+                                    label: function(context) {
+                                        let label = context.dataset.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        if (context.parsed.y !== null) {
+                                            label += Math.round(context.parsed.y) + '%';
+                                        }
+                                        return label;
                                     }
                                 }
                             }
@@ -552,6 +588,13 @@
                 
                 if (schoolChart) {
                     schoolChart.destroy();
+                }
+                
+                // Check if data is present
+                if (!data || !data.labels || data.labels.length === 0) {
+                    console.warn('No school data to display');
+                    ctx.canvas.parentElement.innerHTML = '<p class="text-center text-gray-500 mt-4">No data available</p>';
+                    return;
                 }
                 
                 // Calculate dynamic height based on number of schools

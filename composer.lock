@@ -2854,7 +2854,7 @@
                 "ext-mbstring": "*",
                 "ext-simplexml": "*",
                 "ext-xml": "*",
-                "ext-xmlreader": "*",
+                "ext-xmlLetter": "*",
                 "ext-xmlwriter": "*",
                 "ext-zip": "*",
                 "ext-zlib": "*",

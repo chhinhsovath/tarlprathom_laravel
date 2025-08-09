@@ -183,7 +183,7 @@ class AssessmentController extends Controller
                     // Get student IDs who scored Beginner through Story (not Comp. 1 or Comp. 2) in baseline
                     $eligibleStudentsQuery = Assessment::where('subject', 'khmer')
                         ->where('cycle', 'baseline')
-                        ->whereIn('level', ['Beginner', 'Reader', 'Word', 'Paragraph', 'Story']);
+                        ->whereIn('level', ['Beginner', 'Letter', 'Word', 'Paragraph', 'Story']);
                 } else {
                     // For Math: Get student IDs who scored Beginner through Subtraction (not Division or Word Problem) in baseline
                     $eligibleStudentsQuery = Assessment::where('subject', 'math')
@@ -316,7 +316,7 @@ class AssessmentController extends Controller
         $subject = $request->get('subject', 'khmer');
 
         if ($subject === 'khmer') {
-            $levels = ['Beginner', 'Reader', 'Word', 'Paragraph', 'Story'];
+            $levels = ['Beginner', 'Letter', 'Word', 'Paragraph', 'Story'];
             $labels = [trans_db('Beginner'), trans_db('Letter'), trans_db('Word'), trans_db('Paragraph'), trans_db('Story')];
         } else {
             $levels = ['Beginner', '1-Digit', '2-Digit', 'Subtraction', 'Division'];
@@ -429,12 +429,12 @@ class AssessmentController extends Controller
             'subject' => 'required|in:khmer,math',
             'cycle' => 'required|in:baseline,midline,endline',
             'level' => 'required|string',
-            'gender' => 'required|in:male,female',
+            // Gender is not needed - already set during student enrollment
         ]);
 
         // Validate level based on subject
         if ($validated['subject'] === 'khmer') {
-            if (! in_array($validated['level'], ['Beginner', 'Reader', 'Word', 'Paragraph', 'Story', 'Comp. 1', 'Comp. 2'])) {
+            if (! in_array($validated['level'], ['Beginner', 'Letter', 'Word', 'Paragraph', 'Story', 'Comp. 1', 'Comp. 2'])) {
                 return response()->json(['success' => false, 'message' => 'Invalid level for Khmer'], 422);
             }
         } else {
@@ -443,12 +443,8 @@ class AssessmentController extends Controller
             }
         }
 
-        // Update student gender if needed
+        // Get the student
         $student = Student::find($validated['student_id']);
-        if ($student->gender !== $validated['gender']) {
-            $student->gender = $validated['gender'];
-            $student->save();
-        }
 
         // Check if assessment period is active for the school (only for non-admins)
         if (! auth()->user()->isAdmin()) {

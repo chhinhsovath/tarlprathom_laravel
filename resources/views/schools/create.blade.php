@@ -16,9 +16,9 @@
                         
                         <!-- School Name -->
                         <div>
-                            <x-input-label for="school_name" :value="__('School Name')" />
-                            <x-text-input id="school_name" name="school_name" type="text" class="mt-1 block w-full" :value="old('school_name')" required autofocus />
-                            <x-input-error class="mt-2" :messages="$errors->get('school_name')" />
+                            <x-input-label for="name" :value="__('School Name')" />
+                            <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name')" required autofocus />
+                            <x-input-error class="mt-2" :messages="$errors->get('name')" />
                         </div>
 
                         <!-- School Code -->
@@ -32,7 +32,14 @@
                         <!-- Province -->
                         <div>
                             <x-input-label for="province" :value="__('Province')" />
-                            <x-text-input id="province" name="province" type="text" class="mt-1 block w-full" :value="old('province')" required />
+                            <select id="province" name="province" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
+                                <option value="">{{ __('Select Province') }}</option>
+                                @foreach($provinces as $province)
+                                    <option value="{{ $province->province_name_en }}" {{ old('province') == $province->province_name_en ? 'selected' : '' }}>
+                                        {{ $province->province_name_en }}
+                                    </option>
+                                @endforeach
+                            </select>
                             <x-input-error class="mt-2" :messages="$errors->get('province')" />
                         </div>
 

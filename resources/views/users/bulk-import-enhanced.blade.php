@@ -133,7 +133,7 @@
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <script>
         let importData = [];
-        const schools = @json(\App\Models\School::orderBy('school_name')->pluck('school_name', 'id')->toArray());
+        const schools = @json(\App\Models\School::orderBy('name')->pluck('name', 'id')->toArray());
         
         // Translations for JavaScript
         const translations = {
@@ -158,9 +158,9 @@
             }
 
             const file = fileInput.files[0];
-            const reader = new FileReader();
+            const Letter = new FileLetter();
 
-            reader.onload = function(e) {
+            Letter.onload = function(e) {
                 try {
                     const data = new Uint8Array(e.target.result);
                     const workbook = XLSX.read(data, {type: 'array'});
@@ -174,7 +174,7 @@
                 }
             };
 
-            reader.readAsArrayBuffer(file);
+            Letter.readAsArrayBuffer(file);
         });
 
         function processAndPreviewData(data) {

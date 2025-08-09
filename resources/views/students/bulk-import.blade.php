@@ -142,9 +142,9 @@
             }
 
             const file = fileInput.files[0];
-            const reader = new FileReader();
+            const Letter = new FileLetter();
 
-            reader.onload = function(e) {
+            Letter.onload = function(e) {
                 try {
                     const data = new Uint8Array(e.target.result);
                     const workbook = XLSX.read(data, {type: 'array'});
@@ -158,7 +158,7 @@
                 }
             };
 
-            reader.readAsArrayBuffer(file);
+            Letter.readAsArrayBuffer(file);
         });
 
         function processAndPreviewData(data) {

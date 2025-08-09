@@ -161,11 +161,11 @@ class DashboardController extends Controller
         $user = auth()->user();
         $subject = $request->get('subject', 'khmer');
 
-        // Define levels based on subject
+        // Define levels based on subject with Comp. 1 and Comp. 2 for Khmer
         if ($subject === 'khmer') {
-            $levels = ['Beginner', 'Reader', 'Word', 'Paragraph', 'Story'];
+            $levels = ['Beginner', 'Letter', 'Word', 'Paragraph', 'Story', 'Comp. 1', 'Comp. 2'];
         } else {
-            $levels = ['Beginner', '1-Digit', '2-Digit', 'Subtraction', 'Division'];
+            $levels = ['Beginner', '1-Digit', '2-Digit', 'Subtraction', 'Division', 'Word Problem'];
         }
         $cycles = ['baseline', 'midline', 'endline'];
 
@@ -236,14 +236,17 @@ class DashboardController extends Controller
         $datasets = [];
         $colors = [
             'Beginner' => '#d32f2f',
-            'Reader' => '#f57c00',
+            'Letter' => '#ff6b35',
             'Word' => '#fbc02d',
-            'Paragraph' => '#388e3c',
-            'Story' => '#2e7d32',
-            '1-Digit' => '#f57c00',
+            'Paragraph' => '#66bb6a',
+            'Story' => '#42a5f5',
+            'Comp. 1' => '#ab47bc',
+            'Comp. 2' => '#7e57c2',
+            '1-Digit' => '#ff6b35',
             '2-Digit' => '#fbc02d',
-            'Subtraction' => '#388e3c',
-            'Division' => '#2e7d32',
+            'Subtraction' => '#66bb6a',
+            'Division' => '#42a5f5',
+            'Word Problem' => '#ab47bc',
         ];
 
         foreach ($levels as $level) {
@@ -294,11 +297,11 @@ class DashboardController extends Controller
         $subject = $request->get('subject', 'khmer');
         $cycle = $request->get('cycle', 'baseline');
 
-        // Define levels based on subject
+        // Define levels based on subject with Comp. 1 and Comp. 2 for Khmer
         if ($subject === 'khmer') {
-            $levels = ['Beginner', 'Reader', 'Word', 'Paragraph', 'Story'];
+            $levels = ['Beginner', 'Letter', 'Word', 'Paragraph', 'Story', 'Comp. 1', 'Comp. 2'];
         } else {
-            $levels = ['Beginner', '1-Digit', '2-Digit', 'Subtraction', 'Division'];
+            $levels = ['Beginner', '1-Digit', '2-Digit', 'Subtraction', 'Division', 'Word Problem'];
         }
 
         // Get accessible schools based on user role
@@ -336,20 +339,23 @@ class DashboardController extends Controller
         }
 
         $schools = $schoolQuery->get();
-        $schoolNames = $schools->pluck('school_name')->toArray();
+        $schoolNames = $schools->pluck('name')->toArray();
 
         // Prepare datasets
         $datasets = [];
         $colors = [
             'Beginner' => '#d32f2f',
-            'Reader' => '#f57c00',
+            'Letter' => '#ff6b35',
             'Word' => '#fbc02d',
-            'Paragraph' => '#388e3c',
-            'Story' => '#2e7d32',
-            '1-Digit' => '#f57c00',
+            'Paragraph' => '#66bb6a',
+            'Story' => '#42a5f5',
+            'Comp. 1' => '#ab47bc',
+            'Comp. 2' => '#7e57c2',
+            '1-Digit' => '#ff6b35',
             '2-Digit' => '#fbc02d',
-            'Subtraction' => '#388e3c',
-            'Division' => '#2e7d32',
+            'Subtraction' => '#66bb6a',
+            'Division' => '#42a5f5',
+            'Word Problem' => '#ab47bc',
         ];
 
         // First, get total students per school for the specific cycle

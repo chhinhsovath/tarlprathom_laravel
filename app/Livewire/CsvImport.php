@@ -6,7 +6,7 @@ use App\Models\School;
 use App\Models\Student;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use League\Csv\Reader;
+use League\Csv\Letter;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -59,7 +59,7 @@ class CsvImport extends Component
     {
         try {
             $path = $this->csvFile->getRealPath();
-            $csv = Reader::createFromPath($path, 'r');
+            $csv = Letter::createFromPath($path, 'r');
             $csv->setHeaderOffset(0);
 
             $this->headers = $csv->getHeader();
@@ -118,7 +118,7 @@ class CsvImport extends Component
 
         try {
             $path = $this->csvFile->getRealPath();
-            $csv = Reader::createFromPath($path, 'r');
+            $csv = Letter::createFromPath($path, 'r');
             $csv->setHeaderOffset(0);
 
             $records = $csv->getRecords();

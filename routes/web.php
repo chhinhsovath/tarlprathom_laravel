@@ -16,6 +16,7 @@ use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\ResourceController;
 use App\Http\Controllers\SchoolController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\ShowcaseController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -70,6 +71,7 @@ Route::get('/debug-locale', function () {
 
 // Public routes
 Route::get('/', [AssessmentController::class, 'publicResults'])->name('public.assessment-results');
+Route::get('/showcase', [ShowcaseController::class, 'index'])->name('showcase');
 Route::get('/api/assessment-data', [AssessmentController::class, 'getChartData'])->name('api.assessment-data');
 Route::get('/resources', [ResourceController::class, 'publicIndex'])->name('resources.public');
 Route::get('/resources/{resource}', [ResourceController::class, 'publicShow'])->name('resources.public.show');

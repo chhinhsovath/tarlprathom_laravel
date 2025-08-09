@@ -257,7 +257,7 @@ Main Navigation:
 
 ### Accessibility Features
 - **Keyboard navigation** support
-- **Screen reader compatibility**
+- **Screen Letter compatibility**
 - **High contrast** options
 - **Clear visual hierarchy**
 

@@ -16,14 +16,14 @@ INSERT INTO students (name, sex, age, class, school_id, gender, created_at, upda
 -- Add sample baseline assessments for Khmer
 INSERT INTO assessments (student_id, cycle, subject, level, score, assessed_at, created_at, updated_at) VALUES
 (1, 'baseline', 'khmer', 'Beginner', 0, '2025-01-15', NOW(), NOW()),
-(2, 'baseline', 'khmer', 'Reader', 25, '2025-01-15', NOW(), NOW()),
+(2, 'baseline', 'khmer', 'Letter', 25, '2025-01-15', NOW(), NOW()),
 (3, 'baseline', 'khmer', 'Word', 50, '2025-01-15', NOW(), NOW()),
 (4, 'baseline', 'khmer', 'Paragraph', 75, '2025-01-15', NOW(), NOW()),
 (5, 'baseline', 'khmer', 'Story', 85, '2025-01-15', NOW(), NOW()),
 (6, 'baseline', 'khmer', 'Beginner', 0, '2025-01-15', NOW(), NOW()),
 (7, 'baseline', 'khmer', 'Word', 45, '2025-01-15', NOW(), NOW()),
 (8, 'baseline', 'khmer', 'Paragraph', 70, '2025-01-15', NOW(), NOW()),
-(9, 'baseline', 'khmer', 'Reader', 30, '2025-01-15', NOW(), NOW()),
+(9, 'baseline', 'khmer', 'Letter', 30, '2025-01-15', NOW(), NOW()),
 (10, 'baseline', 'khmer', 'Story', 90, '2025-01-15', NOW(), NOW());
 
 -- Add sample baseline assessments for Math

@@ -282,7 +282,7 @@ class AssessmentFlowTest extends TestCase
 
         // 2. Save individual assessments via AJAX
         foreach ($students as $index => $student) {
-            $levels = ['Beginner', 'Reader', 'Word'];
+            $levels = ['Beginner', 'Letter', 'Word'];
             $level = $levels[$index % 3];
             
             $response = $this->actingAs($teacher)

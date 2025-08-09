@@ -50,7 +50,7 @@ return [
     'Performance Calculation' => 'ការគណនាលទ្ធផល',
     'Performance Calculation Report' => 'របាយការណ៍ការគណនាលទ្ធផល',
     'Calculate and analyze performance metrics' => 'គណនា និងវិភាគរង្វាស់លទ្ធផល',
-    'TaRL methodology performance indicators using level aggregation. Formula: Language_Readers_% = (Para+Story+Comp1+Comp2)/Total_Students×100, Math_Operations_% = (Subtraction+Division+WordProblem)/Total_Students×100. Expected Result: Standardized performance percentages enabling comparison with national TaRL benchmarks.' => 'ការគណនាសូចនាករលទ្ធផលតាមវិធីសាស្ត្រ TaRL សម្រាប់ការប្រៀបធៀបជាមួយស្តង់ដារជាតិ',
+    'TaRL methodology performance indicators using level aggregation. Formula: Language_Letters_% = (Para+Story+Comp1+Comp2)/Total_Students×100, Math_Operations_% = (Subtraction+Division+WordProblem)/Total_Students×100. Expected Result: Standardized performance percentages enabling comparison with national TaRL benchmarks.' => 'ការគណនាសូចនាករលទ្ធផលតាមវិធីសាស្ត្រ TaRL សម្រាប់ការប្រៀបធៀបជាមួយស្តង់ដារជាតិ',
     
     'Class Progress Report' => 'របាយការណ៍វឌ្ឍនភាពថ្នាក់',
     'Class-level longitudinal analysis using Student-Assessment relationships. Formula: Class Progress = Σ(student_progress) / COUNT(students) WHERE class_id GROUP BY assessment_cycle. Expected Result: Class-wise progress trajectories showing average improvements, helping identify which classes need additional support.' => 'ការវិភាគវឌ្ឍនភាពតាមថ្នាក់រៀន ដើម្បីកំណត់ថ្នាក់ដែលត្រូវការជំនួយបន្ថែម',
