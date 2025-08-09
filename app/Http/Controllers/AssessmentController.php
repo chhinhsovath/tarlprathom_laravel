@@ -316,11 +316,11 @@ class AssessmentController extends Controller
         $subject = $request->get('subject', 'khmer');
 
         if ($subject === 'khmer') {
-            $levels = ['Beginner', 'Letter', 'Word', 'Paragraph', 'Story'];
-            $labels = [trans_db('Beginner'), trans_db('Letter'), trans_db('Word'), trans_db('Paragraph'), trans_db('Story')];
+            $levels = ['Beginner', 'Letter', 'Word', 'Paragraph', 'Story', 'Comp. 1', 'Comp. 2'];
+            $labels = [trans_db('Beginner'), trans_db('Letter'), trans_db('Word'), trans_db('Paragraph'), trans_db('Story'), trans_db('Comp. 1'), trans_db('Comp. 2')];
         } else {
-            $levels = ['Beginner', '1-Digit', '2-Digit', 'Subtraction', 'Division'];
-            $labels = [trans_db('Beginner'), trans_db('1-Digit'), trans_db('2-Digit'), trans_db('Subtraction'), trans_db('Division')];
+            $levels = ['Beginner', '1-Digit', '2-Digit', 'Subtraction', 'Division', 'Word Problem'];
+            $labels = [trans_db('Beginner'), trans_db('1-Digit'), trans_db('2-Digit'), trans_db('Subtraction'), trans_db('Division'), trans_db('Word Problem')];
         }
 
         // Get assessment counts by level (filtered by access)
@@ -362,7 +362,7 @@ class AssessmentController extends Controller
             'datasets' => [[
                 'label' => trans_db($subject === 'khmer' ? 'Khmer Assessment Results' : 'Math Assessment Results'),
                 'data' => $data,
-                'backgroundColor' => ['#d32f2f', '#f57c00', '#fbc02d', '#388e3c', '#2e7d32'],
+                'backgroundColor' => ['#d32f2f', '#f57c00', '#fbc02d', '#388e3c', '#2e7d32', '#1976d2', '#7b1fa2'],
                 'borderWidth' => 1,
             ]],
         ];
