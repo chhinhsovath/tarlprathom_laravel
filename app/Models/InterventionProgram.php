@@ -13,7 +13,7 @@ class InterventionProgram extends Model
         'program_name', 'description', 'type', 'intensity', 'target_criteria',
         'objectives', 'duration_weeks', 'sessions_per_week', 'minutes_per_session',
         'delivery_method', 'materials_needed', 'success_metrics', 'success_threshold',
-        'implementation_steps', 'created_by', 'is_active', 'start_date', 'end_date'
+        'implementation_steps', 'created_by', 'is_active', 'start_date', 'end_date',
     ];
 
     protected $casts = [
@@ -25,7 +25,7 @@ class InterventionProgram extends Model
         'success_threshold' => 'decimal:2',
         'is_active' => 'boolean',
         'start_date' => 'date',
-        'end_date' => 'date'
+        'end_date' => 'date',
     ];
 
     public function creator()
@@ -41,7 +41,7 @@ class InterventionProgram extends Model
     public function scopeActive($query)
     {
         return $query->where('is_active', true)
-            ->where(function($q) {
+            ->where(function ($q) {
                 $q->whereNull('end_date')
                     ->orWhere('end_date', '>=', now());
             });
@@ -59,19 +59,19 @@ class InterventionProgram extends Model
 
     public function getTotalSessionsAttribute()
     {
-        if (!$this->duration_weeks || !$this->sessions_per_week) {
+        if (! $this->duration_weeks || ! $this->sessions_per_week) {
             return null;
         }
-        
+
         return $this->duration_weeks * $this->sessions_per_week;
     }
 
     public function getTotalHoursAttribute()
     {
-        if (!$this->total_sessions || !$this->minutes_per_session) {
+        if (! $this->total_sessions || ! $this->minutes_per_session) {
             return null;
         }
-        
+
         return round($this->total_sessions * $this->minutes_per_session / 60, 1);
     }
 
@@ -87,15 +87,15 @@ class InterventionProgram extends Model
         $completed = $this->studentInterventions()
             ->whereIn('status', ['completed', 'graduated'])
             ->count();
-        
+
         $total = $this->studentInterventions()
             ->whereIn('status', ['completed', 'graduated', 'discontinued'])
             ->count();
-        
+
         if ($total === 0) {
             return 0;
         }
-        
+
         return round(($completed / $total) * 100, 2);
     }
 
@@ -108,10 +108,10 @@ class InterventionProgram extends Model
 
     public function isEligibleStudent($student)
     {
-        if (!$this->target_criteria) {
+        if (! $this->target_criteria) {
             return true;
         }
-        
+
         foreach ($this->target_criteria as $criterion) {
             switch ($criterion['type']) {
                 case 'grade_level':
@@ -124,21 +124,21 @@ class InterventionProgram extends Model
                         ->where('subject', $criterion['subject'])
                         ->where('cycle', $criterion['cycle'])
                         ->value('score');
-                    
-                    if (!$this->evaluateCriterion($score, $criterion['operator'], $criterion['value'])) {
+
+                    if (! $this->evaluateCriterion($score, $criterion['operator'], $criterion['value'])) {
                         return false;
                     }
                     break;
                 case 'attendance_rate':
                     $rate = AttendanceRecord::calculateAttendanceRate($student->id);
-                    
-                    if (!$this->evaluateCriterion($rate, $criterion['operator'], $criterion['value'])) {
+
+                    if (! $this->evaluateCriterion($rate, $criterion['operator'], $criterion['value'])) {
                         return false;
                     }
                     break;
             }
         }
-        
+
         return true;
     }
 

@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         // Check if cluster column doesn't exist and add it
-        if (!Schema::hasColumn('schools', 'cluster')) {
+        if (! Schema::hasColumn('schools', 'cluster')) {
             Schema::table('schools', function (Blueprint $table) {
                 $table->string('cluster')->nullable()->after('district');
             });

@@ -33,7 +33,7 @@ return new class extends Migration
             $table->foreignId('verified_by')->nullable()->constrained('users');
             $table->timestamp('verified_at')->nullable();
             $table->timestamps();
-            
+
             $table->unique(['student_id', 'attendance_date', 'period']);
             $table->index(['school_id', 'attendance_date']);
             $table->index(['class_id', 'attendance_date']);

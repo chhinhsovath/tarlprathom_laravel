@@ -130,8 +130,8 @@
                                             required>
                                         <option value="">ជ្រើសរើសសាលា</option>
                                         @foreach($schools as $school)
-                                            <option value="{{ $school->id }}" {{ old('school_id') == $school->id ? 'selected' : '' }}>
-                                                {{ $school->name }}
+                                            <option value="{{ $school->sclAutoID }}" {{ old('school_id') == $school->sclAutoID ? 'selected' : '' }}>
+                                                {{ $school->sclName }}
                                             </option>
                                         @endforeach
                                     </select>

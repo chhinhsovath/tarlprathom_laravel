@@ -6,6 +6,7 @@ use App\Exports\MentoringVisitsExport;
 use App\Http\Requests\StoreMentoringVisitRequest;
 use App\Models\Geographic;
 use App\Models\MentoringVisit;
+use App\Models\Province;
 use App\Models\School;
 use App\Models\User;
 use App\Traits\Sortable;
@@ -113,14 +114,14 @@ class MentoringVisitController extends Controller
         $user = $request->user();
         if ($user->isMentor()) {
             // Mentors can only see their assigned schools
-            $schools = $user->assignedSchools()->orderBy('name')->get();
+            $schools = $user->assignedSchools()->orderBy('sclName')->get();
         } else {
             // Admins can see all schools
-            $schools = School::orderBy('name')->get();
+            $schools = School::orderBy('sclName')->get();
         }
 
         // Get provinces from Geographic table
-        $provinces = Geographic::getProvinces()->pluck('province_name_en', 'province_name_en');
+        $provinces = Province::orderBy('name_kh')->pluck('name_en', 'name_en');
 
         // Get teachers for dropdown
         $teachers = User::where('role', 'teacher')
@@ -255,14 +256,14 @@ class MentoringVisitController extends Controller
         }
         if ($user->isMentor()) {
             // Mentors can only see their assigned schools
-            $schools = $user->assignedSchools()->orderBy('name')->get();
+            $schools = $user->assignedSchools()->orderBy('sclName')->get();
         } else {
             // Admins can see all schools
-            $schools = School::orderBy('name')->get();
+            $schools = School::orderBy('sclName')->get();
         }
 
         // Get provinces from Geographic table
-        $provinces = Geographic::getProvinces()->pluck('province_name_en', 'province_name_en');
+        $provinces = Province::orderBy('name_kh')->pluck('name_en', 'name_en');
 
         // Get teachers for dropdown
         $teachers = User::where('role', 'teacher')

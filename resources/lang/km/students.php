@@ -10,7 +10,7 @@ return [
     'Edit Student' => 'កែសម្រួលព័ត៌មានសិស្ស',
     'Student Details' => 'ព័ត៌មានលម្អិតសិស្ស',
     'View Student' => 'មើលព័ត៌មានសិស្ស',
-    
+
     // Search and Filters
     'Search by name...' => 'ស្វែងរកតាមឈ្មោះ...',
     'All Schools' => 'សាលាទាំងអស់',
@@ -23,7 +23,7 @@ return [
     'Select School' => 'ជ្រើសរើសសាលា',
     'Select Grade' => 'ជ្រើសរើសថ្នាក់',
     'Select Gender' => 'ជ្រើសរើសភេទ',
-    
+
     // Table Headers
     'Name' => 'ឈ្មោះ',
     'Age' => 'អាយុ',
@@ -37,13 +37,13 @@ return [
     'Enrollment Date' => 'ថ្ងៃចុះឈ្មោះ',
     'Student ID' => 'លេខសម្គាល់សិស្ស',
     'Status' => 'ស្ថានភាព',
-    
+
     // Gender Options
     'Male' => 'ប្រុស',
     'Female' => 'ស្រី',
     'male' => 'ប្រុស',
     'female' => 'ស្រី',
-    
+
     // Grade Options
     'Grade 1' => 'ថ្នាក់ទី១',
     'Grade 2' => 'ថ្នាក់ទី២',
@@ -51,7 +51,7 @@ return [
     'Grade 4' => 'ថ្នាក់ទី៤',
     'Grade 5' => 'ថ្នាក់ទី៥',
     'Grade 6' => 'ថ្នាក់ទី៦',
-    
+
     // Actions
     'View' => 'មើល',
     'Edit' => 'កែសម្រួល',
@@ -61,7 +61,7 @@ return [
     'Cancel' => 'បោះបង់',
     'Back' => 'ត្រឡប់ក្រោយ',
     'Back to List' => 'ត្រឡប់ទៅបញ្ជី',
-    
+
     // Form Fields
     'Student Name' => 'ឈ្មោះសិស្ស',
     'Full Name' => 'ឈ្មោះពេញ',
@@ -83,7 +83,7 @@ return [
     'Change Photo' => 'ប្តូររូបថត',
     'Notes' => 'កំណត់ចំណាំ',
     'Additional Notes' => 'កំណត់ចំណាំបន្ថែម',
-    
+
     // Status Labels
     'Active' => 'សកម្ម',
     'Inactive' => 'អសកម្ម',
@@ -91,7 +91,7 @@ return [
     'Transferred' => 'បានផ្ទេរ',
     'Dropped Out' => 'បានបោះបង់',
     'Has Assessments' => 'មានការវាយតម្លៃ',
-    
+
     // Messages
     'No students found.' => 'រកមិនឃើញសិស្សទេ។',
     'Student created successfully.' => 'បានបង្កើតសិស្សដោយជោគជ័យ។',
@@ -100,7 +100,7 @@ return [
     'Are you sure you want to delete this student?' => 'តើអ្នកប្រាកដថាចង់លុបសិស្សនេះមែនទេ?',
     'Cannot delete student with assessments' => 'មិនអាចលុបសិស្សដែលមានការវាយតម្លៃបានទេ',
     'This action cannot be undone.' => 'សកម្មភាពនេះមិនអាចត្រឡប់វិញបានទេ។',
-    
+
     // Assessment Related
     'Assessment History' => 'ប្រវត្តិការវាយតម្លៃ',
     'Baseline Assessment' => 'ការវាយតម្លៃមូលដ្ឋាន',
@@ -114,7 +114,7 @@ return [
     'View Assessment' => 'មើលការវាយតម្លៃ',
     'Add Assessment' => 'បន្ថែមការវាយតម្លៃ',
     'No assessments found' => 'រកមិនឃើញការវាយតម្លៃទេ',
-    
+
     // Import/Export
     'Import Students' => 'នាំចូលសិស្ស',
     'Export Students' => 'នាំចេញសិស្ស',
@@ -123,7 +123,7 @@ return [
     'Select File' => 'ជ្រើសរើសឯកសារ',
     'Import' => 'នាំចូល',
     'Students imported successfully' => 'បាននាំចូលសិស្សដោយជោគជ័យ',
-    
+
     // Validation Messages
     'Name is required' => 'ត្រូវការឈ្មោះ',
     'Please select a school' => 'សូមជ្រើសរើសសាលា',
@@ -133,7 +133,7 @@ return [
     'Invalid date of birth' => 'ថ្ងៃខែឆ្នាំកំណើតមិនត្រឹមត្រូវ',
     'Photo must be an image' => 'រូបថតត្រូវតែជាឯកសាររូបភាព',
     'Photo size must be less than 2MB' => 'ទំហំរូបថតត្រូវតែតូចជាង 2MB',
-    
+
     // Statistics
     'Total Students' => 'សិស្សសរុប',
     'Male Students' => 'សិស្សប្រុស',
@@ -141,7 +141,7 @@ return [
     'Average Age' => 'អាយុមធ្យម',
     'Students by Grade' => 'សិស្សតាមថ្នាក់',
     'Students by School' => 'សិស្សតាមសាលា',
-    
+
     // Additional Fields
     'Emergency Contact' => 'ទំនាក់ទំនងពេលអាសន្ន',
     'Medical Information' => 'ព័ត៌មានសុខភាព',
@@ -155,7 +155,7 @@ return [
     'Dropout Reason' => 'មូលហេតុបោះបង់',
     'Optional' => 'ស្រេចចិត្ត',
     'Student ID will be automatically generated upon creation.' => 'លេខសម្គាល់សិស្សនឹងត្រូវបានបង្កើតដោយស្វ័យប្រវត្តិនៅពេលបង្កើត។',
-    
+
     // Placeholders
     'Enter student name' => 'បញ្ចូលឈ្មោះសិស្ស',
     'Enter parent name' => 'បញ្ចូលឈ្មោះមាតាបិតា',
@@ -163,7 +163,7 @@ return [
     'Enter address' => 'បញ្ចូលអាសយដ្ឋាន',
     'Enter notes' => 'បញ្ចូលកំណត់ចំណាំ',
     'Select date' => 'ជ្រើសរើសកាលបរិច្ឆេទ',
-    
+
     // Student Profile
     'Student Profile' => 'ប្រវត្តិរូបសិស្ស',
     'Personal Information' => 'ព័ត៌មានផ្ទាល់ខ្លួន',
@@ -181,7 +181,7 @@ return [
     'Latest Assessment' => 'ការវាយតម្លៃចុងក្រោយ',
     'Current Assessments' => 'ការវាយតម្លៃបច្ចុប្បន្ន',
     'No assessments found for this student.' => 'រកមិនឃើញការវាយតម្លៃសម្រាប់សិស្សនេះទេ។',
-    
+
     // Reports
     'Student Report' => 'របាយការណ៍សិស្ស',
     'Progress Report' => 'របាយការណ៍វឌ្ឍនភាព',

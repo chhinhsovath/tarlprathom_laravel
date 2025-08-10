@@ -46,7 +46,7 @@ return new class extends Migration
             $table->timestamp('reviewed_at')->nullable();
             $table->text('review_comments')->nullable();
             $table->timestamps();
-            
+
             $table->index(['teacher_id', 'planned_date']);
             $table->index(['school_id', 'subject', 'grade_level']);
             $table->index(['class_id', 'planned_date']);

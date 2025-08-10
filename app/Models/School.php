@@ -113,7 +113,7 @@ class School extends Model
     public function getProvinceAttribute()
     {
         // If province name is empty, try to get it from Geographic table using province ID
-        if (empty($this->sclProvinceName) && !empty($this->sclProvince)) {
+        if (empty($this->sclProvinceName) && ! empty($this->sclProvince)) {
             $geographic = Geographic::where('province_code', $this->sclProvince)
                 ->whereNull('district_code')
                 ->first();
@@ -121,6 +121,7 @@ class School extends Model
                 return $geographic->province_name_en;
             }
         }
+
         return $this->sclProvinceName;
     }
 
@@ -138,7 +139,7 @@ class School extends Model
     public function getDistrictAttribute()
     {
         // If district name is empty, try to get it from Geographic table using district ID
-        if (empty($this->sclDistrictName) && !empty($this->sclDistrict)) {
+        if (empty($this->sclDistrictName) && ! empty($this->sclDistrict)) {
             $geographic = Geographic::where('district_code', $this->sclDistrict)
                 ->whereNull('commune_code')
                 ->first();
@@ -146,6 +147,7 @@ class School extends Model
                 return $geographic->district_name_en;
             }
         }
+
         return $this->sclDistrictName;
     }
 
@@ -227,7 +229,7 @@ class School extends Model
      * Assessment period methods - these fields don't exist in tbl_tarl_schools
      * You may need to create a separate table for assessment dates or add these columns
      */
-    
+
     /**
      * Check if an assessment type is currently active for this school.
      *

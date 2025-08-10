@@ -74,7 +74,7 @@ return new class extends Migration
                 'homework_completion', 'class_participation', 'behavior_during_assessment',
                 'used_assistance', 'assistance_type', 'accommodations_provided',
                 'reassessment_needed', 'reassessment_date', 'benchmark_comparison',
-                'peer_rank', 'peer_total'
+                'peer_rank', 'peer_total',
             ]);
         });
     }

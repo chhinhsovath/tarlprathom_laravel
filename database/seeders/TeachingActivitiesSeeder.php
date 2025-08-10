@@ -27,42 +27,42 @@ class TeachingActivitiesSeeder extends Seeder
                 'learning_objectives' => [
                     'Recognize Khmer consonants',
                     'Associate letters with sounds',
-                    'Develop phonemic awareness'
+                    'Develop phonemic awareness',
                 ],
                 'materials_required' => [
                     'Letter cards',
                     'Sound recording device',
                     'Picture cards',
-                    'Game board'
+                    'Game board',
                 ],
                 'preparation_steps' => [
                     'Prepare letter and picture cards',
                     'Set up game board',
                     'Test sound equipment',
-                    'Organize student groups'
+                    'Organize student groups',
                 ],
                 'implementation_steps' => [
                     'Introduce the game rules',
                     'Demonstrate with one example',
                     'Students take turns matching',
                     'Provide immediate feedback',
-                    'Celebrate correct matches'
+                    'Celebrate correct matches',
                 ],
                 'assessment_strategies' => [
                     'Observe student accuracy',
                     'Note participation level',
                     'Record time to completion',
-                    'Ask reflection questions'
+                    'Ask reflection questions',
                 ],
                 'differentiation_strategies' => [
                     'Vary number of letters for different abilities',
                     'Provide peer support for struggling students',
-                    'Add complexity for advanced learners'
+                    'Add complexity for advanced learners',
                 ],
                 'extension_activities' => [
                     'Create own letter-sound combinations',
                     'Teach the game to younger students',
-                    'Draw pictures for letters'
+                    'Draw pictures for letters',
                 ],
                 'keywords' => ['letters', 'sounds', 'phonics', 'matching', 'beginner'],
                 'difficulty_level' => 'easy',
@@ -75,7 +75,7 @@ class TeachingActivitiesSeeder extends Seeder
                     'Letter recognition',
                     'Sound discrimination',
                     'Memory skills',
-                    'Turn-taking'
+                    'Turn-taking',
                 ],
                 'created_by' => $creator?->id,
                 'is_approved' => true,
@@ -95,41 +95,41 @@ class TeachingActivitiesSeeder extends Seeder
                 'learning_objectives' => [
                     'Improve reading fluency',
                     'Build confidence in oral reading',
-                    'Develop listening skills'
+                    'Develop listening skills',
                 ],
                 'materials_required' => [
                     'Age-appropriate story books',
                     'Reading pointers',
-                    'Comfortable seating'
+                    'Comfortable seating',
                 ],
                 'preparation_steps' => [
                     'Select appropriate story',
                     'Preview difficult words',
                     'Arrange seating in circle',
-                    'Prepare discussion questions'
+                    'Prepare discussion questions',
                 ],
                 'implementation_steps' => [
                     'Introduce the story and characters',
                     'Each student reads one sentence',
                     'Help with difficult words',
                     'Discuss story as you go',
-                    'Reflect on story meaning'
+                    'Reflect on story meaning',
                 ],
                 'assessment_strategies' => [
                     'Note reading fluency improvements',
                     'Assess comprehension through questions',
                     'Observe engagement levels',
-                    'Record new vocabulary learned'
+                    'Record new vocabulary learned',
                 ],
                 'differentiation_strategies' => [
                     'Shorter sentences for struggling Letters',
                     'Allow re-reading for confidence',
-                    'Pair strong Letters with weaker ones'
+                    'Pair strong Letters with weaker ones',
                 ],
                 'extension_activities' => [
                     'Act out parts of the story',
                     'Draw favorite scenes',
-                    'Create alternative endings'
+                    'Create alternative endings',
                 ],
                 'keywords' => ['reading', 'fluency', 'collaboration', 'stories'],
                 'difficulty_level' => 'medium',
@@ -142,7 +142,7 @@ class TeachingActivitiesSeeder extends Seeder
                     'Reading fluency',
                     'Listening skills',
                     'Story comprehension',
-                    'Confidence building'
+                    'Confidence building',
                 ],
                 'created_by' => $creator?->id,
                 'is_approved' => true,
@@ -164,42 +164,42 @@ class TeachingActivitiesSeeder extends Seeder
                 'learning_objectives' => [
                     'Recognize numbers 1-20',
                     'Understand number sequence',
-                    'Develop counting skills'
+                    'Develop counting skills',
                 ],
                 'materials_required' => [
                     'Number cards (1-20)',
                     'Collection baskets',
                     'Timer',
-                    'Stickers for rewards'
+                    'Stickers for rewards',
                 ],
                 'preparation_steps' => [
                     'Hide number cards around classroom',
                     'Prepare collection baskets',
                     'Set up start and finish areas',
-                    'Explain rules clearly'
+                    'Explain rules clearly',
                 ],
                 'implementation_steps' => [
                     'Students search for numbers in order',
                     'Collect numbers 1, then 2, then 3, etc.',
                     'Return to check with teacher',
                     'Continue until complete',
-                    'Celebrate completion'
+                    'Celebrate completion',
                 ],
                 'assessment_strategies' => [
                     'Check number recognition accuracy',
                     'Time how long it takes',
                     'Note which numbers are difficult',
-                    'Observe cooperation skills'
+                    'Observe cooperation skills',
                 ],
                 'differentiation_strategies' => [
                     'Use different number ranges (1-10, 1-15, 1-20)',
                     'Allow peer helpers',
-                    'Provide number line reference'
+                    'Provide number line reference',
                 ],
                 'extension_activities' => [
                     'Hide numbers in skip counting patterns',
                     'Add simple math problems',
-                    'Create treasure maps with numbers'
+                    'Create treasure maps with numbers',
                 ],
                 'keywords' => ['numbers', 'counting', 'sequence', 'active learning'],
                 'difficulty_level' => 'easy',
@@ -212,7 +212,7 @@ class TeachingActivitiesSeeder extends Seeder
                     'Number recognition',
                     'Counting skills',
                     'Physical activity',
-                    'Problem solving'
+                    'Problem solving',
                 ],
                 'created_by' => $creator?->id,
                 'is_approved' => true,
@@ -232,42 +232,42 @@ class TeachingActivitiesSeeder extends Seeder
                 'learning_objectives' => [
                     'Understand addition concept',
                     'Use concrete materials for calculation',
-                    'Connect abstract symbols with concrete objects'
+                    'Connect abstract symbols with concrete objects',
                 ],
                 'materials_required' => [
                     'Counting beads or blocks',
                     'Addition worksheets',
                     'Number cards',
-                    'Recording sheets'
+                    'Recording sheets',
                 ],
                 'preparation_steps' => [
                     'Prepare manipulative sets for each pair',
                     'Create addition problems appropriate for level',
                     'Set up workspace with materials',
-                    'Prepare recording sheets'
+                    'Prepare recording sheets',
                 ],
                 'implementation_steps' => [
                     'Demonstrate addition with manipulatives',
                     'Students work in pairs on problems',
                     'Use objects to show each addition',
                     'Record the number sentence',
-                    'Check answers together'
+                    'Check answers together',
                 ],
                 'assessment_strategies' => [
                     'Observe correct use of manipulatives',
                     'Check accuracy of recorded answers',
                     'Note problem-solving strategies',
-                    'Listen to student explanations'
+                    'Listen to student explanations',
                 ],
                 'differentiation_strategies' => [
                     'Vary problem difficulty (sums to 5, 10, 15)',
                     'Provide different types of manipulatives',
-                    'Allow verbal or written recording'
+                    'Allow verbal or written recording',
                 ],
                 'extension_activities' => [
                     'Create word problems',
                     'Explore subtraction with same materials',
-                    'Make up problems for other students'
+                    'Make up problems for other students',
                 ],
                 'keywords' => ['addition', 'manipulatives', 'concrete', 'pairs'],
                 'difficulty_level' => 'medium',
@@ -280,7 +280,7 @@ class TeachingActivitiesSeeder extends Seeder
                     'Addition skills',
                     'Number sense',
                     'Mathematical reasoning',
-                    'Collaborative skills'
+                    'Collaborative skills',
                 ],
                 'created_by' => $creator?->id,
                 'is_approved' => true,
@@ -302,42 +302,42 @@ class TeachingActivitiesSeeder extends Seeder
                 'learning_objectives' => [
                     'Analyze character traits and motivations',
                     'Express opinions about characters',
-                    'Support opinions with evidence from text'
+                    'Support opinions with evidence from text',
                 ],
                 'materials_required' => [
                     'Complete story book',
                     'Character analysis worksheet',
                     'Discussion question cards',
-                    'Chart paper for recording ideas'
+                    'Chart paper for recording ideas',
                 ],
                 'preparation_steps' => [
                     'Read story beforehand',
                     'Prepare discussion questions',
                     'Set up comfortable discussion area',
-                    'Prepare character analysis templates'
+                    'Prepare character analysis templates',
                 ],
                 'implementation_steps' => [
                     'Review story briefly',
                     'Introduce main characters',
                     'Discuss character traits and evidence',
                     'Students share different perspectives',
-                    'Record key insights on chart'
+                    'Record key insights on chart',
                 ],
                 'assessment_strategies' => [
                     'Listen for evidence-based reasoning',
                     'Note depth of character understanding',
                     'Assess participation in discussion',
-                    'Review written character analyses'
+                    'Review written character analyses',
                 ],
                 'differentiation_strategies' => [
                     'Provide sentence starters for responses',
                     'Allow drawing instead of writing',
-                    'Pair students for discussion support'
+                    'Pair students for discussion support',
                 ],
                 'extension_activities' => [
                     'Write alternative character actions',
                     'Create character dialogue',
-                    'Compare characters across stories'
+                    'Compare characters across stories',
                 ],
                 'keywords' => ['character analysis', 'discussion', 'critical thinking'],
                 'difficulty_level' => 'hard',
@@ -350,7 +350,7 @@ class TeachingActivitiesSeeder extends Seeder
                     'Critical thinking',
                     'Oral communication',
                     'Text analysis',
-                    'Evidence-based reasoning'
+                    'Evidence-based reasoning',
                 ],
                 'created_by' => $creator?->id,
                 'is_approved' => true,
@@ -370,42 +370,42 @@ class TeachingActivitiesSeeder extends Seeder
                 'learning_objectives' => [
                     'Solve multi-step word problems',
                     'Identify relevant information',
-                    'Choose appropriate problem-solving strategies'
+                    'Choose appropriate problem-solving strategies',
                 ],
                 'materials_required' => [
                     'Word problem cards',
                     'Manipulatives for calculation',
                     'Strategy posters',
-                    'Recording sheets'
+                    'Recording sheets',
                 ],
                 'preparation_steps' => [
                     'Select problems appropriate for student levels',
                     'Organize materials by group',
                     'Display problem-solving strategies',
-                    'Prepare solution recording sheets'
+                    'Prepare solution recording sheets',
                 ],
                 'implementation_steps' => [
                     'Read problem together carefully',
                     'Identify what we know and need to find',
                     'Choose problem-solving strategy',
                     'Work through solution step by step',
-                    'Check answer for reasonableness'
+                    'Check answer for reasonableness',
                 ],
                 'assessment_strategies' => [
                     'Observe problem-solving process',
                     'Check accuracy of final answers',
                     'Note strategy choices',
-                    'Listen to group discussions'
+                    'Listen to group discussions',
                 ],
                 'differentiation_strategies' => [
                     'Provide problems with different complexity',
                     'Allow use of manipulatives or drawing',
-                    'Offer hint cards for struggling groups'
+                    'Offer hint cards for struggling groups',
                 ],
                 'extension_activities' => [
                     'Create their own word problems',
                     'Solve problems multiple ways',
-                    'Present solutions to other groups'
+                    'Present solutions to other groups',
                 ],
                 'keywords' => ['word problems', 'problem solving', 'real-world'],
                 'difficulty_level' => 'hard',
@@ -418,7 +418,7 @@ class TeachingActivitiesSeeder extends Seeder
                     'Problem solving',
                     'Mathematical reasoning',
                     'Reading comprehension',
-                    'Collaboration'
+                    'Collaboration',
                 ],
                 'created_by' => $creator?->id,
                 'is_approved' => true,

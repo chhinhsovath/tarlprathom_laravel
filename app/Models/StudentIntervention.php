@@ -17,7 +17,7 @@ class StudentIntervention extends Model
         'exit_reason', 'exit_date', 'post_intervention_plan', 'parent_consent',
         'parent_consent_date', 'parent_involvement', 'accommodations', 'modifications',
         'teacher_feedback', 'student_feedback', 'parent_feedback',
-        'requires_follow_up', 'follow_up_date'
+        'requires_follow_up', 'follow_up_date',
     ];
 
     protected $casts = [
@@ -37,7 +37,7 @@ class StudentIntervention extends Model
         'progress_score' => 'decimal:2',
         'goal_achieved' => 'boolean',
         'parent_consent' => 'boolean',
-        'requires_follow_up' => 'boolean'
+        'requires_follow_up' => 'boolean',
     ];
 
     public function student()
@@ -88,37 +88,37 @@ class StudentIntervention extends Model
 
     public function getDurationInWeeksAttribute()
     {
-        if (!$this->start_date || !$this->end_date) {
+        if (! $this->start_date || ! $this->end_date) {
             return null;
         }
-        
+
         return $this->start_date->diffInWeeks($this->end_date);
     }
 
     public function calculateAttendanceRate()
     {
-        if (!$this->sessions_total || $this->sessions_total === 0) {
+        if (! $this->sessions_total || $this->sessions_total === 0) {
             return 0;
         }
-        
+
         return round(($this->sessions_attended / $this->sessions_total) * 100, 2);
     }
 
     public function updateProgress($sessionNumber, $data)
     {
         $progressData = $this->progress_data ?? [];
-        
+
         $progressData[] = [
             'session' => $sessionNumber,
             'date' => now()->toDateString(),
             'data' => $data,
-            'recorded_by' => auth()->id()
+            'recorded_by' => auth()->id(),
         ];
-        
+
         $this->progress_data = $progressData;
         $this->sessions_attended = count($progressData);
         $this->attendance_rate = $this->calculateAttendanceRate();
-        
+
         $this->save();
     }
 
@@ -127,13 +127,13 @@ class StudentIntervention extends Model
         $this->outcome_data = array_merge($this->outcome_data ?? [], [
             'final_assessment' => $data,
             'recorded_at' => now()->toDateTimeString(),
-            'recorded_by' => auth()->id()
+            'recorded_by' => auth()->id(),
         ]);
-        
+
         if (isset($data['goal_achieved'])) {
             $this->goal_achieved = $data['goal_achieved'];
         }
-        
+
         $this->save();
     }
 

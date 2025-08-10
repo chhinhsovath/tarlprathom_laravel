@@ -99,7 +99,7 @@ return new class extends Migration
                 'programs_implemented', 'shift_system', 'morning_shift_start', 'morning_shift_end',
                 'afternoon_shift_start', 'afternoon_shift_end', 'school_days_per_year',
                 'provides_meals', 'meal_provider', 'special_programs', 'achievements',
-                'challenges', 'accreditation_status', 'last_inspection_date', 'inspection_score'
+                'challenges', 'accreditation_status', 'last_inspection_date', 'inspection_score',
             ]);
         });
     }

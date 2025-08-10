@@ -38,7 +38,7 @@ class AssessmentTranslationsSeeder extends Seeder
             ['key' => 'locked', 'en' => 'Locked', 'km' => 'ជាប់សោ', 'group' => 'general'],
             ['key' => 'active', 'en' => 'Active', 'km' => 'សកម្ម', 'group' => 'general'],
             ['key' => 'no_assessments_found', 'en' => 'No assessments found', 'km' => 'រកមិនឃើញការវាយតម្លៃ', 'group' => 'assessment'],
-            
+
             // Assessment levels
             ['key' => 'story', 'en' => 'Story', 'km' => 'រឿង', 'group' => 'level'],
             ['key' => 'comp_1', 'en' => 'Comp. 1', 'km' => 'យល់អត្ថន័យ ១', 'group' => 'level'],
@@ -65,6 +65,6 @@ class AssessmentTranslationsSeeder extends Seeder
         Translation::clearCache();
 
         $this->command->info('Assessment translations seeded successfully!');
-        $this->command->info('Total translations added: ' . count($translations));
+        $this->command->info('Total translations added: '.count($translations));
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exports\SchoolTemplateExport;
 use App\Models\Geographic;
+use App\Models\Province;
 use App\Models\School;
 use App\Models\User;
 use App\Traits\Sortable;
@@ -68,7 +69,7 @@ class SchoolController extends Controller
             abort(403, __('Unauthorized action.'));
         }
 
-        $provinces = Geographic::getProvinces();
+        $provinces = Province::orderBy('name_kh')->get();
 
         return view('schools.create', compact('provinces'));
     }
@@ -134,7 +135,7 @@ class SchoolController extends Controller
             $query->where('role', 'teacher')->select('users.id', 'name', 'email');
         }]);
 
-        $provinces = Geographic::getProvinces();
+        $provinces = Province::orderBy('name_kh')->get();
 
         return view('schools.edit', compact('school', 'provinces'));
     }
@@ -487,7 +488,7 @@ class SchoolController extends Controller
      */
     public function getProvinces()
     {
-        $provinces = \App\Models\Geographic::getProvinces();
+        $provinces = \App\Models\Province::orderBy('name_kh')->get();
 
         return response()->json($provinces);
     }

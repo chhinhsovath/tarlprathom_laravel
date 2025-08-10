@@ -97,7 +97,7 @@ class Student extends Model
      */
     public function school()
     {
-        return $this->belongsTo(School::class);
+        return $this->belongsTo(School::class, 'school_id', 'sclAutoID');
     }
 
     /**
@@ -211,11 +211,12 @@ class Student extends Model
      */
     public function getBmiAttribute()
     {
-        if (!$this->height_cm || !$this->weight_kg) {
+        if (! $this->height_cm || ! $this->weight_kg) {
             return null;
         }
-        
+
         $heightInMeters = $this->height_cm / 100;
+
         return round($this->weight_kg / ($heightInMeters * $heightInMeters), 2);
     }
 
@@ -224,10 +225,10 @@ class Student extends Model
      */
     public function getCalculatedAgeAttribute()
     {
-        if (!$this->date_of_birth) {
+        if (! $this->date_of_birth) {
             return $this->age;
         }
-        
+
         return $this->date_of_birth->age;
     }
 
@@ -245,11 +246,11 @@ class Student extends Model
     public function getAcademicPerformance($subject = null)
     {
         $query = $this->assessments()->where('cycle', 'endline');
-        
+
         if ($subject) {
             $query->where('subject', $subject);
         }
-        
+
         return $query->avg('percentage_score') ?? 0;
     }
 
@@ -260,7 +261,7 @@ class Student extends Model
     {
         $attendanceRate = $this->getCurrentAttendanceRate();
         $academicPerformance = $this->getAcademicPerformance();
-        
+
         return $attendanceRate < 80 || $academicPerformance < 60;
     }
 }

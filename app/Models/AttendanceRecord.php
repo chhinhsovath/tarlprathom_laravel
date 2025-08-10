@@ -14,7 +14,7 @@ class AttendanceRecord extends Model
         'status', 'arrival_time', 'departure_time', 'minutes_late', 'late_reason',
         'absence_reason', 'parent_notified', 'notification_method', 'notes',
         'period', 'participated_in_activities', 'subjects_attended', 'subjects_missed',
-        'recorded_by', 'recorded_at', 'verified_by', 'verified_at'
+        'recorded_by', 'recorded_at', 'verified_by', 'verified_at',
     ];
 
     protected $casts = [
@@ -26,7 +26,7 @@ class AttendanceRecord extends Model
         'subjects_attended' => 'array',
         'subjects_missed' => 'array',
         'recorded_at' => 'datetime',
-        'verified_at' => 'datetime'
+        'verified_at' => 'datetime',
     ];
 
     public function student()
@@ -36,7 +36,7 @@ class AttendanceRecord extends Model
 
     public function school()
     {
-        return $this->belongsTo(School::class);
+        return $this->belongsTo(School::class, 'school_id', 'sclAutoID');
     }
 
     public function schoolClass()
@@ -112,19 +112,19 @@ class AttendanceRecord extends Model
     public static function calculateAttendanceRate($studentId, $startDate = null, $endDate = null)
     {
         $query = self::where('student_id', $studentId);
-        
+
         if ($startDate && $endDate) {
             $query->whereBetween('attendance_date', [$startDate, $endDate]);
         }
-        
+
         $total = $query->count();
-        
+
         if ($total === 0) {
             return 0;
         }
-        
+
         $present = $query->whereIn('status', ['present', 'late'])->count();
-        
+
         return round(($present / $total) * 100, 2);
     }
 }

@@ -62,7 +62,7 @@ class UserController extends Controller
         }
 
         $users = $query->orderBy($sortField, $sortOrder)->paginate(20)->withQueryString();
-        $schools = School::orderBy('name')->get();
+        $schools = School::orderBy('sclName')->get();
 
         return view('users.index', compact('users', 'schools', 'sortField', 'sortOrder'));
     }
@@ -76,7 +76,7 @@ class UserController extends Controller
         if (! auth()->user()->isAdmin()) {
             abort(403, __('Unauthorized action.'));
         }
-        $schools = School::orderBy('name')->get();
+        $schools = School::orderBy('sclName')->get();
 
         return view('users.create', compact('schools'));
     }
@@ -146,7 +146,7 @@ class UserController extends Controller
         if (! auth()->user()->isAdmin()) {
             abort(403, __('Unauthorized action.'));
         }
-        $schools = School::orderBy('name')->get();
+        $schools = School::orderBy('sclName')->get();
 
         return view('users.edit', compact('user', 'schools'));
     }
@@ -327,7 +327,7 @@ class UserController extends Controller
         $role = $request->get('role', 'teacher');
         $users = User::where('role', $role)
             ->select('id', 'name', 'email')
-            ->orderBy('name')
+            ->orderBy('sclName')
             ->get();
 
         return response()->json($users);
@@ -445,7 +445,7 @@ class UserController extends Controller
             'Is Active',
         ];
 
-        $schools = School::orderBy('name')->pluck('name')->toArray();
+        $schools = School::orderBy('sclName')->pluck('sclName')->toArray();
 
         // Sample data
         $sampleData = [
@@ -523,7 +523,7 @@ class UserController extends Controller
                 ->with('error', __('Schools can only be assigned to mentors.'));
         }
 
-        $schools = School::orderBy('name')->get();
+        $schools = School::orderBy('sclName')->get();
         $assignedSchoolIds = $user->assignedSchools->pluck('id')->toArray();
 
         return view('users.assign-schools', compact('user', 'schools', 'assignedSchoolIds'));

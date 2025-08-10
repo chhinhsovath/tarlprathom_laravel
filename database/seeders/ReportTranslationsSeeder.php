@@ -132,7 +132,7 @@ class ReportTranslationsSeeder extends Seeder
             // General Terms
             ['key' => 'School', 'en' => 'School', 'km' => 'សាលា'],
             ['key' => 'Subject', 'en' => 'Subject', 'km' => 'មុខវិជ្ជា'],
-            
+
             // School Comparison Report - Additional Translations
             ['key' => 'Understanding School Comparisons', 'en' => 'Understanding School Comparisons', 'km' => 'យល់ដឹងអំពីការប្រៀបធៀបសាលា'],
             ['key' => 'This report compares student performance across different schools for a specific subject and assessment cycle. It helps identify:', 'en' => 'This report compares student performance across different schools for a specific subject and assessment cycle. It helps identify:', 'km' => 'របាយការណ៍នេះប្រៀបធៀបការអនុវត្តរបស់សិស្សទូទាំងសាលាផ្សេងៗគ្នាសម្រាប់មុខវិជ្ជា និងវដ្តវាយតម្លៃជាក់លាក់មួយ។ វាជួយកំណត់អត្តសញ្ញាណ៖'],
@@ -140,7 +140,7 @@ class ReportTranslationsSeeder extends Seeder
             ['key' => 'Schools that may need additional support for foundational skills', 'en' => 'Schools that may need additional support for foundational skills', 'km' => 'សាលាដែលអាចត្រូវការការគាំទ្របន្ថែមសម្រាប់ជំនាញមូលដ្ឋាន'],
             ['key' => 'Distribution patterns that inform resource allocation', 'en' => 'Distribution patterns that inform resource allocation', 'km' => 'លំនាំការបែងចែកដែលផ្តល់ព័ត៌មានការបែងចែកធនធាន'],
             ['key' => 'Performance variations across the school network', 'en' => 'Performance variations across the school network', 'km' => 'ការប្រែប្រួលការអនុវត្តនៅទូទាំងបណ្តាញសាលា'],
-            
+
             // School Comparison Chart and Table Translations
             ['key' => 'How to Read the Charts and Tables', 'en' => 'How to Read the Charts and Tables', 'km' => 'របៀបអានគំនូសតាង និងតារាង'],
             ['key' => 'Stacked Bar Chart', 'en' => 'Stacked Bar Chart', 'km' => 'គំនូសតាងរបារជង់'],
@@ -153,14 +153,14 @@ class ReportTranslationsSeeder extends Seeder
             ['key' => 'Percentages show proportion of school total', 'en' => 'Percentages show proportion of school total', 'km' => 'ភាគរយបង្ហាញសមាមាត្រនៃចំនួនសរុបសាលា'],
             ['key' => 'Compare across rows to see school differences', 'en' => 'Compare across rows to see school differences', 'km' => 'ប្រៀបធៀបតាមជួរដេកដើម្បីមើលភាពខុសគ្នារបស់សាលា'],
             ['key' => 'Compare within columns to see level concentrations', 'en' => 'Compare within columns to see level concentrations', 'km' => 'ប្រៀបធៀបក្នុងជួរឈរដើម្បីមើលការប្រមូលផ្តុំកម្រិត'],
-            
+
             // School Comparison Chart Specific Translations
             ['key' => 'Student Distribution by School and Level', 'en' => 'Student Distribution by School and Level', 'km' => 'ការបែងចែកសិស្សតាមសាលា និងកម្រិត'],
             ['key' => 'Chart interpretation', 'en' => 'Chart interpretation', 'km' => 'ការបកស្រាយគំនូសតាង'],
             ['key' => 'Each school is represented by a stacked bar. Taller bars indicate more students assessed. The color distribution within each bar shows how students are distributed across skill levels.', 'en' => 'Each school is represented by a stacked bar. Taller bars indicate more students assessed. The color distribution within each bar shows how students are distributed across skill levels.', 'km' => 'សាលានីមួយៗត្រូវបានតំណាងដោយរបារជង់។ របារខ្ពស់បង្កើតបង្ហាញថាសិស្សច្រើនជាងត្រូវបានវាយតម្លៃ។ ការបែងចែកពណ៌នៅក្នុងរបារនីមួយៗបង្ហាញពីរបៀបដែលសិស្សត្រូវបានបែងចែកនៅទូទាំងកម្រិតជំនាញ។'],
             ['key' => 'Look for', 'en' => 'Look for', 'km' => 'មើលរក'],
             ['key' => 'Schools with more green/teal (advanced levels) vs red/yellow (beginner levels), and schools with similar total heights but different color distributions.', 'en' => 'Schools with more green/teal (advanced levels) vs red/yellow (beginner levels), and schools with similar total heights but different color distributions.', 'km' => 'សាលាដែលមានពណ៌បៃតង/បៃតងទឹកសមុទ្រច្រើនជាង (កម្រិតខ្ពស់) ធៀបនឹងក្រហម/លឿង (កម្រិតដំបូង) និងសាលាដែលមានកម្ពស់សរុបស្រដៀងគ្នាប៉ុន្តែការបែងចែកពណ៌ផ្សេងគ្នា។'],
-            
+
             // Mentoring Impact Report Translations
             ['key' => 'How We Calculate Impact', 'en' => 'How We Calculate Impact', 'km' => 'របៀបដែលយើងគណនាផលប៉ះពាល់'],
             ['key' => 'Baseline Percentage', 'en' => 'Baseline Percentage', 'km' => 'ភាគរយមូលដ្ឋាន'],
@@ -173,14 +173,14 @@ class ReportTranslationsSeeder extends Seeder
             ['key' => 'Follow-up Required', 'en' => 'Follow-up Required', 'km' => 'ត្រូវការតាមដាន'],
             ['key' => 'Show Details', 'en' => 'Show Details', 'km' => 'បង្ហាញលម្អិត'],
             ['key' => 'Hide Details', 'en' => 'Hide Details', 'km' => 'លាក់លម្អិត'],
-            
+
             // Chart translations for Mentoring Impact Report
             ['key' => 'visits', 'en' => 'visits', 'km' => 'ការចុះណែនាំ'],
             ['key' => 'improvement', 'en' => 'improvement', 'km' => 'កែលម្អ'],
             ['key' => 'Correlation between Mentoring Visits and Performance Improvement', 'en' => 'Correlation between Mentoring Visits and Performance Improvement', 'km' => 'ការទាក់ទងគ្នារវាងការចុះណែនាំ និងការកែលម្អដំណើរការ'],
             ['key' => 'Number of Mentoring Visits', 'en' => 'Number of Mentoring Visits', 'km' => 'ចំនួនការចុះណែនាំ'],
             ['key' => 'Performance Improvement (Latest - Baseline)', 'en' => 'Performance Improvement (Latest - Baseline)', 'km' => 'ការកែលម្អដំណើរការ (ចុងក្រោយ - មូលដ្ឋាន)'],
-            
+
             // Additional Mentoring Impact translations
             ['key' => 'Percentage of visits where class was in session', 'en' => 'Percentage of visits where class was in session', 'km' => 'ភាគរយនៃការចុះទស្សនកិច្ចដែលថ្នាក់រៀនកំពុងបើក'],
             ['key' => 'Percentage of teachers with session plans', 'en' => 'Percentage of teachers with session plans', 'km' => 'ភាគរយនៃគ្រូដែលមានផែនការបង្រៀន'],
@@ -193,7 +193,7 @@ class ReportTranslationsSeeder extends Seeder
             ['key' => 'No', 'en' => 'No', 'km' => 'ទេ'],
             ['key' => 'Start Date', 'en' => 'Start Date', 'km' => 'កាលបរិច្ឆេទចាប់ផ្តើម'],
             ['key' => 'End Date', 'en' => 'End Date', 'km' => 'កាលបរិច្ឆេទបញ្ចប់'],
-            
+
             // Progress Tracking Report Translations
             ['key' => 'Understanding Progress Tracking', 'en' => 'Understanding Progress Tracking', 'km' => 'យល់ដឹងការតាមដានវឌ្ឍនភាព'],
             ['key' => 'This report tracks individual student learning progress by comparing their baseline assessment with their most recent assessment (midline or endline). It shows:', 'en' => 'This report tracks individual student learning progress by comparing their baseline assessment with their most recent assessment (midline or endline). It shows:', 'km' => 'របាយការណ៍នេះតាមដានវឌ្ឍនភាពការរៀនសូត្រសិស្សបុគ្គលដោយប្រៀបធៀបការវាយតម្លៃមូលដ្ឋានរបស់ពួកគេជាមួយការវាយតម្លៃចុងក្រោយបំផុតរបស់ពួកគេ (មុនពេលកណ្តាល ឬចុងក្រោយ)។ វាបង្ហាញ៖'],
@@ -201,7 +201,7 @@ class ReportTranslationsSeeder extends Seeder
             ['key' => 'Students who maintained their skill level', 'en' => 'Students who maintained their skill level', 'km' => 'សិស្សដែលរក្សាបានកម្រិតជំនាញរបស់ពួកគេ'],
             ['key' => 'Students whose performance declined', 'en' => 'Students whose performance declined', 'km' => 'សិស្សដែលការអនុវត្តបានធ្លាក់ចុះ'],
             ['key' => 'Score changes between assessment cycles', 'en' => 'Score changes between assessment cycles', 'km' => 'ការផ្លាស់ប្តូរពិន្ទុរវាងវដ្តវាយតម្លៃ'],
-            
+
             // Progress Calculation Details
             ['key' => 'Compares skill levels between baseline and latest assessment', 'en' => 'Compares skill levels between baseline and latest assessment', 'km' => 'ប្រៀបធៀបកម្រិតជំនាញរវាងការវាយតម្លៃមូលដ្ឋាន និងចុងក្រោយ'],
             ['key' => 'Positive number = moved up levels (improved)', 'en' => 'Positive number = moved up levels (improved)', 'km' => 'លេខវិជ្ជមាន = បានឡើងកម្រិត (កែលម្អ)'],
@@ -211,7 +211,7 @@ class ReportTranslationsSeeder extends Seeder
             ['key' => 'Positive = score increased', 'en' => 'Positive = score increased', 'km' => 'វិជ្ជមាន = ពិន្ទុកើនឡើង'],
             ['key' => 'Zero = score stayed the same', 'en' => 'Zero = score stayed the same', 'km' => 'សូន្យ = ពិន្ទុនៅដដែល'],
             ['key' => 'Negative = score decreased', 'en' => 'Negative = score decreased', 'km' => 'អវិជ្ជមាន = ពិន្ទុចុះទាប'],
-            
+
             // Current View Section
             ['key' => 'Current View', 'en' => 'Current View', 'km' => 'ទិដ្ឋភាពបច្ចុប្បន្ន'],
             ['key' => 'Tracking progress in', 'en' => 'Tracking progress in', 'km' => 'តាមដានវឌ្ឍនភាពក្នុង'],
@@ -219,7 +219,7 @@ class ReportTranslationsSeeder extends Seeder
             ['key' => 'Selected School', 'en' => 'Selected School', 'km' => 'សាលាដែលបានជ្រើសរើស'],
             ['key' => 'across all accessible schools', 'en' => 'across all accessible schools', 'km' => 'នៅទូទាំងសាលាដែលអាចចូលប្រើបាន'],
             ['key' => 'Only students with both baseline and follow-up assessments are included', 'en' => 'Only students with both baseline and follow-up assessments are included', 'km' => 'មានតែសិស្សដែលមានការវាយតម្លៃមូលដ្ឋាន និងតាមដានប៉ុណ្ណោះដែលត្រូវបានរួមបញ្ចូល'],
-            
+
             // Individual Student Progress
             ['key' => 'Individual Student Progress', 'en' => 'Individual Student Progress', 'km' => 'វឌ្ឍនភាពសិស្សបុគ្គល'],
             ['key' => 'Reading the Progress Table', 'en' => 'Reading the Progress Table', 'km' => 'ការអានតារាងវឌ្ឍនភាព'],
@@ -230,7 +230,7 @@ class ReportTranslationsSeeder extends Seeder
             ['key' => 'Number of skill levels moved up (+) or down (-)', 'en' => 'Number of skill levels moved up (+) or down (-)', 'km' => 'ចំនួនកម្រិតជំនាញឡើង (+) ឬចុះ (-)'],
             ['key' => 'Numerical difference between latest and baseline scores', 'en' => 'Numerical difference between latest and baseline scores', 'km' => 'ភាពខុសគ្នាជាលេខរវាងពិន្ទុចុងក្រោយ និងមូលដ្ឋាន'],
             ['key' => 'Students are sorted by level improvement (most improved first), then by score change.', 'en' => 'Students are sorted by level improvement (most improved first), then by score change.', 'km' => 'សិស្សត្រូវបានតម្រៀបតាមការកែលម្អកម្រិត (អ្នកកែលម្អបំផុតមុន) បន្ទាប់មកតាមការផ្លាស់ប្តូរពិន្ទុ។'],
-            
+
             // Table Headers and Tooltips
             ['key' => 'Student Name', 'en' => 'Student Name', 'km' => 'ឈ្មោះសិស្ស'],
             ['key' => 'Student name', 'en' => 'Student name', 'km' => 'ឈ្មោះសិស្ស'],
@@ -240,16 +240,16 @@ class ReportTranslationsSeeder extends Seeder
             ['key' => 'Most recent assessment level and score', 'en' => 'Most recent assessment level and score', 'km' => 'កម្រិត និងពិន្ទុការវាយតម្លៃថ្មីបំផុត'],
             ['key' => 'Change in skill levels (+ improved, - declined, = same)', 'en' => 'Change in skill levels (+ improved, - declined, = same)', 'km' => 'ការផ្លាស់ប្តូរកម្រិតជំនាញ (+ កែលម្អ, - ធ្លាក់ចុះ, = ដូចគ្នា)'],
             ['key' => 'Numerical score difference (latest - baseline)', 'en' => 'Numerical score difference (latest - baseline)', 'km' => 'ភាពខុសគ្នាពិន្ទុជាលេខ (ចុងក្រោយ - មូលដ្ឋាន)'],
-            
+
             // Empty State Messages
             ['key' => 'No students with multiple assessments found', 'en' => 'No students with multiple assessments found', 'km' => 'រកមិនឃើញសិស្សដែលមានការវាយតម្លៃច្រើនទេ'],
             ['key' => 'Students need both baseline and follow-up assessments to appear in this report', 'en' => 'Students need both baseline and follow-up assessments to appear in this report', 'km' => 'សិស្សត្រូវការការវាយតម្លៃមូលដ្ឋាន និងតាមដានទាំងពីរដើម្បីបង្ហាញក្នុងរបាយការណ៍នេះ'],
-            
+
             // Progress Status Labels
             ['key' => 'level', 'en' => 'level', 'km' => 'កម្រិត'],
             ['key' => 'levels', 'en' => 'levels', 'km' => 'កម្រិត'],
             ['key' => 'Same level', 'en' => 'Same level', 'km' => 'កម្រិតដូចគ្នា'],
-            
+
             // Additional Progress Summary Translations
             ['key' => 'Summary Cards', 'en' => 'Summary Cards', 'km' => 'កាតសង្ខេប'],
             ['key' => 'Each card shows the count and percentage of students in each progress category. The average score change shows the overall trend across all students.', 'en' => 'Each card shows the count and percentage of students in each progress category. The average score change shows the overall trend across all students.', 'km' => 'កាតនីមួយៗបង្ហាញចំនួន និងភាគរយសិស្សនៅក្នុងប្រភេទវឌ្ឍនភាពនីមួយៗ។ ការផ្លាស់ប្តូរពិន្ទុជាមធ្យមបង្ហាញទិន្នន័យទូទៅនៅទូទាំងសិស្សទាំងអស់។'],
@@ -263,7 +263,7 @@ class ReportTranslationsSeeder extends Seeder
             ['key' => 'No overall change', 'en' => 'No overall change', 'km' => 'គ្មានការផ្លាស់ប្តូរទូទៅ'],
             ['key' => 'Progress Distribution Chart', 'en' => 'Progress Distribution Chart', 'km' => 'តារាងបែងចែកវឌ្ឍនភាព'],
             ['key' => 'This doughnut chart shows the proportion of students in each progress category. Larger green sections indicate more students improved, while larger red sections may indicate need for intervention.', 'en' => 'This doughnut chart shows the proportion of students in each progress category. Larger green sections indicate more students improved, while larger red sections may indicate need for intervention.', 'km' => 'តារាងដូណាតនេះបង្ហាញសមាមាត្រសិស្សនៅក្នុងប្រភេទវឌ្ឍនភាពនីមួយៗ។ ផ្នែកបៃតងធំជាងបង្ហាញថាសិស្សកាន់តែច្រើនបានកែលម្អ ខណៈផ្នែកក្រហមធំជាងអាចបង្ហាញពីតម្រូវការអន្តរាគមន៍។'],
-            
+
             // Interpretation Guide Translations
             ['key' => 'Interpreting Progress Data', 'en' => 'Interpreting Progress Data', 'km' => 'បកស្រាយទិន្នន័យវឌ្ឍនភាព'],
             ['key' => 'High improvement rates', 'en' => 'High improvement rates', 'km' => 'អត្រាកែលម្អខ្ពស់'],
@@ -278,14 +278,14 @@ class ReportTranslationsSeeder extends Seeder
             ['key' => 'May need immediate attention and individualized intervention', 'en' => 'May need immediate attention and individualized intervention', 'km' => 'អាចត្រូវការការយកចិត្តទុកដាក់បន្ទាន់ និងអន្តរាគមន៍បុគ្គល'],
             ['key' => 'Consider timeframe', 'en' => 'Consider timeframe', 'km' => 'ពិចារណាពេលវេលា'],
             ['key' => 'Progress between baseline and midline vs. baseline and endline may differ', 'en' => 'Progress between baseline and midline vs. baseline and endline may differ', 'km' => 'វឌ្ឍនភាពរវាងមូលដ្ឋាន និងកណ្តាល ធៀបនឹង មូលដ្ឋាន និងចុងក្រោយ អាចខុសគ្នា'],
-            
+
             // Actions Section
             ['key' => 'Actions', 'en' => 'Actions', 'km' => 'សកម្មភាព'],
             ['key' => 'Use this progress data to identify students who need additional support, recognize successful teaching methods, and plan targeted interventions.', 'en' => 'Use this progress data to identify students who need additional support, recognize successful teaching methods, and plan targeted interventions.', 'km' => 'ប្រើទិន្នន័យវឌ្ឍនភាពនេះដើម្បីកំណត់អត្តសញ្ញាណសិស្សដែលត្រូវការការគាំទ្របន្ថែម ស្គាល់វិធីសាស្ត្របង្រៀនប្រកបដោយជោគជ័យ និងរៀបចំផែនការអន្តរាគមន៍គោលដៅ។'],
             ['key' => 'Export Chart', 'en' => 'Export Chart', 'km' => 'នាំចេញតារាង'],
             ['key' => 'Print Report', 'en' => 'Print Report', 'km' => 'បោះពុម្ពរបាយការណ៍'],
             ['key' => 'View Overall Performance', 'en' => 'View Overall Performance', 'km' => 'មើលការអនុវត្តទូទៅ'],
-            
+
             // Chart and Table Note
             ['key' => 'Note', 'en' => 'Note', 'km' => 'ចំណាំ'],
             ['key' => 'This table shows students sorted by their level improvement. Students who moved up multiple levels appear first, followed by those with smaller improvements, then those who maintained their level, and finally those who declined.', 'en' => 'This table shows students sorted by their level improvement. Students who moved up multiple levels appear first, followed by those with smaller improvements, then those who maintained their level, and finally those who declined.', 'km' => 'តារាងនេះបង្ហាញសិស្សដែលតម្រៀបតាមការកែលម្អកម្រិតរបស់ពួកគេ។ សិស្សដែលឡើងកម្រិតច្រើនបង្ហាញមុនបង្អស់ បន្ទាប់មកដោយអ្នកដែលមានការកែលម្អតូច បន្ទាប់មកអ្នកដែលរក្សាកម្រិតរបស់ពួកគេ និងចុងក្រោយអ្នកដែលធ្លាក់ចុះ។'],
@@ -301,7 +301,7 @@ class ReportTranslationsSeeder extends Seeder
             ['key' => 'Improved', 'en' => 'Improved', 'km' => 'បានកែលម្អ'],
             ['key' => 'Maintained', 'en' => 'Maintained', 'km' => 'បានរក្សា'],
             ['key' => 'Declined', 'en' => 'Declined', 'km' => 'បានធ្លាក់ចុះ'],
-            
+
             // Performance Calculation Report Translations
             ['key' => 'Analysis of student performance based on reading levels and mathematical operations capability', 'en' => 'Analysis of student performance based on reading levels and mathematical operations capability', 'km' => 'ការវិភាគការអនុវត្តរបស់សិស្សដោយផ្អែកលើកម្រិតការអាន និងសមត្ថភាពប្រមាណវិធីគណិតវិទ្យា'],
             ['key' => 'Assessment Cycle', 'en' => 'Assessment Cycle', 'km' => 'វដ្តវាយតម្លៃ'],
@@ -323,13 +323,13 @@ class ReportTranslationsSeeder extends Seeder
             ['key' => 'Operations', 'en' => 'Operations', 'km' => 'ប្រមាណវិធី'],
             ['key' => 'No Performance Data Available', 'en' => 'No Performance Data Available', 'km' => 'គ្មានទិន្នន័យការអនុវត្តទេ'],
             ['key' => 'No assessment data found for the selected criteria. Please try different filters or ensure assessments have been completed.', 'en' => 'No assessment data found for the selected criteria. Please try different filters or ensure assessments have been completed.', 'km' => 'រកមិនឃើញទិន្នន័យវាយតម្លៃសម្រាប់លក្ខណៈវិនិច្ឆ័យដែលបានជ្រើសរើសទេ។ សូមសាកល្បងតម្រងផ្សេងគ្នា ឬធានាថាការវាយតម្លៃត្រូវបានបញ្ចប់។'],
-            
+
             // Assessment Chart Labels
             ['key' => 'Khmer Assessment Results', 'en' => 'Khmer Assessment Results', 'km' => 'លទ្ធផលការវាយតម្លៃខ្មែរ'],
             ['key' => 'Math Assessment Results', 'en' => 'Math Assessment Results', 'km' => 'លទ្ធផលការវាយតម្លៃគណិតវិទ្យា'],
             ['key' => 'Reading Level', 'en' => 'Reading Level', 'km' => 'កម្រិតការអាន'],
             ['key' => 'Error loading assessment data', 'en' => 'Error loading assessment data', 'km' => 'កំហុសក្នុងការផ្ទុកទិន្នន័យការវាយតម្លៃ'],
-            
+
             // Public Assessment Results Page
             ['key' => 'TaRL Project', 'en' => 'TaRL Project', 'km' => 'គម្រោង TaRL'],
             ['key' => 'Assessment Results', 'en' => 'Assessment Results', 'km' => 'លទ្ធផលការវាយតម្លៃ'],
@@ -338,7 +338,7 @@ class ReportTranslationsSeeder extends Seeder
             ['key' => 'Log in', 'en' => 'Log in', 'km' => 'ចូលប្រព័ន្ធ'],
             ['key' => 'Register', 'en' => 'Register', 'km' => 'ចុះឈ្មោះ'],
             ['key' => 'Total Students Assessed', 'en' => 'Total Students Assessed', 'km' => 'សិស្សសរុបដែលបានវាយតម្លៃ'],
-            
+
             // Chart JavaScript Translations
             ['key' => 'Student Progress Distribution', 'en' => 'Student Progress Distribution', 'km' => 'ការបែងចែកវឌ្ឍនភាពសិស្ស'],
             ['key' => 'students', 'en' => 'students', 'km' => 'សិស្ស'],

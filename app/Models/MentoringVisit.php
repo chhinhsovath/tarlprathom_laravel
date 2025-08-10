@@ -155,7 +155,7 @@ class MentoringVisit extends Model
      */
     public function school()
     {
-        return $this->belongsTo(School::class);
+        return $this->belongsTo(School::class, 'school_id', 'sclAutoID');
     }
 
     /**

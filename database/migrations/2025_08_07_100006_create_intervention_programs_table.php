@@ -29,7 +29,7 @@ return new class extends Migration
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();
             $table->timestamps();
-            
+
             $table->index('type');
             $table->index('intensity');
             $table->index(['is_active', 'start_date', 'end_date']);

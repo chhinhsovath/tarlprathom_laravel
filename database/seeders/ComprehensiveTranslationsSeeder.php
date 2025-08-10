@@ -24,7 +24,7 @@ class ComprehensiveTranslationsSeeder extends Seeder
             ['key' => 'recent_assessments', 'en' => 'Recent Assessments', 'km' => 'ការវាយតម្លៃថ្មីៗ', 'group' => 'dashboard'],
             ['key' => 'performance_by_level', 'en' => 'Performance by Level', 'km' => 'លទ្ធផលតាមកម្រិត', 'group' => 'dashboard'],
             ['key' => 'assessment_distribution', 'en' => 'Assessment Distribution', 'km' => 'ការបែងចែកការវាយតម្លៃ', 'group' => 'dashboard'],
-            
+
             // Student Management
             ['key' => 'add_student', 'en' => 'Add Student', 'km' => 'បន្ថែមសិស្ស', 'group' => 'student'],
             ['key' => 'edit_student', 'en' => 'Edit Student', 'km' => 'កែសម្រួលសិស្ស', 'group' => 'student'],
@@ -39,7 +39,7 @@ class ComprehensiveTranslationsSeeder extends Seeder
             ['key' => 'age', 'en' => 'Age', 'km' => 'អាយុ', 'group' => 'student'],
             ['key' => 'section', 'en' => 'Section', 'km' => 'ផ្នែក', 'group' => 'student'],
             ['key' => 'student_number', 'en' => 'Student Number', 'km' => 'លេខរៀងសិស្ស', 'group' => 'student'],
-            
+
             // School Management
             ['key' => 'add_school', 'en' => 'Add School', 'km' => 'បន្ថែមសាលា', 'group' => 'school'],
             ['key' => 'edit_school', 'en' => 'Edit School', 'km' => 'កែសម្រួលសាលា', 'group' => 'school'],
@@ -49,7 +49,7 @@ class ComprehensiveTranslationsSeeder extends Seeder
             ['key' => 'school_name', 'en' => 'School Name', 'km' => 'ឈ្មោះសាលា', 'group' => 'school'],
             ['key' => 'contact_person', 'en' => 'Contact Person', 'km' => 'អ្នកទំនាក់ទំនង', 'group' => 'school'],
             ['key' => 'education_service_area', 'en' => 'Education Service Area', 'km' => 'តំបន់សេវាអប់រំ', 'group' => 'school'],
-            
+
             // User Management
             ['key' => 'add_user', 'en' => 'Add User', 'km' => 'បន្ថែមអ្នកប្រើ', 'group' => 'user'],
             ['key' => 'edit_user', 'en' => 'Edit User', 'km' => 'កែសម្រួលអ្នកប្រើ', 'group' => 'user'],
@@ -62,7 +62,7 @@ class ComprehensiveTranslationsSeeder extends Seeder
             ['key' => 'assign_schools', 'en' => 'Assign Schools', 'km' => 'ចាត់តាំងសាលា', 'group' => 'user'],
             ['key' => 'holding_classes', 'en' => 'Holding Classes', 'km' => 'ថ្នាក់ដែលបង្រៀន', 'group' => 'user'],
             ['key' => 'sex', 'en' => 'Sex', 'km' => 'ភេទ', 'group' => 'user'],
-            
+
             // Classes
             ['key' => 'classes', 'en' => 'Classes', 'km' => 'ថ្នាក់រៀន', 'group' => 'class'],
             ['key' => 'add_class', 'en' => 'Add Class', 'km' => 'បន្ថែមថ្នាក់', 'group' => 'class'],
@@ -70,7 +70,7 @@ class ComprehensiveTranslationsSeeder extends Seeder
             ['key' => 'delete_class', 'en' => 'Delete Class', 'km' => 'លុបថ្នាក់', 'group' => 'class'],
             ['key' => 'class_name', 'en' => 'Class Name', 'km' => 'ឈ្មោះថ្នាក់', 'group' => 'class'],
             ['key' => 'academic_year', 'en' => 'Academic Year', 'km' => 'ឆ្នាំសិក្សា', 'group' => 'class'],
-            
+
             // Reports
             ['key' => 'generate_report', 'en' => 'Generate Report', 'km' => 'បង្កើតរបាយការណ៍', 'group' => 'report'],
             ['key' => 'export_report', 'en' => 'Export Report', 'km' => 'នាំចេញរបាយការណ៍', 'group' => 'report'],
@@ -79,7 +79,7 @@ class ComprehensiveTranslationsSeeder extends Seeder
             ['key' => 'mentoring_impact', 'en' => 'Mentoring Impact', 'km' => 'ផលប៉ះពាល់នៃការណែនាំ', 'group' => 'report'],
             ['key' => 'my_mentoring', 'en' => 'My Mentoring', 'km' => 'ការណែនាំរបស់ខ្ញុំ', 'group' => 'report'],
             ['key' => 'performance_calculation', 'en' => 'Performance Calculation', 'km' => 'ការគណនាលទ្ធផល', 'group' => 'report'],
-            
+
             // Import/Export
             ['key' => 'import_data', 'en' => 'Import Data', 'km' => 'នាំចូលទិន្នន័យ', 'group' => 'import'],
             ['key' => 'export_data', 'en' => 'Export Data', 'km' => 'នាំចេញទិន្នន័យ', 'group' => 'import'],
@@ -89,7 +89,7 @@ class ComprehensiveTranslationsSeeder extends Seeder
             ['key' => 'download_template', 'en' => 'Download Template', 'km' => 'ទាញយកគំរូ', 'group' => 'import'],
             ['key' => 'upload_file', 'en' => 'Upload File', 'km' => 'ផ្ទុកឯកសារ', 'group' => 'import'],
             ['key' => 'select_file', 'en' => 'Select File', 'km' => 'ជ្រើសរើសឯកសារ', 'group' => 'import'],
-            
+
             // Validation messages
             ['key' => 'field_required', 'en' => 'This field is required', 'km' => 'ទិន្នន័យនេះចាំបាច់', 'group' => 'validation'],
             ['key' => 'invalid_email', 'en' => 'Invalid email address', 'km' => 'អាសយដ្ឋានអ៊ីមែលមិនត្រឹមត្រូវ', 'group' => 'validation'],
@@ -97,7 +97,7 @@ class ComprehensiveTranslationsSeeder extends Seeder
             ['key' => 'data_saved', 'en' => 'Data saved successfully', 'km' => 'ទិន្នន័យត្រូវបានរក្សាទុកដោយជោគជ័យ', 'group' => 'validation'],
             ['key' => 'data_deleted', 'en' => 'Data deleted successfully', 'km' => 'ទិន្នន័យត្រូវបានលុបដោយជោគជ័យ', 'group' => 'validation'],
             ['key' => 'operation_failed', 'en' => 'Operation failed', 'km' => 'ប្រតិបត្តិការបរាជ័យ', 'group' => 'validation'],
-            
+
             // Months
             ['key' => 'january', 'en' => 'January', 'km' => 'មករា', 'group' => 'date'],
             ['key' => 'february', 'en' => 'February', 'km' => 'កុម្ភៈ', 'group' => 'date'],
@@ -111,7 +111,7 @@ class ComprehensiveTranslationsSeeder extends Seeder
             ['key' => 'october', 'en' => 'October', 'km' => 'តុលា', 'group' => 'date'],
             ['key' => 'november', 'en' => 'November', 'km' => 'វិច្ឆិកា', 'group' => 'date'],
             ['key' => 'december', 'en' => 'December', 'km' => 'ធ្នូ', 'group' => 'date'],
-            
+
             // Days
             ['key' => 'monday', 'en' => 'Monday', 'km' => 'ច័ន្ទ', 'group' => 'date'],
             ['key' => 'tuesday', 'en' => 'Tuesday', 'km' => 'អង្គារ', 'group' => 'date'],
@@ -137,6 +137,6 @@ class ComprehensiveTranslationsSeeder extends Seeder
         Translation::clearCache();
 
         $this->command->info('Comprehensive translations seeded successfully!');
-        $this->command->info('Total translations added: ' . count($translations));
+        $this->command->info('Total translations added: '.count($translations));
     }
 }

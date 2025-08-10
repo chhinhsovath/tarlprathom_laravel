@@ -16,7 +16,7 @@ class StudentLearningOutcome extends Model
         'teacher_observations', 'support_provided', 'requires_remediation',
         'remediation_plan', 'practice_hours', 'practice_activities',
         'improvement_rate', 'learning_path', 'peer_assessment', 'self_assessment',
-        'portfolio_included', 'portfolio_link'
+        'portfolio_included', 'portfolio_link',
     ];
 
     protected $casts = [
@@ -31,7 +31,7 @@ class StudentLearningOutcome extends Model
         'peer_assessment' => 'array',
         'self_assessment' => 'array',
         'requires_remediation' => 'boolean',
-        'portfolio_included' => 'boolean'
+        'portfolio_included' => 'boolean',
     ];
 
     public function student()
@@ -81,10 +81,10 @@ class StudentLearningOutcome extends Model
 
     public function getDaysToAchieveAttribute()
     {
-        if (!$this->achieved_date || !$this->first_attempt_date) {
+        if (! $this->achieved_date || ! $this->first_attempt_date) {
             return null;
         }
-        
+
         return $this->achieved_date->diffInDays($this->first_attempt_date);
     }
 
@@ -93,28 +93,28 @@ class StudentLearningOutcome extends Model
         if ($this->attempts_count <= 1) {
             return 0;
         }
-        
+
         $initialScore = 0;
         $currentScore = $this->achievement_score ?? 0;
-        
+
         if ($this->attempts_count > 0) {
             return round((($currentScore - $initialScore) / $this->attempts_count), 2);
         }
-        
+
         return 0;
     }
 
     public function addEvidence($type, $description, $url = null)
     {
         $artifacts = $this->evidence_artifacts ?? [];
-        
+
         $artifacts[] = [
             'type' => $type,
             'description' => $description,
             'url' => $url,
-            'added_at' => now()->toDateTimeString()
+            'added_at' => now()->toDateTimeString(),
         ];
-        
+
         $this->evidence_artifacts = $artifacts;
         $this->save();
     }
@@ -122,14 +122,14 @@ class StudentLearningOutcome extends Model
     public function addPracticeActivity($activity, $duration, $score = null)
     {
         $activities = $this->practice_activities ?? [];
-        
+
         $activities[] = [
             'activity' => $activity,
             'duration' => $duration,
             'score' => $score,
-            'date' => now()->toDateString()
+            'date' => now()->toDateString(),
         ];
-        
+
         $this->practice_activities = $activities;
         $this->practice_hours = ($this->practice_hours ?? 0) + ($duration / 60);
         $this->save();

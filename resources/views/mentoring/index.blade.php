@@ -26,9 +26,9 @@
                             <div>
                                 <select name="school_id" class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                                     <option value="">{{ __('mentoring.All Schools') }}</option>
-                                    @foreach(App\Models\School::orderBy('name')->get() as $school)
-                                        <option value="{{ $school->id }}" {{ request('school_id') == $school->id ? 'selected' : '' }}>
-                                            {{ $school->name }}
+                                    @foreach(App\Models\School::orderBy('sclName')->get() as $school)
+                                        <option value="{{ $school->sclAutoID }}" {{ request('school_id') == $school->sclAutoID ? 'selected' : '' }}>
+                                            {{ $school->sclName }}
                                         </option>
                                     @endforeach
                                 </select>

@@ -25,13 +25,13 @@ class InterventionProgramsSeeder extends Seeder
                         'subject' => 'khmer',
                         'cycle' => 'baseline',
                         'operator' => '<',
-                        'value' => 40
-                    ]
+                        'value' => 40,
+                    ],
                 ],
                 'objectives' => [
                     'Improve letter recognition by 80%',
                     'Achieve basic word reading fluency',
-                    'Develop phonemic awareness'
+                    'Develop phonemic awareness',
                 ],
                 'duration_weeks' => 12,
                 'sessions_per_week' => 3,
@@ -41,12 +41,12 @@ class InterventionProgramsSeeder extends Seeder
                     'Phonics workbooks',
                     'Letter cards',
                     'Reading passages',
-                    'Audio recordings'
+                    'Audio recordings',
                 ],
                 'success_metrics' => [
                     'Improvement in assessment scores by at least 30%',
                     'Ability to read 20 sight words',
-                    'Complete 80% of program sessions'
+                    'Complete 80% of program sessions',
                 ],
                 'success_threshold' => 70.0,
                 'implementation_steps' => [
@@ -54,7 +54,7 @@ class InterventionProgramsSeeder extends Seeder
                     'Intensive phonics instruction',
                     'Daily reading practice',
                     'Progress monitoring weekly',
-                    'Final assessment and transition'
+                    'Final assessment and transition',
                 ],
                 'created_by' => $creator?->id,
                 'is_active' => true,
@@ -72,13 +72,13 @@ class InterventionProgramsSeeder extends Seeder
                         'subject' => 'math',
                         'cycle' => 'baseline',
                         'operator' => '<',
-                        'value' => 35
-                    ]
+                        'value' => 35,
+                    ],
                 ],
                 'objectives' => [
                     'Master number recognition 1-20',
                     'Understand basic addition and subtraction',
-                    'Develop number sense'
+                    'Develop number sense',
                 ],
                 'duration_weeks' => 10,
                 'sessions_per_week' => 4,
@@ -88,12 +88,12 @@ class InterventionProgramsSeeder extends Seeder
                     'Counting manipulatives',
                     'Number charts',
                     'Math worksheets',
-                    'Visual aids'
+                    'Visual aids',
                 ],
                 'success_metrics' => [
                     'Score 70% or higher on number recognition test',
                     'Solve 8 out of 10 basic addition problems',
-                    'Demonstrate improved confidence in math'
+                    'Demonstrate improved confidence in math',
                 ],
                 'success_threshold' => 75.0,
                 'implementation_steps' => [
@@ -101,7 +101,7 @@ class InterventionProgramsSeeder extends Seeder
                     'Concrete manipulative stage',
                     'Semi-concrete representation',
                     'Abstract number work',
-                    'Mastery verification'
+                    'Mastery verification',
                 ],
                 'created_by' => $creator?->id,
                 'is_active' => true,
@@ -117,13 +117,13 @@ class InterventionProgramsSeeder extends Seeder
                     [
                         'type' => 'attendance_rate',
                         'operator' => '<',
-                        'value' => 70
-                    ]
+                        'value' => 70,
+                    ],
                 ],
                 'objectives' => [
                     'Increase attendance rate to 85% or higher',
                     'Identify and address barriers to attendance',
-                    'Strengthen family-school connection'
+                    'Strengthen family-school connection',
                 ],
                 'duration_weeks' => 16,
                 'sessions_per_week' => 2,
@@ -133,12 +133,12 @@ class InterventionProgramsSeeder extends Seeder
                     'Attendance tracking sheets',
                     'Family communication materials',
                     'Transportation vouchers',
-                    'Health referral forms'
+                    'Health referral forms',
                 ],
                 'success_metrics' => [
                     'Attendance rate improves by at least 20%',
                     'Reduced tardiness incidents',
-                    'Increased family engagement'
+                    'Increased family engagement',
                 ],
                 'success_threshold' => 85.0,
                 'implementation_steps' => [
@@ -146,7 +146,7 @@ class InterventionProgramsSeeder extends Seeder
                     'Develop attendance action plan',
                     'Weekly check-ins and support',
                     'Address identified barriers',
-                    'Celebrate attendance milestones'
+                    'Celebrate attendance milestones',
                 ],
                 'created_by' => $creator?->id,
                 'is_active' => true,
@@ -162,13 +162,13 @@ class InterventionProgramsSeeder extends Seeder
                     [
                         'type' => 'nutrition_status',
                         'operator' => '=',
-                        'value' => 'malnourished'
-                    ]
+                        'value' => 'malnourished',
+                    ],
                 ],
                 'objectives' => [
                     'Improve nutritional status to normal range',
                     'Increase weight and height appropriately',
-                    'Enhance learning capacity through better nutrition'
+                    'Enhance learning capacity through better nutrition',
                 ],
                 'duration_weeks' => 24,
                 'sessions_per_week' => 5,
@@ -178,12 +178,12 @@ class InterventionProgramsSeeder extends Seeder
                     'Nutritional supplements',
                     'Growth monitoring charts',
                     'Health education materials',
-                    'Family nutrition guides'
+                    'Family nutrition guides',
                 ],
                 'success_metrics' => [
                     'Weight gain of 2-3 kg over 6 months',
                     'Improved energy levels in classroom',
-                    'Better academic performance'
+                    'Better academic performance',
                 ],
                 'success_threshold' => 80.0,
                 'implementation_steps' => [
@@ -191,7 +191,7 @@ class InterventionProgramsSeeder extends Seeder
                     'Daily nutritional supplementation',
                     'Monthly growth monitoring',
                     'Family nutrition education',
-                    'Transition to regular meal program'
+                    'Transition to regular meal program',
                 ],
                 'created_by' => $creator?->id,
                 'is_active' => true,
@@ -207,13 +207,13 @@ class InterventionProgramsSeeder extends Seeder
                     [
                         'type' => 'behavior_incidents',
                         'operator' => '>',
-                        'value' => 3
-                    ]
+                        'value' => 3,
+                    ],
                 ],
                 'objectives' => [
                     'Reduce disruptive behaviors by 75%',
                     'Increase on-task behavior to 85%',
-                    'Improve social skills and peer relationships'
+                    'Improve social skills and peer relationships',
                 ],
                 'duration_weeks' => 8,
                 'sessions_per_week' => 3,
@@ -223,12 +223,12 @@ class InterventionProgramsSeeder extends Seeder
                     'Behavior tracking charts',
                     'Social skills curriculum',
                     'Reward system materials',
-                    'Communication tools'
+                    'Communication tools',
                 ],
                 'success_metrics' => [
                     'Behavior incidents reduced by 75%',
                     'Increased positive teacher reports',
-                    'Improved peer interactions'
+                    'Improved peer interactions',
                 ],
                 'success_threshold' => 75.0,
                 'implementation_steps' => [
@@ -236,7 +236,7 @@ class InterventionProgramsSeeder extends Seeder
                     'Develop behavior intervention plan',
                     'Implement positive behavior supports',
                     'Regular progress monitoring',
-                    'Plan for behavior maintenance'
+                    'Plan for behavior maintenance',
                 ],
                 'created_by' => $creator?->id,
                 'is_active' => true,
@@ -252,13 +252,13 @@ class InterventionProgramsSeeder extends Seeder
                     [
                         'type' => 'grade_level',
                         'operator' => '=',
-                        'value' => '1,2,3'
-                    ]
+                        'value' => '1,2,3',
+                    ],
                 ],
                 'objectives' => [
                     'Develop emotional self-awareness',
                     'Improve emotion regulation skills',
-                    'Enhance social interaction abilities'
+                    'Enhance social interaction abilities',
                 ],
                 'duration_weeks' => 20,
                 'sessions_per_week' => 2,
@@ -268,12 +268,12 @@ class InterventionProgramsSeeder extends Seeder
                     'SEL curriculum materials',
                     'Emotion regulation tools',
                     'Role-play scenarios',
-                    'Assessment rubrics'
+                    'Assessment rubrics',
                 ],
                 'success_metrics' => [
                     'Improved emotion recognition scores',
                     'Reduced peer conflicts',
-                    'Increased prosocial behaviors'
+                    'Increased prosocial behaviors',
                 ],
                 'success_threshold' => 70.0,
                 'implementation_steps' => [
@@ -281,7 +281,7 @@ class InterventionProgramsSeeder extends Seeder
                     'Explicit instruction in core competencies',
                     'Practice through guided activities',
                     'Real-world application opportunities',
-                    'Progress monitoring and feedback'
+                    'Progress monitoring and feedback',
                 ],
                 'created_by' => $creator?->id,
                 'is_active' => true,

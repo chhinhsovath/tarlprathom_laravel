@@ -41,7 +41,7 @@ return new class extends Migration
             $table->boolean('requires_follow_up')->default(false);
             $table->date('follow_up_date')->nullable();
             $table->timestamps();
-            
+
             $table->index(['student_id', 'status']);
             $table->index(['intervention_program_id', 'status']);
             $table->index(['assigned_to', 'status']);

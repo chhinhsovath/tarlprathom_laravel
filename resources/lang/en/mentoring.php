@@ -11,7 +11,7 @@ return [
     'Search' => 'Search',
     'Clear' => 'Clear',
     'Export to Excel' => 'Export to Excel',
-    
+
     // Table Headers
     'Date' => 'Date',
     'School' => 'School',
@@ -20,11 +20,11 @@ return [
     'Score' => 'Score',
     'Status' => 'Status',
     'Actions' => 'Actions',
-    
+
     // Status Labels
     'Locked' => 'Locked',
     'Active' => 'Active',
-    
+
     // Actions
     'View' => 'View',
     'Edit' => 'Edit',
@@ -34,13 +34,13 @@ return [
     'Back' => 'Back',
     'Update' => 'Update',
     'Back to List' => 'Back to List',
-    
+
     // Messages
     'No mentoring visits found' => 'No mentoring visits found',
     'Visit logged successfully' => 'Visit logged successfully',
     'Visit updated successfully' => 'Visit updated successfully',
     'Visit deleted successfully' => 'Visit deleted successfully',
-    
+
     // Form Fields
     'Visit Date' => 'Visit Date',
     'Select School' => 'Select School',
@@ -50,7 +50,7 @@ return [
     'Feedback' => 'Feedback',
     'Next Steps' => 'Next Steps',
     'Overall Score' => 'Overall Score',
-    
+
     // Edit Page Specific
     'Edit Mentoring Visit' => 'Edit Mentoring Visit',
     'Progress' => 'Progress',
@@ -63,7 +63,7 @@ return [
     'Select Commune' => 'Select Commune',
     'Village' => 'Village',
     'Select Village' => 'Select Village',
-    
+
     // Show Page Specific
     'Visit Details' => 'Visit Details',
     'Location' => 'Location',

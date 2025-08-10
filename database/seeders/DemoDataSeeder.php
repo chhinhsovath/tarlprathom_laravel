@@ -18,7 +18,7 @@ class DemoDataSeeder extends Seeder
     public function run(): void
     {
         $this->command->info('Starting comprehensive demo data seeding...');
-        
+
         // Disable assessment history tracking for seeding
         \DB::statement('SET @disable_assessment_history = 1;');
 
@@ -101,25 +101,26 @@ class DemoDataSeeder extends Seeder
 
         if ($neededSchools <= 0) {
             $this->command->info("Already have {$schoolCount} schools. Skipping school creation.");
+
             return;
         }
 
         for ($i = 1; $i <= $neededSchools; $i++) {
             $province = $provinces[array_rand($provinces)];
             $district = $districts[$province][array_rand($districts[$province])];
-            
+
             School::create([
                 'name' => "Primary School {$i}",
-                'school_code' => 'SCH' . str_pad($schoolCount + $i, 4, '0', STR_PAD_LEFT),
+                'school_code' => 'SCH'.str_pad($schoolCount + $i, 4, '0', STR_PAD_LEFT),
                 'province' => $province,
                 'district' => $district,
                 'subdistrict' => "Subdistrict {$i}",
                 'address' => "Street {$i}, {$district}, {$province}",
                 'contact_person' => "Director {$i}",
-                'phone' => '012' . rand(100000, 999999),
-                'email' => 'school' . ($schoolCount + $i) . '@example.com',
+                'phone' => '012'.rand(100000, 999999),
+                'email' => 'school'.($schoolCount + $i).'@example.com',
                 'postal_code' => str_pad(rand(10000, 99999), 5, '0', STR_PAD_LEFT),
-                'education_service_area' => 'Area ' . rand(1, 5),
+                'education_service_area' => 'Area '.rand(1, 5),
                 'status' => 'active',
             ]);
         }
@@ -130,7 +131,7 @@ class DemoDataSeeder extends Seeder
     private function createStudentsAndAssessments()
     {
         $this->command->info('Creating students and assessments...');
-        
+
         // Clear existing assessments and students for clean demo data
         $this->command->info('Clearing existing student and assessment data...');
         \DB::statement('SET FOREIGN_KEY_CHECKS=0;');
@@ -155,16 +156,16 @@ class DemoDataSeeder extends Seeder
             // Create 10 students per school
             for ($s = 1; $s <= 10; $s++) {
                 $sex = rand(0, 1) ? 'M' : 'F';
-                $firstName = $sex === 'M' 
+                $firstName = $sex === 'M'
                     ? ['Sok', 'Chan', 'Phalla', 'Vuthy', 'Samnang', 'Dara', 'Sopheak', 'Veasna'][array_rand(['Sok', 'Chan', 'Phalla', 'Vuthy', 'Samnang', 'Dara', 'Sopheak', 'Veasna'])]
                     : ['Sreyneth', 'Sophea', 'Kunthea', 'Sina', 'Pisey', 'Srey Mom', 'Chanthy', 'Sokunthea'][array_rand(['Sreyneth', 'Sophea', 'Kunthea', 'Sina', 'Pisey', 'Srey Mom', 'Chanthy', 'Sokunthea'])];
-                
+
                 $lastName = ['Keo', 'Sok', 'Chan', 'Lim', 'Mao', 'Phan', 'Seng', 'Chea'][array_rand(['Keo', 'Sok', 'Chan', 'Lim', 'Mao', 'Phan', 'Seng', 'Chea'])];
-                
+
                 $age = rand(6, 12);
                 $student = Student::create([
-                    'student_code' => 'STU' . str_pad($totalStudentsCreated + 1, 6, '0', STR_PAD_LEFT),
-                    'name' => $firstName . ' ' . $lastName,
+                    'student_code' => 'STU'.str_pad($totalStudentsCreated + 1, 6, '0', STR_PAD_LEFT),
+                    'name' => $firstName.' '.$lastName,
                     'first_name' => $firstName,
                     'last_name' => $lastName,
                     'nickname' => substr($firstName, 0, 3),
@@ -173,14 +174,14 @@ class DemoDataSeeder extends Seeder
                     'birthdate' => Carbon::now()->subYears($age)->subDays(rand(0, 365)),
                     'age' => $age,
                     'grade' => rand(1, 6),
-                    'class' => 'Class ' . rand(1, 3),
+                    'class' => 'Class '.rand(1, 3),
                     'section' => 'A',
                     'student_number' => $s,
                     'status' => 'active',
                     'school_id' => $school->id,
-                    'parent_name' => 'Parent of ' . $firstName,
-                    'parent_phone' => '012' . rand(100000, 999999),
-                    'address' => "House " . rand(1, 100) . ", Street " . rand(1, 50),
+                    'parent_name' => 'Parent of '.$firstName,
+                    'parent_phone' => '012'.rand(100000, 999999),
+                    'address' => 'House '.rand(1, 100).', Street '.rand(1, 50),
                     'subdistrict' => $school->subdistrict,
                     'district' => $school->district,
                     'province' => $school->province,
@@ -189,7 +190,7 @@ class DemoDataSeeder extends Seeder
 
                 // Create assessments for each student
                 $this->createStudentAssessments($student, $khmerLevels, $mathLevels);
-                
+
                 $totalStudentsCreated++;
             }
 
@@ -226,7 +227,7 @@ class DemoDataSeeder extends Seeder
     private function createAssessment($student, $cycle, $subject, $levels, $date, $progressionLevel = 0)
     {
         // Simulate realistic distribution based on progression
-        $weights = match($progressionLevel) {
+        $weights = match ($progressionLevel) {
             0 => [35, 25, 20, 10, 5, 3, 2], // Baseline - more beginners
             1 => [20, 25, 25, 15, 10, 3, 2], // Midline - some progression
             2 => [10, 20, 25, 20, 15, 7, 3], // Endline - more advanced
@@ -243,7 +244,7 @@ class DemoDataSeeder extends Seeder
         $level = $levels[$levelIndex];
 
         // Generate a realistic score based on level
-        $score = match($levelIndex) {
+        $score = match ($levelIndex) {
             0 => rand(0, 40),    // Beginner
             1 => rand(30, 60),   // Letter/1-Digit
             2 => rand(50, 75),   // Word/2-Digit
@@ -269,7 +270,7 @@ class DemoDataSeeder extends Seeder
     {
         $total = array_sum($weights);
         $random = rand(1, $total);
-        
+
         $cumulative = 0;
         foreach ($weights as $index => $weight) {
             $cumulative += $weight;
@@ -277,7 +278,7 @@ class DemoDataSeeder extends Seeder
                 return $index;
             }
         }
-        
+
         return count($weights) - 1;
     }
 }

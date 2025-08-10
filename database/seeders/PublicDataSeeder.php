@@ -7,7 +7,6 @@ use App\Models\School;
 use App\Models\Student;
 use App\Models\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
 class PublicDataSeeder extends Seeder
 {
@@ -19,14 +18,14 @@ class PublicDataSeeder extends Seeder
         // Get or create sample schools from different provinces
         $provinces = [
             'Phnom Penh', 'Kandal', 'Kampong Cham', 'Kampong Speu', 'Takeo',
-            'Kampot', 'Siem Reap', 'Battambang', 'Banteay Meanchey', 'Kampong Thom'
+            'Kampot', 'Siem Reap', 'Battambang', 'Banteay Meanchey', 'Kampong Thom',
         ];
 
         $schools = [];
         foreach ($provinces as $idx => $province) {
             // Check if schools exist for this province
             $school = School::where('sclProvinceName', $province)->first();
-            if (!$school) {
+            if (! $school) {
                 // Try to find by province code
                 $school = School::whereNotNull('sclProvinceName')
                     ->where('sclProvinceName', '!=', '')
@@ -43,7 +42,7 @@ class PublicDataSeeder extends Seeder
             $schools = School::inRandomOrder()->limit(10)->get();
         }
 
-        echo "Using " . count($schools) . " schools for demo data\n";
+        echo 'Using '.count($schools)." schools for demo data\n";
 
         // Create realistic student distribution
         $totalStudents = 1000; // Create 1000 students for better visualization
@@ -61,13 +60,13 @@ class PublicDataSeeder extends Seeder
 
         // Get or create a default teacher
         $teacher = User::where('role', 'teacher')->first();
-        if (!$teacher) {
+        if (! $teacher) {
             $teacher = User::where('email', 'teacher1@prathaminternational.org')->first();
         }
 
         foreach ($schools as $school) {
             $studentsPerSchool = intval($totalStudents / count($schools));
-            
+
             for ($i = 0; $i < $studentsPerSchool; $i++) {
                 // Determine grade based on distribution
                 $rand = mt_rand(1, 100) / 100;
@@ -82,23 +81,23 @@ class PublicDataSeeder extends Seeder
                 }
 
                 $student = Student::create([
-                    'name' => 'Student ' . ($studentsCreated + 1001), // Start from 1001 to avoid conflicts
-                    'student_code' => 'PUB' . str_pad($studentsCreated + 1001, 6, '0', STR_PAD_LEFT),
+                    'name' => 'Student '.($studentsCreated + 1001), // Start from 1001 to avoid conflicts
+                    'student_code' => 'PUB'.str_pad($studentsCreated + 1001, 6, '0', STR_PAD_LEFT),
                     'birthdate' => now()->subYears(6 + $grade)->subDays(rand(0, 365)),
                     'gender' => ['male', 'female'][array_rand(['male', 'female'])],
                     'school_id' => $school->id, // Use the accessor that returns sclAutoID
                     'teacher_id' => $teacher ? $teacher->id : null,
                     'grade' => $grade,
                     'age' => 6 + $grade,
-                    'parent_name' => 'Guardian ' . ($studentsCreated + 1001),
-                    'parent_phone' => '0' . rand(10, 99) . rand(100000, 999999),
-                    'address' => 'Address ' . ($studentsCreated + 1001),
+                    'parent_name' => 'Guardian '.($studentsCreated + 1001),
+                    'parent_phone' => '0'.rand(10, 99).rand(100000, 999999),
+                    'address' => 'Address '.($studentsCreated + 1001),
                     'status' => 'active',
                 ]);
 
                 // Create assessments with realistic TaRL progression
                 $this->createRealisticAssessments($student, $grade);
-                
+
                 $studentsCreated++;
             }
         }
@@ -116,7 +115,7 @@ class PublicDataSeeder extends Seeder
     {
         // Khmer levels progression
         $khmerLevels = ['Beginner', 'Letter', 'Word', 'Paragraph', 'Story', 'Comp. 1', 'Comp. 2'];
-        
+
         // Math levels progression
         $mathLevels = ['Beginner', '1-Digit', '2-Digit', 'Subtraction', 'Division', 'Word Problem'];
 

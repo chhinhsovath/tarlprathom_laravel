@@ -15,7 +15,7 @@ class LearningOutcome extends Model
         'assessment_criteria', 'performance_indicators', 'minimum_mastery_score',
         'target_weeks_to_achieve', 'prerequisite_outcomes', 'related_outcomes',
         'teaching_strategies', 'learning_resources', 'is_core_outcome',
-        'is_measurable', 'measurement_method', 'difficulty_level', 'is_active'
+        'is_measurable', 'measurement_method', 'difficulty_level', 'is_active',
     ];
 
     protected $casts = [
@@ -27,7 +27,7 @@ class LearningOutcome extends Model
         'learning_resources' => 'array',
         'is_core_outcome' => 'boolean',
         'is_measurable' => 'boolean',
-        'is_active' => 'boolean'
+        'is_active' => 'boolean',
     ];
 
     public function parentOutcome()
@@ -74,27 +74,27 @@ class LearningOutcome extends Model
     {
         $path = [$this->name];
         $parent = $this->parentOutcome;
-        
+
         while ($parent) {
             array_unshift($path, $parent->name);
             $parent = $parent->parentOutcome;
         }
-        
+
         return implode(' > ', $path);
     }
 
     public function getStudentMasteryRate()
     {
         $total = $this->studentOutcomes()->count();
-        
+
         if ($total === 0) {
             return 0;
         }
-        
+
         $mastered = $this->studentOutcomes()
             ->whereIn('mastery_level', ['proficient', 'advanced'])
             ->count();
-        
+
         return round(($mastered / $total) * 100, 2);
     }
 

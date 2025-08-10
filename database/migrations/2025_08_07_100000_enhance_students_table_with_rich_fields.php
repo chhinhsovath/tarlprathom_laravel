@@ -74,7 +74,7 @@ return new class extends Migration
                 'height_cm', 'weight_kg', 'nutrition_status', 'receives_meal_support',
                 'learning_difficulties', 'special_needs', 'teacher_notes', 'extra_activities',
                 'achievements', 'siblings_count', 'sibling_position', 'family_income_level',
-                'has_birth_certificate', 'birth_certificate_number'
+                'has_birth_certificate', 'birth_certificate_number',
             ]);
         });
     }

@@ -18,7 +18,7 @@ class LessonPlan extends Model
         'students_present', 'students_absent', 'challenges_faced', 'successes_noted',
         'student_engagement_levels', 'objectives_achieved', 'improvements_for_next_time',
         'shared_with_colleagues', 'times_reused', 'effectiveness_rating',
-        'reviewed_by', 'reviewed_at', 'review_comments'
+        'reviewed_by', 'reviewed_at', 'review_comments',
     ];
 
     protected $casts = [
@@ -39,7 +39,7 @@ class LessonPlan extends Model
         'objectives_achieved' => 'array',
         'shared_with_colleagues' => 'boolean',
         'effectiveness_rating' => 'decimal:2',
-        'reviewed_at' => 'datetime'
+        'reviewed_at' => 'datetime',
     ];
 
     public function teacher()
@@ -49,7 +49,7 @@ class LessonPlan extends Model
 
     public function school()
     {
-        return $this->belongsTo(School::class);
+        return $this->belongsTo(School::class, 'school_id', 'sclAutoID');
     }
 
     public function schoolClass()
@@ -104,7 +104,7 @@ class LessonPlan extends Model
 
     public function getIsOverdueAttribute()
     {
-        return $this->execution_status === 'planned' && 
+        return $this->execution_status === 'planned' &&
                $this->planned_date < now()->toDateString();
     }
 
@@ -115,11 +115,12 @@ class LessonPlan extends Model
 
     public function getAttendanceRateAttribute()
     {
-        if (!$this->students_present || !$this->students_absent) {
+        if (! $this->students_present || ! $this->students_absent) {
             return null;
         }
-        
+
         $total = $this->students_present + $this->students_absent;
+
         return $total > 0 ? round(($this->students_present / $total) * 100, 1) : 0;
     }
 
@@ -175,73 +176,73 @@ class LessonPlan extends Model
     public function calculateEngagementScore()
     {
         $engagementLevels = $this->student_engagement_levels ?? [];
-        
+
         if (empty($engagementLevels)) {
             return null;
         }
-        
+
         $scoreMap = [
             'highly_engaged' => 5,
             'engaged' => 4,
             'moderately_engaged' => 3,
             'low_engagement' => 2,
-            'disengaged' => 1
+            'disengaged' => 1,
         ];
-        
+
         $totalScore = 0;
         $count = 0;
-        
+
         foreach ($engagementLevels as $level => $studentCount) {
             if (isset($scoreMap[$level])) {
                 $totalScore += $scoreMap[$level] * $studentCount;
                 $count += $studentCount;
             }
         }
-        
+
         return $count > 0 ? round($totalScore / $count, 1) : null;
     }
 
     public function getRecommendedImprovements()
     {
         $improvements = [];
-        
+
         if ($this->effectiveness_rating && $this->effectiveness_rating < 3) {
             $improvements[] = 'Consider revising lesson structure';
             $improvements[] = 'Review material difficulty level';
         }
-        
+
         if ($this->attendance_rate && $this->attendance_rate < 80) {
             $improvements[] = 'Investigate attendance issues';
         }
-        
+
         $engagementScore = $this->calculateEngagementScore();
         if ($engagementScore && $engagementScore < 3.5) {
             $improvements[] = 'Add more interactive activities';
             $improvements[] = 'Vary teaching methods';
         }
-        
+
         return $improvements;
     }
 
     public static function getTeacherStatistics($teacherId, $startDate = null, $endDate = null)
     {
         $query = self::where('teacher_id', $teacherId);
-        
+
         if ($startDate && $endDate) {
             $query->whereBetween('planned_date', [$startDate, $endDate]);
         }
-        
+
         return [
             'total_planned' => $query->count(),
             'completed' => $query->where('execution_status', 'completed')->count(),
-            'completion_rate' => $query->count() > 0 ? 
+            'completion_rate' => $query->count() > 0 ?
                 round(($query->where('execution_status', 'completed')->count() / $query->count()) * 100, 1) : 0,
             'average_rating' => $query->whereNotNull('effectiveness_rating')->avg('effectiveness_rating'),
             'total_shared' => $query->where('shared_with_colleagues', true)->count(),
             'most_used_subject' => $query->groupBy('subject')
                 ->selectRaw('subject, count(*) as count')
                 ->orderByDesc('count')
-                ->first()?->subject
+                ->first()?->subject,
         ];
     }
 
@@ -261,7 +262,7 @@ class LessonPlan extends Model
         $duplicate->reviewed_at = null;
         $duplicate->review_comments = null;
         $duplicate->effectiveness_rating = null;
-        
+
         return $duplicate;
     }
 }

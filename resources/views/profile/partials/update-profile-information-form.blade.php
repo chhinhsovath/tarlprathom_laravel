@@ -71,15 +71,15 @@
             @if(auth()->user()->isAdmin())
                 <select id="school_id" name="school_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                     <option value="">{{ __('Select School') }}</option>
-                    @foreach(\App\Models\School::orderBy('name')->get() as $school)
-                        <option value="{{ $school->id }}" {{ old('school_id', $user->school_id) == $school->id ? 'selected' : '' }}>
-                            {{ $school->name }}
+                    @foreach(\App\Models\School::orderBy('sclName')->get() as $school)
+                        <option value="{{ $school->sclAutoID }}" {{ old('school_id', $user->school_id) == $school->sclAutoID ? 'selected' : '' }}>
+                            {{ $school->sclName }}
                         </option>
                     @endforeach
                 </select>
                 <x-input-error class="mt-2" :messages="$errors->get('school_id')" />
             @else
-                <p class="mt-1 text-sm text-gray-600">{{ $user->school ? $user->school->name : __('Not assigned') }}</p>
+                <p class="mt-1 text-sm text-gray-600">{{ $user->school ? $user->school->sclName : __('Not assigned') }}</p>
             @endif
         </div>
 

@@ -22,7 +22,7 @@ class ProgressTracking extends Model
         'peer_support_received', 'teacher_observations', 'breakthrough_moments',
         'intervention_notes', 'parent_communication', 'parent_feedback',
         'weekly_improvement', 'cumulative_progress', 'next_week_focus',
-        'recommended_activities'
+        'recommended_activities',
     ];
 
     protected $casts = [
@@ -44,7 +44,7 @@ class ProgressTracking extends Model
         'areas_of_difficulty' => 'array',
         'breakthrough_moments' => 'array',
         'intervention_notes' => 'array',
-        'recommended_activities' => 'array'
+        'recommended_activities' => 'array',
     ];
 
     public function student()
@@ -54,7 +54,7 @@ class ProgressTracking extends Model
 
     public function school()
     {
-        return $this->belongsTo(School::class);
+        return $this->belongsTo(School::class, 'school_id', 'sclAutoID');
     }
 
     public function teacher()
@@ -105,7 +105,7 @@ class ProgressTracking extends Model
     public function getEngagementLevelAttribute()
     {
         $score = $this->engagement_score ?? 0;
-        
+
         if ($score >= 4.5) {
             return 'highly_engaged';
         } elseif ($score >= 3.5) {
@@ -125,17 +125,17 @@ class ProgressTracking extends Model
             ->where('subject', $this->subject)
             ->where('week_number', $this->week_number - 1)
             ->first();
-        
-        if (!$previousWeek) {
+
+        if (! $previousWeek) {
             return 0;
         }
-        
-        $currentScore = ($this->completion_rate ?? 0) * 0.4 + 
+
+        $currentScore = ($this->completion_rate ?? 0) * 0.4 +
                        ($this->accuracy_rate ?? 0) * 0.6;
-        
-        $previousScore = ($previousWeek->completion_rate ?? 0) * 0.4 + 
+
+        $previousScore = ($previousWeek->completion_rate ?? 0) * 0.4 +
                         ($previousWeek->accuracy_rate ?? 0) * 0.6;
-        
+
         return round($currentScore - $previousScore, 2);
     }
 
@@ -147,14 +147,14 @@ class ProgressTracking extends Model
             ->where('subject', $this->subject)
             ->where('week_number', 1)
             ->first();
-        
-        if (!$firstWeek) {
+
+        if (! $firstWeek) {
             return 0;
         }
-        
+
         $levelProgress = $this->calculateLevelProgress($firstWeek->starting_level, $this->current_level);
         $scoreProgress = (($this->accuracy_rate ?? 0) - ($firstWeek->accuracy_rate ?? 0));
-        
+
         return round(($levelProgress * 0.7 + $scoreProgress * 0.3), 2);
     }
 
@@ -165,12 +165,12 @@ class ProgressTracking extends Model
             'letter' => 2,
             'word' => 3,
             'paragraph' => 4,
-            'story' => 5
+            'story' => 5,
         ];
-        
+
         $start = $levels[strtolower($startLevel)] ?? 1;
         $current = $levels[strtolower($currentLevel)] ?? 1;
-        
+
         return ($current - $start) * 20;
     }
 
@@ -181,7 +181,7 @@ class ProgressTracking extends Model
             ->where('academic_year', $academicYear)
             ->where('term', $term)
             ->get();
-        
+
         return [
             'student_id' => $studentId,
             'week' => $weekNumber,
@@ -192,11 +192,11 @@ class ProgressTracking extends Model
                     'progress' => $record->weekly_improvement,
                     'engagement' => $record->engagement_level,
                     'areas_of_strength' => $record->skills_mastered,
-                    'areas_for_improvement' => $record->areas_of_difficulty
+                    'areas_for_improvement' => $record->areas_of_difficulty,
                 ];
             }),
             'overall_engagement' => $records->avg('engagement_score'),
-            'overall_progress' => $records->avg('weekly_improvement')
+            'overall_progress' => $records->avg('weekly_improvement'),
         ];
     }
 }

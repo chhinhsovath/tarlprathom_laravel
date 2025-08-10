@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
 use App\Models\School;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -18,7 +18,7 @@ class UpdateUsersSeeder extends Seeder
 
         // Get a school for teacher and mentor assignments
         $school = School::first();
-        
+
         // 1. Coordinator Account
         User::updateOrCreate(
             ['email' => 'coordinator@prathaminternational.org'],
@@ -59,7 +59,7 @@ class UpdateUsersSeeder extends Seeder
                 'phone' => '012345680',
             ]
         );
-        
+
         // Assign schools to mentor (assign first 10 schools)
         if ($mentor) {
             $schoolIds = School::take(10)->pluck('sclAutoID')->toArray();

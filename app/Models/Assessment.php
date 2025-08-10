@@ -17,6 +17,7 @@ class Assessment extends Model
      */
     protected $fillable = [
         'student_id',
+        'assessor_id',
         'cycle',
         'subject',
         'level',
@@ -45,15 +46,35 @@ class Assessment extends Model
     protected $originalDataBeforeUpdate;
 
     /**
+     * Get the student that owns the assessment.
+     */
+    public function student()
+    {
+        return $this->belongsTo(Student::class);
+    }
+
+    /**
+     * Get the assessor (user) who conducted the assessment.
+     */
+    public function assessor()
+    {
+        return $this->belongsTo(User::class, 'assessor_id');
+    }
+
+    /**
+     * Get the user who locked this assessment.
+     */
+    public function lockedBy()
+    {
+        return $this->belongsTo(User::class, 'locked_by');
+    }
+
+    /**
      * Boot the model.
      */
     protected static function boot()
     {
         parent::boot();
-
-        // Temporarily disable history tracking until the table structure is fixed
-        // The assessment_histories table doesn't match the expected structure
-        return;
 
         // Track history when creating a new assessment
         static::created(function ($assessment) {
@@ -73,27 +94,11 @@ class Assessment extends Model
     }
 
     /**
-     * Get the student that the assessment belongs to.
-     */
-    public function student()
-    {
-        return $this->belongsTo(Student::class);
-    }
-
-    /**
      * Get the history records for this assessment.
      */
     public function histories()
     {
         return $this->hasMany(AssessmentHistory::class);
-    }
-
-    /**
-     * Get the user who locked this assessment.
-     */
-    public function lockedBy()
-    {
-        return $this->belongsTo(User::class, 'locked_by');
     }
 
     /**
@@ -103,22 +108,31 @@ class Assessment extends Model
     {
         $historyData = [
             'student_id' => $this->student_id,
-            'assessment_id' => $this->id,
-            'cycle' => $this->cycle,
+            'assessment_type' => $this->cycle, // Map cycle to assessment_type
             'subject' => $this->subject,
             'level' => $this->level,
             'score' => $this->score,
             'assessed_at' => $this->assessed_at,
-            'updated_by' => Auth::id(),
-            'action' => $action,
+            'assessor_id' => $this->assessor_id ?? Auth::id(),
+            'is_locked' => $this->is_locked ?? false,
+            'locked_by' => $this->locked_by,
+            'locked_at' => $this->locked_at,
         ];
 
         if ($previousData) {
-            $historyData['previous_data'] = [
-                'level' => $previousData['level'] ?? null,
-                'score' => $previousData['score'] ?? null,
-                'assessed_at' => $previousData['assessed_at'] ?? null,
-            ];
+            $historyData['assessment_data'] = json_encode([
+                'action' => $action,
+                'previous_data' => [
+                    'level' => $previousData['level'] ?? null,
+                    'score' => $previousData['score'] ?? null,
+                    'assessed_at' => $previousData['assessed_at'] ?? null,
+                    'is_locked' => $previousData['is_locked'] ?? false,
+                ],
+            ]);
+        } else {
+            $historyData['assessment_data'] = json_encode([
+                'action' => $action,
+            ]);
         }
 
         AssessmentHistory::create($historyData);
@@ -131,7 +145,7 @@ class Assessment extends Model
     {
         return AssessmentHistory::where('student_id', $studentId)
             ->where('subject', $subject)
-            ->where('cycle', $cycle)
+            ->where('assessment_type', $cycle) // Use assessment_type instead of cycle
             ->orderBy('created_at', 'desc')
             ->get();
     }

@@ -24,6 +24,7 @@ class Geographic extends Model
      */
     protected $fillable = [
         'province_code',
+        'province_id',
         'province_name_kh',
         'province_name_en',
         'district_code',
@@ -38,14 +39,47 @@ class Geographic extends Model
     ];
 
     /**
-     * Get unique provinces
+     * Get the province that owns the geographic entry.
+     */
+    public function province()
+    {
+        return $this->belongsTo(Province::class);
+    }
+
+    /**
+     * Get unique provinces (now from provinces table)
      */
     public static function getProvinces()
     {
-        return self::select('province_code', 'province_name_kh', 'province_name_en')
+        return Province::select('province_code', 'name_kh as province_name_kh', 'name_en as province_name_en')
+            ->orderBy('name_kh')
+            ->get();
+    }
+
+    /**
+     * Get unique districts for the current geographic structure
+     */
+    public static function getDistricts()
+    {
+        return self::select('district_code', 'district_name_kh', 'district_name_en', 'province_code')
             ->distinct()
-            ->whereNotNull('province_code')
-            ->orderBy('province_name_kh')
+            ->whereNotNull('district_code')
+            ->orderBy('province_code')
+            ->orderBy('district_name_kh')
+            ->get();
+    }
+
+    /**
+     * Get unique communes for the current geographic structure
+     */
+    public static function getCommunes()
+    {
+        return self::select('commune_code', 'commune_name_kh', 'commune_name_en', 'district_code', 'province_code')
+            ->distinct()
+            ->whereNotNull('commune_code')
+            ->orderBy('province_code')
+            ->orderBy('district_code')
+            ->orderBy('commune_name_kh')
             ->get();
     }
 

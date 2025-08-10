@@ -17,7 +17,7 @@ class TeachingActivity extends Model
         'keywords', 'difficulty_level', 'requires_technology', 'technology_requirements',
         'indoor_activity', 'space_requirements', 'minimum_students', 'maximum_students',
         'skills_developed', 'effectiveness_rating', 'usage_count', 'created_by',
-        'is_approved', 'approved_by', 'approved_at', 'is_active'
+        'is_approved', 'approved_by', 'approved_at', 'is_active',
     ];
 
     protected $casts = [
@@ -37,7 +37,7 @@ class TeachingActivity extends Model
         'indoor_activity' => 'boolean',
         'is_approved' => 'boolean',
         'is_active' => 'boolean',
-        'approved_at' => 'datetime'
+        'approved_at' => 'datetime',
     ];
 
     public function creator()
@@ -72,7 +72,7 @@ class TeachingActivity extends Model
 
     public function scopeForGrade($query, $gradeLevel)
     {
-        return $query->where('grade_level', 'like', '%' . $gradeLevel . '%');
+        return $query->where('grade_level', 'like', '%'.$gradeLevel.'%');
     }
 
     public function scopeForLevel($query, $level)
@@ -119,18 +119,18 @@ class TeachingActivity extends Model
     {
         $usageScore = min($this->usage_count / 100, 1) * 40;
         $ratingScore = ($this->effectiveness_rating / 5) * 60;
-        
+
         return round($usageScore + $ratingScore, 1);
     }
 
     public static function getRecommendedForStudent($studentId, $subject = null, $limit = 5)
     {
         $query = self::active()->approved();
-        
+
         if ($subject) {
             $query->forSubject($subject);
         }
-        
+
         return $query->orderByDesc('effectiveness_rating')
             ->orderByDesc('usage_count')
             ->limit($limit)
@@ -141,8 +141,8 @@ class TeachingActivity extends Model
     {
         return self::active()->approved()
             ->where(function ($query) use ($searchTerm) {
-                $query->where('activity_name', 'like', '%' . $searchTerm . '%')
-                    ->orWhere('description', 'like', '%' . $searchTerm . '%')
+                $query->where('activity_name', 'like', '%'.$searchTerm.'%')
+                    ->orWhere('description', 'like', '%'.$searchTerm.'%')
                     ->orWhereJsonContains('keywords', $searchTerm);
             })
             ->get();

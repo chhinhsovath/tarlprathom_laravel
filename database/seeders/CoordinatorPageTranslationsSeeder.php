@@ -40,6 +40,6 @@ class CoordinatorPageTranslationsSeeder extends Seeder
         Translation::clearCache();
 
         $this->command->info('Coordinator page translations seeded successfully!');
-        $this->command->info('Total translations added: ' . count($translations));
+        $this->command->info('Total translations added: '.count($translations));
     }
 }

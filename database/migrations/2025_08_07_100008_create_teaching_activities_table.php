@@ -42,7 +42,7 @@ return new class extends Migration
             $table->timestamp('approved_at')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
-            
+
             $table->index(['subject', 'grade_level']);
             $table->index('tarl_level');
             $table->index('activity_type');

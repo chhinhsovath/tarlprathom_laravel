@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
 class ShowcaseController extends Controller
 {
     public function index()
@@ -16,8 +14,8 @@ class ShowcaseController extends Controller
                     'edit_users',
                     'delete_users',
                     'assign_roles',
-                    'manage_permissions'
-                ]
+                    'manage_permissions',
+                ],
             ],
             'school_management' => [
                 'icon' => 'building',
@@ -26,8 +24,8 @@ class ShowcaseController extends Controller
                     'edit_schools',
                     'delete_schools',
                     'view_school_statistics',
-                    'manage_school_staff'
-                ]
+                    'manage_school_staff',
+                ],
             ],
             'student_management' => [
                 'icon' => 'graduation-cap',
@@ -36,8 +34,8 @@ class ShowcaseController extends Controller
                     'update_profiles',
                     'upload_photos',
                     'manage_attendance',
-                    'track_progress'
-                ]
+                    'track_progress',
+                ],
             ],
             'assessments' => [
                 'icon' => 'clipboard-list',
@@ -46,8 +44,8 @@ class ShowcaseController extends Controller
                     'midline_assessment',
                     'endline_assessment',
                     'quick_assessment',
-                    'custom_assessments'
-                ]
+                    'custom_assessments',
+                ],
             ],
             'mentoring' => [
                 'icon' => 'user-check',
@@ -56,8 +54,8 @@ class ShowcaseController extends Controller
                     'observation_notes',
                     'feedback_forms',
                     'action_plans',
-                    'mentor_reports'
-                ]
+                    'mentor_reports',
+                ],
             ],
             'reporting' => [
                 'icon' => 'chart-bar',
@@ -66,8 +64,8 @@ class ShowcaseController extends Controller
                     'export_data',
                     'analytics_dashboard',
                     'custom_report_builder',
-                    'real_time_statistics'
-                ]
+                    'real_time_statistics',
+                ],
             ],
             'data_analysis' => [
                 'icon' => 'chart-line',
@@ -76,8 +74,8 @@ class ShowcaseController extends Controller
                     'trend_monitoring',
                     'intervention_planning',
                     'performance_metrics',
-                    'predictive_analytics'
-                ]
+                    'predictive_analytics',
+                ],
             ],
             'resources' => [
                 'icon' => 'book-open',
@@ -86,8 +84,8 @@ class ShowcaseController extends Controller
                     'assessment_tools',
                     'activity_guides',
                     'help_documentation',
-                    'training_videos'
-                ]
+                    'training_videos',
+                ],
             ],
             'communication' => [
                 'icon' => 'comments',
@@ -96,9 +94,9 @@ class ShowcaseController extends Controller
                     'announcements',
                     'notifications',
                     'collaboration_tools',
-                    'parent_communication'
-                ]
-            ]
+                    'parent_communication',
+                ],
+            ],
         ];
 
         return view('showcase', compact('features'));

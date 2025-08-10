@@ -34,7 +34,7 @@ return new class extends Migration
             $table->boolean('portfolio_included')->default(false);
             $table->string('portfolio_link')->nullable();
             $table->timestamps();
-            
+
             $table->unique(['student_id', 'learning_outcome_id']);
             $table->index(['mastery_level', 'achieved_date']);
             $table->index('teacher_id');

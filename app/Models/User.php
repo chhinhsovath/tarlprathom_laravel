@@ -63,7 +63,7 @@ class User extends Authenticatable
      */
     public function school()
     {
-        return $this->belongsTo(School::class);
+        return $this->belongsTo(School::class, 'school_id', 'sclAutoID');
     }
 
     /**
@@ -126,8 +126,32 @@ class User extends Authenticatable
      */
     public function assignedSchools()
     {
-        return $this->belongsToMany(School::class, 'mentor_school', 'user_id', 'school_id')
+        return $this->belongsToMany(School::class, 'mentor_school', 'user_id', 'school_id', 'id', 'sclAutoID')
             ->withTimestamps();
+    }
+
+    /**
+     * Get accessible school codes for the user (for pilot schools).
+     */
+    public function getAccessibleSchoolCodes()
+    {
+        if ($this->isAdmin()) {
+            // Admin can access all pilot schools
+            return \App\Models\PilotSchool::pluck('school_code')->toArray();
+        }
+
+        if ($this->role === 'mentor') {
+            // Get assigned school codes from mentor_school relationship
+            return $this->assignedSchools()->pluck('sclCode')->toArray();
+        }
+
+        if ($this->role === 'teacher' && $this->school_id) {
+            // Teacher can only access their own school
+            $school = School::find($this->school_id);
+            return $school ? [$school->sclCode] : [];
+        }
+
+        return [];
     }
 
     /**

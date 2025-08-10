@@ -33,7 +33,7 @@ return new class extends Migration
             $table->enum('difficulty_level', ['beginner', 'intermediate', 'advanced'])->default('intermediate');
             $table->boolean('is_active')->default(true);
             $table->timestamps();
-            
+
             $table->index(['subject', 'grade_level']);
             $table->index('domain');
             $table->index('cognitive_level');

@@ -48,7 +48,7 @@ return new class extends Migration
             $table->string('next_week_focus')->nullable();
             $table->json('recommended_activities')->nullable();
             $table->timestamps();
-            
+
             $table->unique(['student_id', 'academic_year', 'term', 'week_number', 'subject']);
             $table->index(['school_id', 'academic_year', 'term']);
             $table->index(['teacher_id', 'week_start_date']);

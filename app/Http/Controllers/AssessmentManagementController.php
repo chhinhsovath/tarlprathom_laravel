@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Assessment;
 use App\Models\Geographic;
 use App\Models\MentoringVisit;
+use App\Models\Province;
 use App\Models\School;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -67,7 +68,7 @@ class AssessmentManagementController extends Controller
             ->appends($request->query());
 
         // Get filter options from Geographic table
-        $provinces = Geographic::getProvinces()->pluck('province_name_en', 'province_name_en');
+        $provinces = Province::orderBy('name_kh')->pluck('name_en', 'name_en');
         $districts = School::when($request->filled('province'), function ($q) use ($request) {
             $q->where('province', $request->province);
         })->distinct()->orderBy('district')->pluck('district');
@@ -81,7 +82,7 @@ class AssessmentManagementController extends Controller
             $q->where('district', $request->district);
         })
         // Cluster filtering removed - column doesn't exist
-        ->orderBy('name')->get();
+            ->orderBy('name')->get();
 
         $teachers = User::whereIn('role', ['teacher', 'mentor'])
             ->when($request->filled('school_id'), function ($q) use ($request) {
@@ -144,7 +145,7 @@ class AssessmentManagementController extends Controller
             ->appends($request->query());
 
         // Get filter options from Geographic table
-        $provinces = Geographic::getProvinces()->pluck('province_name_en', 'province_name_en');
+        $provinces = Province::orderBy('name_kh')->pluck('name_en', 'name_en');
         $districts = School::when($request->filled('province'), function ($q) use ($request) {
             $q->where('province', $request->province);
         })->distinct()->orderBy('district')->pluck('district');
@@ -158,7 +159,7 @@ class AssessmentManagementController extends Controller
             $q->where('district', $request->district);
         })
         // Cluster filtering removed - column doesn't exist
-        ->orderBy('name')->get();
+            ->orderBy('name')->get();
 
         $mentors = User::where('role', 'mentor')->orderBy('name')->get();
         $teachers = User::whereIn('role', ['teacher', 'mentor'])

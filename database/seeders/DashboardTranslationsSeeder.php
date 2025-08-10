@@ -45,7 +45,7 @@ class DashboardTranslationsSeeder extends Seeder
                     'en' => $translation['en'],
                     'km' => $translation['km'],
                     'group' => $translation['group'],
-                    'is_active' => true
+                    'is_active' => true,
                 ]
             );
         }

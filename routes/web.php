@@ -146,7 +146,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/reports/my-mentoring', [ReportController::class, 'myMentoring'])->name('reports.my-mentoring');
     Route::get('/reports/school-visits', [ReportController::class, 'schoolVisits'])->name('reports.school-visits');
     Route::get('/reports/export/{type}', [ReportController::class, 'export'])->name('reports.export');
-    
+
     // Enhanced Reports Routes
     Route::get('/reports/dashboard', [ReportsController::class, 'dashboard'])->name('reports.dashboard');
     Route::get('/reports/student-progress', [ReportsController::class, 'studentProgress'])->name('reports.student-progress');

@@ -47,11 +47,11 @@
                         <select id="schoolFilter" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
                             <option value="">{{ trans_db('all_schools') }}</option>
                             @foreach($schools as $school)
-                                <option value="{{ $school->id }}" 
-                                    data-province="{{ $school->province }}" 
-                                    data-district="{{ $school->district }}" 
-                                    data-cluster="{{ $school->cluster }}">
-                                    {{ $school->name }}
+                                <option value="{{ $school->id ?? $school->sclAutoID }}" 
+                                    data-province="{{ $school->province ?? $school->sclProvinceName }}" 
+                                    data-district="{{ $school->district ?? $school->sclDistrictName }}" 
+                                    data-cluster="{{ $school->cluster ?? $school->sclClusterName }}">
+                                    {{ $school->school_name ?? $school->sclName }}
                                 </option>
                             @endforeach
                         </select>
