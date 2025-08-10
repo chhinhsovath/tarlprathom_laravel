@@ -7,6 +7,7 @@ use App\Http\Requests\StoreStudentRequest;
 use App\Http\Requests\UpdateStudentRequest;
 use App\Models\Assessment;
 use App\Models\AssessmentHistory;
+use App\Models\PilotSchool;
 use App\Models\School;
 use App\Models\Student;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -25,7 +26,7 @@ class StudentController extends Controller
     {
         $this->authorize('viewAny', Student::class);
 
-        $query = Student::with(['school', 'school.assignedMentors', 'teacher'])
+        $query = Student::with(['pilotSchool', 'teacher'])
             ->withCount('assessments');
         $user = $request->user();
 
@@ -37,7 +38,7 @@ class StudentController extends Controller
                 // If no schools are accessible, return no results
                 $query->whereRaw('1 = 0');
             } else {
-                $query->whereIn('school_id', $accessibleSchoolIds);
+                $query->whereIn('pilot_school_id', $accessibleSchoolIds);
             }
         }
 
@@ -56,7 +57,7 @@ class StudentController extends Controller
         if ($request->filled('school_id')) {
             $schoolId = $request->get('school_id');
             if ($user->isAdmin() || $user->canAccessSchool($schoolId)) {
-                $query->where('school_id', $schoolId);
+                $query->where('pilot_school_id', $schoolId);
             }
         }
 
@@ -92,9 +93,9 @@ class StudentController extends Controller
 
         // Get schools for filter dropdown (for admins and mentors)
         if ($user->isAdmin()) {
-            $schools = School::orderBy('sclName')->get();
+            $schools = PilotSchool::orderBy('school_name')->get();
         } elseif ($user->isMentor()) {
-            $schools = School::whereIn('sclAutoID', $accessibleSchoolIds)->orderBy('sclName')->get();
+            $schools = PilotSchool::whereIn('id', $accessibleSchoolIds)->orderBy('school_name')->get();
         } else {
             $schools = collect();
         }
@@ -114,7 +115,7 @@ class StudentController extends Controller
         $accessibleSchoolIds = $user->getAccessibleSchoolIds();
 
         if (! empty($accessibleSchoolIds)) {
-            $schools = School::whereIn('sclAutoID', $accessibleSchoolIds)->orderBy('sclName')->get();
+            $schools = PilotSchool::whereIn('id', $accessibleSchoolIds)->orderBy('school_name')->get();
         } else {
             $schools = collect();
         }
@@ -179,7 +180,7 @@ class StudentController extends Controller
         $accessibleSchoolIds = $user->getAccessibleSchoolIds();
 
         if (! empty($accessibleSchoolIds)) {
-            $schools = School::whereIn('sclAutoID', $accessibleSchoolIds)->orderBy('sclName')->get();
+            $schools = PilotSchool::whereIn('id', $accessibleSchoolIds)->orderBy('school_name')->get();
         } else {
             $schools = collect();
         }

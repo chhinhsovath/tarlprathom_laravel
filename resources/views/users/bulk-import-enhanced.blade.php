@@ -133,7 +133,7 @@
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <script>
         let importData = [];
-        const schools = @json(\App\Models\School::orderBy('sclName')->pluck('sclName', 'sclAutoID')->toArray());
+        const schools = @json(\App\Models\PilotSchool::orderBy('school_name')->pluck('school_name', 'id')->toArray());
         
         // Translations for JavaScript
         const translations = {

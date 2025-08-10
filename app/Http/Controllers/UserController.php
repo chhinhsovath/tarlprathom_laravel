@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PilotSchool;
 use App\Models\School;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -20,7 +21,7 @@ class UserController extends Controller
         if (! auth()->user()->isAdmin()) {
             abort(403, __('Unauthorized action.'));
         }
-        $query = User::with('school');
+        $query = User::with('pilotSchool');
 
         // Search functionality
         if ($request->filled('search')) {
@@ -38,7 +39,7 @@ class UserController extends Controller
 
         // Filter by school
         if ($request->filled('school_id')) {
-            $query->where('school_id', $request->get('school_id'));
+            $query->where('pilot_school_id', $request->get('school_id'));
         }
 
         // Filter by status
@@ -62,7 +63,7 @@ class UserController extends Controller
         }
 
         $users = $query->orderBy($sortField, $sortOrder)->paginate(20)->withQueryString();
-        $schools = School::orderBy('sclName')->get();
+        $schools = PilotSchool::orderBy('school_name')->get();
 
         return view('users.index', compact('users', 'schools', 'sortField', 'sortOrder'));
     }
@@ -76,7 +77,7 @@ class UserController extends Controller
         if (! auth()->user()->isAdmin()) {
             abort(403, __('Unauthorized action.'));
         }
-        $schools = School::orderBy('sclName')->get();
+        $schools = PilotSchool::orderBy('school_name')->get();
 
         return view('users.create', compact('schools'));
     }
@@ -146,7 +147,7 @@ class UserController extends Controller
         if (! auth()->user()->isAdmin()) {
             abort(403, __('Unauthorized action.'));
         }
-        $schools = School::orderBy('sclName')->get();
+        $schools = PilotSchool::orderBy('school_name')->get();
 
         return view('users.edit', compact('user', 'schools'));
     }
@@ -445,7 +446,7 @@ class UserController extends Controller
             'Is Active',
         ];
 
-        $schools = School::orderBy('sclName')->pluck('sclName')->toArray();
+        $schools = PilotSchool::orderBy('school_name')->pluck('school_name')->toArray();
 
         // Sample data
         $sampleData = [
@@ -523,7 +524,7 @@ class UserController extends Controller
                 ->with('error', __('Schools can only be assigned to mentors.'));
         }
 
-        $schools = School::orderBy('sclName')->get();
+        $schools = PilotSchool::orderBy('school_name')->get();
         $assignedSchoolIds = $user->assignedSchools->pluck('id')->toArray();
 
         return view('users.assign-schools', compact('user', 'schools', 'assignedSchoolIds'));

@@ -17,6 +17,7 @@ class MentoringVisit extends Model
     protected $fillable = [
         'mentor_id',
         'school_id',
+        'pilot_school_id',
         'teacher_id',
         'visit_date',
         'observation',
@@ -151,11 +152,33 @@ class MentoringVisit extends Model
     }
 
     /**
-     * Get the school where the visit took place.
+     * Get the school where the visit took place (legacy - uses tbl_tarl_schools).
      */
     public function school()
     {
         return $this->belongsTo(School::class, 'school_id', 'sclAutoID');
+    }
+    
+    /**
+     * Get the pilot school where the visit took place.
+     */
+    public function pilotSchool()
+    {
+        return $this->belongsTo(PilotSchool::class, 'pilot_school_id');
+    }
+    
+    /**
+     * Get the school name (prioritize pilot school).
+     */
+    public function getSchoolNameAttribute()
+    {
+        if ($this->pilotSchool) {
+            return $this->pilotSchool->school_name;
+        }
+        if ($this->school) {
+            return $this->school->sclName;
+        }
+        return null;
     }
 
     /**

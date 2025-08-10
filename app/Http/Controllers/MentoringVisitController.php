@@ -7,6 +7,7 @@ use App\Http\Requests\StoreMentoringVisitRequest;
 use App\Models\Geographic;
 use App\Models\MentoringVisit;
 use App\Models\Province;
+use App\Models\PilotSchool;
 use App\Models\School;
 use App\Models\User;
 use App\Traits\Sortable;
@@ -117,7 +118,7 @@ class MentoringVisitController extends Controller
             $schools = $user->assignedSchools()->orderBy('sclName')->get();
         } else {
             // Admins can see all schools
-            $schools = School::orderBy('sclName')->get();
+            $schools = PilotSchool::orderBy('school_name')->get();
         }
 
         // Get provinces from Geographic table
@@ -259,7 +260,7 @@ class MentoringVisitController extends Controller
             $schools = $user->assignedSchools()->orderBy('sclName')->get();
         } else {
             // Admins can see all schools
-            $schools = School::orderBy('sclName')->get();
+            $schools = PilotSchool::orderBy('school_name')->get();
         }
 
         // Get provinces from Geographic table

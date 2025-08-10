@@ -22,6 +22,7 @@ class Student extends Model
         'age',
         'class',
         'school_id',
+        'pilot_school_id',
         'teacher_id',
         'class_id',
         'photo',
@@ -93,11 +94,33 @@ class Student extends Model
     ];
 
     /**
-     * Get the school that the student belongs to.
+     * Get the school that the student belongs to (legacy - uses tbl_tarl_schools).
      */
     public function school()
     {
         return $this->belongsTo(School::class, 'school_id', 'sclAutoID');
+    }
+    
+    /**
+     * Get the pilot school that the student belongs to.
+     */
+    public function pilotSchool()
+    {
+        return $this->belongsTo(PilotSchool::class, 'pilot_school_id');
+    }
+    
+    /**
+     * Get the school name (prioritize pilot school).
+     */
+    public function getSchoolNameAttribute()
+    {
+        if ($this->pilotSchool) {
+            return $this->pilotSchool->school_name;
+        }
+        if ($this->school) {
+            return $this->school->sclName;
+        }
+        return null;
     }
 
     /**

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Exports\AssessmentsExport;
 use App\Http\Requests\StoreAssessmentRequest;
 use App\Models\Assessment;
+use App\Models\PilotSchool;
 use App\Models\School;
 use App\Models\Student;
 use App\Models\StudentAssessmentEligibility;
@@ -126,12 +127,12 @@ class AssessmentController extends Controller
         // Get schools for filter dropdown (based on access)
         $schools = [];
         if ($request->user()->isAdmin()) {
-            $schools = School::orderBy('sclName')->get();
+            $schools = PilotSchool::orderBy('school_name')->get();
         } elseif ($request->user()->isMentor()) {
             if (empty($accessibleSchoolIds)) {
                 $schools = collect([]);  // Empty collection if no schools accessible
             } else {
-                $schools = School::whereIn('sclAutoID', $accessibleSchoolIds)->orderBy('sclName')->get();
+                $schools = PilotSchool::whereIn('id', $accessibleSchoolIds)->orderBy('school_name')->get();
             }
         }
 

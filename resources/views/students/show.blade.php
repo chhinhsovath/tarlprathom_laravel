@@ -61,19 +61,19 @@
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                             <div>
                                 <span class="text-xs text-gray-500 uppercase tracking-wider">{{ __('students.School') }}</span>
-                                <p class="text-sm font-medium text-gray-900">{{ $student->school->name ?? 'N/A' }}</p>
+                                <p class="text-sm font-medium text-gray-900">{{ $student->pilotSchool->school_name ?? $student->school->name ?? 'N/A' }}</p>
                             </div>
                             <div>
                                 <span class="text-xs text-gray-500 uppercase tracking-wider">{{ __('students.District') }}</span>
-                                <p class="text-sm font-medium text-gray-900">{{ $student->school->district ?? 'N/A' }}</p>
+                                <p class="text-sm font-medium text-gray-900">{{ $student->pilotSchool->district ?? $student->school->district ?? 'N/A' }}</p>
                             </div>
                             <div>
                                 <span class="text-xs text-gray-500 uppercase tracking-wider">{{ __('students.Cluster') }}</span>
-                                <p class="text-sm font-medium text-gray-900">{{ $student->school->cluster ?? 'N/A' }}</p>
+                                <p class="text-sm font-medium text-gray-900">{{ $student->pilotSchool->cluster ?? $student->school->cluster ?? 'N/A' }}</p>
                             </div>
                             <div>
                                 <span class="text-xs text-gray-500 uppercase tracking-wider">{{ __('students.Province') }}</span>
-                                <p class="text-sm font-medium text-gray-900">{{ $student->school->province ?? 'N/A' }}</p>
+                                <p class="text-sm font-medium text-gray-900">{{ $student->pilotSchool->province ?? $student->school->province ?? 'N/A' }}</p>
                             </div>
                             <div>
                                 <span class="text-xs text-gray-500 uppercase tracking-wider">{{ __('students.Teacher') }}</span>
@@ -81,7 +81,7 @@
                             </div>
                             <div>
                                 <span class="text-xs text-gray-500 uppercase tracking-wider">{{ __('students.School Code') }}</span>
-                                <p class="text-sm font-medium text-gray-900">{{ $student->school->school_code ?? 'N/A' }}</p>
+                                <p class="text-sm font-medium text-gray-900">{{ $student->pilotSchool->school_code ?? $student->school->school_code ?? 'N/A' }}</p>
                             </div>
                         </div>
                     </div>

@@ -23,6 +23,7 @@ class User extends Authenticatable
         'password',
         'role', // 'admin', 'coordinator', 'mentor', 'teacher', 'viewer'
         'school_id',
+        'pilot_school_id',
         'province',
         'district',
         'commune',
@@ -59,11 +60,19 @@ class User extends Authenticatable
     }
 
     /**
-     * Get the school that the user belongs to.
+     * Get the school that the user belongs to (legacy - uses tbl_tarl_schools).
      */
     public function school()
     {
         return $this->belongsTo(School::class, 'school_id', 'sclAutoID');
+    }
+    
+    /**
+     * Get the pilot school that the user belongs to.
+     */
+    public function pilotSchool()
+    {
+        return $this->belongsTo(PilotSchool::class, 'pilot_school_id');
     }
 
     /**
@@ -122,11 +131,20 @@ class User extends Authenticatable
     }
 
     /**
-     * Get the schools assigned to this mentor (many-to-many relationship).
+     * Get the schools assigned to this mentor (many-to-many relationship - legacy).
      */
     public function assignedSchools()
     {
         return $this->belongsToMany(School::class, 'mentor_school', 'user_id', 'school_id', 'id', 'sclAutoID')
+            ->withTimestamps();
+    }
+    
+    /**
+     * Get the pilot schools assigned to this mentor (many-to-many relationship).
+     */
+    public function assignedPilotSchools()
+    {
+        return $this->belongsToMany(PilotSchool::class, 'mentor_school', 'user_id', 'pilot_school_id')
             ->withTimestamps();
     }
 
@@ -141,14 +159,14 @@ class User extends Authenticatable
         }
 
         if ($this->role === 'mentor') {
-            // Get assigned school codes from mentor_school relationship
-            return $this->assignedSchools()->pluck('sclCode')->toArray();
+            // Get assigned school codes from pilot schools
+            return $this->assignedPilotSchools()->pluck('school_code')->toArray();
         }
 
-        if ($this->role === 'teacher' && $this->school_id) {
+        if ($this->role === 'teacher' && $this->pilot_school_id) {
             // Teacher can only access their own school
-            $school = School::find($this->school_id);
-            return $school ? [$school->sclCode] : [];
+            $school = PilotSchool::find($this->pilot_school_id);
+            return $school ? [$school->school_code] : [];
         }
 
         return [];
@@ -217,16 +235,16 @@ class User extends Authenticatable
     public function getAccessibleSchoolIds()
     {
         if ($this->isAdmin() || $this->isCoordinator()) {
-            return School::pluck('sclAutoID')->toArray();
+            return PilotSchool::pluck('id')->toArray();
         }
 
         if ($this->isMentor()) {
-            return $this->assignedSchools()->pluck('tbl_tarl_schools.sclAutoID')->toArray();
+            return $this->assignedPilotSchools()->pluck('pilot_schools.id')->toArray();
         }
 
         // Teachers only see their own school
-        if ($this->isTeacher() && $this->school_id) {
-            return [$this->school_id];
+        if ($this->isTeacher() && $this->pilot_school_id) {
+            return [$this->pilot_school_id];
         }
 
         return [];
@@ -244,7 +262,7 @@ class User extends Authenticatable
             return Student::whereRaw('1 = 0'); // Return empty query
         }
 
-        return Student::whereIn('school_id', $schoolIds);
+        return Student::whereIn('pilot_school_id', $schoolIds);
     }
 
     /**
@@ -259,7 +277,7 @@ class User extends Authenticatable
             return User::whereRaw('1 = 0'); // Return empty query
         }
 
-        return User::where('role', 'teacher')->whereIn('school_id', $schoolIds);
+        return User::where('role', 'teacher')->whereIn('pilot_school_id', $schoolIds);
     }
 
     /**
@@ -277,6 +295,6 @@ class User extends Authenticatable
     {
         $student = Student::find($studentId);
 
-        return $student && $this->canAccessSchool($student->school_id);
+        return $student && $this->canAccessSchool($student->pilot_school_id);
     }
 }
