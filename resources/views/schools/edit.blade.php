@@ -19,9 +19,9 @@
                         
                         <!-- School Name -->
                         <div>
-                            <x-input-label for="name" :value="__('School Name')" />
-                            <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $school->name)" required autofocus />
-                            <x-input-error class="mt-2" :messages="$errors->get('name')" />
+                            <x-input-label for="school_name" :value="__('School Name')" />
+                            <x-text-input id="school_name" name="school_name" type="text" class="mt-1 block w-full" :value="old('school_name', $school->school_name)" required autofocus />
+                            <x-input-error class="mt-2" :messages="$errors->get('school_name')" />
                         </div>
 
                         <!-- School Code -->

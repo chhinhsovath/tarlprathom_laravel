@@ -159,7 +159,7 @@
                             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                                 @foreach($user->assignedSchools as $school)
                                     <div class="bg-gray-50 rounded-lg p-3">
-                                        <h4 class="font-medium text-gray-900">{{ $school->name }}</h4>
+                                        <h4 class="font-medium text-gray-900">{{ $school->school_name }}</h4>
                                         @if($school->province)
                                             <p class="text-sm text-gray-600">{{ $school->province }}</p>
                                         @endif

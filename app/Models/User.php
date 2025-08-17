@@ -33,6 +33,7 @@ class User extends Authenticatable
         'profile_photo',
         'sex',
         'holding_classes',
+        'assigned_subject',
     ];
 
     /**
@@ -60,13 +61,13 @@ class User extends Authenticatable
     }
 
     /**
-     * Get the school that the user belongs to (legacy - uses tbl_tarl_schools).
+     * Get the school that the user belongs to.
      */
     public function school()
     {
-        return $this->belongsTo(School::class, 'school_id', 'sclAutoID');
+        return $this->belongsTo(PilotSchool::class, 'pilot_school_id');
     }
-    
+
     /**
      * Get the pilot school that the user belongs to.
      */
@@ -131,14 +132,14 @@ class User extends Authenticatable
     }
 
     /**
-     * Get the schools assigned to this mentor (many-to-many relationship - legacy).
+     * Get the schools assigned to this mentor (many-to-many relationship).
      */
     public function assignedSchools()
     {
-        return $this->belongsToMany(School::class, 'mentor_school', 'user_id', 'school_id', 'id', 'sclAutoID')
+        return $this->belongsToMany(PilotSchool::class, 'mentor_school', 'user_id', 'pilot_school_id')
             ->withTimestamps();
     }
-    
+
     /**
      * Get the pilot schools assigned to this mentor (many-to-many relationship).
      */
@@ -166,6 +167,7 @@ class User extends Authenticatable
         if ($this->role === 'teacher' && $this->pilot_school_id) {
             // Teacher can only access their own school
             $school = PilotSchool::find($this->pilot_school_id);
+
             return $school ? [$school->school_code] : [];
         }
 

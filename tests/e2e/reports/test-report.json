@@ -1,0 +1,19 @@
+{
+  "timestamp": "2025-08-10T07:59:57.502Z",
+  "results": [
+    {
+      "role": "Admin",
+      "test": "Full Access Test",
+      "status": "failed",
+      "duration": "9.078s",
+      "screenshot": "tests/e2e/screenshots/errors/admin_error_2025-08-10T07-59-57-193Z.png",
+      "error": "\u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('h1, h2').first()\nExpected pattern: \u001b[32m/Dashboard|Overview/i\u001b[39m\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toContainText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('h1, h2').first()\u001b[22m\n"
+    }
+  ],
+  "summary": {
+    "total": 1,
+    "passed": 0,
+    "failed": 1,
+    "skipped": 0
+  }
+}

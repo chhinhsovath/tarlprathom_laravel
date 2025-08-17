@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Assessment;
 use App\Models\Geographic;
 use App\Models\MentoringVisit;
+use App\Models\PilotSchool;
 use App\Models\Province;
-use App\Models\School;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,25 +23,25 @@ class AssessmentManagementController extends Controller
     {
         $query = Assessment::with(['student.school', 'student.teacher'])
             ->join('students', 'assessments.student_id', '=', 'students.id')
-            ->join('schools', 'students.school_id', '=', 'schools.id')
+            ->join('pilot_schools', 'students.pilot_school_id', '=', 'pilot_schools.id')
             ->join('users', 'students.teacher_id', '=', 'users.id')
             ->select('assessments.*');
 
         // Apply filters
         if ($request->filled('province')) {
-            $query->where('schools.province', $request->province);
+            $query->where('pilot_schools.province', $request->province);
         }
 
         if ($request->filled('district')) {
-            $query->where('schools.district', $request->district);
+            $query->where('pilot_schools.district', $request->district);
         }
 
         if ($request->filled('cluster')) {
-            $query->where('schools.cluster', $request->cluster);
+            $query->where('pilot_schools.cluster', $request->cluster);
         }
 
         if ($request->filled('school_id')) {
-            $query->where('schools.id', $request->school_id);
+            $query->where('pilot_schools.id', $request->school_id);
         }
 
         if ($request->filled('teacher_id')) {
@@ -69,20 +69,20 @@ class AssessmentManagementController extends Controller
 
         // Get filter options from Geographic table
         $provinces = Province::orderBy('name_kh')->pluck('name_en', 'name_en');
-        $districts = School::when($request->filled('province'), function ($q) use ($request) {
+        $districts = PilotSchool::when($request->filled('province'), function ($q) use ($request) {
             $q->where('province', $request->province);
         })->distinct()->orderBy('district')->pluck('district');
 
         // Cluster column doesn't exist in schools table - return empty collection
         $clusters = collect([]);
 
-        $schools = School::when($request->filled('province'), function ($q) use ($request) {
+        $schools = PilotSchool::when($request->filled('province'), function ($q) use ($request) {
             $q->where('province', $request->province);
         })->when($request->filled('district'), function ($q) use ($request) {
             $q->where('district', $request->district);
         })
         // Cluster filtering removed - column doesn't exist
-            ->orderBy('name')->get();
+            ->orderBy('school_name')->get();
 
         $teachers = User::whereIn('role', ['teacher', 'mentor'])
             ->when($request->filled('school_id'), function ($q) use ($request) {
@@ -105,24 +105,24 @@ class AssessmentManagementController extends Controller
     public function mentoringVisits(Request $request)
     {
         $query = MentoringVisit::with(['mentor', 'school', 'teacher'])
-            ->join('schools', 'mentoring_visits.school_id', '=', 'schools.id')
+            ->join('pilot_schools', 'mentoring_visits.pilot_school_id', '=', 'pilot_schools.id')
             ->select('mentoring_visits.*');
 
         // Apply filters
         if ($request->filled('province')) {
-            $query->where('schools.province', $request->province);
+            $query->where('pilot_schools.province', $request->province);
         }
 
         if ($request->filled('district')) {
-            $query->where('schools.district', $request->district);
+            $query->where('pilot_schools.district', $request->district);
         }
 
         if ($request->filled('cluster')) {
-            $query->where('schools.cluster', $request->cluster);
+            $query->where('pilot_schools.cluster', $request->cluster);
         }
 
         if ($request->filled('school_id')) {
-            $query->where('schools.id', $request->school_id);
+            $query->where('pilot_schools.id', $request->school_id);
         }
 
         if ($request->filled('mentor_id')) {
@@ -146,20 +146,20 @@ class AssessmentManagementController extends Controller
 
         // Get filter options from Geographic table
         $provinces = Province::orderBy('name_kh')->pluck('name_en', 'name_en');
-        $districts = School::when($request->filled('province'), function ($q) use ($request) {
+        $districts = PilotSchool::when($request->filled('province'), function ($q) use ($request) {
             $q->where('province', $request->province);
         })->distinct()->orderBy('district')->pluck('district');
 
         // Cluster column doesn't exist in schools table - return empty collection
         $clusters = collect([]);
 
-        $schools = School::when($request->filled('province'), function ($q) use ($request) {
+        $schools = PilotSchool::when($request->filled('province'), function ($q) use ($request) {
             $q->where('province', $request->province);
         })->when($request->filled('district'), function ($q) use ($request) {
             $q->where('district', $request->district);
         })
         // Cluster filtering removed - column doesn't exist
-            ->orderBy('name')->get();
+            ->orderBy('school_name')->get();
 
         $mentors = User::where('role', 'mentor')->orderBy('name')->get();
         $teachers = User::whereIn('role', ['teacher', 'mentor'])

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\School;
+use App\Models\PilotSchool;
 use App\Models\Student;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -74,7 +74,7 @@ class ImportController extends Controller
                     continue;
                 }
 
-                School::updateOrCreate(
+                PilotSchool::updateOrCreate(
                     ['school_code' => $data['school_code']],
                     [
                         'name' => $data['name'], // Set the 'name' field for compatibility
@@ -142,7 +142,7 @@ class ImportController extends Controller
                     continue;
                 }
 
-                $school = School::where('school_name', $data['name'])->first();
+                $school = PilotSchool::where('school_name', $data['name'])->first();
                 if (! $school) {
                     $errors[] = 'Row '.($index + 2).": School '{$data['name']}' not found";
 
@@ -215,7 +215,7 @@ class ImportController extends Controller
                     continue;
                 }
 
-                $school = School::where('school_name', $data['name'])->first();
+                $school = PilotSchool::where('school_name', $data['name'])->first();
                 if (! $school) {
                     $errors[] = 'Row '.($index + 2).": School '{$data['name']}' not found";
 

@@ -613,7 +613,7 @@ class AssessmentController extends Controller
             ->pluck('student_id')
             ->toArray();
 
-        $schools = School::orderBy('sclName')->get();
+        $schools = PilotSchool::orderBy('school_name')->get();
 
         return view('assessments.select-students', compact(
             'students',

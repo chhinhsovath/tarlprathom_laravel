@@ -620,17 +620,51 @@
                                 beginAtZero: true,
                                 title: {
                                     display: true,
-                                    text: '{{ trans_db("percentage") }}'
+                                    text: '{{ trans_db("percentage") }}',
+                                    font: {
+                                        size: 14,
+                                        weight: 'bold'
+                                    }
                                 },
-                                max: 100
+                                max: 100,
+                                ticks: {
+                                    callback: function(value) {
+                                        return value + '%';
+                                    },
+                                    font: {
+                                        size: 11
+                                    }
+                                },
+                                grid: {
+                                    display: true,
+                                    drawBorder: true,
+                                    borderDash: [5, 5],
+                                    color: '#E5E7EB'
+                                }
                             },
                             y: {
                                 stacked: true,
+                                title: {
+                                    display: true,
+                                    text: '{{ trans_db("schools") }}',
+                                    font: {
+                                        size: 14,
+                                        weight: 'bold'
+                                    }
+                                },
                                 ticks: {
                                     autoSkip: false,
                                     font: {
                                         size: 11
+                                    },
+                                    callback: function(value, index, values) {
+                                        // Ensure school names are displayed
+                                        const labels = this.chart.data.labels;
+                                        return labels[index] || value;
                                     }
+                                },
+                                grid: {
+                                    display: false
                                 }
                             }
                         },
@@ -647,18 +681,24 @@
                             },
                             datalabels: {
                                 display: function(context) {
-                                    return context.dataset.data[context.dataIndex] > 5; // Only show labels for segments > 5%
+                                    return context.dataset.data[context.dataIndex] > 3; // Show labels for segments > 3%
                                 },
-                                color: 'white',
+                                color: function(context) {
+                                    // Use white for darker colors, black for lighter colors
+                                    const value = context.dataset.data[context.dataIndex];
+                                    return value > 30 ? 'white' : '#374151';
+                                },
                                 font: {
                                     weight: 'bold',
-                                    size: 10
+                                    size: 11
                                 },
-                                formatter: function(value) {
-                                    return value + '%';
+                                formatter: function(value, context) {
+                                    // Round to 1 decimal place
+                                    return Math.round(value * 10) / 10 + '%';
                                 },
                                 anchor: 'center',
-                                align: 'center'
+                                align: 'center',
+                                clip: false
                             },
                             tooltip: {
                                 callbacks: {

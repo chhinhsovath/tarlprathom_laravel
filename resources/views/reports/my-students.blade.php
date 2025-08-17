@@ -27,22 +27,30 @@
                         </div>
 
                         <!-- Subject Filter -->
+                        @if(($teacherSubject ?? 'both') === 'both')
                         <div>
                             <label for="subject" class="block text-sm font-medium text-gray-700 mb-2">
                                 {{ __('Subject') }}
                             </label>
                             <select name="subject" id="subject" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                                <option value="all" {{ request('subject', 'all') == 'all' ? 'selected' : '' }}>
-                                    {{ __('All Subjects') }}
-                                </option>
-                                <option value="khmer" {{ request('subject') == 'khmer' ? 'selected' : '' }}>
+                                <option value="khmer" {{ $subject == 'khmer' ? 'selected' : '' }}>
                                     {{ __('Khmer') }}
                                 </option>
-                                <option value="math" {{ request('subject') == 'math' ? 'selected' : '' }}>
+                                <option value="math" {{ $subject == 'math' ? 'selected' : '' }}>
                                     {{ __('Math') }}
                                 </option>
                             </select>
                         </div>
+                        @else
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                {{ __('Subject') }}
+                            </label>
+                            <div class="w-full px-3 py-2 bg-gray-100 rounded-md text-gray-700">
+                                {{ ucfirst($teacherSubject ?? 'both') }}
+                            </div>
+                        </div>
+                        @endif
 
                         <!-- Cycle Filter -->
                         <div>
@@ -213,26 +221,69 @@
 
     @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
     <script>
         @if($performanceByLevel->count() > 0)
+        // Determine which subject colors to use
+        const currentSubject = '{{ $subject }}';
+        
+        // Color schemes matching the dashboard
+        const khmerColors = [
+            '#ef4444', // red for beginner
+            '#f59e0b', // amber for letter
+            '#eab308', // yellow for word  
+            '#84cc16', // lime for paragraph
+            '#22c55e', // green for story
+            '#10b981', // emerald for comp 1
+            '#14b8a6'  // teal for comp 2
+        ];
+        
+        const mathColors = [
+            '#ef4444', // red for beginner
+            '#f59e0b', // amber for 1-digit
+            '#eab308', // yellow for 2-digit
+            '#84cc16', // lime for subtraction
+            '#22c55e', // green for division
+            '#10b981', // emerald for word problem
+        ];
+        
+        // Map levels to colors based on subject
+        const levelColorMap = {};
+        const labels = {!! json_encode($performanceByLevel->keys()->values()) !!};
+        const values = {!! json_encode($performanceByLevel->values()->values()) !!};
+        
+        // Assign colors based on level names
+        const backgroundColors = labels.map(level => {
+            if (currentSubject === 'math') {
+                if (level === 'Beginner') return mathColors[0];
+                if (level === '1-Digit') return mathColors[1];
+                if (level === '2-Digit') return mathColors[2];
+                if (level === 'Subtraction') return mathColors[3];
+                if (level === 'Division') return mathColors[4];
+                if (level === 'Word Problem') return mathColors[5];
+            } else {
+                if (level === 'Beginner') return khmerColors[0];
+                if (level === 'Letter') return khmerColors[1];
+                if (level === 'Word') return khmerColors[2];
+                if (level === 'Paragraph') return khmerColors[3];
+                if (level === 'Story') return khmerColors[4];
+                if (level === 'Comp. 1') return khmerColors[5];
+                if (level === 'Comp. 2') return khmerColors[6];
+            }
+            return '#6b7280'; // default gray
+        });
+        
         // Performance by Level Chart
         const levelCtx = document.getElementById('levelChart').getContext('2d');
         new Chart(levelCtx, {
             type: 'bar',
             data: {
-                labels: {!! json_encode($performanceByLevel->keys()) !!},
+                labels: labels,
                 datasets: [{
                     label: '{{ __("Number of Students") }}',
-                    data: {!! json_encode($performanceByLevel->values()) !!},
-                    backgroundColor: [
-                        '#EF4444', // Red for Beginner
-                        '#F97316', // Orange for Letter/1-Digit
-                        '#EAB308', // Yellow for Word/2-Digit
-                        '#3B82F6', // Blue for Paragraph/Subtraction
-                        '#10B981', // Green for Story/Division
-                        '#8B5CF6', // Purple for Comp.1/Word Problem
-                        '#EC4899', // Pink for Comp.2
-                    ],
+                    data: values,
+                    backgroundColor: backgroundColors,
+                    borderColor: backgroundColors.map(color => color + 'DD'),
                     borderWidth: 1
                 }]
             },
@@ -242,6 +293,16 @@
                 plugins: {
                     legend: {
                         display: false
+                    },
+                    datalabels: {
+                        anchor: 'end',
+                        align: 'top',
+                        color: '#374151',
+                        font: {
+                            weight: 'bold',
+                            size: 14
+                        },
+                        formatter: (value) => value
                     }
                 },
                 scales: {
@@ -252,7 +313,8 @@
                         }
                     }
                 }
-            }
+            },
+            plugins: [ChartDataLabels]
         });
         @endif
     </script>

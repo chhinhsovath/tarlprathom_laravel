@@ -19,7 +19,7 @@
                     <select wire:model="school_id" class="w-full rounded-md border-gray-300 shadow-sm">
                         <option value="">-- ជ្រើសរើសសាលា --</option>
                         @foreach($schools as $school)
-                            <option value="{{ $school->id }}">{{ $school->name }}</option>
+                            <option value="{{ $school->id }}">{{ $school->school_name }}</option>
                         @endforeach
                     </select>
                     @error('school_id') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror

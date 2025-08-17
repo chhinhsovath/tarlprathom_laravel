@@ -16,10 +16,10 @@ return new class extends Migration
             $table->id();
             $table->string('name', 100)->unique();
             $table->timestamps();
-            
+
             $table->index('name');
         });
-        
+
         // Insert only the pilot provinces
         DB::table('pilot_provinces')->insert([
             ['name' => 'Battambang', 'created_at' => now(), 'updated_at' => now()],

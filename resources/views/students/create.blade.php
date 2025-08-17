@@ -67,7 +67,7 @@
                                         <option value="">{{ __('students.Select School') }}</option>
                                         @foreach($schools as $school)
                                             <option value="{{ $school->id }}" {{ old('school_id') == $school->id ? 'selected' : '' }}>
-                                                {{ $school->name }}
+                                                {{ $school->school_name }}
                                             </option>
                                         @endforeach
                                     </select>

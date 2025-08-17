@@ -39,15 +39,15 @@
                         <!-- School -->
                         <div class="mt-4">
                             <x-input-label for="school_id" :value="__('School')" />
-                            <select id="school_id" name="school_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required onchange="loadTeachers()">
+                            <select id="school_id" name="pilot_school_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required onchange="loadTeachers()">
                                 <option value="">{{ __('Select School') }}</option>
                                 @foreach($schools as $school)
-                                    <option value="{{ $school->id }}" {{ old('school_id', $class->school_id) == $school->id ? 'selected' : '' }}>
-                                        {{ $school->name }}
+                                    <option value="{{ $school->id }}" {{ old('pilot_school_id', $class->pilot_school_id) == $school->id ? 'selected' : '' }}>
+                                        {{ $school->school_name }}
                                     </option>
                                 @endforeach
                             </select>
-                            <x-input-error class="mt-2" :messages="$errors->get('school_id')" />
+                            <x-input-error class="mt-2" :messages="$errors->get('pilot_school_id')" />
                         </div>
 
                         <!-- Teacher -->

@@ -29,7 +29,7 @@
                                        class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 mt-1"
                                        @if(in_array($school->id, $assignedSchoolIds)) checked @endif>
                                 <label for="school_{{ $school->id }}" class="ml-2 text-sm">
-                                    <span class="font-medium">{{ $school->name }}</span>
+                                    <span class="font-medium">{{ $school->school_name }}</span>
                                     @if($school->province)
                                         <span class="text-gray-500 block text-xs">{{ $school->province }}</span>
                                     @endif

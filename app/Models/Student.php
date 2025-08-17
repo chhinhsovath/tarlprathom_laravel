@@ -98,9 +98,9 @@ class Student extends Model
      */
     public function school()
     {
-        return $this->belongsTo(School::class, 'school_id', 'sclAutoID');
+        return $this->belongsTo(PilotSchool::class, 'pilot_school_id');
     }
-    
+
     /**
      * Get the pilot school that the student belongs to.
      */
@@ -108,7 +108,7 @@ class Student extends Model
     {
         return $this->belongsTo(PilotSchool::class, 'pilot_school_id');
     }
-    
+
     /**
      * Get the school name (prioritize pilot school).
      */
@@ -118,8 +118,9 @@ class Student extends Model
             return $this->pilotSchool->school_name;
         }
         if ($this->school) {
-            return $this->school->sclName;
+            return $this->school->school_name;
         }
+
         return null;
     }
 

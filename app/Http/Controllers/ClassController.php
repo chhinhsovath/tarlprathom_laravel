@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\School;
+use App\Models\PilotSchool;
 use App\Models\SchoolClass;
 use App\Models\User;
 use App\Traits\Sortable;
@@ -24,7 +24,7 @@ class ClassController extends Controller
         if ($user->isTeacher()) {
             $query->where('teacher_id', $user->id);
         } elseif (! $user->isAdmin()) {
-            $query->where('school_id', $user->school_id);
+            $query->where('pilot_school_id', $user->pilot_school_id);
         }
 
         // Search functionality
@@ -35,7 +35,7 @@ class ClassController extends Controller
 
         // Filter by school (admin only)
         if ($request->filled('school_id') && $user->isAdmin()) {
-            $query->where('school_id', $request->get('school_id'));
+            $query->where('pilot_school_id', $request->get('school_id'));
         }
 
         // Filter by grade level
@@ -53,7 +53,7 @@ class ClassController extends Controller
         );
 
         $classes = $query->paginate(20)->withQueryString();
-        $schools = $user->isAdmin() ? School::orderBy('name')->get() : collect();
+        $schools = $user->isAdmin() ? PilotSchool::orderBy('school_name')->get() : collect();
 
         return view('classes.index', compact('classes', 'schools') + $sortData);
     }
@@ -68,7 +68,7 @@ class ClassController extends Controller
             abort(403, __('Unauthorized action.'));
         }
 
-        $schools = School::orderBy('name')->get();
+        $schools = PilotSchool::orderBy('school_name')->get();
         $teachers = User::where('role', 'teacher')->orderBy('name')->get();
 
         return view('classes.create', compact('schools', 'teachers'));
@@ -87,13 +87,18 @@ class ClassController extends Controller
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'grade_level' => ['required', 'integer', 'in:4,5'],
-            'school_id' => ['required', 'exists:schools,id'],
+            'pilot_school_id' => ['required', 'exists:pilot_schools,id'],
             'teacher_id' => ['nullable', 'exists:users,id'],
             'academic_year' => ['nullable', 'string', 'max:255'],
             'is_active' => ['boolean'],
         ]);
 
         $validated['is_active'] = $request->has('is_active');
+
+        // Map the field name for database
+        if (isset($validated['pilot_school_id'])) {
+            $validated['pilot_school_id'] = $validated['pilot_school_id'];
+        }
 
         SchoolClass::create($validated);
 
@@ -110,7 +115,7 @@ class ClassController extends Controller
 
         // Check authorization
         $user = auth()->user();
-        if (! $user->isAdmin() && $class->teacher_id !== $user->id && $class->school_id !== $user->school_id) {
+        if (! $user->isAdmin() && $class->teacher_id !== $user->id && $class->pilot_school_id !== $user->pilot_school_id) {
             abort(403, __('Unauthorized action.'));
         }
 
@@ -127,9 +132,9 @@ class ClassController extends Controller
             abort(403, __('Unauthorized action.'));
         }
 
-        $schools = School::orderBy('name')->get();
+        $schools = PilotSchool::orderBy('school_name')->get();
         $teachers = User::where('role', 'teacher')
-            ->where('school_id', $class->school_id)
+            ->where('pilot_school_id', $class->pilot_school_id)
             ->orderBy('name')
             ->get();
 
@@ -149,7 +154,7 @@ class ClassController extends Controller
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'grade_level' => ['required', 'integer', 'in:4,5'],
-            'school_id' => ['required', 'exists:schools,id'],
+            'pilot_school_id' => ['required', 'exists:pilot_schools,id'],
             'teacher_id' => ['nullable', 'exists:users,id'],
             'academic_year' => ['nullable', 'string', 'max:255'],
             'is_active' => ['boolean'],

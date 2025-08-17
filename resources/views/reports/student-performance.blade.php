@@ -1,15 +1,153 @@
 <x-app-layout>
+    {{-- Print Styles --}}
+    @push('styles')
+    <style>
+        @media print {
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                color-adjust: exact !important;
+            }
+            
+            @page {
+                size: A4 landscape;
+                margin: 10mm;
+            }
+            
+            .no-print {
+                display: none !important;
+            }
+            
+            body {
+                font-size: 10pt;
+                line-height: 1.3;
+            }
+            
+            .print-container {
+                width: 100% !important;
+                max-width: none !important;
+                padding: 0 !important;
+            }
+            
+            /* Chart specific print styles */
+            .chart-container {
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+                margin-bottom: 20px !important;
+                padding: 10px !important;
+                background: white !important;
+                position: relative !important;
+            }
+            
+            /* Hide canvas in print, show print table instead */
+            canvas {
+                display: none !important;
+            }
+            
+            /* Show print-friendly chart replacement */
+            .print-chart-table {
+                display: block !important;
+                width: 100% !important;
+            }
+            
+            /* Force chart wrapper height */
+            div[style*="height: 300px"] {
+                height: auto !important;
+            }
+            
+            /* Ensure the chart box doesn't break */
+            .bg-white.overflow-hidden {
+                page-break-inside: avoid !important;
+            }
+            
+            /* Ensure chart sections don't break */
+            .avoid-break {
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+            
+            /* Table adjustments */
+            table {
+                page-break-inside: avoid;
+                font-size: 8pt;
+                width: 100%;
+            }
+            
+            th, td {
+                padding: 2px 4px !important;
+                font-size: 8pt !important;
+            }
+            
+            /* Hide table info icons in print */
+            .normal-case.text-gray-400 {
+                display: none !important;
+            }
+            
+            /* Compact the summary table */
+            .mt-6.overflow-x-auto {
+                margin-top: 10px !important;
+            }
+            
+            /* Background colors for print */
+            .bg-blue-50, .bg-yellow-50, .bg-green-50 {
+                background-color: #f9f9f9 !important;
+                border: 1px solid #ddd !important;
+            }
+            
+            /* Remove shadows */
+            .shadow-sm, .shadow {
+                box-shadow: none !important;
+            }
+            
+            /* Page breaks */
+            .page-break {
+                page-break-after: always;
+            }
+            
+            /* Hide export buttons in print */
+            button[onclick*="exportSingleChart"] {
+                display: none !important;
+            }
+            
+            /* Adjust margins for print */
+            .mb-6 {
+                margin-bottom: 10px !important;
+            }
+            
+            .p-6 {
+                padding: 10px !important;
+            }
+        }
+        
+        @media screen {
+            .print-only {
+                display: none;
+            }
+            .print-chart-table {
+                display: none;
+            }
+        }
+    </style>
+    @endpush
 
-    <div class="py-6">
+    <div class="py-6 print-container">
         <div class="w-full px-4 sm:px-6 lg:px-8">
             <!-- Header -->
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
                 <div class="p-6 bg-white border-b border-gray-200">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-lg font-medium text-gray-900">{{ __('Student Performance Report') }}</h3>
-                        <a href="{{ route('reports.index') }}" class="text-sm text-gray-600 hover:text-gray-900">
-                            ← {{ __('Back to Reports') }}
-                        </a>
+                        <div class="flex gap-2 no-print">
+                            <button onclick="window.print()" class="inline-flex items-center px-3 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
+                                </svg>
+                                {{ __('Print') }}
+                            </button>
+                            <a href="{{ route('reports.index') }}" class="text-sm text-gray-600 hover:text-gray-900">
+                                ← {{ __('Back to Reports') }}
+                            </a>
+                        </div>
                     </div>
                     
                     <!-- Filters -->
@@ -20,7 +158,7 @@
                                 <option value="">{{ __('All Schools') }}</option>
                                 @foreach($schools as $school)
                                     <option value="{{ $school->id }}" {{ $schoolId == $school->id ? 'selected' : '' }}>
-                                        {{ $school->name }}
+                                        {{ $school->school_name }}
                                     </option>
                                 @endforeach
                             </select>
@@ -126,16 +264,50 @@
             
             @if($subject === 'all')
                 <!-- Performance by Level - Khmer -->
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
+                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6 avoid-break">
                     <div class="p-6 bg-white border-b border-gray-200">
-                        <h4 class="text-md font-medium text-gray-900 mb-4">{{ __('Khmer Performance by Level') }}</h4>
+                        <div class="flex justify-between items-center mb-4">
+                            <h4 class="text-md font-medium text-gray-900">{{ __('Khmer Performance by Level') }}</h4>
+                            <button onclick="exportSingleChart('khmerPerformanceChart', 'khmer')" class="inline-flex items-center px-3 py-1.5 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 no-print">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                </svg>
+                                {{ __('Export Chart') }}
+                            </button>
+                        </div>
                         
                         <div class="mb-4 p-3 bg-gray-50 rounded-lg text-sm text-gray-600">
                             <p><strong>{{ __('What this shows') }}:</strong> {{ __('Distribution of students across Khmer reading levels. Colors progress from red (lowest) to teal (highest) to visually represent skill progression.') }}</p>
                         </div>
                         
-                        <div class="relative" style="height: 300px;">
+                        <div class="relative chart-container" style="height: 300px;" data-chart="khmer">
                             <canvas id="khmerPerformanceChart"></canvas>
+                            <!-- Print-friendly chart replacement -->
+                            <div class="print-chart-table">
+                                <div class="flex justify-between items-center gap-2">
+                                    @php
+                                        $khmerPrintData = $performanceByLevelAndSubject['khmer'] ?? collect();
+                                        $khmerPrintTotal = $khmerPrintData->sum('count');
+                                    @endphp
+                                    @foreach($khmerLevels as $level)
+                                        @php
+                                            $levelData = $khmerPrintData->firstWhere('level', $level);
+                                            $count = $levelData ? $levelData->count : 0;
+                                            $percent = $khmerPrintTotal > 0 ? round(($count / $khmerPrintTotal) * 100) : 0;
+                                            $height = $percent * 2; // Scale for visual representation
+                                        @endphp
+                                        <div class="flex-1 text-center">
+                                            <div class="relative">
+                                                <div class="bg-gray-200 rounded" style="height: 200px; position: relative;">
+                                                    <div class="absolute bottom-0 left-0 right-0 bg-blue-500 rounded" style="height: {{ $height }}px;"></div>
+                                                </div>
+                                                <div class="mt-2 text-xs font-bold">{{ $count }}</div>
+                                                <div class="text-xs">{{ $level }}</div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
                         </div>
                         
                         <!-- Summary Table -->
@@ -193,14 +365,48 @@
                 <!-- Performance by Level - Math -->
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
                     <div class="p-6 bg-white border-b border-gray-200">
-                        <h4 class="text-md font-medium text-gray-900 mb-4">{{ __('Math Performance by Level') }}</h4>
+                        <div class="flex justify-between items-center mb-4">
+                            <h4 class="text-md font-medium text-gray-900">{{ __('Math Performance by Level') }}</h4>
+                            <button onclick="exportSingleChart('mathPerformanceChart', 'math')" class="inline-flex items-center px-3 py-1.5 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 no-print">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                </svg>
+                                {{ __('Export Chart') }}
+                            </button>
+                        </div>
                         
                         <div class="mb-4 p-3 bg-gray-50 rounded-lg text-sm text-gray-600">
                             <p><strong>{{ __('What this shows') }}:</strong> {{ __('Distribution of students across Math skill levels. Colors progress from red (lowest) to emerald (highest) to visually represent skill progression.') }}</p>
                         </div>
                         
-                        <div class="relative" style="height: 300px;">
+                        <div class="relative chart-container" style="height: 300px;" data-chart="math">
                             <canvas id="mathPerformanceChart"></canvas>
+                            <!-- Print-friendly chart replacement -->
+                            <div class="print-chart-table">
+                                <div class="flex justify-between items-center gap-2">
+                                    @php
+                                        $mathPrintData = $performanceByLevelAndSubject['math'] ?? collect();
+                                        $mathPrintTotal = $mathPrintData->sum('count');
+                                    @endphp
+                                    @foreach($mathLevels as $level)
+                                        @php
+                                            $levelData = $mathPrintData->firstWhere('level', $level);
+                                            $count = $levelData ? $levelData->count : 0;
+                                            $percent = $mathPrintTotal > 0 ? round(($count / $mathPrintTotal) * 100) : 0;
+                                            $height = $percent * 2; // Scale for visual representation
+                                        @endphp
+                                        <div class="flex-1 text-center">
+                                            <div class="relative">
+                                                <div class="bg-gray-200 rounded" style="height: 200px; position: relative;">
+                                                    <div class="absolute bottom-0 left-0 right-0 bg-green-500 rounded" style="height: {{ $height }}px;"></div>
+                                                </div>
+                                                <div class="mt-2 text-xs font-bold">{{ $count }}</div>
+                                                <div class="text-xs">{{ $level }}</div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
                         </div>
                         
                         <!-- Summary Table -->
@@ -258,7 +464,15 @@
                 <!-- Performance by Level - Single Subject -->
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
                     <div class="p-6 bg-white border-b border-gray-200">
-                        <h4 class="text-md font-medium text-gray-900 mb-4">{{ __('Performance by Level') }} - {{ ucfirst($subject) }}</h4>
+                        <div class="flex justify-between items-center mb-4">
+                            <h4 class="text-md font-medium text-gray-900">{{ __('Performance by Level') }} - {{ ucfirst($subject) }}</h4>
+                            <button onclick="exportSingleChart('performanceChart', '{{ $subject }}')" class="inline-flex items-center px-3 py-1.5 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 no-print">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                </svg>
+                                {{ __('Export Chart') }}
+                            </button>
+                        </div>
                         
                         <div class="mb-4 p-3 bg-gray-50 rounded-lg text-sm text-gray-600">
                             <p><strong>{{ __('What this shows') }}:</strong> 
@@ -271,8 +485,36 @@
                             <p class="mt-1"><strong>{{ __('Color coding') }}:</strong> {{ __('Colors progress from red (beginner) to green/teal (advanced) to show skill progression.') }}</p>
                         </div>
                         
-                        <div class="relative" style="height: 300px;">
+                        <div class="relative chart-container" style="height: 300px;" data-chart="single">
                             <canvas id="performanceChart"></canvas>
+                            <!-- Print-friendly chart replacement -->
+                            <div class="print-chart-table">
+                                <div class="flex justify-between items-center gap-2">
+                                    @php
+                                        $singlePrintData = $performanceByLevel;
+                                        $singlePrintTotal = $singlePrintData->sum('count');
+                                        $singleLevels = $subject === 'khmer' ? $khmerLevels : $mathLevels;
+                                    @endphp
+                                    @foreach($singleLevels as $level)
+                                        @php
+                                            $levelData = $singlePrintData->firstWhere('level', $level);
+                                            $count = $levelData ? $levelData->count : 0;
+                                            $percent = $singlePrintTotal > 0 ? round(($count / $singlePrintTotal) * 100) : 0;
+                                            $height = $percent * 2; // Scale for visual representation
+                                            $barColor = $subject === 'khmer' ? 'bg-blue-500' : 'bg-green-500';
+                                        @endphp
+                                        <div class="flex-1 text-center">
+                                            <div class="relative">
+                                                <div class="bg-gray-200 rounded" style="height: 200px; position: relative;">
+                                                    <div class="absolute bottom-0 left-0 right-0 {{ $barColor }} rounded" style="height: {{ $height }}px;"></div>
+                                                </div>
+                                                <div class="mt-2 text-xs font-bold">{{ $count }}</div>
+                                                <div class="text-xs">{{ $level }}</div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
                         </div>
                         
                         <!-- Summary Table -->
@@ -381,7 +623,6 @@
     
     @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
     <script>
         $(document).ready(function() {
             const khmerLevels = @json($khmerLevels);
@@ -470,21 +711,7 @@
                                     }
                                 }
                             },
-                            datalabels: {
-                                display: function(context) {
-                                    return context.dataset.data[context.dataIndex] > 0;
-                                },
-                                color: 'black',
-                                font: {
-                                    weight: 'bold',
-                                    size: 11
-                                },
-                                formatter: function(value) {
-                                    return value;
-                                },
-                                anchor: 'end',
-                                align: 'top'
-                            }
+                            // Data labels removed to prevent recursion error
                         },
                         scales: {
                             y: {
@@ -493,12 +720,29 @@
                                     display: true,
                                     text: '{{ __("Number of Students") }}',
                                     font: {
-                                        size: 12,
-                                        weight: 'bold'
+                                        size: 14,
+                                        weight: 'bold',
+                                        color: '#374151'
                                     }
                                 },
                                 ticks: {
-                                    stepSize: 1
+                                    stepSize: 1,
+                                    font: {
+                                        size: 12
+                                    },
+                                    color: '#6B7280',
+                                    callback: function(value) {
+                                        if (Math.floor(value) === value) {
+                                            return value;
+                                        }
+                                    }
+                                },
+                                grid: {
+                                    display: true,
+                                    drawBorder: true,
+                                    drawOnChartArea: true,
+                                    borderDash: [5, 5],
+                                    color: '#E5E7EB'
                                 }
                             },
                             x: {
@@ -506,43 +750,82 @@
                                     display: true,
                                     text: '{{ __("Skill Level") }} ({{ __("Beginner to Advanced") }})',
                                     font: {
-                                        size: 12,
-                                        weight: 'bold'
+                                        size: 14,
+                                        weight: 'bold',
+                                        color: '#374151'
                                     }
+                                },
+                                ticks: {
+                                    font: {
+                                        size: 12
+                                    },
+                                    color: '#6B7280'
+                                },
+                                grid: {
+                                    display: false
                                 }
                             }
                         }
                     },
-                    plugins: [ChartDataLabels]
+                    plugins: []
                 });
             }
             
-            // Export charts function
+            // Export single chart function
+            window.exportSingleChart = function(chartId, subjectType) {
+                try {
+                    const date = new Date().toISOString().split('T')[0];
+                    const chart = window[chartId + 'Chart'];
+                    
+                    if (!chart) {
+                        console.error('Chart not found:', chartId);
+                        alert('Chart not found. Please wait for the chart to load and try again.');
+                        return;
+                    }
+                    
+                    // Use Chart.js built-in toBase64Image method
+                    const imageUrl = chart.toBase64Image();
+                    
+                    // Download
+                    const link = document.createElement('a');
+                    link.download = subjectType + '-performance-chart-' + date + '.png';
+                    link.href = imageUrl;
+                    link.click();
+                    
+                } catch (error) {
+                    console.error('Error exporting chart:', error);
+                    alert('Error exporting chart. Please try again.');
+                }
+            };
+            
+            // Export charts function (for backward compatibility)
             window.exportCharts = function() {
                 const subject = '{{ $subject }}';
                 const date = new Date().toISOString().split('T')[0];
                 
                 if (subject === 'all') {
                     // Export both charts
-                    const khmerLink = document.createElement('a');
-                    khmerLink.download = 'khmer-performance-chart-' + date + '.png';
-                    khmerLink.href = window.khmerPerformanceChartChart.toBase64Image();
-                    khmerLink.click();
-                    
+                    exportSingleChart('khmerPerformanceChart', 'khmer');
                     setTimeout(() => {
-                        const mathLink = document.createElement('a');
-                        mathLink.download = 'math-performance-chart-' + date + '.png';
-                        mathLink.href = window.mathPerformanceChartChart.toBase64Image();
-                        mathLink.click();
+                        exportSingleChart('mathPerformanceChart', 'math');
                     }, 500);
                 } else {
                     // Export single chart
-                    const link = document.createElement('a');
-                    link.download = subject + '-performance-chart-' + date + '.png';
-                    link.href = window.performanceChartChart.toBase64Image();
-                    link.click();
+                    exportSingleChart('performanceChart', subject);
                 }
             };
+            
+            // Print event handlers - charts are hidden during print and replaced with HTML bars
+            window.addEventListener('beforeprint', function() {
+                // Charts will be hidden via CSS during print
+                // The print-chart-table divs will be shown instead
+                console.log('Preparing for print...');
+            });
+            
+            window.addEventListener('afterprint', function() {
+                // Nothing to restore as CSS handles visibility
+                console.log('Print completed.');
+            });
         });
     </script>
     @endpush

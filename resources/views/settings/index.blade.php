@@ -46,7 +46,7 @@
                             <div>
                                 <x-input-label for="app_locale" :value="__('Default Language')" />
                                 <select id="app_locale" name="app_locale" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
-                                    <option value="en" {{ old('app_locale', $settings['app_locale']) == 'en' ? 'selected' : '' }}>អង់គ្លេស</option>
+                                    <option value="en" {{ old('app_locale', $settings['app_locale']) == 'en' ? 'selected' : '' }}>English</option>
                                     <option value="km" {{ old('app_locale', $settings['app_locale']) == 'km' ? 'selected' : '' }}>ខ្មែរ</option>
                                 </select>
                                 <x-input-error class="mt-2" :messages="$errors->get('app_locale')" />

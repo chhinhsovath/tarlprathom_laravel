@@ -21,7 +21,7 @@
                             <option value="">{{ trans_db('All Schools') }}</option>
                             @foreach($schools as $school)
                                 <option value="{{ $school->id }}" {{ $schoolId == $school->id ? 'selected' : '' }}>
-                                    {{ $school->name }}
+                                    {{ $school->school_name }}
                                 </option>
                             @endforeach
                         </select>
@@ -129,7 +129,15 @@
             <!-- Performance by Level - Khmer -->
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
                 <div class="p-6 bg-white border-b border-gray-200">
-                    <h4 class="text-md font-medium text-gray-900 mb-4">{{ trans_db('Khmer Performance by Level') }}</h4>
+                    <div class="flex justify-between items-center mb-4">
+                        <h4 class="text-md font-medium text-gray-900">{{ trans_db('Khmer Performance by Level') }}</h4>
+                        <button onclick="exportSingleChart('khmerPerformanceChart', 'khmer')" class="inline-flex items-center px-3 py-1.5 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700">
+                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                            </svg>
+                            {{ trans_db('Export Chart') }}
+                        </button>
+                    </div>
                     
                     <div class="mb-4 p-3 bg-gray-50 rounded-lg text-sm text-gray-600">
                         <p><strong>{{ trans_db('What this shows') }}:</strong> {{ trans_db('Distribution of students across Khmer reading levels. Colors progress from red (lowest) to teal (highest) to visually represent skill progression.') }}</p>
@@ -194,7 +202,15 @@
             <!-- Performance by Level - Math -->
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
                 <div class="p-6 bg-white border-b border-gray-200">
-                    <h4 class="text-md font-medium text-gray-900 mb-4">{{ trans_db('Math Performance by Level') }}</h4>
+                    <div class="flex justify-between items-center mb-4">
+                        <h4 class="text-md font-medium text-gray-900">{{ trans_db('Math Performance by Level') }}</h4>
+                        <button onclick="exportSingleChart('mathPerformanceChart', 'math')" class="inline-flex items-center px-3 py-1.5 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700">
+                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                            </svg>
+                            {{ trans_db('Export Chart') }}
+                        </button>
+                    </div>
                     
                     <div class="mb-4 p-3 bg-gray-50 rounded-lg text-sm text-gray-600">
                         <p><strong>{{ trans_db('What this shows') }}:</strong> {{ trans_db('Distribution of students across Math skill levels. Colors progress from red (lowest) to emerald (highest) to visually represent skill progression.') }}</p>
@@ -259,7 +275,15 @@
             <!-- Performance by Level - Single Subject -->
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
                 <div class="p-6 bg-white border-b border-gray-200">
-                    <h4 class="text-md font-medium text-gray-900 mb-4">{{ trans_db('Performance by Level') }} - {{ trans_db(ucfirst($subject)) }}</h4>
+                    <div class="flex justify-between items-center mb-4">
+                        <h4 class="text-md font-medium text-gray-900">{{ trans_db('Performance by Level') }} - {{ trans_db(ucfirst($subject)) }}</h4>
+                        <button onclick="exportSingleChart('performanceChart', '{{ $subject }}')" class="inline-flex items-center px-3 py-1.5 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700">
+                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                            </svg>
+                            {{ trans_db('Export Chart') }}
+                        </button>
+                    </div>
                     
                     <div class="mb-4 p-3 bg-gray-50 rounded-lg text-sm text-gray-600">
                         <p><strong>{{ trans_db('What this shows') }}:</strong> 
@@ -446,7 +470,21 @@ $(document).ready(function() {
         const colors = subjectType === 'khmer' ? khmerColors : mathColors;
         
         // Translate level labels
-        const translatedLabels = levelOrder.map(level => @json(trans_db('${level}')));
+        const levelTranslations = {
+            'Beginner': @json(trans_db('Beginner')),
+            'Letter': @json(trans_db('Letter')),
+            'Word': @json(trans_db('Word')),
+            'Paragraph': @json(trans_db('Paragraph')),
+            'Story': @json(trans_db('Story')),
+            'Comp. 1': @json(trans_db('Comp. 1')),
+            'Comp. 2': @json(trans_db('Comp. 2')),
+            '1-Digit': @json(trans_db('1-Digit')),
+            '2-Digit': @json(trans_db('2-Digit')),
+            'Subtraction': @json(trans_db('Subtraction')),
+            'Division': @json(trans_db('Division')),
+            'Word Problem': @json(trans_db('Word Problem'))
+        };
+        const translatedLabels = levelOrder.map(level => levelTranslations[level] || level);
         
         // Create chart
         const ctx = document.getElementById(canvasId).getContext('2d');
@@ -533,30 +571,79 @@ $(document).ready(function() {
         });
     }
     
-    // Export charts function
+    // Export single chart with dark background
+    window.exportSingleChart = function(chartId, subjectType) {
+        const date = new Date().toISOString().split('T')[0];
+        const chart = window[chartId + 'Chart'];
+        
+        if (!chart) {
+            console.error('Chart not found:', chartId);
+            return;
+        }
+        
+        // Create a temporary canvas for export
+        const tempCanvas = document.createElement('canvas');
+        const tempCtx = tempCanvas.getContext('2d');
+        const originalCanvas = chart.canvas;
+        
+        // Set dimensions with padding
+        const padding = 40;
+        tempCanvas.width = originalCanvas.width + (padding * 2);
+        tempCanvas.height = originalCanvas.height + (padding * 2);
+        
+        // Fill background with black
+        tempCtx.fillStyle = '#000000';
+        tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+        
+        // Store original chart options
+        const originalOptions = JSON.parse(JSON.stringify(chart.options));
+        
+        // Update chart with white text for export
+        chart.options.plugins.title.color = '#FFFFFF';
+        chart.options.plugins.datalabels.color = '#FFFFFF';
+        chart.options.scales.x.title.font.color = '#FFFFFF';
+        chart.options.scales.x.ticks.color = '#FFFFFF';
+        chart.options.scales.y.title.font.color = '#FFFFFF';
+        chart.options.scales.y.ticks.color = '#FFFFFF';
+        chart.options.scales.y.grid.color = 'rgba(255, 255, 255, 0.1)';
+        
+        // Update chart
+        chart.update('none');
+        
+        // Draw the chart on the temporary canvas with padding
+        tempCtx.drawImage(originalCanvas, padding, padding);
+        
+        // Add watermark/timestamp
+        tempCtx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+        tempCtx.font = '12px Arial';
+        tempCtx.textAlign = 'right';
+        tempCtx.fillText('Generated: ' + new Date().toLocaleString(), tempCanvas.width - 10, tempCanvas.height - 10);
+        
+        // Create download link
+        const link = document.createElement('a');
+        link.download = subjectType + '-performance-chart-' + date + '.png';
+        link.href = tempCanvas.toDataURL('image/png', 1.0);
+        link.click();
+        
+        // Restore original chart options
+        chart.options = originalOptions;
+        chart.update('none');
+    };
+    
+    // Export charts function (for backward compatibility)
     window.exportCharts = function() {
         const subject = '{{ $subject }}';
         const date = new Date().toISOString().split('T')[0];
         
         if (subject === 'all') {
             // Export both charts
-            const khmerLink = document.createElement('a');
-            khmerLink.download = 'khmer-performance-chart-' + date + '.png';
-            khmerLink.href = window.khmerPerformanceChartChart.toBase64Image();
-            khmerLink.click();
-            
+            exportSingleChart('khmerPerformanceChart', 'khmer');
             setTimeout(() => {
-                const mathLink = document.createElement('a');
-                mathLink.download = 'math-performance-chart-' + date + '.png';
-                mathLink.href = window.mathPerformanceChartChart.toBase64Image();
-                mathLink.click();
+                exportSingleChart('mathPerformanceChart', 'math');
             }, 500);
         } else {
             // Export single chart
-            const link = document.createElement('a');
-            link.download = subject + '-performance-chart-' + date + '.png';
-            link.href = window.performanceChartChart.toBase64Image();
-            link.click();
+            exportSingleChart('performanceChart', subject);
         }
     };
 });

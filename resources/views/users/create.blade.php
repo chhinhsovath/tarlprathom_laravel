@@ -75,7 +75,7 @@
                                         <option value="">{{ __('No School Assigned') }}</option>
                                         @foreach($schools as $school)
                                             <option value="{{ $school->id }}" {{ old('school_id') == $school->id ? 'selected' : '' }}>
-                                                {{ $school->name }}
+                                                {{ $school->school_name }}
                                             </option>
                                         @endforeach
                                     </select>
@@ -165,6 +165,17 @@
                                     <x-text-input id="holding_classes" name="holding_classes" type="text" class="mt-1 block w-full" :value="old('holding_classes')" placeholder="{{ __('e.g., Grade 1, Grade 2') }}" />
                                     <x-input-error class="mt-2" :messages="$errors->get('holding_classes')" />
                                 </div>
+                                
+                                <!-- Assigned Subject (for Teachers) -->
+                                <div id="assigned_subject_container" style="display: none;">
+                                    <x-input-label for="assigned_subject" :value="__('Assigned Subject')" />
+                                    <select id="assigned_subject" name="assigned_subject" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                        <option value="both" {{ old('assigned_subject', 'both') == 'both' ? 'selected' : '' }}>{{ __('Both Subjects') }}</option>
+                                        <option value="khmer" {{ old('assigned_subject') == 'khmer' ? 'selected' : '' }}>{{ __('Khmer Only') }}</option>
+                                        <option value="math" {{ old('assigned_subject') == 'math' ? 'selected' : '' }}>{{ __('Math Only') }}</option>
+                                    </select>
+                                    <x-input-error class="mt-2" :messages="$errors->get('assigned_subject')" />
+                                </div>
                             </div>
                         </div>
                         
@@ -227,12 +238,12 @@
                     return;
                 }
                 
-                const Letter = new FileLetter();
-                Letter.onload = function(e) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
                     previewImage.src = e.target.result;
                     preview.classList.remove('hidden');
                 };
-                Letter.readAsDataURL(file);
+                reader.readAsDataURL(file);
             } else {
                 preview.classList.add('hidden');
             }
@@ -240,6 +251,23 @@
         
         // Geographic cascading selects
         document.addEventListener('DOMContentLoaded', function() {
+            const roleSelect = document.getElementById('role');
+            const assignedSubjectContainer = document.getElementById('assigned_subject_container');
+            
+            // Show/hide assigned subject based on role
+            roleSelect.addEventListener('change', function() {
+                if (this.value === 'teacher') {
+                    assignedSubjectContainer.style.display = 'block';
+                } else {
+                    assignedSubjectContainer.style.display = 'none';
+                }
+            });
+            
+            // Check on page load if editing
+            if (roleSelect.value === 'teacher') {
+                assignedSubjectContainer.style.display = 'block';
+            }
+            
             const provinceSelect = document.getElementById('province');
             const districtSelect = document.getElementById('district');
             const communeSelect = document.getElementById('commune');

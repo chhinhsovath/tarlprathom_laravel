@@ -20,6 +20,19 @@ if (! function_exists('trans_db')) {
         // Get translation from database
         $translation = Translation::getTranslation($key, $locale);
 
+        // If translation not found and we're not in English, try English as fallback
+        if ($translation === $key && $locale !== 'en') {
+            $translation = Translation::getTranslation($key, 'en');
+        }
+
+        // If still not found, try Laravel's translation system as final fallback
+        if ($translation === $key) {
+            $laravelTranslation = trans($key, $replace, $locale);
+            if ($laravelTranslation !== $key) {
+                $translation = $laravelTranslation;
+            }
+        }
+
         // Replace placeholders
         foreach ($replace as $placeholder => $value) {
             $translation = str_replace(':'.$placeholder, $value, $translation);

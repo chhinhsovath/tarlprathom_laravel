@@ -49,7 +49,7 @@ class LessonPlan extends Model
 
     public function school()
     {
-        return $this->belongsTo(School::class, 'school_id', 'sclAutoID');
+        return $this->belongsTo(PilotSchool::class, 'pilot_school_id');
     }
 
     public function schoolClass()

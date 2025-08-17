@@ -21,7 +21,7 @@
                             <option value="">{{ trans_db('All Schools') }}</option>
                             @foreach($schools as $school)
                                 <option value="{{ $school->id }}" {{ $schoolId == $school->id ? 'selected' : '' }}>
-                                    {{ $school->name }}
+                                    {{ $school->school_name }}
                                 </option>
                             @endforeach
                         </select>
@@ -154,11 +154,11 @@
                         <div class="text-xs text-green-400 mt-1">{{ trans_db('Moved to higher skill levels') }}</div>
                     </div>
                     
-                    <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
-                        <div class="text-2xl font-bold text-blue-700">{{ $maintained }}</div>
-                        <div class="text-sm text-blue-600">{{ trans_db('Students Maintained') }}</div>
-                        <div class="text-xs text-blue-500">{{ $totalStudents > 0 ? number_format(($maintained / $totalStudents) * 100, 1) : 0 }}% {{ trans_db('of total') }}</div>
-                        <div class="text-xs text-blue-400 mt-1">{{ trans_db('Stayed at same skill level') }}</div>
+                    <div class="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
+                        <div class="text-2xl font-bold text-yellow-700">{{ $maintained }}</div>
+                        <div class="text-sm text-yellow-600">{{ trans_db('Students Maintained') }}</div>
+                        <div class="text-xs text-yellow-500">{{ $totalStudents > 0 ? number_format(($maintained / $totalStudents) * 100, 1) : 0 }}% {{ trans_db('of total') }}</div>
+                        <div class="text-xs text-yellow-400 mt-1">{{ trans_db('Stayed at same skill level') }}</div>
                     </div>
                     
                     <div class="bg-red-50 p-4 rounded-lg border border-red-200">
@@ -273,8 +273,8 @@
                                             ↓ {{ $data['level_improved'] }} {{ abs($data['level_improved']) == 1 ? trans_db('level') : trans_db('levels') }}
                                         </span>
                                     @else
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                                            = {{ trans_db('Same level') }}
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                            {{ trans_db('Same level') }}
                                         </span>
                                     @endif
                                 </td>
@@ -284,7 +284,7 @@
                                     @elseif($data['level_improved'] < 0)
                                         <span class="text-red-600 font-medium">{{ $data['level_improved'] }} {{ trans_db('levels') }}</span>
                                     @else
-                                        <span class="text-gray-500">0</span>
+                                        <span class="text-yellow-600">0</span>
                                     @endif
                                 </td>
                             </tr>
@@ -399,8 +399,20 @@ $(document).ready(function() {
         return acc;
     }, {});
     
+    // Map colors to categories correctly using config
+    const colorMap = @json(config('charts.colors.progress'));
+    const progressColorMap = {
+        'Improved': colorMap.improved,
+        'Maintained': colorMap.maintained, 
+        'Declined': colorMap.declined
+    };
+    
+    // Get colors in the same order as the keys
+    const orderedKeys = Object.keys(levelChanges);
+    const orderedColors = orderedKeys.map(key => progressColorMap[key]);
+    
     // Translate labels
-    const translatedLabels = Object.keys(levelChanges).map(key => chartTranslations[key]);
+    const translatedLabels = orderedKeys.map(key => chartTranslations[key]);
     
     // Create pie chart
     const ctx = document.getElementById('progressChart').getContext('2d');
@@ -410,11 +422,7 @@ $(document).ready(function() {
             labels: translatedLabels,
             datasets: [{
                 data: Object.values(levelChanges),
-                backgroundColor: [
-                    '#22c55e', // green for improved
-                    '#ef4444', // red for declined
-                    '#3b82f6'  // blue for maintained
-                ],
+                backgroundColor: orderedColors,
                 borderWidth: 2,
                 borderColor: '#ffffff'
             }]

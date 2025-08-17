@@ -105,6 +105,7 @@ class UserController extends Controller
             'profile_photo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:5120'],
             'sex' => ['nullable', 'in:male,female'],
             'holding_classes' => ['nullable', 'string', 'max:255'],
+            'assigned_subject' => ['nullable', 'in:khmer,math,both'],
             'is_active' => ['boolean'],
         ]);
 
@@ -175,6 +176,7 @@ class UserController extends Controller
             'profile_photo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:5120'],
             'sex' => ['nullable', 'in:male,female'],
             'holding_classes' => ['nullable', 'string', 'max:255'],
+            'assigned_subject' => ['nullable', 'in:khmer,math,both'],
             'is_active' => ['boolean'],
         ]);
 
@@ -328,7 +330,7 @@ class UserController extends Controller
         $role = $request->get('role', 'teacher');
         $users = User::where('role', $role)
             ->select('id', 'name', 'email')
-            ->orderBy('sclName')
+            ->orderBy('school_name')
             ->get();
 
         return response()->json($users);

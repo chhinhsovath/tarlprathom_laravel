@@ -13,11 +13,73 @@ class PilotSchool extends Model
 
     protected $fillable = [
         'province',
-        'district', 
+        'district',
         'cluster',
         'school_name',
         'school_code',
     ];
+
+    /**
+     * Relationships
+     */
+
+    /**
+     * Get all users (teachers) associated with this school.
+     */
+    public function users()
+    {
+        return $this->hasMany(\App\Models\User::class, 'pilot_school_id');
+    }
+
+    /**
+     * Get all teachers associated with this school.
+     */
+    public function teachers()
+    {
+        return $this->hasMany(\App\Models\User::class, 'pilot_school_id')->where('role', 'teacher');
+    }
+
+    /**
+     * Get all students in this school.
+     */
+    public function students()
+    {
+        return $this->hasMany(\App\Models\Student::class, 'pilot_school_id');
+    }
+
+    /**
+     * Get all classes in this school.
+     */
+    public function classes()
+    {
+        return $this->hasMany(\App\Models\SchoolClass::class, 'pilot_school_id');
+    }
+
+    /**
+     * Get the mentors assigned to this school (many-to-many relationship).
+     */
+    public function assignedMentors()
+    {
+        return $this->belongsToMany(\App\Models\User::class, 'mentor_school', 'pilot_school_id', 'user_id')
+            ->where('role', 'mentor')
+            ->withTimestamps();
+    }
+
+    /**
+     * Get all mentoring visits for this school.
+     */
+    public function mentoringVisits()
+    {
+        return $this->hasMany(\App\Models\MentoringVisit::class, 'pilot_school_id');
+    }
+
+    /**
+     * Get all assessments for students in this school.
+     */
+    public function assessments()
+    {
+        return $this->hasManyThrough(\App\Models\Assessment::class, \App\Models\Student::class, 'pilot_school_id', 'student_id');
+    }
 
     /**
      * Get unique provinces from pilot schools
@@ -36,11 +98,11 @@ class PilotSchool extends Model
     public static function getDistricts($province = null)
     {
         $query = self::select('district')->distinct();
-        
+
         if ($province) {
             $query->where('province', $province);
         }
-        
+
         return $query->orderBy('district')->pluck('district');
     }
 
@@ -50,15 +112,15 @@ class PilotSchool extends Model
     public static function getClusters($province = null, $district = null)
     {
         $query = self::select('cluster')->distinct();
-        
+
         if ($province) {
             $query->where('province', $province);
         }
-        
+
         if ($district) {
             $query->where('district', $district);
         }
-        
+
         return $query->orderBy('cluster')->pluck('cluster');
     }
 
@@ -68,19 +130,19 @@ class PilotSchool extends Model
     public static function getSchoolsByFilters($province = null, $district = null, $cluster = null)
     {
         $query = self::query();
-        
+
         if ($province) {
             $query->where('province', $province);
         }
-        
+
         if ($district) {
             $query->where('district', $district);
         }
-        
+
         if ($cluster) {
             $query->where('cluster', $cluster);
         }
-        
+
         return $query->orderBy('school_name')->get();
     }
 

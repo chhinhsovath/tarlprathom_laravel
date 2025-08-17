@@ -77,7 +77,7 @@
                                         <option value="">{{ __('No School Assigned') }}</option>
                                         @foreach($schools as $school)
                                             <option value="{{ $school->id }}" {{ old('school_id', $user->school_id) == $school->id ? 'selected' : '' }}>
-                                                {{ $school->name }}
+                                                {{ $school->school_name }}
                                             </option>
                                         @endforeach
                                     </select>
@@ -167,6 +167,19 @@
                                     <x-text-input id="holding_classes" name="holding_classes" type="text" class="mt-1 block w-full" :value="old('holding_classes', $user->holding_classes)" placeholder="{{ __('e.g., Grade 1, Grade 2') }}" />
                                     <x-input-error class="mt-2" :messages="$errors->get('holding_classes')" />
                                 </div>
+                                
+                                <!-- Assigned Subject (for Teachers) -->
+                                @if($user->role === 'teacher')
+                                <div>
+                                    <x-input-label for="assigned_subject" :value="__('Assigned Subject')" />
+                                    <select id="assigned_subject" name="assigned_subject" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                        <option value="both" {{ old('assigned_subject', $user->assigned_subject ?? 'both') == 'both' ? 'selected' : '' }}>{{ __('Both Subjects') }}</option>
+                                        <option value="khmer" {{ old('assigned_subject', $user->assigned_subject ?? 'both') == 'khmer' ? 'selected' : '' }}>{{ __('Khmer Only') }}</option>
+                                        <option value="math" {{ old('assigned_subject', $user->assigned_subject ?? 'both') == 'math' ? 'selected' : '' }}>{{ __('Math Only') }}</option>
+                                    </select>
+                                    <x-input-error class="mt-2" :messages="$errors->get('assigned_subject')" />
+                                </div>
+                                @endif
                             </div>
                         </div>
                         

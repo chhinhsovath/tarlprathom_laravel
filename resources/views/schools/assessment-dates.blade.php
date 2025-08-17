@@ -124,7 +124,7 @@
                                             <input type="checkbox" name="school_ids[]" value="{{ $school->id }}" class="school-checkbox rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500">
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm font-medium text-gray-900">{{ $school->name }}</div>
+                                            <div class="text-sm font-medium text-gray-900">{{ $school->school_name }}</div>
                                             <div class="text-sm text-gray-500">{{ $school->school_code }}</div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">

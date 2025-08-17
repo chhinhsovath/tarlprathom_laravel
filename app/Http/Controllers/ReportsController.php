@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Assessment;
 use App\Models\AttendanceRecord;
 use App\Models\LearningOutcome;
+use App\Models\PilotSchool;
 use App\Models\ProgressTracking;
 use App\Models\School;
 use App\Models\Student;
@@ -59,7 +60,7 @@ class ReportsController extends Controller
 
     public function schoolComparison(Request $request)
     {
-        $schools = School::with(['students', 'teachers'])->get();
+        $schools = PilotSchool::with(['students', 'teachers'])->get();
 
         $data = [
             'schools' => $schools->map(function ($school) {
@@ -165,7 +166,7 @@ class ReportsController extends Controller
             'total_teachers' => \App\Models\User::where('role', 'teacher')
                 ->when($schoolId, fn ($q) => $q->where('school_id', $schoolId))
                 ->count(),
-            'total_schools' => $schoolId ? 1 : School::count(),
+            'total_schools' => $schoolId ? 1 : PilotSchool::count(),
             'assessments_completed' => Assessment::when($schoolId, function ($q) use ($schoolId) {
                 return $q->whereHas('student', fn ($sq) => $sq->where('school_id', $schoolId));
             })->count(),
@@ -633,7 +634,7 @@ class ReportsController extends Controller
 
     private function getSchoolMetrics($schoolId)
     {
-        $school = School::with(['students', 'teachers'])->find($schoolId);
+        $school = PilotSchool::with(['students', 'teachers'])->find($schoolId);
 
         return [
             'total_students' => $school->students->count(),

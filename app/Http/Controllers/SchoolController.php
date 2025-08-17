@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\SchoolTemplateExport;
-use App\Models\Geographic;
+use App\Models\PilotSchool;
 use App\Models\Province;
 use App\Models\School;
 use App\Models\User;
@@ -27,13 +27,13 @@ class SchoolController extends Controller
             abort(403, __('Unauthorized action.'));
         }
 
-        $query = School::withCount(['users', 'students']);
+        $query = PilotSchool::withCount(['users', 'students']);
 
         // Apply access restrictions for mentors
         if ($user->isMentor()) {
             $accessibleSchoolIds = $user->getAccessibleSchoolIds();
             if (! empty($accessibleSchoolIds)) {
-                $query->whereIn('sclAutoID', $accessibleSchoolIds);
+                $query->whereIn('id', $accessibleSchoolIds);
             } else {
                 // No schools assigned, show empty result
                 $query->whereRaw('1 = 0');
@@ -44,15 +44,15 @@ class SchoolController extends Controller
         if ($request->filled('search')) {
             $search = $request->get('search');
             $query->where(function ($q) use ($search) {
-                $q->where('sclName', 'like', "%{$search}%")
-                    ->orWhere('sclCode', 'like', "%{$search}%")
-                    ->orWhere('sclProvinceName', 'like', "%{$search}%")
-                    ->orWhere('sclDistrictName', 'like', "%{$search}%");
+                $q->where('school_name', 'like', "%{$search}%")
+                    ->orWhere('school_code', 'like', "%{$search}%")
+                    ->orWhere('province', 'like', "%{$search}%")
+                    ->orWhere('district', 'like', "%{$search}%");
             });
         }
 
         // Apply sorting
-        $sortData = $this->applySorting($query, $request, ['sclName', 'sclCode', 'sclProvinceName', 'sclDistrictName', 'created_at'], 'sclName');
+        $sortData = $this->applySorting($query, $request, ['school_name', 'school_code', 'province', 'district', 'created_at'], 'school_name');
 
         $schools = $query->paginate(20)->withQueryString();
 
@@ -84,14 +84,14 @@ class SchoolController extends Controller
             abort(403, __('Unauthorized action.'));
         }
         $validated = $request->validate([
-            'sclName' => ['required', 'string', 'max:255'],
-            'sclCode' => ['required', 'string', 'max:255', 'unique:tbl_tarl_schools,sclCode'],
-            'sclProvinceName' => ['required', 'string', 'max:255'],
-            'sclDistrictName' => ['required', 'string', 'max:255'],
-            'sclClusterName' => ['nullable', 'string', 'max:255'],
+            'school_name' => ['required', 'string', 'max:255'],
+            'school_code' => ['required', 'string', 'max:255', 'unique:pilot_schools,school_code'],
+            'province' => ['required', 'string', 'max:255'],
+            'district' => ['required', 'string', 'max:255'],
+            'cluster' => ['nullable', 'string', 'max:255'],
         ]);
 
-        School::create($validated);
+        PilotSchool::create($validated);
 
         return redirect()->route('schools.index')
             ->with('success', __('School created successfully.'));
@@ -100,7 +100,7 @@ class SchoolController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(School $school)
+    public function show(PilotSchool $school)
     {
         $user = auth()->user();
 
@@ -111,11 +111,7 @@ class SchoolController extends Controller
 
         $school->loadCount(['users', 'students']);
         $teachers = $school->users()->where('role', 'teacher')->get();
-        $mentors = User::where('role', 'mentor')
-            ->whereHas('assignedSchools', function ($query) use ($school) {
-                $query->where('schools.sclAutoID', $school->sclAutoID);
-            })
-            ->get();
+        $mentors = $school->assignedMentors;
         $recentStudents = $school->students()->latest()->limit(10)->get();
 
         return view('schools.show', compact('school', 'teachers', 'mentors', 'recentStudents'));
@@ -124,7 +120,7 @@ class SchoolController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(School $school)
+    public function edit(PilotSchool $school)
     {
         // Check if user is admin
         if (! auth()->user()->isAdmin()) {
@@ -143,18 +139,18 @@ class SchoolController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, School $school)
+    public function update(Request $request, PilotSchool $school)
     {
         // Check if user is admin
         if (! auth()->user()->isAdmin()) {
             abort(403, __('Unauthorized action.'));
         }
         $validated = $request->validate([
-            'sclName' => ['required', 'string', 'max:255'],
-            'sclCode' => ['required', 'string', 'max:255', 'unique:tbl_tarl_schools,sclCode,'.$school->sclAutoID.',sclAutoID'],
-            'sclProvinceName' => ['required', 'string', 'max:255'],
-            'sclDistrictName' => ['required', 'string', 'max:255'],
-            'sclClusterName' => ['nullable', 'string', 'max:255'],
+            'school_name' => ['required', 'string', 'max:255'],
+            'school_code' => ['required', 'string', 'max:255', 'unique:pilot_schools,school_code,'.$school->id.',id'],
+            'province' => ['required', 'string', 'max:255'],
+            'district' => ['required', 'string', 'max:255'],
+            'cluster' => ['nullable', 'string', 'max:255'],
             // Assessment date validations - these fields don't exist in tbl_tarl_schools
             // You may want to store these in a separate table
             // 'baseline_start_date' => ['nullable', 'date'],
@@ -175,7 +171,7 @@ class SchoolController extends Controller
                 if ($teacherData['action'] === 'remove') {
                     // Remove teacher from school (set school_id to null)
                     \App\Models\User::where('id', $teacherData['id'])
-                        ->where('school_id', $school->id)
+                        ->where('pilot_school_id', $school->id)
                         ->update(['school_id' => null]);
                 } elseif ($teacherData['action'] === 'new') {
                     // Check if teacher exists or create new
@@ -188,16 +184,16 @@ class SchoolController extends Controller
                             'email' => $teacherData['email'],
                             'password' => bcrypt('password123'), // Default password
                             'role' => 'teacher',
-                            'school_id' => $school->id,
+                            'pilot_school_id' => $school->id,
                         ]);
                     } else {
                         // Assign existing teacher to this school
-                        $teacher->update(['school_id' => $school->id]);
+                        $teacher->update(['pilot_school_id' => $school->id]);
                     }
                 } elseif ($teacherData['action'] === 'existing' && isset($teacherData['id'])) {
                     // Update existing teacher if needed
                     $teacher = \App\Models\User::find($teacherData['id']);
-                    if ($teacher && $teacher->school_id == $school->id) {
+                    if ($teacher && $teacher->pilot_school_id == $school->id) {
                         $teacher->update([
                             'name' => $teacherData['name'],
                             'email' => $teacherData['email'],
@@ -214,7 +210,7 @@ class SchoolController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(School $school)
+    public function destroy(PilotSchool $school)
     {
         // Check if user is admin
         if (! auth()->user()->isAdmin()) {
@@ -235,7 +231,7 @@ class SchoolController extends Controller
     /**
      * Add teachers to the school.
      */
-    public function addTeacher(Request $request, School $school)
+    public function addTeacher(Request $request, PilotSchool $school)
     {
         // Check if user is admin
         if (! auth()->user()->isAdmin()) {
@@ -250,7 +246,7 @@ class SchoolController extends Controller
         // Update the school_id for each selected teacher
         User::whereIn('id', $request->teacher_ids)
             ->where('role', 'teacher')
-            ->update(['school_id' => $school->id]);
+            ->update(['pilot_school_id' => $school->id]);
 
         return redirect()->route('schools.show', $school)
             ->with('success', __('Teachers added successfully.'));
@@ -259,7 +255,7 @@ class SchoolController extends Controller
     /**
      * Remove a teacher from the school.
      */
-    public function removeTeacher(Request $request, School $school)
+    public function removeTeacher(Request $request, PilotSchool $school)
     {
         // Check if user is admin
         if (! auth()->user()->isAdmin()) {
@@ -271,8 +267,8 @@ class SchoolController extends Controller
         ]);
 
         User::where('id', $request->teacher_id)
-            ->where('school_id', $school->id)
-            ->update(['school_id' => null]);
+            ->where('pilot_school_id', $school->id)
+            ->update(['pilot_school_id' => null]);
 
         return redirect()->route('schools.show', $school)
             ->with('success', __('Teacher removed successfully.'));
@@ -281,7 +277,7 @@ class SchoolController extends Controller
     /**
      * Search for available teachers (not assigned to any school).
      */
-    public function searchTeachers(Request $request, School $school)
+    public function searchTeachers(Request $request, PilotSchool $school)
     {
         $query = $request->get('q', '');
 
@@ -291,13 +287,13 @@ class SchoolController extends Controller
                     ->orWhere('email', 'like', "%{$query}%");
             })
             ->where(function ($q) use ($school) {
-                $q->whereNull('school_id')
-                    ->orWhere('school_id', '!=', $school->id);
+                $q->whereNull('pilot_school_id')
+                    ->orWhere('pilot_school_id', '!=', $school->id);
             })
             ->limit(20)
-            ->get(['id', 'name', 'email', 'school_id'])
+            ->get(['id', 'name', 'email', 'pilot_school_id'])
             ->map(function ($teacher) use ($school) {
-                $teacher->is_current = $teacher->school_id == $school->id;
+                $teacher->is_current = $teacher->pilot_school_id == $school->id;
 
                 return $teacher;
             });
@@ -308,7 +304,7 @@ class SchoolController extends Controller
     /**
      * Add mentors to the school.
      */
-    public function addMentor(Request $request, School $school)
+    public function addMentor(Request $request, PilotSchool $school)
     {
         // Check if user is admin
         if (! auth()->user()->isAdmin()) {
@@ -326,7 +322,7 @@ class SchoolController extends Controller
             $mentor = User::where('id', $mentorId)->where('role', 'mentor')->first();
             if ($mentor) {
                 // Attach mentor to school if not already attached
-                if (! $mentor->assignedSchools()->where('school_id', $school->id)->exists()) {
+                if (! $mentor->assignedSchools()->where('pilot_school_id', $school->id)->exists()) {
                     $mentor->assignedSchools()->attach($school->id);
                 }
             }
@@ -339,7 +335,7 @@ class SchoolController extends Controller
     /**
      * Remove a mentor from the school.
      */
-    public function removeMentor(Request $request, School $school)
+    public function removeMentor(Request $request, PilotSchool $school)
     {
         // Check if user is admin
         if (! auth()->user()->isAdmin()) {
@@ -362,7 +358,7 @@ class SchoolController extends Controller
     /**
      * Search for available mentors.
      */
-    public function searchMentors(Request $request, School $school)
+    public function searchMentors(Request $request, PilotSchool $school)
     {
         $query = $request->get('q', '');
 
@@ -374,7 +370,7 @@ class SchoolController extends Controller
             ->limit(20)
             ->get(['id', 'name', 'email'])
             ->map(function ($mentor) use ($school) {
-                $mentor->is_assigned = $mentor->assignedSchools()->where('school_id', $school->id)->exists();
+                $mentor->is_assigned = $mentor->assignedSchools()->where('pilot_school_id', $school->id)->exists();
 
                 return $mentor;
             });
@@ -420,11 +416,11 @@ class SchoolController extends Controller
 
         $request->validate([
             'schools' => 'required|array',
-            'schools.*.sclName' => 'required|string|max:255',
-            'schools.*.sclCode' => 'required|string|max:255',
-            'schools.*.sclProvinceName' => 'required|string|max:255',
-            'schools.*.sclDistrictName' => 'required|string|max:255',
-            'schools.*.sclClusterName' => 'nullable|string|max:255',
+            'schools.*.school_name' => 'required|string|max:255',
+            'schools.*.school_code' => 'required|string|max:255',
+            'schools.*.province' => 'required|string|max:255',
+            'schools.*.district' => 'required|string|max:255',
+            'schools.*.cluster' => 'nullable|string|max:255',
         ]);
 
         $imported = 0;
@@ -434,19 +430,19 @@ class SchoolController extends Controller
         foreach ($request->schools as $index => $schoolData) {
             try {
                 // Check if school code already exists
-                if (School::where('sclCode', $schoolData['sclCode'])->exists()) {
+                if (PilotSchool::where('school_code', $schoolData['school_code'])->exists()) {
                     $failed++;
-                    $errors[] = 'Row '.($index + 1).": School code {$schoolData['sclCode']} already exists";
+                    $errors[] = 'Row '.($index + 1).": School code {$schoolData['school_code']} already exists";
 
                     continue;
                 }
 
-                School::create([
-                    'sclName' => $schoolData['sclName'],
-                    'sclCode' => $schoolData['sclCode'],
-                    'sclProvinceName' => $schoolData['sclProvinceName'],
-                    'sclDistrictName' => $schoolData['sclDistrictName'],
-                    'sclClusterName' => $schoolData['sclClusterName'] ?? null,
+                PilotSchool::create([
+                    'school_name' => $schoolData['school_name'],
+                    'school_code' => $schoolData['school_code'],
+                    'province' => $schoolData['province'],
+                    'district' => $schoolData['district'],
+                    'cluster' => $schoolData['cluster'] ?? null,
                 ]);
                 $imported++;
             } catch (\Exception $e) {
@@ -472,7 +468,7 @@ class SchoolController extends Controller
     /**
      * Get teachers for a specific school (API endpoint)
      */
-    public function getTeachers(School $school)
+    public function getTeachers(PilotSchool $school)
     {
         $teachers = $school->users()
             ->where('role', 'teacher')
@@ -539,7 +535,7 @@ class SchoolController extends Controller
             abort(403, __('Unauthorized action.'));
         }
 
-        $schools = School::orderBy('sclName')->get();
+        $schools = PilotSchool::orderBy('school_name')->get();
 
         return view('schools.assessment-dates', compact('schools'));
     }
@@ -556,7 +552,7 @@ class SchoolController extends Controller
 
         $validated = $request->validate([
             'school_ids' => 'required|array',
-            'school_ids.*' => 'exists:schools,id',
+            'school_ids.*' => 'exists:pilot_schools,id',
             'baseline_start_date' => 'nullable|date',
             'baseline_end_date' => 'nullable|date|after_or_equal:baseline_start_date',
             'midline_start_date' => 'nullable|date',
@@ -580,7 +576,7 @@ class SchoolController extends Controller
         }
 
         // Update selected schools
-        School::whereIn('sclAutoID', $validated['school_ids'])
+        PilotSchool::whereIn('id', $validated['school_ids'])
             ->update($updateData);
 
         return redirect()->route('schools.assessment-dates')

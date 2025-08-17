@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\School;
+use App\Models\PilotSchool;
 use App\Models\Student;
 use App\Models\User;
 use Illuminate\Support\Facades\App;
@@ -19,7 +19,7 @@ class CoordinatorController extends Controller
     {
         // Get coordinator-relevant statistics only
         $stats = [
-            'total_schools' => School::count(),
+            'total_schools' => PilotSchool::count(),
             'total_teachers' => User::where('role', 'teacher')->count(),
             'total_mentors' => User::where('role', 'mentor')->count(),
             'total_coordinators' => User::where('role', 'coordinator')->count(),
@@ -34,9 +34,9 @@ class CoordinatorController extends Controller
     private function getImportStatistics()
     {
         return [
-            'schools_this_month' => School::where('created_at', '>=', now()->subMonth())->count(),
+            'schools_this_month' => PilotSchool::where('created_at', '>=', now()->subMonth())->count(),
             'users_this_month' => User::whereIn('role', ['teacher', 'mentor'])->where('created_at', '>=', now()->subMonth())->count(),
-            'schools_today' => School::whereDate('created_at', today())->count(),
+            'schools_today' => PilotSchool::whereDate('created_at', today())->count(),
             'users_today' => User::whereIn('role', ['teacher', 'mentor'])->whereDate('created_at', today())->count(),
         ];
     }
@@ -59,7 +59,7 @@ class CoordinatorController extends Controller
     public function bulkImportDashboard()
     {
         $stats = [
-            'schools_count' => School::count(),
+            'schools_count' => PilotSchool::count(),
             'students_count' => Student::count(),
             'teachers_count' => User::where('role', 'teacher')->count(),
             'mentors_count' => User::where('role', 'mentor')->count(),
@@ -110,7 +110,7 @@ class CoordinatorController extends Controller
     {
         $overview = [
             'database' => [
-                'schools' => School::count(),
+                'schools' => PilotSchool::count(),
                 'students' => Student::count(),
                 'teachers' => User::where('role', 'teacher')->count(),
                 'mentors' => User::where('role', 'mentor')->count(),
@@ -118,7 +118,7 @@ class CoordinatorController extends Controller
                 'admins' => User::where('role', 'admin')->count(),
             ],
             'recent_activity' => [
-                'new_schools_this_week' => School::where('created_at', '>=', now()->subWeek())->count(),
+                'new_schools_this_week' => PilotSchool::where('created_at', '>=', now()->subWeek())->count(),
                 'new_students_this_week' => Student::where('created_at', '>=', now()->subWeek())->count(),
                 'new_users_this_week' => User::where('created_at', '>=', now()->subWeek())->count(),
             ],

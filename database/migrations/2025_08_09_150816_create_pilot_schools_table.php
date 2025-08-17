@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('school_name', 255);
             $table->string('school_code', 20)->unique();
             $table->timestamps();
-            
+
             // Indexes for fast lookups
             $table->index('province');
             $table->index('district');
@@ -29,7 +29,7 @@ return new class extends Migration
             $table->index(['province', 'district']);
             $table->index(['province', 'district', 'cluster']);
         });
-        
+
         // Insert the pilot schools data
         DB::table('pilot_schools')->insert([
             // Battambang schools
@@ -48,7 +48,7 @@ return new class extends Migration
             ['province' => 'Battambang', 'district' => 'Rattanakmondol', 'cluster' => 'ភ្ជាវ', 'school_name' => 'ភ្ជាវ', 'school_code' => '2070402015', 'created_at' => now(), 'updated_at' => now()],
             ['province' => 'Battambang', 'district' => 'Rattanakmondol', 'cluster' => 'ភ្ជាវ', 'school_name' => 'ស្វាយស', 'school_code' => '2070409032', 'created_at' => now(), 'updated_at' => now()],
             ['province' => 'Battambang', 'district' => 'Rattanakmondol', 'cluster' => 'ភ្ជាវ', 'school_name' => 'តាគ្រក់', 'school_code' => '2070408031', 'created_at' => now(), 'updated_at' => now()],
-            
+
             // Kampong Cham schools
             ['province' => 'Kampongcham', 'district' => 'Kgmeas', 'cluster' => 'កម្រងស្តៅ', 'school_name' => 'ស្ដៅលើ', 'school_code' => '3071003033', 'created_at' => now(), 'updated_at' => now()],
             ['province' => 'Kampongcham', 'district' => 'Kgmeas', 'cluster' => 'កម្រងស្តៅ', 'school_name' => 'ស្ដៅ', 'school_code' => '3071005034', 'created_at' => now(), 'updated_at' => now()],

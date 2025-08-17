@@ -25,7 +25,7 @@
                                 <option value="">{{ trans_db('All Schools') }}</option>
                                 @foreach($schools as $school)
                                     <option value="{{ $school->id }}" {{ $schoolId == $school->id ? 'selected' : '' }}>
-                                        {{ $school->name }}
+                                        {{ $school->school_name }}
                                     </option>
                                 @endforeach
                             </select>
@@ -65,7 +65,7 @@
                         <h4 class="font-semibold text-blue-900 mb-3 text-lg">{{ trans_db('a. Language -') }}</h4>
                         <div class="text-base text-blue-800 space-y-2">
                             <div class="ml-4">
-                                <span class="font-medium">i.</span> {{ trans_db('Letters = Para + Story + Comp 1 + Comp 2') }}
+                                <span class="font-medium">i.</span> {{ trans_db('Readers = Para + Story + Comp 1 + Comp 2') }}
                             </div>
                             <div class="ml-4">
                                 <span class="font-medium">ii.</span> {{ trans_db('Beginners = Beginner + Letter') }}
@@ -154,7 +154,7 @@
                                     {{ trans_db('Total Students') }}
                                 </th>
                                 <th class="px-8 py-3 text-center text-sm font-medium text-gray-500 uppercase tracking-wider">
-                                    {{ trans_db('Letters') }}
+                                    {{ trans_db('Readers') }}
                                 </th>
                                 <th class="px-8 py-3 text-center text-sm font-medium text-gray-500 uppercase tracking-wider">
                                     {{ trans_db('Beginners') }}
@@ -174,7 +174,7 @@
                             @foreach($schoolPerformanceData as $data)
                             <tr class="hover:bg-gray-50">
                                 <td class="px-8 py-6 whitespace-nowrap text-base font-medium text-gray-900">
-                                    {{ $data['school']->name }}
+                                    {{ $data['school']->school_name }}
                                 </td>
                                 
                                 <!-- Language Performance -->
@@ -182,8 +182,8 @@
                                     {{ $data['language']['total_students'] }}
                                 </td>
                                 <td class="px-8 py-6 whitespace-nowrap text-base text-center">
-                                    <div class="text-gray-900 font-medium">{{ $data['language']['Letters'] }}</div>
-                                    <div class="text-sm text-gray-500">({{ $data['language']['Letters_percentage'] }}%)</div>
+                                    <div class="text-gray-900 font-medium">{{ $data['language']['readers'] }}</div>
+                                    <div class="text-sm text-gray-500">({{ $data['language']['readers_percentage'] }}%)</div>
                                 </td>
                                 <td class="px-8 py-6 whitespace-nowrap text-base text-center">
                                     <div class="text-gray-900 font-medium">{{ $data['language']['beginners'] }}</div>
@@ -227,7 +227,7 @@
 
 @if(count($schoolPerformanceData) > 0)
 @push('scripts')
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
 // Translation strings for JavaScript charts
 const chartTranslations = {
@@ -235,36 +235,36 @@ const chartTranslations = {
 };
 
 document.addEventListener('DOMContentLoaded', function() {
-    const ctx = document.getElementById('performanceChart').getContext('2d');
-    
-    // Sample data for demonstration - in real implementation this would come from multiple cycles
-    const schoolNames = @json(array_column($schoolPerformanceData, 'school'));
-    const languageLetterPercentages = @json(array_column(array_column($schoolPerformanceData, 'language'), 'Letters_percentage'));
-    
-    // For now, using current cycle data, but in real implementation you'd need data from all three cycles
-    const chart = new Chart(ctx, {
+    try {
+        const ctx = document.getElementById('performanceChart');
+        if (!ctx) {
+            console.error('Canvas element not found');
+            return;
+        }
+        
+        // Sample data for demonstration - in real implementation this would come from multiple cycles
+        const schoolNames = @json(collect($schoolPerformanceData)->pluck('school')->toArray());
+        const languageReaderPercentages = @json(collect($schoolPerformanceData)->pluck('language.readers_percentage')->filter()->values()->toArray());
+        
+        console.log('School Names:', schoolNames);
+        console.log('Reader Percentages:', languageReaderPercentages);
+        
+        // Check if we have data
+        if (!languageReaderPercentages || languageReaderPercentages.length === 0) {
+            console.warn('No data to display in chart');
+            return;
+        }
+        
+        // For now, using current cycle data, but in real implementation you'd need data from all three cycles
+        const chart = new Chart(ctx.getContext('2d'), {
         type: 'bar',
         data: {
             labels: schoolNames.map(school => school.school_name),
             datasets: [{
                 label: chartTranslations['cycle'],
-                data: languageLetterPercentages,
-                backgroundColor: 
-                    @if($cycle === 'baseline')
-                        'rgba(251, 146, 60, 0.8)'
-                    @elseif($cycle === 'midline')
-                        'rgba(194, 65, 12, 0.8)'
-                    @else
-                        'rgba(37, 99, 235, 0.8)'
-                    @endif,
-                borderColor: 
-                    @if($cycle === 'baseline')
-                        'rgba(251, 146, 60, 1)'
-                    @elseif($cycle === 'midline')
-                        'rgba(194, 65, 12, 1)'
-                    @else
-                        'rgba(37, 99, 235, 1)'
-                    @endif,
+                data: languageReaderPercentages,
+                backgroundColor: @json(config('charts.colors.cycles.' . $cycle)) + '80', // Add transparency
+                borderColor: @json(config('charts.colors.cycles.' . $cycle)),
                 borderWidth: 1
             }]
         },
@@ -296,6 +296,9 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
+    } catch (error) {
+        console.error('Error creating chart:', error);
+    }
 });
 </script>
 @endpush

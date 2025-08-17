@@ -24,10 +24,13 @@ class SchoolClass extends Model
     protected $fillable = [
         'name',
         'grade',
+        'grade_level',
         'school_id',
+        'pilot_school_id',
         'teacher_id',
         'section',
         'academic_year',
+        'is_active',
     ];
 
     /**
@@ -44,7 +47,7 @@ class SchoolClass extends Model
      */
     public function school()
     {
-        return $this->belongsTo(School::class, 'school_id', 'sclAutoID');
+        return $this->belongsTo(PilotSchool::class, 'pilot_school_id');
     }
 
     /**
@@ -76,7 +79,7 @@ class SchoolClass extends Model
      */
     public function scopeForSchool($query, $schoolId)
     {
-        return $query->where('school_id', $schoolId);
+        return $query->where('pilot_school_id', $schoolId);
     }
 
     /**

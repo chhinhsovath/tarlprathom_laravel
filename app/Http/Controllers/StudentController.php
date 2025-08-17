@@ -144,7 +144,7 @@ class StudentController extends Controller
         // Verify teacher belongs to the selected school if provided
         if (isset($validated['teacher_id']) && $validated['teacher_id']) {
             $teacher = \App\Models\User::find($validated['teacher_id']);
-            if (! $teacher || $teacher->school_id != $validated['school_id']) {
+            if (! $teacher || $teacher->pilot_school_id != $validated['school_id']) {
                 return back()->withErrors(['teacher_id' => 'The selected teacher does not belong to the selected school.']);
             }
         }
@@ -213,7 +213,7 @@ class StudentController extends Controller
     {
         // Check authorization
         $user = auth()->user();
-        if ($user->isTeacher() && $student->school_id !== $user->school_id) {
+        if ($user->isTeacher() && $student->pilot_school_id !== $user->pilot_school_id) {
             abort(403);
         }
 
@@ -275,7 +275,7 @@ class StudentController extends Controller
     {
         $this->authorize('create', Student::class);
 
-        $schools = School::orderBy('sclName')->pluck('sclName', 'sclAutoID');
+        $schools = PilotSchool::orderBy('school_name')->pluck('school_name', 'id');
         $teachers = \App\Models\User::where('role', 'teacher')
             ->select('id', 'name', 'school_id')
             ->get();
@@ -319,7 +319,7 @@ class StudentController extends Controller
                 // Verify teacher belongs to the school if provided
                 if (isset($studentData['teacher_id']) && $studentData['teacher_id']) {
                     $teacher = \App\Models\User::find($studentData['teacher_id']);
-                    if (! $teacher || $teacher->school_id != $studentData['school_id']) {
+                    if (! $teacher || $teacher->pilot_school_id != $studentData['school_id']) {
                         $failed++;
 
                         continue;

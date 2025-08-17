@@ -322,6 +322,9 @@ $(document).ready(function() {
     const comparisonData = @json($comparisonData);
     const subject = @json($subject);
     
+    console.log('Comparison Data:', comparisonData);
+    console.log('Subject:', subject);
+    
     if (comparisonData.length > 0) {
         // Prepare data for chart
         const schools = comparisonData.map(d => d.school);
@@ -330,18 +333,10 @@ $(document).ready(function() {
             : ['Beginner', '1-Digit', '2-Digit', 'Subtraction', 'Division', 'Word Problem'];
         
         const datasets = levels.map((level, index) => {
-            const colors = [
-                '#ef4444', // red for beginner
-                '#f59e0b', // amber
-                '#eab308', // yellow
-                '#84cc16', // lime
-                '#22c55e', // green
-                '#10b981', // emerald
-                '#14b8a6'  // teal for advanced
-            ];
+            const colors = @json(config('charts.colors.tarl_levels'));
             
             return {
-                label: @json(trans_db('${level}')),
+                label: level,
                 data: comparisonData.map(d => d.levels[level] || 0),
                 backgroundColor: colors[index],
                 borderColor: colors[index] + 'DD',
@@ -351,8 +346,9 @@ $(document).ready(function() {
         });
         
         // Create stacked bar chart
-        const ctx = document.getElementById('comparisonChart').getContext('2d');
-        comparisonChart = new Chart(ctx, {
+        try {
+            const ctx = document.getElementById('comparisonChart').getContext('2d');
+            comparisonChart = new Chart(ctx, {
             type: 'bar',
             data: {
                 labels: schools,
@@ -437,8 +433,12 @@ $(document).ready(function() {
                     }
                 }
             },
-            plugins: [ChartDataLabels]
+            plugins: [typeof ChartDataLabels !== 'undefined' ? ChartDataLabels : null].filter(Boolean)
         });
+        } catch (error) {
+            console.error('Error creating chart:', error);
+            alert('There was an error creating the chart. Please check the console for details.');
+        }
     }
 });
 

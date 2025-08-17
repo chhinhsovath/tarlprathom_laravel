@@ -6,8 +6,8 @@ use App\Exports\MentoringVisitsExport;
 use App\Http\Requests\StoreMentoringVisitRequest;
 use App\Models\Geographic;
 use App\Models\MentoringVisit;
-use App\Models\Province;
 use App\Models\PilotSchool;
+use App\Models\Province;
 use App\Models\School;
 use App\Models\User;
 use App\Traits\Sortable;
@@ -39,9 +39,9 @@ class MentoringVisitController extends Controller
             $query->where('teacher_id', $user->id);
         } elseif ($user->isMentor()) {
             // Mentors can see visits for their assigned schools
-            $assignedSchoolIds = $user->assignedSchools()->pluck('schools.id')->toArray();
+            $assignedSchoolIds = $user->assignedSchools()->pluck('pilot_schools.id')->toArray();
             if (! empty($assignedSchoolIds)) {
-                $query->whereIn('school_id', $assignedSchoolIds);
+                $query->whereIn('pilot_school_id', $assignedSchoolIds);
             } else {
                 // If no schools assigned, show no visits
                 $query->whereRaw('1 = 0');
@@ -67,8 +67,8 @@ class MentoringVisitController extends Controller
         }
 
         // Add filters
-        if ($request->filled('school_id')) {
-            $query->where('school_id', $request->get('school_id'));
+        if ($request->filled('pilot_school_id')) {
+            $query->where('pilot_school_id', $request->get('pilot_school_id'));
         }
 
         if ($request->filled('mentor_id')) {
@@ -91,7 +91,7 @@ class MentoringVisitController extends Controller
         $sortData = $this->applySorting(
             $query,
             $request,
-            ['visit_date', 'school_id', 'teacher_id', 'mentor_id', 'score'],
+            ['visit_date', 'pilot_school_id', 'teacher_id', 'mentor_id', 'score'],
             'visit_date',
             'desc'
         );
@@ -115,7 +115,7 @@ class MentoringVisitController extends Controller
         $user = $request->user();
         if ($user->isMentor()) {
             // Mentors can only see their assigned schools
-            $schools = $user->assignedSchools()->orderBy('sclName')->get();
+            $schools = $user->assignedSchools()->orderBy('school_name')->get();
         } else {
             // Admins can see all schools
             $schools = PilotSchool::orderBy('school_name')->get();
@@ -143,7 +143,7 @@ class MentoringVisitController extends Controller
             ->get();
 
         // Pre-select values if passed as parameters
-        $selectedSchoolId = $request->get('school_id');
+        $selectedSchoolId = $request->get('pilot_school_id');
         $selectedTeacherId = $request->get('teacher_id');
 
         // Get questionnaire configuration
@@ -193,15 +193,15 @@ class MentoringVisitController extends Controller
 
         // Verify the teacher belongs to the selected school
         $teacher = User::findOrFail($validated['teacher_id']);
-        if ($teacher->school_id !== $validated['school_id']) {
+        if ($teacher->pilot_school_id !== $validated['pilot_school_id']) {
             return back()->withErrors(['teacher_id' => __('The selected teacher does not belong to the selected school.')]);
         }
 
         // Verify mentor has access to the school
         if ($request->user()->isMentor()) {
-            $assignedSchoolIds = $request->user()->assignedSchools()->pluck('schools.id')->toArray();
-            if (! in_array($validated['school_id'], $assignedSchoolIds)) {
-                return back()->withErrors(['school_id' => __('You are not assigned to this school.')]);
+            $assignedSchoolIds = $request->user()->assignedSchools()->pluck('pilot_schools.id')->toArray();
+            if (! in_array($validated['pilot_school_id'], $assignedSchoolIds)) {
+                return back()->withErrors(['pilot_school_id' => __('You are not assigned to this school.')]);
             }
         }
 
@@ -221,7 +221,7 @@ class MentoringVisitController extends Controller
         // Check if user can view this mentoring visit
         if ($user->isAdmin() || $user->isViewer()) {
             // These roles can view all visits
-        } elseif ($user->isMentor() && $user->canAccessSchool($mentoringVisit->school_id)) {
+        } elseif ($user->isMentor() && $user->canAccessSchool($mentoringVisit->pilot_school_id)) {
             // Mentors can view visits from their assigned schools
         } elseif ($user->isTeacher() && $mentoringVisit->teacher_id === $user->id) {
             // Teachers can view visits where they are the teacher
@@ -257,7 +257,7 @@ class MentoringVisitController extends Controller
         }
         if ($user->isMentor()) {
             // Mentors can only see their assigned schools
-            $schools = $user->assignedSchools()->orderBy('sclName')->get();
+            $schools = $user->assignedSchools()->orderBy('school_name')->get();
         } else {
             // Admins can see all schools
             $schools = PilotSchool::orderBy('school_name')->get();
@@ -344,7 +344,7 @@ class MentoringVisitController extends Controller
 
         // Verify the teacher belongs to the selected school
         $teacher = User::findOrFail($validated['teacher_id']);
-        if ($teacher->school_id !== $validated['school_id']) {
+        if ($teacher->pilot_school_id !== $validated['pilot_school_id']) {
             return back()->withErrors(['teacher_id' => __('The selected teacher does not belong to the selected school.')]);
         }
 
