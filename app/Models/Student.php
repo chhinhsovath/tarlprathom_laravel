@@ -94,11 +94,11 @@ class Student extends Model
     ];
 
     /**
-     * Get the school that the student belongs to (legacy - uses tbl_tarl_schools).
+     * Get the school that the student belongs to (from pilot_schools table).
      */
     public function school()
     {
-        return $this->belongsTo(PilotSchool::class, 'pilot_school_id');
+        return $this->belongsTo(PilotSchool::class, 'school_id');
     }
 
     /**

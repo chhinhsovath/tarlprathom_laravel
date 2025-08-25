@@ -15,24 +15,34 @@ class StudentSeeder extends Seeder
     public function run(): void
     {
         $faker = Faker::create();
-        $schools = School::all();
+        // Get schools from the schools table, not from School model which uses tbl_tarl_schools
+        $schoolIds = \DB::table('schools')->pluck('id')->toArray();
+
+        if (empty($schoolIds)) {
+            $this->command->info('No schools found in schools table.');
+
+            return;
+        }
+
         $classes = ['Grade 1', 'Grade 2', 'Grade 3', 'Grade 4', 'Grade 5', 'Grade 6'];
 
         // Khmer names for more realistic data
         $khmerFirstNames = ['Sok', 'Chan', 'Srey', 'Vanna', 'Dara', 'Sophea', 'Kosal', 'Pisey', 'Bopha', 'Samnang', 'Kunthea', 'Visal', 'Rachana', 'Sovann', 'Phalla'];
         $khmerLastNames = ['Lim', 'Chea', 'Heng', 'Pich', 'Sam', 'Keo', 'Mao', 'Seng', 'Ung', 'Ouk', 'Chhun', 'Touch', 'Sor', 'Ly', 'Kim'];
 
-        foreach ($schools as $school) {
-            // Create 20 students per school (100 total)
-            for ($i = 0; $i < 20; $i++) {
-                Student::create([
+        // Create 100 students distributed among schools
+        for ($i = 0; $i < 100; $i++) {
+            Student::firstOrCreate(
+                [
                     'name' => $faker->randomElement($khmerFirstNames).' '.$faker->randomElement($khmerLastNames),
+                    'school_id' => $faker->randomElement($schoolIds),
+                ],
+                [
                     'sex' => $faker->randomElement(['male', 'female']),
                     'age' => $faker->numberBetween(6, 12),
                     'class' => $faker->randomElement($classes),
-                    'school_id' => $school->id,
-                ]);
-            }
+                ]
+            );
         }
     }
 }

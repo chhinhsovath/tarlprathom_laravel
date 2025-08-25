@@ -23,7 +23,6 @@ class User extends Authenticatable
         'password',
         'role', // 'admin', 'coordinator', 'mentor', 'teacher', 'viewer'
         'school_id',
-        'pilot_school_id',
         'province',
         'district',
         'commune',
@@ -65,7 +64,7 @@ class User extends Authenticatable
      */
     public function school()
     {
-        return $this->belongsTo(PilotSchool::class, 'pilot_school_id');
+        return $this->belongsTo(School::class, 'school_id');
     }
 
     /**
@@ -73,7 +72,7 @@ class User extends Authenticatable
      */
     public function pilotSchool()
     {
-        return $this->belongsTo(PilotSchool::class, 'pilot_school_id');
+        return $this->belongsTo(PilotSchool::class, 'school_id');
     }
 
     /**
@@ -136,7 +135,7 @@ class User extends Authenticatable
      */
     public function assignedSchools()
     {
-        return $this->belongsToMany(PilotSchool::class, 'mentor_school', 'user_id', 'pilot_school_id')
+        return $this->belongsToMany(PilotSchool::class, 'mentor_school', 'user_id', 'school_id')
             ->withTimestamps();
     }
 
@@ -145,7 +144,7 @@ class User extends Authenticatable
      */
     public function assignedPilotSchools()
     {
-        return $this->belongsToMany(PilotSchool::class, 'mentor_school', 'user_id', 'pilot_school_id')
+        return $this->belongsToMany(PilotSchool::class, 'mentor_school', 'user_id', 'school_id')
             ->withTimestamps();
     }
 
@@ -164,9 +163,9 @@ class User extends Authenticatable
             return $this->assignedPilotSchools()->pluck('school_code')->toArray();
         }
 
-        if ($this->role === 'teacher' && $this->pilot_school_id) {
+        if ($this->role === 'teacher' && $this->school_id) {
             // Teacher can only access their own school
-            $school = PilotSchool::find($this->pilot_school_id);
+            $school = PilotSchool::find($this->school_id);
 
             return $school ? [$school->school_code] : [];
         }
@@ -245,8 +244,8 @@ class User extends Authenticatable
         }
 
         // Teachers only see their own school
-        if ($this->isTeacher() && $this->pilot_school_id) {
-            return [$this->pilot_school_id];
+        if ($this->isTeacher() && $this->school_id) {
+            return [$this->school_id];
         }
 
         return [];
@@ -264,7 +263,7 @@ class User extends Authenticatable
             return Student::whereRaw('1 = 0'); // Return empty query
         }
 
-        return Student::whereIn('pilot_school_id', $schoolIds);
+        return Student::whereIn('school_id', $schoolIds);
     }
 
     /**
@@ -279,7 +278,7 @@ class User extends Authenticatable
             return User::whereRaw('1 = 0'); // Return empty query
         }
 
-        return User::where('role', 'teacher')->whereIn('pilot_school_id', $schoolIds);
+        return User::where('role', 'teacher')->whereIn('school_id', $schoolIds);
     }
 
     /**
@@ -297,6 +296,6 @@ class User extends Authenticatable
     {
         $student = Student::find($studentId);
 
-        return $student && $this->canAccessSchool($student->pilot_school_id);
+        return $student && $this->canAccessSchool($student->school_id);
     }
 }

@@ -28,9 +28,16 @@ if (! function_exists('trans_db')) {
         // If still not found, try Laravel's translation system as final fallback
         if ($translation === $key) {
             $laravelTranslation = trans($key, $replace, $locale);
-            if ($laravelTranslation !== $key) {
+            // Ensure we don't get an array back from Laravel's trans()
+            if (! is_array($laravelTranslation) && $laravelTranslation !== $key) {
                 $translation = $laravelTranslation;
             }
+        }
+
+        // Ensure translation is always a string
+        if (is_array($translation)) {
+            // If it's an array, return the key as fallback
+            $translation = $key;
         }
 
         // Replace placeholders

@@ -24,9 +24,11 @@ class StoreStudentRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'age' => 'required|integer|min:3|max:18',
-            'class' => 'required|string|in:Grade 4,Grade 5',
-            'gender' => 'required|in:male,female',
+            'class' => 'required|string|in:Grade 1,Grade 2,Grade 3,Grade 4,Grade 5,Grade 6',
+            'sex' => 'required|in:male,female',
+            'gender' => 'nullable|in:male,female',
             'school_id' => 'required|exists:schools,id',
+            'pilot_school_id' => 'nullable|exists:pilot_schools,id',
             'teacher_id' => 'nullable|exists:users,id',
         ];
     }
@@ -41,8 +43,9 @@ class StoreStudentRequest extends FormRequest
         return [
             'age.min' => 'The age must be at least 3 years.',
             'age.max' => 'The age must not exceed 18 years.',
+            'sex.in' => 'The sex field must be either male or female.',
             'gender.in' => 'The gender field must be either male or female.',
-            'class.in' => 'The class must be either Grade 4 or Grade 5.',
+            'class.in' => 'The class must be a valid grade level.',
             'school_id.exists' => 'The selected school does not exist.',
             'teacher_id.exists' => 'The selected teacher does not exist.',
         ];

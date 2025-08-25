@@ -108,30 +108,22 @@ class Assessment extends Model
     {
         $historyData = [
             'student_id' => $this->student_id,
-            'assessment_type' => $this->cycle, // Map cycle to assessment_type
+            'assessment_id' => $this->id,
+            'cycle' => $this->cycle,
             'subject' => $this->subject,
             'level' => $this->level,
             'score' => $this->score,
             'assessed_at' => $this->assessed_at,
-            'assessor_id' => $this->assessor_id ?? Auth::id(),
-            'is_locked' => $this->is_locked ?? false,
-            'locked_by' => $this->locked_by,
-            'locked_at' => $this->locked_at,
+            'updated_by' => $this->assessor_id ?? Auth::id(),
+            'action' => $action,
         ];
 
         if ($previousData) {
-            $historyData['assessment_data'] = json_encode([
-                'action' => $action,
-                'previous_data' => [
-                    'level' => $previousData['level'] ?? null,
-                    'score' => $previousData['score'] ?? null,
-                    'assessed_at' => $previousData['assessed_at'] ?? null,
-                    'is_locked' => $previousData['is_locked'] ?? false,
-                ],
-            ]);
-        } else {
-            $historyData['assessment_data'] = json_encode([
-                'action' => $action,
+            $historyData['previous_data'] = json_encode([
+                'level' => $previousData['level'] ?? null,
+                'score' => $previousData['score'] ?? null,
+                'assessed_at' => $previousData['assessed_at'] ?? null,
+                'is_locked' => $previousData['is_locked'] ?? false,
             ]);
         }
 
@@ -145,7 +137,7 @@ class Assessment extends Model
     {
         return AssessmentHistory::where('student_id', $studentId)
             ->where('subject', $subject)
-            ->where('assessment_type', $cycle) // Use assessment_type instead of cycle
+            ->where('cycle', $cycle)
             ->orderBy('created_at', 'desc')
             ->get();
     }

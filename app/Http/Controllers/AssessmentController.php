@@ -360,12 +360,14 @@ class AssessmentController extends Controller
 
         $chartData = [
             'labels' => $labels,
-            'datasets' => [[
-                'label' => trans_db($subject === 'khmer' ? 'Khmer Assessment Results' : 'Math Assessment Results'),
-                'data' => $data,
-                'backgroundColor' => ['#d32f2f', '#f57c00', '#fbc02d', '#388e3c', '#2e7d32', '#1976d2', '#7b1fa2'],
-                'borderWidth' => 1,
-            ]],
+            'datasets' => [
+                [
+                    'label' => trans_db($subject === 'khmer' ? 'Khmer Assessment Results' : 'Math Assessment Results'),
+                    'data' => $data,
+                    'backgroundColor' => ['#d32f2f', '#f57c00', '#fbc02d', '#388e3c', '#2e7d32', '#1976d2', '#7b1fa2'],
+                    'borderWidth' => 1,
+                ],
+            ],
         ];
 
         // Get cycle data (filtered by access)

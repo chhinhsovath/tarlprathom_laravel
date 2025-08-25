@@ -131,7 +131,7 @@
                                         {{ $assessment->student->name }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {{ $assessment->student->school->name }}
+                                        {{ $assessment->student->school ? $assessment->student->school->name : 'N/A' }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         {{ trans_db($assessment->subject === 'khmer' ? 'khmer' : 'math') }}

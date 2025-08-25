@@ -26,7 +26,7 @@ class StudentController extends Controller
     {
         $this->authorize('viewAny', Student::class);
 
-        $query = Student::with(['pilotSchool', 'teacher'])
+        $query = Student::with(['school.assignedMentors', 'teacher'])
             ->withCount('assessments');
         $user = $request->user();
 
@@ -38,7 +38,7 @@ class StudentController extends Controller
                 // If no schools are accessible, return no results
                 $query->whereRaw('1 = 0');
             } else {
-                $query->whereIn('pilot_school_id', $accessibleSchoolIds);
+                $query->whereIn('school_id', $accessibleSchoolIds);
             }
         }
 
@@ -57,7 +57,7 @@ class StudentController extends Controller
         if ($request->filled('school_id')) {
             $schoolId = $request->get('school_id');
             if ($user->isAdmin() || $user->canAccessSchool($schoolId)) {
-                $query->where('pilot_school_id', $schoolId);
+                $query->where('school_id', $schoolId);
             }
         }
 
@@ -144,7 +144,7 @@ class StudentController extends Controller
         // Verify teacher belongs to the selected school if provided
         if (isset($validated['teacher_id']) && $validated['teacher_id']) {
             $teacher = \App\Models\User::find($validated['teacher_id']);
-            if (! $teacher || $teacher->pilot_school_id != $validated['school_id']) {
+            if (! $teacher || $teacher->school_id != $validated['school_id']) {
                 return back()->withErrors(['teacher_id' => 'The selected teacher does not belong to the selected school.']);
             }
         }
@@ -213,7 +213,7 @@ class StudentController extends Controller
     {
         // Check authorization
         $user = auth()->user();
-        if ($user->isTeacher() && $student->pilot_school_id !== $user->pilot_school_id) {
+        if ($user->isTeacher() && $student->school_id !== $user->school_id) {
             abort(403);
         }
 
@@ -319,7 +319,7 @@ class StudentController extends Controller
                 // Verify teacher belongs to the school if provided
                 if (isset($studentData['teacher_id']) && $studentData['teacher_id']) {
                     $teacher = \App\Models\User::find($studentData['teacher_id']);
-                    if (! $teacher || $teacher->pilot_school_id != $studentData['school_id']) {
+                    if (! $teacher || $teacher->school_id != $studentData['school_id']) {
                         $failed++;
 
                         continue;

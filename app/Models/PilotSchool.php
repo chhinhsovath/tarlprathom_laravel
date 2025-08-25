@@ -60,7 +60,7 @@ class PilotSchool extends Model
      */
     public function assignedMentors()
     {
-        return $this->belongsToMany(\App\Models\User::class, 'mentor_school', 'pilot_school_id', 'user_id')
+        return $this->belongsToMany(\App\Models\User::class, 'mentor_school', 'school_id', 'user_id')
             ->where('role', 'mentor')
             ->withTimestamps();
     }
