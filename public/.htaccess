@@ -1,21 +1,37 @@
 <IfModule mod_rewrite.c>
-      <IfModule mod_negotiation.c>
-          Options -MultiViews -Indexes
-      </IfModule>
+    <IfModule mod_negotiation.c>
+        Options -MultiViews -Indexes
+    </IfModule>
 
-      RewriteEngine On
+    RewriteEngine On
 
-      # Handle Authorization Header
-      RewriteCond %{HTTP:Authorization} .
-      RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+    # Handle Authorization Header
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
-      # Redirect Trailing Slashes If Not A Folder...
-      RewriteCond %{REQUEST_FILENAME} !-d
-      RewriteCond %{REQUEST_URI} (.+)/$
-      RewriteRule ^ %1 [L,R=301]
+    # Redirect Trailing Slashes If Not A Folder...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} (.+)/$
+    RewriteRule ^ %1 [L,R=301]
 
-      # Send Requests To Front Controller...
-      RewriteCond %{REQUEST_FILENAME} !-d
-      RewriteCond %{REQUEST_FILENAME} !-f
-      RewriteRule ^ index.php [L]
-  </IfModule>
+    # Send Requests To Front Controller...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ index.php [L]
+</IfModule>
+
+# Security Headers
+<IfModule mod_headers.c>
+    # Remove Server signature
+    Header unset Server
+    Header always unset X-Powered-By
+    
+    # Add security headers (will be overridden by Laravel middleware for iframe embedding)
+    Header always set X-Content-Type-Options nosniff
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# Error handling - redirect to Laravel's error handling
+ErrorDocument 404 /index.php
+ErrorDocument 500 /index.php

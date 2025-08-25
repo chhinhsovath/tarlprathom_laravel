@@ -1,58 +1,56 @@
-#\!/bin/bash
+#!/bin/bash
 
-echo "🚀 Laravel TaRL - Production Deployment"
-echo "======================================="
-echo ""
+# Production Deployment Script for TaRL Laravel Application
+# This script should be run on the production server after pulling the latest code
 
-cd /var/www/html/tarl
+echo "Starting production deployment..."
 
-# 1. Install production dependencies
-echo "1️⃣ Installing production dependencies..."
-composer install --no-dev --optimize-autoloader --no-interaction
+# Create storage directories if they don't exist
+echo "Creating storage directories..."
+mkdir -p storage/app/public
+mkdir -p storage/framework/cache/data
+mkdir -p storage/framework/sessions
+mkdir -p storage/framework/testing
+mkdir -p storage/framework/views
+mkdir -p storage/logs
+mkdir -p bootstrap/cache
 
-# 2. Copy production environment
-echo "2️⃣ Setting up production environment..."
-if [ \! -f .env ]; then
-    cp .env.production .env
-    echo "✅ Environment file created from .env.production"
-else
-    echo "⚠️  .env file already exists - please verify settings"
-fi
+# Set proper permissions
+echo "Setting permissions..."
+chmod -R 775 storage
+chmod -R 775 bootstrap/cache
 
-# 3. Generate application key if needed
-echo "3️⃣ Checking application key..."
-if \! grep -q "APP_KEY=base64:" .env; then
-    php artisan key:generate --force
-    echo "✅ Application key generated"
-else
-    echo "✅ Application key already exists"
-fi
+# Create storage link
+echo "Creating storage link..."
+php artisan storage:link
 
-# 4. Run database migrations
-echo "4️⃣ Running database migrations..."
-php artisan migrate --force
-
-# 5. Clear and cache configuration
-echo "5️⃣ Optimizing application..."
+# Clear all caches
+echo "Clearing caches..."
+php artisan cache:clear
 php artisan config:clear
-php artisan config:cache
 php artisan route:clear
-php artisan route:cache
 php artisan view:clear
+
+# Optimize for production
+echo "Optimizing for production..."
+php artisan config:cache
+php artisan route:cache
 php artisan view:cache
 
-# 6. Set final permissions
-echo "6️⃣ Setting final permissions..."
-sudo chown -R www-data:www-data /var/www/html/tarl
-sudo chmod -R 755 /var/www/html/tarl
-sudo chmod -R 775 storage bootstrap/cache
+# Run migrations
+echo "Running migrations..."
+php artisan migrate --force
 
+# Create session table if using database sessions
+echo "Ensuring session table exists..."
+php artisan session:table
+php artisan migrate --force
+
+echo "Deployment completed successfully!"
 echo ""
-echo "✅ Production deployment complete\!"
-echo ""
-echo "🌐 Your application should now be accessible at:"
-echo "   https://plp.moeys.gov.kh/tarl/"
-echo ""
-echo "📋 Admin Login:"
-echo "   Email: admin@tarlconnect.com"
-echo "   Password: password"
+echo "IMPORTANT: Make sure to:"
+echo "1. Update .env file with production database credentials"
+echo "2. Set APP_ENV=production"
+echo "3. Set APP_DEBUG=false"
+echo "4. Configure your web server to point to the /public directory"
+echo "5. Ensure PHP extensions are installed: pdo_mysql, mbstring, openssl, tokenizer, xml, ctype, json"
