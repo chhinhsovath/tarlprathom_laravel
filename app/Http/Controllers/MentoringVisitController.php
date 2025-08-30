@@ -41,7 +41,7 @@ class MentoringVisitController extends Controller
             // Mentors can see visits for their assigned schools
             $assignedSchoolIds = $user->assignedSchools()->pluck('pilot_schools.id')->toArray();
             if (! empty($assignedSchoolIds)) {
-                $query->whereIn('pilot_school_id', $assignedSchoolIds);
+                $query->whereIn('school_id', $assignedSchoolIds);
             } else {
                 // If no schools assigned, show no visits
                 $query->whereRaw('1 = 0');
@@ -67,8 +67,8 @@ class MentoringVisitController extends Controller
         }
 
         // Add filters
-        if ($request->filled('pilot_school_id')) {
-            $query->where('pilot_school_id', $request->get('pilot_school_id'));
+        if ($request->filled('school_id')) {
+            $query->where('school_id', $request->get('school_id'));
         }
 
         if ($request->filled('mentor_id')) {

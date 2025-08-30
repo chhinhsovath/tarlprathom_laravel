@@ -110,13 +110,13 @@
                                         {{ $visit->visit_date->format('Y-m-d') }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {{ $visit->school->name }}
+                                        {{ $visit->school->school_name ?? $visit->school->name ?? 'N/A' }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {{ $visit->teacher->name }}
+                                        {{ $visit->teacher->name ?? 'N/A' }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {{ $visit->mentor->name }}
+                                        {{ $visit->mentor->name ?? 'N/A' }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 

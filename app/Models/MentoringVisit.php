@@ -152,11 +152,11 @@ class MentoringVisit extends Model
     }
 
     /**
-     * Get the school where the visit took place (legacy - uses tbl_tarl_schools).
+     * Get the school where the visit took place.
      */
     public function school()
     {
-        return $this->belongsTo(PilotSchool::class, 'pilot_school_id');
+        return $this->belongsTo(\App\Models\School::class, 'school_id');
     }
 
     /**
@@ -164,7 +164,7 @@ class MentoringVisit extends Model
      */
     public function pilotSchool()
     {
-        return $this->belongsTo(PilotSchool::class, 'pilot_school_id');
+        return $this->belongsTo(PilotSchool::class, 'school_id');
     }
 
     /**
