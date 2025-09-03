@@ -14,6 +14,9 @@ use App\Traits\Sortable;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Cache;
+use App\Jobs\ExportMentoringVisitsJob;
+use App\Services\MentoringVisitService;
 
 class MentoringVisitController extends Controller
 {
@@ -126,8 +129,10 @@ class MentoringVisitController extends Controller
             $schools = PilotSchool::orderBy('school_name')->get();
         }
 
-        // Get provinces from Geographic table
-        $provinces = Province::orderBy('name_kh')->pluck('name_en', 'name_en');
+        // Get provinces from cache or database
+        $provinces = Cache::remember('provinces_list', 900, function () {
+            return Province::orderBy('name_kh')->pluck('name_en', 'name_en');
+        });
 
         // Get teachers for dropdown - optimize query
         $teachers = User::select('id', 'name', 'email', 'pilot_school_id')
@@ -137,11 +142,14 @@ class MentoringVisitController extends Controller
             ->orderBy('name')
             ->get();
 
-        // Get mentors for dropdown (for admin)
-        $mentors = User::where('role', 'mentor')
-            ->where('is_active', true)
-            ->orderBy('name')
-            ->get();
+        // Get mentors from cache for better performance
+        $mentors = Cache::remember('active_mentors', 300, function () {
+            return User::select('id', 'name', 'email')
+                ->where('role', 'mentor')
+                ->where('is_active', true)
+                ->orderBy('name')
+                ->get();
+        });
 
         // Only get students from relevant schools for better performance
         $schoolIds = $schools->pluck('id');
@@ -272,8 +280,10 @@ class MentoringVisitController extends Controller
             $schools = PilotSchool::orderBy('school_name')->get();
         }
 
-        // Get provinces from Geographic table
-        $provinces = Province::orderBy('name_kh')->pluck('name_en', 'name_en');
+        // Get provinces from cache or database
+        $provinces = Cache::remember('provinces_list', 900, function () {
+            return Province::orderBy('name_kh')->pluck('name_en', 'name_en');
+        });
 
         // Get teachers for dropdown - optimize query
         $teachers = User::select('id', 'name', 'email', 'pilot_school_id')
@@ -283,11 +293,14 @@ class MentoringVisitController extends Controller
             ->orderBy('name')
             ->get();
 
-        // Get mentors for dropdown (for admin)
-        $mentors = User::where('role', 'mentor')
-            ->where('is_active', true)
-            ->orderBy('name')
-            ->get();
+        // Get mentors from cache for better performance
+        $mentors = Cache::remember('active_mentors', 300, function () {
+            return User::select('id', 'name', 'email')
+                ->where('role', 'mentor')
+                ->where('is_active', true)
+                ->orderBy('name')
+                ->get();
+        });
 
         // Only get students from relevant schools for better performance
         $schoolIds = $schools->pluck('id');
@@ -386,7 +399,7 @@ class MentoringVisitController extends Controller
     }
 
     /**
-     * Export mentoring visits to Excel
+     * Export mentoring visits to Excel (queued)
      */
     public function export(Request $request)
     {
@@ -397,6 +410,9 @@ class MentoringVisitController extends Controller
             abort(403);
         }
 
-        return Excel::download(new MentoringVisitsExport($request), 'mentoring_visits_'.date('Y-m-d_H-i-s').'.xlsx');
+        // Dispatch export job to queue
+        ExportMentoringVisitsJob::dispatch($user, $request->all());
+
+        return redirect()->back()->with('success', __('Export has been queued. You will receive the file shortly.'));
     }
 }
