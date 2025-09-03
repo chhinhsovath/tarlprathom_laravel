@@ -12,6 +12,8 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
+use App\Notifications\ExportReadyNotification;
+use Illuminate\Support\Facades\URL;
 
 class ExportMentoringVisitsJob implements ShouldQueue
 {
@@ -45,8 +47,22 @@ class ExportMentoringVisitsJob implements ShouldQueue
         // Store the file
         Excel::store($export, 'exports/' . $this->fileName, 'public');
         
-        // Log success or send notification
-        \Log::info('Export completed', [
+        // Generate download URL
+        $downloadUrl = URL::temporarySignedRoute(
+            'exports.download',
+            now()->addDays(7),
+            ['file' => $this->fileName]
+        );
+        
+        // Send notification to user
+        $this->user->notify(new ExportReadyNotification(
+            $this->fileName,
+            $downloadUrl,
+            'Mentoring Visits'
+        ));
+        
+        // Log success
+        \Log::info('Export completed and notification sent', [
             'user_id' => $this->user->id,
             'file' => $this->fileName
         ]);
