@@ -24,7 +24,8 @@ class StoreMentoringVisitRequest extends FormRequest
     {
         return [
             // Basic fields
-            'school_id' => 'required|exists:schools,id',
+            'pilot_school_id' => 'required|exists:pilot_schools,id',
+            'school_id' => 'nullable|exists:schools,id', // Legacy field, optional
             'teacher_id' => 'required_if:class_in_session,Yes|nullable|exists:users,id',
             'visit_date' => 'required|date',
             'mentor_id' => 'nullable|exists:users,id',
@@ -32,6 +33,10 @@ class StoreMentoringVisitRequest extends FormRequest
             // New questionnaire fields
             'region' => 'required|string|max:255',
             'province' => 'required|string|max:255',
+            'district' => 'nullable|string|max:255',
+            'commune' => 'nullable|string|max:255',
+            'village' => 'nullable|string|max:255',
+            'level' => 'nullable|string|max:255',
             'program_type' => 'required|string|max:255',
             'class_in_session' => 'required|in:Yes,No',
             'class_not_in_session_reason' => 'required_if:class_in_session,No|nullable|string',

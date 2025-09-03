@@ -31,7 +31,12 @@ class MentoringVisitController extends Controller
             abort(403);
         }
 
-        $query = MentoringVisit::with(['mentor', 'teacher', 'pilotSchool']);
+        // Eager load relationships to prevent N+1 queries
+        $query = MentoringVisit::with([
+            'mentor:id,name,email',
+            'teacher:id,name,email', 
+            'pilotSchool:id,school_name,school_code'
+        ]);
 
         // Filter based on user role
         if ($user->isTeacher()) {
@@ -124,10 +129,11 @@ class MentoringVisitController extends Controller
         // Get provinces from Geographic table
         $provinces = Province::orderBy('name_kh')->pluck('name_en', 'name_en');
 
-        // Get teachers for dropdown
-        $teachers = User::where('role', 'teacher')
+        // Get teachers for dropdown - optimize query
+        $teachers = User::select('id', 'name', 'email', 'pilot_school_id')
+            ->where('role', 'teacher')
             ->where('is_active', true)
-            ->with('pilotSchool')
+            ->with('pilotSchool:id,school_name')
             ->orderBy('name')
             ->get();
 
@@ -137,9 +143,12 @@ class MentoringVisitController extends Controller
             ->orderBy('name')
             ->get();
 
-        // Get students for dropdown
-        $students = \App\Models\Student::with('school')
+        // Only get students from relevant schools for better performance
+        $schoolIds = $schools->pluck('id');
+        $students = \App\Models\Student::select('id', 'name', 'student_code', 'pilot_school_id')
+            ->whereIn('pilot_school_id', $schoolIds)
             ->orderBy('name')
+            ->limit(500) // Limit for performance
             ->get();
 
         // Pre-select values if passed as parameters
@@ -266,10 +275,11 @@ class MentoringVisitController extends Controller
         // Get provinces from Geographic table
         $provinces = Province::orderBy('name_kh')->pluck('name_en', 'name_en');
 
-        // Get teachers for dropdown
-        $teachers = User::where('role', 'teacher')
+        // Get teachers for dropdown - optimize query
+        $teachers = User::select('id', 'name', 'email', 'pilot_school_id')
+            ->where('role', 'teacher')
             ->where('is_active', true)
-            ->with('pilotSchool')
+            ->with('pilotSchool:id,school_name')
             ->orderBy('name')
             ->get();
 
@@ -279,9 +289,12 @@ class MentoringVisitController extends Controller
             ->orderBy('name')
             ->get();
 
-        // Get students for dropdown
-        $students = \App\Models\Student::with('school')
+        // Only get students from relevant schools for better performance
+        $schoolIds = $schools->pluck('id');
+        $students = \App\Models\Student::select('id', 'name', 'student_code', 'pilot_school_id')
+            ->whereIn('pilot_school_id', $schoolIds)
             ->orderBy('name')
+            ->limit(500) // Limit for performance
             ->get();
 
         // Get questionnaire configuration

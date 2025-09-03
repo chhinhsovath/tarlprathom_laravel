@@ -161,12 +161,13 @@ class MentoringVisit extends Model
     }
 
     /**
-     * Get the legacy school (for backward compatibility only).
-     * @deprecated Use pilotSchool() instead
+     * Get the school through pilot school relationship.
+     * This provides a consistent way to access school information.
      */
     public function school()
     {
-        return $this->belongsTo(\App\Models\School::class, 'school_id');
+        // Always use pilot school as the primary relationship
+        return $this->pilotSchool();
     }
 
     /**
