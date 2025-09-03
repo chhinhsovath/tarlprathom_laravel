@@ -31,6 +31,7 @@ class MentoringVisit extends Model
         'district',
         'commune',
         'village',
+        'level',
         'cluster',
         'mentor_name',
         'program_type',

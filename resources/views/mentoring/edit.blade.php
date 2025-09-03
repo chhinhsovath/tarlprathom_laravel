@@ -78,6 +78,24 @@
                                     @enderror
                                 </div>
                                 
+                                <!-- Level -->
+                                <div>
+                                    <label for="level" class="block text-sm font-medium text-gray-700 mb-2">
+                                        {{ __('mentoring.Level') }} <span class="text-red-500">*</span>
+                                    </label>
+                                    <input type="text" 
+                                           id="level" 
+                                           name="level" 
+                                           value="{{ old('level', $mentoringVisit->level ?? auth()->user()->level ?? '') }}"
+                                           readonly
+                                           class="w-full rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                           required>
+                                    <small class="text-gray-500">{{ __('Auto-filled based on user account') }}</small>
+                                    @error('level')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                                
                                 <!-- Mentor (for admin) -->
                                 @if(auth()->user()->isAdmin())
                                 <div>

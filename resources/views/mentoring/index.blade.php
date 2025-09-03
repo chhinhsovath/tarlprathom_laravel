@@ -152,6 +152,17 @@
                                             <a href="{{ route('mentoring.edit', $visit) }}" class="text-yellow-600 hover:text-yellow-900">
                                                 {{ __('mentoring.Edit') }}
                                             </a>
+                                            @if(auth()->user()->isAdmin() || $visit->mentor_id == auth()->user()->id)
+                                                <span class="text-gray-300 mx-1">|</span>
+                                                <form action="{{ route('mentoring.destroy', $visit) }}" method="POST" class="inline-block delete-form">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="text-red-600 hover:text-red-900" 
+                                                            onclick="return confirm('{{ __('Are you sure you want to delete this mentoring visit?') }}')">
+                                                        {{ __('mentoring.Delete') }}
+                                                    </button>
+                                                </form>
+                                            @endif
                                         @endif
                                     </td>
                                 </tr>

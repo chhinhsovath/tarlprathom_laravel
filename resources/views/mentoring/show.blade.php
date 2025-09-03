@@ -23,6 +23,17 @@
                                     {{ __('mentoring.Edit') }}
                                 </a>
                             @endif
+                            @if(auth()->user()->isAdmin() || auth()->user()->id == $mentoringVisit->mentor_id)
+                                <form action="{{ route('mentoring.destroy', $mentoringVisit) }}" method="POST" class="inline-block">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" 
+                                            onclick="return confirm('{{ __('Are you sure you want to delete this mentoring visit?') }}')" 
+                                            class="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700">
+                                        {{ __('mentoring.Delete') }}
+                                    </button>
+                                </form>
+                            @endif
                             <a href="{{ route('mentoring.index') }}" 
                                class="inline-flex items-center px-4 py-2 bg-gray-300 border border-transparent rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest hover:bg-gray-400">
                                 {{ __('mentoring.Back to List') }}
