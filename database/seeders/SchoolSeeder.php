@@ -50,7 +50,9 @@ class SchoolSeeder extends Seeder
             ],
         ];
 
-        foreach ($schools as $school) {
+        foreach ($schools as $index => $school) {
+            $school['school_name'] = $school['name'];
+            $school['school_code'] = strtoupper(substr($school['province'], 0, 2)) . str_pad($index + 1, 3, '0', STR_PAD_LEFT);
             School::create($school);
         }
     }

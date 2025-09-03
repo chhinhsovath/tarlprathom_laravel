@@ -26,7 +26,7 @@ class StudentController extends Controller
     {
         $this->authorize('viewAny', Student::class);
 
-        $query = Student::with(['school.assignedMentors', 'teacher'])
+        $query = Student::with(['pilotSchool.assignedMentors', 'teacher'])
             ->withCount('assessments');
         $user = $request->user();
 
@@ -38,7 +38,7 @@ class StudentController extends Controller
                 // If no schools are accessible, return no results
                 $query->whereRaw('1 = 0');
             } else {
-                $query->whereIn('school_id', $accessibleSchoolIds);
+                $query->whereIn('pilot_school_id', $accessibleSchoolIds);
             }
         }
 
@@ -53,11 +53,11 @@ class StudentController extends Controller
             $query->where('name', 'like', "%{$search}%");
         }
 
-        // Add school filter (for admins and mentors with access)
-        if ($request->filled('school_id')) {
-            $schoolId = $request->get('school_id');
+        // Add pilot school filter (for admins and mentors with access)
+        if ($request->filled('pilot_school_id')) {
+            $schoolId = $request->get('pilot_school_id');
             if ($user->isAdmin() || $user->canAccessSchool($schoolId)) {
-                $query->where('school_id', $schoolId);
+                $query->where('pilot_school_id', $schoolId);
             }
         }
 
@@ -131,9 +131,9 @@ class StudentController extends Controller
         $validated = $request->validated();
         $user = $request->user();
 
-        // Ensure user can only add students to accessible schools
-        if (! $user->isAdmin() && ! $user->canAccessSchool($validated['school_id'])) {
-            return back()->withErrors(['school_id' => 'You do not have access to this school.']);
+        // Ensure user can only add students to accessible pilot schools
+        if (! $user->isAdmin() && ! $user->canAccessSchool($validated['pilot_school_id'])) {
+            return back()->withErrors(['pilot_school_id' => 'You do not have access to this pilot school.']);
         }
 
         // If teacher, ensure they assign students to themselves
@@ -144,8 +144,8 @@ class StudentController extends Controller
         // Verify teacher belongs to the selected school if provided
         if (isset($validated['teacher_id']) && $validated['teacher_id']) {
             $teacher = \App\Models\User::find($validated['teacher_id']);
-            if (! $teacher || $teacher->school_id != $validated['school_id']) {
-                return back()->withErrors(['teacher_id' => 'The selected teacher does not belong to the selected school.']);
+            if (! $teacher || $teacher->pilot_school_id != $validated['pilot_school_id']) {
+                return back()->withErrors(['teacher_id' => 'The selected teacher does not belong to the selected pilot school.']);
             }
         }
 

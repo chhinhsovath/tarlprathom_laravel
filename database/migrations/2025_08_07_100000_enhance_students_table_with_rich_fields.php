@@ -54,7 +54,7 @@ return new class extends Migration
             $table->boolean('has_birth_certificate')->default(true)->after('family_income_level');
             $table->string('birth_certificate_number')->nullable()->after('has_birth_certificate');
             $table->index(['school_id', 'enrollment_status']);
-            $table->index(['grade', 'class_id']);
+            $table->index(['class', 'class_id']);
             $table->index('student_code');
             $table->index('enrollment_date');
         });

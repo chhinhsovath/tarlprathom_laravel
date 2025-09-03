@@ -41,17 +41,19 @@ class LocalizationController extends Controller
 
     public function editTranslations(Request $request)
     {
-        $search = $request->get('search');
-        $group = $request->get('group', 'all');
+        $search = is_string($request->get('search')) ? $request->get('search') : '';
+        $group = is_string($request->get('group')) ? $request->get('group') : 'all';
 
         // Get all groups for filter
         $groups = Translation::getGroups();
-        array_unshift($groups, 'all');
+        if (!in_array('all', $groups)) {
+            array_unshift($groups, 'all');
+        }
 
         // Get translations
         $query = Translation::query();
 
-        if ($search) {
+        if (!empty($search)) {
             $query->search($search);
         }
 

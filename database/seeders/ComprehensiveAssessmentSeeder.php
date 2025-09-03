@@ -15,10 +15,16 @@ class ComprehensiveAssessmentSeeder extends Seeder
     public function run(): void
     {
         // Clear existing assessments and histories
-        \DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        Assessment::truncate();
-        \DB::table('assessment_histories')->truncate();
-        \DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        if (\DB::getDriverName() === 'mysql') {
+            \DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+            Assessment::truncate();
+            \DB::table('assessment_histories')->truncate();
+            \DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        } else {
+            // For PostgreSQL, use CASCADE
+            \DB::statement('TRUNCATE TABLE assessments CASCADE;');
+            \DB::statement('TRUNCATE TABLE assessment_histories CASCADE;');
+        }
 
         // Define assessment levels
         $khmerLevels = ['Beginner', 'Letter', 'Word', 'Paragraph', 'Story', 'Comp 1', 'Comp 2'];
@@ -156,11 +162,28 @@ class ComprehensiveAssessmentSeeder extends Seeder
 
         // Level distribution for Khmer
         $this->command->info("\nKhmer Level Distribution:");
-        $khmerLevels = Assessment::where('subject', 'khmer')
-            ->selectRaw('level, COUNT(*) as count')
-            ->groupBy('level')
-            ->orderByRaw("FIELD(level, 'Beginner', 'Letter', 'Word', 'Paragraph', 'Story', 'Comp 1', 'Comp 2')")
-            ->pluck('count', 'level');
+        if (\DB::getDriverName() === 'mysql') {
+            $khmerLevels = Assessment::where('subject', 'khmer')
+                ->selectRaw('level, COUNT(*) as count')
+                ->groupBy('level')
+                ->orderByRaw("FIELD(level, 'Beginner', 'Letter', 'Word', 'Paragraph', 'Story', 'Comp 1', 'Comp 2')")
+                ->pluck('count', 'level');
+        } else {
+            // PostgreSQL version using CASE
+            $khmerLevels = Assessment::where('subject', 'khmer')
+                ->selectRaw('level, COUNT(*) as count')
+                ->groupBy('level')
+                ->orderByRaw("CASE 
+                    WHEN level = 'Beginner' THEN 1
+                    WHEN level = 'Letter' THEN 2
+                    WHEN level = 'Word' THEN 3
+                    WHEN level = 'Paragraph' THEN 4
+                    WHEN level = 'Story' THEN 5
+                    WHEN level = 'Comp 1' THEN 6
+                    WHEN level = 'Comp 2' THEN 7
+                    ELSE 8 END")
+                ->pluck('count', 'level');
+        }
 
         foreach ($khmerLevels as $level => $count) {
             $this->command->info("  {$level}: {$count}");
@@ -168,11 +191,27 @@ class ComprehensiveAssessmentSeeder extends Seeder
 
         // Level distribution for Math
         $this->command->info("\nMath Level Distribution:");
-        $mathLevels = Assessment::where('subject', 'math')
-            ->selectRaw('level, COUNT(*) as count')
-            ->groupBy('level')
-            ->orderByRaw("FIELD(level, 'Beginner', '1-Digit', '2-Digit', 'Subtraction', 'Division', 'Word Problem')")
-            ->pluck('count', 'level');
+        if (\DB::getDriverName() === 'mysql') {
+            $mathLevels = Assessment::where('subject', 'math')
+                ->selectRaw('level, COUNT(*) as count')
+                ->groupBy('level')
+                ->orderByRaw("FIELD(level, 'Beginner', '1-Digit', '2-Digit', 'Subtraction', 'Division', 'Word Problem')")
+                ->pluck('count', 'level');
+        } else {
+            // PostgreSQL version using CASE
+            $mathLevels = Assessment::where('subject', 'math')
+                ->selectRaw('level, COUNT(*) as count')
+                ->groupBy('level')
+                ->orderByRaw("CASE 
+                    WHEN level = 'Beginner' THEN 1
+                    WHEN level = '1-Digit' THEN 2
+                    WHEN level = '2-Digit' THEN 3
+                    WHEN level = 'Subtraction' THEN 4
+                    WHEN level = 'Division' THEN 5
+                    WHEN level = 'Word Problem' THEN 6
+                    ELSE 7 END")
+                ->pluck('count', 'level');
+        }
 
         foreach ($mathLevels as $level => $count) {
             $this->command->info("  {$level}: {$count}");

@@ -14,6 +14,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\ResourceController;
+use App\Http\Controllers\RoleBasedAccessControlController;
 use App\Http\Controllers\SchoolController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\ShowcaseController;
@@ -28,6 +29,7 @@ Route::get('/language/{locale}', [LanguageController::class, 'switch'])->name('l
 Route::get('/test-translation', function () {
     return view('test-translation');
 })->middleware(['auth']);
+
 
 // Debug locale
 Route::get('/debug-locale', function () {
@@ -134,6 +136,23 @@ Route::middleware('auth')->group(function () {
     Route::put('/mentoring/{mentoringVisit}', [MentoringVisitController::class, 'update'])->name('mentoring.update');
     Route::delete('/mentoring/{mentoringVisit}', [MentoringVisitController::class, 'destroy'])->name('mentoring.destroy');
 
+    // Role-Based Access Control Routes (Admin only)
+    Route::prefix('rbac')->name('rbac.')->middleware(['auth', 'role:admin'])->group(function () {
+        Route::get('/', [RoleBasedAccessControlController::class, 'index'])->name('index');
+        Route::get('/users', [RoleBasedAccessControlController::class, 'users'])->name('users');
+        Route::get('/users/create', [RoleBasedAccessControlController::class, 'create'])->name('create');
+        Route::post('/users', [RoleBasedAccessControlController::class, 'store'])->name('store');
+        Route::get('/users/{user}', [RoleBasedAccessControlController::class, 'show'])->name('show');
+        Route::get('/users/{user}/edit', [RoleBasedAccessControlController::class, 'edit'])->name('edit');
+        Route::put('/users/{user}', [RoleBasedAccessControlController::class, 'update'])->name('update');
+        Route::delete('/users/{user}', [RoleBasedAccessControlController::class, 'destroy'])->name('destroy');
+        Route::post('/users/{user}/toggle-status', [RoleBasedAccessControlController::class, 'toggleStatus'])->name('toggle-status');
+        Route::get('/data-access', [RoleBasedAccessControlController::class, 'dataAccess'])->name('data-access');
+    });
+
+    // Legacy route for compatibility
+    Route::get('/role-based-access-control', [RoleBasedAccessControlController::class, 'index'])->name('role-based-access-control');
+
     // Reports Routes
     Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
     Route::get('/reports/student-performance', [ReportController::class, 'studentPerformance'])->name('reports.student-performance');
@@ -179,10 +198,17 @@ Route::middleware('auth')->group(function () {
         Route::resource('schools', SchoolController::class);
         Route::post('/schools/{school}/add-teacher', [SchoolController::class, 'addTeacher'])->name('schools.add-teacher');
         Route::delete('/schools/{school}/remove-teacher', [SchoolController::class, 'removeTeacher'])->name('schools.remove-teacher');
+        Route::delete('/schools/{school}/remove-student', [SchoolController::class, 'removeStudent'])->name('schools.remove-student');
         Route::get('/schools/{school}/search-teachers', [SchoolController::class, 'searchTeachers'])->name('schools.search-teachers');
         Route::post('/schools/{school}/add-mentor', [SchoolController::class, 'addMentor'])->name('schools.add-mentor');
         Route::delete('/schools/{school}/remove-mentor', [SchoolController::class, 'removeMentor'])->name('schools.remove-mentor');
         Route::get('/schools/{school}/search-mentors', [SchoolController::class, 'searchMentors'])->name('schools.search-mentors');
+        
+        // School-specific imports (Admin and Coordinator)
+        Route::get('/schools/{school}/download-teacher-template', [SchoolController::class, 'downloadTeacherTemplate'])->name('schools.download-teacher-template');
+        Route::get('/schools/{school}/download-student-template', [SchoolController::class, 'downloadStudentTemplate'])->name('schools.download-student-template');
+        Route::post('/schools/{school}/import-teachers', [SchoolController::class, 'importTeachers'])->name('schools.import-teachers');
+        Route::post('/schools/{school}/import-students', [SchoolController::class, 'importStudents'])->name('schools.import-students');
 
         // Resource Management (Admin only)
         Route::middleware(['auth', 'App\Http\Middleware\AdminMiddleware'])->group(function () {

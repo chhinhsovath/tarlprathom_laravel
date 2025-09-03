@@ -30,14 +30,13 @@ class DashboardController extends Controller
         $clusters = [];
 
         if ($user->role === 'mentor' || $user->role === 'admin') {
-            // For pilot phase, use the optimized pilot_schools table
-            // This table only has 30 schools instead of thousands
+            // Get schools from the pilot schools table
             $schools = PilotSchool::orderBy('school_name')->get();
 
-            // Get unique provinces from pilot schools (only 2 provinces)
+            // Get unique provinces from pilot schools
             $provinces = PilotSchool::getProvinces();
 
-            // Get unique districts from pilot schools (only 2 districts)
+            // Get unique districts from pilot schools
             $districts = PilotSchool::getDistricts();
 
             // Get unique clusters from pilot schools
@@ -84,12 +83,10 @@ class DashboardController extends Controller
                 $schoolQuery->whereRaw('1 = 0');
             } else {
                 // Restrict to accessible schools
-                $studentQuery->whereIn('school_id', $accessibleSchoolIds);
-                // Use join instead of whereHas for better performance
-                $assessmentQuery->join('students', 'assessments.student_id', '=', 'students.id')
-                    ->whereIn('students.school_id', $accessibleSchoolIds)
-                    ->select('assessments.*');
-                $mentoringQuery->whereIn('school_id', $accessibleSchoolIds);
+                $studentQuery->whereIn('pilot_school_id', $accessibleSchoolIds);
+                // Use pilot_school_id directly on assessments
+                $assessmentQuery->whereIn('pilot_school_id', $accessibleSchoolIds);
+                $mentoringQuery->whereIn('pilot_school_id', $accessibleSchoolIds);
                 $schoolQuery->whereIn('id', $accessibleSchoolIds);
             }
         }
@@ -105,13 +102,11 @@ class DashboardController extends Controller
                         $filterQuery->whereIn('id', $accessibleSchoolIds);
                     }
                     $schoolIds = $filterQuery->pluck('id');
-                    $studentQuery->whereIn('school_id', $schoolIds);
-                    // Optimize assessment query with join
-                    $assessmentQuery->join('students as s2', 'assessments.student_id', '=', 's2.id')
-                        ->whereIn('s2.school_id', $schoolIds)
-                        ->select('assessments.*');
-                    $mentoringQuery->whereIn('school_id', $schoolIds);
-                    $schoolQuery->where('sclProvince', $province->province_code);
+                    $studentQuery->whereIn('pilot_school_id', $schoolIds);
+                    // Use pilot_school_id directly on assessments
+                    $assessmentQuery->whereIn('pilot_school_id', $schoolIds);
+                    $mentoringQuery->whereIn('pilot_school_id', $schoolIds);
+                    $schoolQuery->where('province', $province->name_en);
                 }
             }
 
@@ -123,10 +118,8 @@ class DashboardController extends Controller
                 }
                 $schoolIds = $filterQuery->pluck('id');
                 $studentQuery->whereIn('pilot_school_id', $schoolIds);
-                $assessmentQuery->whereHas('student', function ($q) use ($schoolIds) {
-                    $q->whereIn('pilot_school_id', $schoolIds);
-                });
-                $mentoringQuery->whereIn('school_id', $schoolIds);
+                $assessmentQuery->whereIn('pilot_school_id', $schoolIds);
+                $mentoringQuery->whereIn('pilot_school_id', $schoolIds);
                 $schoolQuery->where('district', $request->district);
             }
 
@@ -147,11 +140,9 @@ class DashboardController extends Controller
 
             // Filter by selected school
             if ($request->has('school_id') && $request->school_id) {
-                $studentQuery->where('school_id', $request->school_id);
-                $assessmentQuery->whereHas('student', function ($q) use ($request) {
-                    $q->where('school_id', $request->school_id);
-                });
-                $mentoringQuery->where('school_id', $request->school_id);
+                $studentQuery->where('pilot_school_id', $request->school_id);
+                $assessmentQuery->where('pilot_school_id', $request->school_id);
+                $mentoringQuery->where('pilot_school_id', $request->school_id);
                 $schoolQuery->where('id', $request->school_id);
             }
         }
@@ -191,9 +182,7 @@ class DashboardController extends Controller
                 // If no schools are accessible, return no results
                 $query->whereRaw('1 = 0');
             } else {
-                $query->whereHas('student', function ($q) use ($accessibleSchoolIds) {
-                    $q->whereIn('pilot_school_id', $accessibleSchoolIds);
-                });
+                $query->whereIn('pilot_school_id', $accessibleSchoolIds);
             }
         }
 
@@ -208,9 +197,7 @@ class DashboardController extends Controller
                         $filterQuery->whereIn('id', $accessibleSchoolIds);
                     }
                     $schoolIds = $filterQuery->pluck('id');
-                    $query->whereHas('student', function ($q) use ($schoolIds) {
-                        $q->whereIn('school_id', $schoolIds);
-                    });
+                    $query->whereIn('pilot_school_id', $schoolIds);
                 }
             }
 
@@ -221,9 +208,7 @@ class DashboardController extends Controller
                     $filterQuery->whereIn('id', $accessibleSchoolIds);
                 }
                 $schoolIds = $filterQuery->pluck('id');
-                $query->whereHas('student', function ($q) use ($schoolIds) {
-                    $q->whereIn('pilot_school_id', $schoolIds);
-                });
+                $query->whereIn('pilot_school_id', $schoolIds);
             }
 
             // Filter by cluster (commented out - cluster column doesn't exist yet)
@@ -240,9 +225,7 @@ class DashboardController extends Controller
 
             // Filter by selected school
             if ($request->has('school_id') && $request->school_id) {
-                $query->whereHas('student', function ($q) use ($request) {
-                    $q->where('school_id', $request->school_id);
-                });
+                $query->where('pilot_school_id', $request->school_id);
             }
         }
 
@@ -274,9 +257,9 @@ class DashboardController extends Controller
             }
 
             $datasets[] = [
-                'label' => __($level),
+                'label' => trans_db($level),
                 'data' => $data,
-                'backgroundColor' => $colors[$level],
+                'backgroundColor' => $colors[$level] ?? '#999999', // Fallback color if key not found
                 'stack' => 'Stack 0',
             ];
         }
@@ -289,7 +272,7 @@ class DashboardController extends Controller
 
         return response()->json([
             'chartData' => [
-                'labels' => [__('Baseline'), __('Midline'), __('Endline')],
+                'labels' => [trans_db('Baseline'), trans_db('Midline'), trans_db('Endline')],
                 'datasets' => $datasets,
             ],
             'totals' => $totals,
@@ -338,12 +321,12 @@ class DashboardController extends Controller
         if ($request->has('province') && $request->province) {
             $province = Province::where('name_en', $request->province)->first();
             if ($province) {
-                $schoolQuery->where('sclProvince', $province->province_code);
+                $schoolQuery->where('province', $request->province);
             }
         }
 
         if ($request->has('district') && $request->district) {
-            $schoolQuery->where('sclDistrictName', $request->district);
+            $schoolQuery->where('district', $request->district);
         }
 
         // Filter by cluster (commented out - cluster column doesn't exist yet)
@@ -380,9 +363,7 @@ class DashboardController extends Controller
         foreach ($schools as $school) {
             $total = Assessment::where('subject', $subject)
                 ->where('cycle', $cycle)
-                ->whereHas('student', function ($q) use ($school) {
-                    $q->where('school_id', $school->id);
-                })
+                ->where('pilot_school_id', $school->id)
                 ->count();
             $schoolTotals[$school->id] = $total;
         }
@@ -393,9 +374,7 @@ class DashboardController extends Controller
                 $count = Assessment::where('subject', $subject)
                     ->where('cycle', $cycle)
                     ->where('level', $level)
-                    ->whereHas('student', function ($q) use ($school) {
-                        $q->where('school_id', $school->id);
-                    })
+                    ->where('pilot_school_id', $school->id)
                     ->count();
 
                 // Calculate percentage
@@ -405,9 +384,9 @@ class DashboardController extends Controller
             }
 
             $datasets[] = [
-                'label' => __($level),
+                'label' => trans_db($level),
                 'data' => $data,
-                'backgroundColor' => $colors[$level],
+                'backgroundColor' => $colors[$level] ?? '#999999', // Fallback color if key not found
                 'stack' => 'Stack 0',
             ];
         }

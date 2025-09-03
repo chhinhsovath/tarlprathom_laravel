@@ -152,7 +152,16 @@ class MentoringVisit extends Model
     }
 
     /**
-     * Get the school where the visit took place.
+     * Get the pilot school where the visit took place (primary relationship).
+     */
+    public function pilotSchool()
+    {
+        return $this->belongsTo(PilotSchool::class, 'pilot_school_id');
+    }
+
+    /**
+     * Get the legacy school (for backward compatibility only).
+     * @deprecated Use pilotSchool() instead
      */
     public function school()
     {
@@ -160,26 +169,15 @@ class MentoringVisit extends Model
     }
 
     /**
-     * Get the pilot school where the visit took place.
-     */
-    public function pilotSchool()
-    {
-        return $this->belongsTo(PilotSchool::class, 'school_id');
-    }
-
-    /**
-     * Get the school name (prioritize pilot school).
+     * Get the school name from pilot school.
      */
     public function getSchoolNameAttribute()
     {
         if ($this->pilotSchool) {
             return $this->pilotSchool->school_name;
         }
-        if ($this->school) {
-            return $this->school->school_name;
-        }
 
-        return null;
+        return 'Unknown School';
     }
 
     /**

@@ -20,10 +20,10 @@
                             </div>
                             @if(auth()->user()->isAdmin())
                                 <div>
-                                    <select name="school_id" class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                    <select name="pilot_school_id" class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                                         <option value="">{{ __('students.All Schools') }}</option>
                                         @foreach($schools as $school)
-                                            <option value="{{ $school->id }}" {{ request('school_id') == $school->id ? 'selected' : '' }}>
+                                            <option value="{{ $school->id }}" {{ request('pilot_school_id') == $school->id ? 'selected' : '' }}>
                                                 {{ $school->school_name }}
                                             </option>
                                         @endforeach
@@ -52,7 +52,7 @@
                                 <button type="submit" class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
                                     {{ __('students.Search') }}
                                 </button>
-                                @if(request('search') || request('school_id') || request('class') || request('gender'))
+                                @if(request('search') || request('pilot_school_id') || request('class') || request('gender'))
                                     <a href="{{ route('students.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-300 border border-transparent rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest hover:bg-gray-400 focus:bg-gray-400 active:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition ease-in-out duration-150">
                                         {{ __('students.Clear') }}
                                     </a>
@@ -137,15 +137,15 @@
                                         @endif
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="text-sm text-gray-900">
-                                                @if($student->school && $student->school->assignedMentors->count() > 0)
-                                                    {{ $student->school->assignedMentors->pluck('name')->join(', ') }}
+                                                @if($student->pilotSchool && $student->pilotSchool->assignedMentors->count() > 0)
+                                                    {{ $student->pilotSchool->assignedMentors->pluck('name')->join(', ') }}
                                                 @else
                                                     N/A
                                                 @endif
                                             </div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm text-gray-900">{{ $student->school->name ?? 'N/A' }}</div>
+                                            <div class="text-sm text-gray-900">{{ $student->pilotSchool->school_name ?? 'N/A' }}</div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                             <a href="{{ route('students.show', $student) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">{{ __('students.View') }}</a>

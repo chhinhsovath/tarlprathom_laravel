@@ -47,11 +47,11 @@
                         <select id="schoolFilter" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
                             <option value="">{{ trans_db('all_schools') }}</option>
                             @foreach($schools as $school)
-                                <option value="{{ $school->id ?? $school->sclAutoID }}" 
-                                    data-province="{{ $school->province ?? $school->sclProvinceName }}" 
-                                    data-district="{{ $school->district ?? $school->sclDistrictName }}" 
-                                    data-cluster="{{ $school->cluster ?? $school->sclClusterName }}">
-                                    {{ $school->school_name ?? $school->sclName }}
+                                <option value="{{ $school->id }}" 
+                                    data-province="{{ $school->province }}" 
+                                    data-district="{{ $school->district }}" 
+                                    data-cluster="{{ $school->cluster }}">
+                                    {{ $school->school_name }}
                                 </option>
                             @endforeach
                         </select>
@@ -177,13 +177,13 @@
                             <!-- Cycle selector -->
                             <div class="flex justify-center gap-2 mb-4">
                                 <button class="cycle-btn px-3 py-1 text-sm rounded transition-all duration-200 bg-indigo-500 text-white" data-cycle="baseline">
-                                    {{ __('Baseline') }}
+                                    {{ trans_db('Baseline') }}
                                 </button>
                                 <button class="cycle-btn px-3 py-1 text-sm rounded transition-all duration-200 bg-gray-200 text-gray-700 hover:bg-gray-300" data-cycle="midline">
-                                    {{ __('Midline') }}
+                                    {{ trans_db('Midline') }}
                                 </button>
                                 <button class="cycle-btn px-3 py-1 text-sm rounded transition-all duration-200 bg-gray-200 text-gray-700 hover:bg-gray-300" data-cycle="endline">
-                                    {{ __('Endline') }}
+                                    {{ trans_db('Endline') }}
                                 </button>
                             </div>
                             <div class="relative overflow-y-auto" style="height: 400px;">
@@ -593,7 +593,7 @@
                 // Check if data is present
                 if (!data || !data.labels || data.labels.length === 0) {
                     console.warn('No school data to display');
-                    ctx.canvas.parentElement.innerHTML = '<p class="text-center text-gray-500 mt-4">No data available</p>';
+                    ctx.canvas.parentElement.innerHTML = '<p class="text-center text-gray-500 mt-4">{{ trans_db("No data available") }}</p>';
                     return;
                 }
                 

@@ -36,9 +36,7 @@ class AssessmentController extends Controller
 
             // Filter by school for teachers
             if ($request->user()->isTeacher()) {
-                $query->whereHas('student', function ($q) use ($request) {
-                    $q->where('school_id', $request->user()->school_id);
-                });
+                $query->where('pilot_school_id', $request->user()->pilot_school_id);
             }
 
             $assessments = $query->get(['student_id', 'level']);
@@ -59,9 +57,7 @@ class AssessmentController extends Controller
                 // If no schools are accessible, return no results
                 $query->whereRaw('1 = 0');
             } else {
-                $query->whereHas('student', function ($q) use ($accessibleSchoolIds) {
-                    $q->whereIn('school_id', $accessibleSchoolIds);
-                });
+                $query->whereIn('pilot_school_id', $accessibleSchoolIds);
             }
         }
 
@@ -77,16 +73,14 @@ class AssessmentController extends Controller
         if ($request->filled('school_id')) {
             $schoolId = $request->get('school_id');
             if ($user->isAdmin() || $user->canAccessSchool($schoolId)) {
-                $query->whereHas('student', function ($q) use ($schoolId) {
-                    $q->where('school_id', $schoolId);
-                });
+                $query->where('pilot_school_id', $schoolId);
             }
         }
 
         // Filter by grade
         if ($request->filled('grade')) {
             $query->whereHas('student', function ($q) use ($request) {
-                $q->where('grade', $request->get('grade'));
+                $q->where('class', 'Grade ' . $request->get('grade'));
             });
         }
 
@@ -160,7 +154,7 @@ class AssessmentController extends Controller
                 // If no schools are accessible, return no results
                 $studentsQuery->whereRaw('1 = 0');
             } else {
-                $studentsQuery->whereIn('school_id', $accessibleSchoolIds);
+                $studentsQuery->whereIn('pilot_school_id', $accessibleSchoolIds);
             }
         }
 
@@ -194,9 +188,7 @@ class AssessmentController extends Controller
 
                 // If teacher, only get eligible students from their school
                 if ($user->isTeacher()) {
-                    $eligibleStudentsQuery->whereHas('student', function ($q) use ($user) {
-                        $q->where('school_id', $user->school_id);
-                    });
+                    $eligibleStudentsQuery->where('pilot_school_id', $user->pilot_school_id);
                 }
 
                 $eligibleStudentIds = $eligibleStudentsQuery->pluck('student_id');
@@ -335,9 +327,7 @@ class AssessmentController extends Controller
             // User is authenticated but not admin - apply school restrictions
             $accessibleSchoolIds = $user->getAccessibleSchoolIds();
             if (! empty($accessibleSchoolIds)) {
-                $query->whereHas('student', function ($q) use ($accessibleSchoolIds) {
-                    $q->whereIn('school_id', $accessibleSchoolIds);
-                });
+                $query->whereIn('pilot_school_id', $accessibleSchoolIds);
             } else {
                 // User has no accessible schools - return no results
                 $query->whereRaw('1 = 0');
@@ -379,9 +369,7 @@ class AssessmentController extends Controller
             // User is authenticated but not admin - apply school restrictions
             $accessibleSchoolIds = $user->getAccessibleSchoolIds();
             if (! empty($accessibleSchoolIds)) {
-                $cycleQuery->whereHas('student', function ($q) use ($accessibleSchoolIds) {
-                    $q->whereIn('school_id', $accessibleSchoolIds);
-                });
+                $cycleQuery->whereIn('pilot_school_id', $accessibleSchoolIds);
             } else {
                 // User has no accessible schools - return no results
                 $cycleQuery->whereRaw('1 = 0');
@@ -400,9 +388,7 @@ class AssessmentController extends Controller
             // User is authenticated but not admin - apply school restrictions
             $accessibleSchoolIds = $user->getAccessibleSchoolIds();
             if (! empty($accessibleSchoolIds)) {
-                $totalQuery->whereHas('student', function ($q) use ($accessibleSchoolIds) {
-                    $q->whereIn('school_id', $accessibleSchoolIds);
-                });
+                $totalQuery->whereIn('pilot_school_id', $accessibleSchoolIds);
             } else {
                 // User has no accessible schools - return no results
                 $totalQuery->whereRaw('1 = 0');
@@ -558,11 +544,11 @@ class AssessmentController extends Controller
 
         if ($user->isTeacher()) {
             // Teachers can only select students from their school
-            $query->where('school_id', $user->school_id);
+            $query->where('pilot_school_id', $user->pilot_school_id);
         } elseif ($user->isAdmin()) {
             // Admins can see all students, optionally filtered by school
             if ($request->filled('school_id')) {
-                $query->where('school_id', $request->get('school_id'));
+                $query->where('pilot_school_id', $request->get('school_id'));
             }
         }
 
@@ -574,7 +560,7 @@ class AssessmentController extends Controller
 
         // Filter by grade
         if ($request->filled('grade')) {
-            $query->where('grade', $request->get('grade'));
+            $query->where('class', 'Grade ' . $request->get('grade'));
         }
 
         // Filter by baseline Khmer level
@@ -648,7 +634,7 @@ class AssessmentController extends Controller
 
         // Get students the user has access to
         $accessibleStudentIds = Student::when($user->isTeacher(), function ($q) use ($user) {
-            $q->where('school_id', $user->school_id);
+            $q->where('pilot_school_id', $user->pilot_school_id);
         })->pluck('id')->toArray();
 
         // Clear existing eligibility for these students and assessment type

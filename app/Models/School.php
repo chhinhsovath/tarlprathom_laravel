@@ -14,14 +14,14 @@ class School extends Model
      *
      * @var string
      */
-    protected $table = 'tbl_tarl_schools';
+    protected $table = 'schools';
 
     /**
      * The primary key associated with the table.
      *
      * @var string
      */
-    protected $primaryKey = 'sclAutoID';
+    protected $primaryKey = 'id';
 
     /**
      * Indicates if the IDs are auto-incrementing.
@@ -36,20 +36,28 @@ class School extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'sclName',
-        'sclCode',
-        'sclCluster',
-        'sclClusterName',
-        'sclCommune',
-        'sclDistrict',
-        'sclProvince',
-        'sclZone',
-        'sclOrder',
-        'sclStatus',
-        'sclImage',
-        'sclZoneName',
-        'sclProvinceName',
-        'sclDistrictName',
+        'name',
+        'school_name',
+        'school_code',
+        'province',
+        'district',
+        'commune',
+        'village',
+        'cluster',
+        'school_type',
+        'student_target_poor_male',
+        'student_target_poor_female',
+        'student_target_general_male',
+        'student_target_general_female',
+        'teacher_target_male',
+        'teacher_target_female',
+        'baseline_start_date',
+        'baseline_end_date',
+        'midline_start_date',
+        'midline_end_date',
+        'endline_start_date',
+        'endline_end_date',
+        'is_pilot',
         'total_students',
         'total_teachers',
         'total_teachers_female',
@@ -70,117 +78,117 @@ class School extends Model
     /**
      * Get the id attribute (alias for sclAutoID).
      */
-    public function getIdAttribute()
-    {
-        return $this->sclAutoID;
-    }
+    // public function getIdAttribute()
+    // {
+    //     return $this->sclAutoID;
+    // }
 
-    /**
-     * Get the name attribute (alias for sclName).
-     */
-    public function getNameAttribute()
-    {
-        return $this->sclName;
-    }
+    // /**
+    //  * Get the name attribute (alias for sclName).
+    //  */
+    // public function getNameAttribute()
+    // {
+    //     return $this->sclName;
+    // }
 
-    /**
-     * Set the name attribute (alias for sclName).
-     */
-    public function setNameAttribute($value)
-    {
-        $this->attributes['sclName'] = $value;
-    }
+    // /**
+    //  * Set the name attribute (alias for sclName).
+    //  */
+    // public function setNameAttribute($value)
+    // {
+    //     $this->attributes['sclName'] = $value;
+    // }
 
-    /**
-     * Get the school_code attribute (alias for sclCode).
-     */
-    public function getSchoolCodeAttribute()
-    {
-        return $this->sclCode;
-    }
+    // /**
+    //  * Get the school_code attribute (alias for sclCode).
+    //  */
+    // public function getSchoolCodeAttribute()
+    // {
+    //     return $this->sclCode;
+    // }
 
-    /**
-     * Set the school_code attribute (alias for sclCode).
-     */
-    public function setSchoolCodeAttribute($value)
-    {
-        $this->attributes['sclCode'] = $value;
-    }
+    // /**
+    //  * Set the school_code attribute (alias for sclCode).
+    //  */
+    // public function setSchoolCodeAttribute($value)
+    // {
+    //     $this->attributes['sclCode'] = $value;
+    // }
 
-    /**
-     * Get the province attribute (alias for sclProvinceName).
-     */
-    public function getProvinceAttribute()
-    {
-        // If province name is empty, try to get it from Geographic table using province ID
-        if (empty($this->sclProvinceName) && ! empty($this->sclProvince)) {
-            $geographic = Geographic::where('province_code', $this->sclProvince)
-                ->whereNull('district_code')
-                ->first();
-            if ($geographic) {
-                return $geographic->province_name_en;
-            }
-        }
+    // /**
+    //  * Get the province attribute (alias for sclProvinceName).
+    //  */
+    // public function getProvinceAttribute()
+    // {
+    //     // If province name is empty, try to get it from Geographic table using province ID
+    //     if (empty($this->sclProvinceName) && ! empty($this->sclProvince)) {
+    //         $geographic = Geographic::where('province_code', $this->sclProvince)
+    //             ->whereNull('district_code')
+    //             ->first();
+    //         if ($geographic) {
+    //             return $geographic->province_name_en;
+    //         }
+    //     }
 
-        return $this->sclProvinceName;
-    }
+    //     return $this->sclProvinceName;
+    // }
 
-    /**
-     * Set the province attribute (alias for sclProvinceName).
-     */
-    public function setProvinceAttribute($value)
-    {
-        $this->attributes['sclProvinceName'] = $value;
-    }
+    // /**
+    //  * Set the province attribute (alias for sclProvinceName).
+    //  */
+    // public function setProvinceAttribute($value)
+    // {
+    //     $this->attributes['sclProvinceName'] = $value;
+    // }
 
-    /**
-     * Get the district attribute (alias for sclDistrictName).
-     */
-    public function getDistrictAttribute()
-    {
-        // If district name is empty, try to get it from Geographic table using district ID
-        if (empty($this->sclDistrictName) && ! empty($this->sclDistrict)) {
-            $geographic = Geographic::where('district_code', $this->sclDistrict)
-                ->whereNull('commune_code')
-                ->first();
-            if ($geographic) {
-                return $geographic->district_name_en;
-            }
-        }
+    // /**
+    //  * Get the district attribute (alias for sclDistrictName).
+    //  */
+    // public function getDistrictAttribute()
+    // {
+    //     // If district name is empty, try to get it from Geographic table using district ID
+    //     if (empty($this->sclDistrictName) && ! empty($this->sclDistrict)) {
+    //         $geographic = Geographic::where('district_code', $this->sclDistrict)
+    //             ->whereNull('commune_code')
+    //             ->first();
+    //         if ($geographic) {
+    //             return $geographic->district_name_en;
+    //         }
+    //     }
 
-        return $this->sclDistrictName;
-    }
+    //     return $this->sclDistrictName;
+    // }
 
-    /**
-     * Set the district attribute (alias for sclDistrictName).
-     */
-    public function setDistrictAttribute($value)
-    {
-        $this->attributes['sclDistrictName'] = $value;
-    }
+    // /**
+    //  * Set the district attribute (alias for sclDistrictName).
+    //  */
+    // public function setDistrictAttribute($value)
+    // {
+    //     $this->attributes['sclDistrictName'] = $value;
+    // }
 
-    /**
-     * Get the cluster attribute (alias for sclClusterName).
-     */
-    public function getClusterAttribute()
-    {
-        return $this->sclClusterName ?? $this->sclCluster;
-    }
+    // /**
+    //  * Get the cluster attribute (alias for sclClusterName).
+    //  */
+    // public function getClusterAttribute()
+    // {
+    //     return $this->sclClusterName ?? $this->sclCluster;
+    // }
 
-    /**
-     * Set the cluster attribute (alias for sclClusterName).
-     */
-    public function setClusterAttribute($value)
-    {
-        $this->attributes['sclClusterName'] = $value;
-    }
+    // /**
+    //  * Set the cluster attribute (alias for sclClusterName).
+    //  */
+    // public function setClusterAttribute($value)
+    // {
+    //     $this->attributes['sclClusterName'] = $value;
+    // }
 
     /**
      * Get the students for the school.
      */
     public function students()
     {
-        return $this->hasMany(Student::class, 'school_id', 'sclAutoID');
+        return $this->hasMany(Student::class, 'school_id', 'id');
     }
 
     /**
@@ -188,7 +196,7 @@ class School extends Model
      */
     public function mentoringVisits()
     {
-        return $this->hasMany(MentoringVisit::class, 'school_id', 'sclAutoID');
+        return $this->hasMany(MentoringVisit::class, 'school_id', 'id');
     }
 
     /**
@@ -196,7 +204,7 @@ class School extends Model
      */
     public function teachers()
     {
-        return $this->hasMany(User::class, 'school_id', 'sclAutoID')->where('role', 'teacher');
+        return $this->hasMany(User::class, 'school_id', 'id')->where('role', 'teacher');
     }
 
     /**
@@ -204,7 +212,7 @@ class School extends Model
      */
     public function users()
     {
-        return $this->hasMany(User::class, 'school_id', 'sclAutoID');
+        return $this->hasMany(User::class, 'school_id', 'id');
     }
 
     /**
@@ -212,7 +220,7 @@ class School extends Model
      */
     public function classes()
     {
-        return $this->hasMany(SchoolClass::class, 'school_id', 'sclAutoID');
+        return $this->hasMany(SchoolClass::class, 'school_id', 'id');
     }
 
     /**

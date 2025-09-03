@@ -18,11 +18,20 @@ return new class extends Migration
         });
 
         // Update geographic table to set province_id based on province_code
-        DB::statement('
-            UPDATE geographic g
-            JOIN provinces p ON g.province_code = p.province_code
-            SET g.province_id = p.id
-        ');
+        if (DB::getDriverName() === 'pgsql') {
+            DB::statement('
+                UPDATE geographic 
+                SET province_id = p.id
+                FROM provinces p 
+                WHERE geographic.province_code = p.province_code
+            ');
+        } else {
+            DB::statement('
+                UPDATE geographic g
+                JOIN provinces p ON g.province_code = p.province_code
+                SET g.province_id = p.id
+            ');
+        }
 
         // Add foreign key constraint
         Schema::table('geographic', function (Blueprint $table) {

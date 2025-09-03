@@ -51,6 +51,7 @@
                                             required>
                                         <option value="">ជ្រើសរើសខេត្ត</option>
                                     </select>
+                                    <small class="text-gray-500">បំពេញដោយស្វ័យប្រវត្តិ - ផ្អែកលើព័ត៌មានលម្អិតនៃគណនីអ្នកប្រើប្រាស់</small>
                                     @error('province')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
@@ -67,6 +68,7 @@
                                             required disabled>
                                         <option value="">ជ្រើសរើសស្រុក/ក្រុង</option>
                                     </select>
+                                    <small class="text-gray-500">បំពេញដោយស្វ័យប្រវត្តិ - ផ្អែកលើព័ត៌មានលម្អិតនៃគណនីអ្នកប្រើប្រាស់</small>
                                     @error('district')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
@@ -104,6 +106,23 @@
                                     @enderror
                                 </div>
                                 
+                                <!-- កម្រង (Level) -->
+                                <div>
+                                    <label for="level" class="block text-sm font-medium text-gray-700 mb-2">
+                                        {{ __('កម្រង') }} <span class="text-red-500">*</span>
+                                    </label>
+                                    <input type="text" 
+                                           id="level" 
+                                           name="level" 
+                                           value="{{ auth()->user()->level ?? '' }}"
+                                           readonly
+                                           class="w-full rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                           required>
+                                    <small class="text-gray-500">បំពេញដោយស្វ័យប្រវត្តិ - ផ្អែកលើព័ត៌មានលម្អិតនៃគណនីអ្នកប្រើប្រាស់</small>
+                                    @error('level')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
                                 
                                 <!-- ឈ្មោះទីប្រឹក្សាគរុកោសល្យ (Mentor Name) -->
                                 <div>
@@ -114,8 +133,9 @@
                                            id="mentor_name" 
                                            name="mentor_name" 
                                            value="{{ auth()->user()->name }}"
-                                           class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                           class="w-full rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                                            readonly>
+                                    <small class="text-gray-500">បំពេញដោយស្វ័យប្រវត្តិ - ផ្អែកលើព័ត៌មានលម្អិតនៃគណនីអ្នកប្រើប្រាស់</small>
                                     <input type="hidden" name="mentor_id" value="{{ auth()->user()->id }}">
                                 </div>
                                 
@@ -233,7 +253,7 @@
                                         {{ __('កម្រិតថ្នាក់ដែលបានអង្កេត') }} <span class="text-red-500">*</span>
                                     </label>
                                     <div class="space-y-2">
-                                        @foreach(['ទី៤', 'ទី៥'] as $grade)
+                                        @foreach(['ទី៤', 'ទី៥', 'ទី៦'] as $grade)
                                         <label class="inline-flex items-center mr-4">
                                             <input type="checkbox" name="grades_observed[]" value="{{ $grade }}" 
                                                    class="form-checkbox"
@@ -894,6 +914,122 @@
                                     </div>
                                 </div>
                             </div>
+                            
+                            <!-- Activity 3 -->
+                            <div id="activity3_section" style="display: none;" class="border-l-4 border-purple-500 pl-4 mb-6">
+                                <h5 class="font-semibold text-gray-700 mb-4">សកម្មភាពទី៣</h5>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <!-- Activity name for Khmer -->
+                                    <div id="activity3_khmer_container" style="display: none;">
+                                        <label for="activity3_name_language" class="block text-sm font-medium text-gray-700 mb-2">
+                                            {{ __('តើសកម្មភាពទីបីណាដែលត្រូវបានអនុវត្ត? (ភាសាខ្មែរ)') }}
+                                        </label>
+                                        <select id="activity3_name_language" 
+                                                name="activity3_name_language" 
+                                                class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                            <option value="">ជ្រើសរើសសកម្មភាព</option>
+                                            @foreach($khmerActivities as $activity)
+                                            <option value="{{ $activity }}" {{ old('activity3_name_language') == $activity ? 'selected' : '' }}>
+                                                {{ $activity }}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    
+                                    <!-- Activity name for Math -->
+                                    <div id="activity3_math_container" style="display: none;">
+                                        <label for="activity3_name_numeracy" class="block text-sm font-medium text-gray-700 mb-2">
+                                            {{ __('តើសកម្មភាពទីបីណាដែលត្រូវបានអនុវត្ត? (គណិតវិទ្យា)') }}
+                                        </label>
+                                        <select id="activity3_name_numeracy" 
+                                                name="activity3_name_numeracy" 
+                                                class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                            <option value="">ជ្រើសរើសសកម្មភាព</option>
+                                            @foreach($mathActivities as $activity)
+                                            <option value="{{ $activity }}" {{ old('activity3_name_numeracy') == $activity ? 'selected' : '' }}>
+                                                {{ $activity }}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    
+                                    <!-- Duration -->
+                                    <div>
+                                        <label for="activity3_duration" class="block text-sm font-medium text-gray-700 mb-2">
+                                            {{ __('តើសកម្មភាពទីបីប្រើរយៈពេលប៉ុន្មាន? (នាទី)') }}
+                                        </label>
+                                        <input type="number" 
+                                               id="activity3_duration" 
+                                               name="activity3_duration" 
+                                               value="{{ old('activity3_duration') }}"
+                                               class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                    </div>
+                                    
+                                    <!-- Clear instructions -->
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                                            {{ __('តើគ្រូបានណែនាំពីសកម្មភាពទីបីបានច្បាស់លាស់ដែរឬទេ?') }}
+                                        </label>
+                                        <div class="space-y-2">
+                                            <label class="inline-flex items-center">
+                                                <input type="radio" name="activity3_clear_instructions" value="1" 
+                                                       class="form-radio"
+                                                       {{ old('activity3_clear_instructions') == '1' ? 'checked' : '' }}>
+                                                <span class="ml-2">{{ __('បាទ/ចាស') }}</span>
+                                            </label>
+                                            <label class="inline-flex items-center ml-6">
+                                                <input type="radio" name="activity3_clear_instructions" value="0" 
+                                                       class="form-radio"
+                                                       {{ old('activity3_clear_instructions') == '0' ? 'checked' : '' }}>
+                                                <span class="ml-2">{{ __('ទេ') }}</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- No clear instructions reason -->
+                                    <div id="activity3_no_clear_instructions_container" style="display: none;">
+                                        <label for="activity3_no_clear_instructions_reason" class="block text-sm font-medium text-gray-700 mb-2">
+                                            {{ __('ហេតុអ្វីបានជាគ្រូមិនបានណែនាំពីសកម្មភាពទីបីបានច្បាស់លាស់?') }}
+                                        </label>
+                                        <textarea id="activity3_no_clear_instructions_reason" 
+                                                  name="activity3_no_clear_instructions_reason" 
+                                                  rows="2"
+                                                  class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">{{ old('activity3_no_clear_instructions_reason') }}</textarea>
+                                    </div>
+                                    
+                                    <!-- Followed process -->
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                                            {{ __('តើគ្រូបានអនុវត្តតាមដំណើរការនៃសកម្មភាពដូចមានក្នុងកិច្ចតែងការបង្រៀនដែរឬទេ?') }}
+                                        </label>
+                                        <div class="space-y-2">
+                                            <label class="inline-flex items-center">
+                                                <input type="radio" name="activity3_followed_process" value="1" 
+                                                       class="form-radio"
+                                                       {{ old('activity3_followed_process') == '1' ? 'checked' : '' }}>
+                                                <span class="ml-2">{{ __('បាទ/ចាស') }}</span>
+                                            </label>
+                                            <label class="inline-flex items-center ml-6">
+                                                <input type="radio" name="activity3_followed_process" value="0" 
+                                                       class="form-radio"
+                                                       {{ old('activity3_followed_process') == '0' ? 'checked' : '' }}>
+                                                <span class="ml-2">{{ __('ទេ') }}</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Not followed reason -->
+                                    <div id="activity3_not_followed_reason_container" style="display: none;">
+                                        <label for="activity3_not_followed_reason" class="block text-sm font-medium text-gray-700 mb-2">
+                                            {{ __('បើមិនបានអនុវត្តតាម, ហេតុអ្វី?') }}
+                                        </label>
+                                        <textarea id="activity3_not_followed_reason" 
+                                                  name="activity3_not_followed_reason" 
+                                                  rows="2"
+                                                  class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">{{ old('activity3_not_followed_reason') }}</textarea>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Miscellaneous -->
@@ -1158,13 +1294,13 @@
                     if (this.value === 'ភាសាខ្មែរ') {
                         languageLevelsContainer.style.display = 'block';
                         numeracyLevelsContainer.style.display = 'none';
-                        // Show/hide activity fields
+                        // Show/hide activity fields for activities 1-3
                         document.querySelectorAll('[id*="_khmer_container"]').forEach(el => el.style.display = 'block');
                         document.querySelectorAll('[id*="_math_container"]').forEach(el => el.style.display = 'none');
                     } else if (this.value === 'គណិតវិទ្យា') {
                         languageLevelsContainer.style.display = 'none';
                         numeracyLevelsContainer.style.display = 'block';
-                        // Show/hide activity fields
+                        // Show/hide activity fields for activities 1-3
                         document.querySelectorAll('[id*="_khmer_container"]').forEach(el => el.style.display = 'none');
                         document.querySelectorAll('[id*="_math_container"]').forEach(el => el.style.display = 'block');
                     } else {
@@ -1231,7 +1367,7 @@
             }
             
             // Activity clear instructions logic
-            for (let i = 1; i <= 2; i++) {
+            for (let i = 1; i <= 3; i++) {
                 const clearInstructionsRadios = document.querySelectorAll(`input[name="activity${i}_clear_instructions"]`);
                 const noClearInstructionsContainer = document.getElementById(`activity${i}_no_clear_instructions_container`);
                 
@@ -1277,6 +1413,19 @@
                     
                     if (improved > total) {
                         this.setCustomValidity('ចំនួនសិស្សដែលមានការកើនឡើងមិនអាចលើសពីចំនួនសិស្សសរុបបានទេ');
+                    } else {
+                        this.setCustomValidity('');
+                    }
+                });
+            }
+            
+            // Validation for total students limit (max 20 as per TaRL requirements)
+            if (totalStudents) {
+                totalStudents.addEventListener('input', function() {
+                    const total = parseInt(this.value) || 0;
+                    
+                    if (total > 20) {
+                        this.setCustomValidity('ចំនួនសិស្សសរុបក្នុងថ្នាក់ TaRL មិនអាចលើសពី ២០ រូបបានទេ');
                     } else {
                         this.setCustomValidity('');
                     }

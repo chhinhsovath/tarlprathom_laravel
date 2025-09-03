@@ -104,7 +104,7 @@
                                                 <span class="font-medium">{{ $school->users_count ?? 0 }}</span> {{ __('Users') }}
                                             </div>
                                             <div>
-                                                <span class="font-medium">{{ $school->students_count ?? 0 }}</span> {{ __('Students') }}
+                                                <span class="font-medium">{{ $school->students_count ?? 0 }}</span> {{ trans_db('students') }}
                                             </div>
                                         </div>
                                     </td>

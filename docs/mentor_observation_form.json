@@ -1,0 +1,489 @@
+{
+  "title": "Mentor Visit Observation Form",
+  "version": "1.0",
+  "description": "TaRL (Teaching at the Right Level) classroom observation form for mentor visits",
+  "language": "Khmer",
+  "sections": [
+    {
+      "id": 1,
+      "name": "Visit Details",
+      "questions": [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
+    },
+    {
+      "id": 20,
+      "name": "Delivery Questions",
+      "questions": [21, 22]
+    },
+    {
+      "id": 23,
+      "name": "Classroom Related Questions",
+      "questions": [24, 25, 26]
+    },
+    {
+      "id": 27,
+      "name": "Teacher Related Questions",
+      "questions": [28, 29, 30, 31, 32, 33]
+    },
+    {
+      "id": 34,
+      "name": "Activity Related Questions",
+      "questions": [35]
+    },
+    {
+      "id": 36,
+      "name": "Activity 1",
+      "questions": [37, 38, 39, 40, 41, 42, 43]
+    },
+    {
+      "id": 44,
+      "name": "Activity 2",
+      "questions": [45, 46, 47, 48, 49, 50, 52, 53]
+    }
+  ],
+  "questions": [
+    {
+      "id": 2,
+      "section": "Visit Details",
+      "question": "កាលបរិច្ឆេទនៃការចុះ",
+      "questionEn": "Date of visit",
+      "responseType": "Date",
+      "required": true
+    },
+    {
+      "id": 3,
+      "section": "Visit Details",
+      "question": "ខេត្ត",
+      "questionEn": "Province",
+      "responseType": "Text",
+      "required": true,
+      "options": "<បំពេញដោយស្វ័យប្រវត្តិ - ផ្អែកលើព័ត៌មានលម្អិតនៃគណនីអ្នកប្រើប្រាស់>",
+      "optionsEn": "<Auto-fill based on user account information>"
+    },
+    {
+      "id": 4,
+      "section": "Visit Details",
+      "question": "ស្រុក/ក្រុង",
+      "questionEn": "District/City",
+      "responseType": "Text",
+      "required": true,
+      "options": "<បំពេញដោយស្វ័យប្រវត្តិ - ផ្អែកលើព័ត៌មានលម្អិតនៃគណនីអ្នកប្រើប្រាស់>",
+      "optionsEn": "<Auto-fill based on user account information>"
+    },
+    {
+      "id": 5,
+      "section": "Visit Details",
+      "question": "កម្រង",
+      "questionEn": "Level",
+      "responseType": "Text",
+      "required": true,
+      "options": "<បំពេញដោយស្វ័យប្រវត្តិ - ផ្អែកលើព័ត៌មានលម្អិតនៃគណនីអ្នកប្រើប្រាស់>",
+      "optionsEn": "<Auto-fill based on user account information>"
+    },
+    {
+      "id": 6,
+      "section": "Visit Details",
+      "question": "ឈ្មោះទីប្រឹក្សាគរុកោសល្យ",
+      "questionEn": "Name of pedagogical advisor",
+      "responseType": "Text",
+      "required": true,
+      "options": "<បំពេញដោយស្វ័យប្រវត្តិ - ផ្អែកលើព័ត៌មានលម្អិតនៃគណនីអ្នកប្រើប្រាស់>",
+      "optionsEn": "<Auto-fill based on user account information>"
+    },
+    {
+      "id": 7,
+      "section": "Visit Details",
+      "question": "ឈ្មោះសាលា",
+      "questionEn": "School name",
+      "responseType": "MCQ - Single Select",
+      "required": true,
+      "options": "<ជម្រើស - ផ្អែកលើការកំណត់ទីតាំងរបស់ទីប្រឹក្សាគរុកោសល្យ>",
+      "optionsEn": "<Options based on pedagogical advisor's location>"
+    },
+    {
+      "id": 8,
+      "section": "Visit Details",
+      "question": "ឈ្មោះគ្រូបង្រៀន",
+      "questionEn": "Teacher name",
+      "responseType": "MCQ - Single Select",
+      "required": true,
+      "options": "<ជម្រើស - ផ្អែកលើការកំណត់ទីតាំងរបស់សាលា>",
+      "optionsEn": "<Options based on school location>"
+    },
+    {
+      "id": 9,
+      "section": "Visit Details",
+      "question": "តើថ្នាក់រៀន TaRL មានដំណើរការនៅថ្ងៃចុះអង្កេតដែរឬទេ?",
+      "questionEn": "Is the TaRL class operational on the survey day?",
+      "responseType": "MCQ - Single Select",
+      "required": true,
+      "options": "បាទ/ចាស, ទេ",
+      "optionsEn": "Yes, No"
+    },
+    {
+      "id": 10,
+      "section": "Visit Details",
+      "question": "ហេតុអ្វីបានជាថ្នាក់រៀន TaRL មិនដំណើរការ?",
+      "questionEn": "Why is the TaRL class not operational?",
+      "responseType": "Text",
+      "required": true,
+      "condition": "ID 9 = \"No\"",
+      "comment": "End Form after question"
+    },
+    {
+      "id": 11,
+      "section": "Visit Details",
+      "question": "តើអ្នកបានអង្កេតការបង្រៀនពេញមួយវគ្គដែរឬទេ?",
+      "questionEn": "Did you observe the complete teaching session?",
+      "responseType": "MCQ - Single Select",
+      "required": true,
+      "options": "បាទ/ចាស, ទេ",
+      "optionsEn": "Yes, No"
+    },
+    {
+      "id": 12,
+      "section": "Visit Details",
+      "question": "កម្រិតថ្នាក់ដែលបានអង្កេត",
+      "questionEn": "Grade level observed",
+      "responseType": "MCQ - Multiple Select",
+      "required": true,
+      "options": "ទី៤, ទី៥",
+      "optionsEn": "Grade 4, Grade 5"
+    },
+    {
+      "id": 13,
+      "section": "Visit Details",
+      "question": "មុខវិជ្ជាដែលបានអង្កេត",
+      "questionEn": "Subject observed",
+      "responseType": "MCQ - Single Select",
+      "required": true,
+      "options": "ភាសាខ្មែរ, គណិតវិទ្យា",
+      "optionsEn": "Khmer, Mathematics"
+    },
+    {
+      "id": 14,
+      "section": "Visit Details",
+      "question": "កម្រិតសមត្ថភាព TaRL (ភាសាខ្មែរ) ដែលបានអង្កេត",
+      "questionEn": "TaRL competency level (Khmer) observed",
+      "responseType": "MCQ - Multiple Select",
+      "required": true,
+      "options": "កម្រិតដំបូង, តួអក្សរ, ពាក្យ, កថាខណ្ឌ, អត្ថបទខ្លី, ការយល់ន័យទី១, ការយល់ន័យទី២",
+      "optionsEn": "Beginner level, Letters, Words, Paragraphs, Short texts, Comprehension 1, Comprehension 2",
+      "condition": "ID 13 = \"Khmer\""
+    },
+    {
+      "id": 15,
+      "section": "Visit Details",
+      "question": "កម្រិតសមត្ថភាព (គណិតវិទ្យា) ដែលបានអង្កេត",
+      "questionEn": "Competency level (Mathematics) observed",
+      "responseType": "MCQ - Multiple Select",
+      "required": true,
+      "options": "កម្រិតដំបូង, លេខ១ខ្ទង់, លេខ២ខ្ទង់, ប្រមាណវិធីដក, ប្រមាណវិធីចែក, ចំណោទ",
+      "optionsEn": "Beginner level, 1-digit numbers, 2-digit numbers, Subtraction operations, Division operations, Word problems",
+      "condition": "ID 13 = \"Math\""
+    },
+    {
+      "id": 16,
+      "section": "Visit Details",
+      "question": "ចំនួនសិស្សសរុបក្នុងថ្នាក់ TaRL",
+      "questionEn": "Total number of students in TaRL class",
+      "responseType": "Number",
+      "required": true,
+      "condition": "ID 16 <= 20"
+    },
+    {
+      "id": 17,
+      "section": "Visit Details",
+      "question": "ចំនួនសិស្សមានវត្តមាននៅថ្ងៃចុះអង្កេត",
+      "questionEn": "Number of students present on survey day",
+      "responseType": "Number",
+      "required": true,
+      "condition": "ID 17 <= ID 16",
+      "comment": "Validation that value entered for question 17 should be less than question 16"
+    },
+    {
+      "id": 18,
+      "section": "Visit Details",
+      "question": "ចំនួនសិស្សដែលមានការកើនឡើងសមត្ថភាពធៀបនឹងសប្តាហ៍មុន",
+      "questionEn": "Number of students who showed improvement compared to previous week",
+      "responseType": "Number",
+      "required": true,
+      "condition": "ID 18 <= ID 16",
+      "comment": "Validation that value entered for question 18 should be less than question 16"
+    },
+    {
+      "id": 19,
+      "section": "Visit Details",
+      "question": "តើមានថ្នាក់រៀនប៉ុន្មានបានដំណើរការមុនថ្ងៃចុះអង្កេតនេះ?",
+      "questionEn": "How many classes were conducted before this survey day?",
+      "responseType": "Number",
+      "required": true
+    },
+    {
+      "id": 21,
+      "section": "Delivery Questions",
+      "question": "តើថ្នាក់រៀនបានចាប់ផ្តើមទាន់ពេលដែរឬទេ (ក្នុងរយៈពេល ៥ នាទី)?",
+      "questionEn": "Did the class start on time (within 5 minutes)?",
+      "responseType": "MCQ - Single Select",
+      "required": true,
+      "options": "បាទ/ចាស, ទេ, មិនដឹង",
+      "optionsEn": "Yes, No, Don't know"
+    },
+    {
+      "id": 22,
+      "section": "Delivery Questions",
+      "question": "ហេតុអ្វីបានជាថ្នាក់រៀនមិនចាប់ផ្តើមទាន់ពេល?",
+      "questionEn": "Why didn't the class start on time?",
+      "responseType": "Text",
+      "required": true,
+      "condition": "ID 21 = \"No\""
+    },
+    {
+      "id": 24,
+      "section": "Classroom Related Questions",
+      "question": "តើសម្ភារឧបទេសអ្វីខ្លះដែលអ្នកបានឃើញមាននៅក្នុងថ្នាក់រៀន?",
+      "questionEn": "What teaching materials did you observe in the classroom?",
+      "responseType": "MCQ - Multiple Select",
+      "required": true,
+      "options": "តារាងលេខ ០-៩៩, តារាងតម្លៃលេខតាមខ្ទង់, បណ្ណតម្លៃលេខតាមខ្ទង់, តារាងបូកលេខដោយផ្ទាល់មាត់, តារាងដកលេខដោយផ្ទាល់មាត់, តារាងគុណលេខដោយផ្ទាល់មាត់, ប្រាក់លេង, សៀវភៅគ្រូមុខវិទ្យាគណិតវិទ្យា, ទុយោ, កូនសៀវភៅចំណោទ (បូក ដក គុណ ចែក), តារាងព្យាង្គ, បណ្ណរូបភាព, ការតម្រៀបល្បះ និងកូនសៀវភៅការកែតម្រូវកំហុស, បណ្ណពាក្យ/បណ្ណព្យាង្គ, បណ្ណរឿង/អត្ថបទ, សៀវភៅគ្រូមុខវិជ្ជាភាសាខ្មែរ"
+    },
+    {
+      "id": 25,
+      "section": "Classroom Related Questions",
+      "question": "តើសិស្សត្រូវបានបែងចែកជាក្រុមសមស្របតាមកម្រិតសមត្ថភាពដែរឬទេ?",
+      "questionEn": "Are students appropriately grouped by competency level?",
+      "responseType": "MCQ - Single Select",
+      "required": true,
+      "options": "បាទ/ចាស, ទេ",
+      "optionsEn": "Yes, No"
+    },
+    {
+      "id": 26,
+      "section": "Classroom Related Questions",
+      "question": "តើសិស្សបានចូលរួមយ៉ាងសកម្មក្នុងសកម្មភាពដែរឬទេ?",
+      "questionEn": "Did students actively participate in activities?",
+      "responseType": "MCQ - Single Select",
+      "required": true,
+      "options": "បាទ/ចាស, ទេ",
+      "optionsEn": "Yes, No"
+    },
+    {
+      "id": 28,
+      "section": "Teacher Related Questions",
+      "question": "តើគ្រូមានកិច្ចតែងការបង្រៀន (ផែនការមេរៀន) ដែរឬទេ?",
+      "questionEn": "Does the teacher have a lesson plan?",
+      "responseType": "MCQ - Single Select",
+      "required": true,
+      "options": "បាទ/ចាស, ទេ",
+      "optionsEn": "Yes, No"
+    },
+    {
+      "id": 29,
+      "section": "Teacher Related Questions",
+      "question": "ហេតុអ្វីបានជាគ្រូមិនមានកិច្ចតែងការបង្រៀន?",
+      "questionEn": "Why doesn't the teacher have a lesson plan?",
+      "responseType": "Text",
+      "required": true,
+      "condition": "ID 29 = \"No\""
+    },
+    {
+      "id": 30,
+      "section": "Teacher Related Questions",
+      "question": "តើគ្រូបានបង្រៀនតាមកិច្ចតែងការបង្រៀនដែរឬទេ?",
+      "questionEn": "Did the teacher follow the lesson plan?",
+      "responseType": "MCQ - Single Select",
+      "required": true,
+      "options": "បាទ/ចាស, ទេ",
+      "optionsEn": "Yes, No",
+      "condition": "ID 29 = \"Yes\""
+    },
+    {
+      "id": 31,
+      "section": "Teacher Related Questions",
+      "question": "ហេតុអ្វីបានជាគ្រូមិនបានបង្រៀនតាមកិច្ចតែងការបង្រៀន?",
+      "questionEn": "Why didn't the teacher follow the lesson plan?",
+      "responseType": "Text",
+      "required": true,
+      "condition": "ID 31 = \"No\""
+    },
+    {
+      "id": 32,
+      "section": "Teacher Related Questions",
+      "question": "តើកិច្ចតែងការបង្រៀនសមស្របនឹងកម្រិតសមត្ថភាពរបស់សិស្សដែរឬទេ?",
+      "questionEn": "Is the lesson plan appropriate for students' competency levels?",
+      "responseType": "MCQ - Single Select",
+      "required": true,
+      "options": "បាទ/ចាស, ទេ",
+      "optionsEn": "Yes, No",
+      "condition": "ID 29 = \"Yes\""
+    },
+    {
+      "id": 33,
+      "section": "Teacher Related Questions",
+      "question": "កំណត់ចំណាំ/មតិកែលម្អដែលបានផ្តល់លើកិច្ចតែងការបង្រៀន",
+      "questionEn": "Notes/feedback provided on the lesson plan",
+      "responseType": "Text",
+      "required": true,
+      "condition": "ID 29 = \"Yes\""
+    },
+    {
+      "id": 35,
+      "section": "Activity Related Questions",
+      "question": "តើមានសកម្មភាពប៉ុន្មានត្រូវបានអង្កេត?",
+      "questionEn": "How many activities were observed?",
+      "responseType": "Number",
+      "required": true
+    },
+    {
+      "id": 37,
+      "section": "Activity 1",
+      "question": "តើសកម្មភាពទីមួយណាដែលត្រូវបានអនុវត្ត? (ភាសាខ្មែរ)",
+      "questionEn": "What was the first activity implemented? (Khmer)",
+      "responseType": "MCQ - Single Select",
+      "required": true,
+      "options": "ការសន្ទនាសេរី, ការពណ៌នារូបភាព, ការអានកថាខណ្ឌ, ផែនទីគំនិត, ការចម្លងនិងសរសេរតាមអាន, ល្បែងបោះចូលកន្ត្រក (បោះព្យញ្ជនៈ, ស្រៈ , ពាក្យ ចូលកន្ត្រក), ល្បែងត្រឡប់បណ្ណពាក្យ, ល្បែងលោតលើតួអក្សរ, ការអានតារាងព្យាង្គ, ការកំណត់ចំនួនព្យាង្គក្នុងពាក្យ (ឧ. ទះដៃតាមចំនួនព្យាង្គក្នុងពាក្យ (សា👏🏼លា👏🏼រៀន👏🏼), ការបង្កើតពាក្យនិងប្រយោគ, ពាក្យចួន, ល្បែងគ្រ័រ (អ្នកដើរចំក្រឡាណា ត្រូវឆ្លើយសំណួរដែលគ្រូបានកំណត់ក្នុងក្រឡានោះ) , ការបង្កើតពាក្យតាមសូរចុង, ការកែតម្រូវកំហុស, ការបង្កើតសាច់រឿងបន្ត, សកម្មភាពផ្អែកលើមេរៀន (៨ ជំហាន)",
+      "condition": "ID 13 = \"Khmer\""
+    },
+    {
+      "id": 38,
+      "section": "Activity 1",
+      "question": "តើសកម្មភាពទីមួយណាដែលត្រូវបានអនុវត្ត? (គណិតវិទ្យា)",
+      "questionEn": "What was the first activity implemented? (Mathematics)",
+      "responseType": "MCQ - Single Select",
+      "required": true,
+      "options": "ចំនួនដោយប្រើបាច់ឈើនិងឈើ, ការអានតារាងលេខ, ល្បែងកង់លេខ, ល្បែងលោតលើលេខ, ការទះដៃនិងផ្ទាត់ម្រាមដៃ, តារាងតម្លៃលេខតាមខ្ទង់, បណ្ណតម្លៃលេខតាមខ្ទង់, សៀវភៅកំណត់ត្រាលេខ, ចំនួនជាមួយប្រាក់លេង, ការដោះស្រាយចំណោទ, រកផលគុណជាមួយលេខប្រាំបួន, ប្រមាណវិធីបូកដោយប្រើបាច់ឈើនិងឈើ, ប្រមាណវិធីដកដោយប្រើបាច់ឈើនិងឈើ, ប្រមាណវិធីបូកដកដោយផ្ទាល់មាត់, ប្រមាណវិធីបូកដោយប្រើប្រាក់លេង, ប្រមាណវិធីដកដោយប្រើប្រាក់លេង, ប្រមាណវិធីគុណដោយប្រើឈើ, ប្រមាណវិធីគុណដោយបំបែកលេខ, ការសូត្រតារាងមេគុណ, ប្រមាណវិធីគុណក្នុងប្រអប់, ប្រមាណវិធីគុណដោយប្រើតារាងតម្លៃលេខតាមខ្ទង់, ប្រមាណវិធីចែកដោយប្រើឈើ, ប្រមាណវិធីចែកដោយប្រើប្រាក់លេង, ប្រមាណវិធីចែកដោយប្រើតារាងមេគុណ",
+      "condition": "ID 13 = \"Math\""
+    },
+    {
+      "id": 39,
+      "section": "Activity 1",
+      "question": "តើសកម្មភាពទីមួយប្រើរយៈពេលប៉ុន្មាន? (នាទី)",
+      "questionEn": "How much time did the first activity take? (minutes)",
+      "responseType": "Number",
+      "required": true
+    },
+    {
+      "id": 40,
+      "section": "Activity 1",
+      "question": "តើគ្រូបានណែនាំពីសកម្មភាពទីមួយបានច្បាស់លាស់ដែរឬទេ?",
+      "questionEn": "Did the teacher provide clear instructions for the first activity?",
+      "responseType": "MCQ - Single Select",
+      "required": true,
+      "options": "បាទ/ចាស, ទេ",
+      "optionsEn": "Yes, No"
+    },
+    {
+      "id": 41,
+      "section": "Activity 1",
+      "question": "ហេតុអ្វីបានជាគ្រូមិនបានណែនាំពីសកម្មភាពទីមួយបានច្បាស់លាស់?",
+      "questionEn": "Why didn't the teacher provide clear instructions for the first activity?",
+      "responseType": "Text",
+      "required": true,
+      "condition": "ID 40 = \"No\""
+    },
+    {
+      "id": 42,
+      "section": "Activity 1",
+      "question": "តើគ្រូបានអនុវត្តតាមដំណើរការនៃសកម្មភាពដូចមានក្នុងកិច្ចតែងការបង្រៀនដែរឬទេ?",
+      "questionEn": "Did the teacher follow the activity process as outlined in the lesson plan?",
+      "responseType": "MCQ - Single Select",
+      "required": true,
+      "options": "បាទ/ចាស, ទេ",
+      "optionsEn": "Yes, No"
+    },
+    {
+      "id": 43,
+      "section": "Activity 1",
+      "question": "បើមិនបានអនុវត្តតាម, ហេតុអ្វី?",
+      "questionEn": "If not followed, why?",
+      "responseType": "Text",
+      "required": true,
+      "condition": "ID 42 = \"No\""
+    },
+    {
+      "id": 45,
+      "section": "Activity 2",
+      "question": "តើសកម្មភាពទីពីរណាដែលត្រូវបានអនុវត្ត? (ភាសាខ្មែរ)",
+      "questionEn": "What was the second activity implemented? (Khmer)",
+      "responseType": "MCQ - Single Select",
+      "required": true,
+      "options": "ការសន្ទនាសេរី, ការពណ៌នារូបភាព, ការអានកថាខណ្ឌ, ផែនទីគំនិត, ការចម្លងនិងសរសេរតាមអាន, ល្បែងបោះចូលកន្ត្រក (បោះព្យញ្ជនៈ, ស្រៈ , ពាក្យ ចូលកន្ត្រក), ល្បែងត្រឡប់បណ្ណពាក្យ, ល្បែងលោតលើតួអក្សរ, ការអានតារាងព្យាង្គ, ការកំណត់ចំនួនព្យាង្គក្នុងពាក្យ (ឧ. ទះដៃតាមចំនួនព្យាង្គក្នុងពាក្យ (សា👏🏼លា👏🏼រៀន👏🏼), ការបង្កើតពាក្យនិងប្រយោគ, ពាក្យចួន, ល្បែងគ្រ័រ (អ្នកដើរចំក្រឡាណា ត្រូវឆ្លើយសំណួរដែលគ្រូបានកំណត់ក្នុងក្រឡានោះ) , ការបង្កើតពាក្យតាមសូរចុង, ការកែតម្រូវកំហុស, ការបង្កើតសាច់រឿងបន្ត, សកម្មភាពផ្អែកលើមេរៀន (៨ ជំហាន)",
+      "condition": "ID 13 = \"Khmer\""
+    },
+    {
+      "id": 46,
+      "section": "Activity 2",
+      "question": "តើសកម្មភាពទីពីរណាដែលត្រូវបានអនុវត្ត? (គណិតវិទ្យា)",
+      "questionEn": "What was the second activity implemented? (Mathematics)",
+      "responseType": "MCQ - Single Select",
+      "required": true,
+      "options": "ចំនួនដោយប្រើបាច់ឈើនិងឈើ, ការអានតារាងលេខ, ល្បែងកង់លេខ, ល្បែងលោតលើលេខ, ការទះដៃនិងផ្ទាត់ម្រាមដៃ, តារាងតម្លៃលេខតាមខ្ទង់, បណ្ណតម្លៃលេខតាមខ្ទង់, សៀវភៅកំណត់ត្រាលេខ, ចំនួនជាមួយប្រាក់លេង, ការដោះស្រាយចំណោទ, រកផលគុណជាមួយលេខប្រាំបួន, ប្រមាណវិធីបូកដោយប្រើបាច់ឈើនិងឈើ, ប្រមាណវិធីដកដោយប្រើបាច់ឈើនិងឈើ, ប្រមាណវិធីបូកដកដោយផ្ទាល់មាត់, ប្រមាណវិធីបូកដោយប្រើប្រាក់លេង, ប្រមាណវិធីដកដោយប្រើប្រាក់លេង, ប្រមាណវិធីគុណដោយប្រើឈើ, ប្រមាណវិធីគុណដោយបំបែកលេខ, ការសូត្រតារាងមេគុណ, ប្រមាណវិធីគុណក្នុងប្រអប់, ប្រមាណវិធីគុណដោយប្រើតារាងតម្លៃលេខតាមខ្ទង់, ប្រមាណវិធីចែកដោយប្រើឈើ, ប្រមាណវិធីចែកដោយប្រើប្រាក់លេង, ប្រមាណវិធីចែកដោយប្រើតារាងមេគុណ",
+      "condition": "ID 13 = \"Math\""
+    },
+    {
+      "id": 47,
+      "section": "Activity 2",
+      "question": "តើសកម្មភាពទីពីរប្រើរយៈពេលប៉ុន្មាន? (នាទី)",
+      "questionEn": "How much time did the second activity take? (minutes)",
+      "responseType": "Number",
+      "required": true
+    },
+    {
+      "id": 48,
+      "section": "Activity 2",
+      "question": "តើគ្រូបានណែនាំពីសកម្មភាពទីពីរបានច្បាស់លាស់ដែរឬទេ?",
+      "questionEn": "Did the teacher provide clear instructions for the second activity?",
+      "responseType": "MCQ - Single Select",
+      "required": true,
+      "options": "បាទ/ចាស, ទេ",
+      "optionsEn": "Yes, No"
+    },
+    {
+      "id": 49,
+      "section": "Activity 2",
+      "question": "ហេតុអ្វីបានជាគ្រូមិនបានណែនាំពីសកម្មភាពទីពីរបានច្បាស់លាស់?",
+      "questionEn": "Why didn't the teacher provide clear instructions for the second activity?",
+      "responseType": "Text",
+      "required": true,
+      "condition": "ID 48 = \"No\""
+    },
+    {
+      "id": 50,
+      "section": "Activity 2",
+      "question": "តើគ្រូបានអនុវត្តតាមដំណើរនៃសកម្មភាពដូចមានក្នុងកិច្ចតែងការបង្រៀនដែរឬទេ?",
+      "questionEn": "Did the teacher follow the activity process as outlined in the lesson plan?",
+      "responseType": "MCQ - Single Select",
+      "required": true,
+      "options": "បាទ/ចាស, ទេ",
+      "optionsEn": "Yes, No"
+    },
+    {
+      "id": 52,
+      "section": "Activity 2",
+      "question": "បើមិនបានអនុវត្តតាម, ហេតុអ្វី?",
+      "questionEn": "If not followed, why?",
+      "responseType": "Text",
+      "required": true
+    },
+    {
+      "id": 53,
+      "section": "Activity 2",
+      "question": "មតិយោបល់សម្រាប់គ្រូបង្រៀន (ប្រសិនបើមាន) (១០០-១២០ ពាក្យ)",
+      "questionEn": "Feedback for teacher (if any) (100-120 words)",
+      "responseType": "Text",
+      "required": true
+    }
+  ],
+  "metadata": {
+    "totalQuestions": 52,
+    "totalSections": 7,
+    "conditionalLogic": true,
+    "supportedLanguages": ["km", "en"],
+    "responseTypes": [
+      "Date",
+      "Text", 
+      "MCQ - Single Select",
+      "MCQ - Multiple Select",
+      "Number"
+    ]
+  }
+}

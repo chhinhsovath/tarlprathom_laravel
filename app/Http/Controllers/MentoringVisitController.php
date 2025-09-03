@@ -31,17 +31,17 @@ class MentoringVisitController extends Controller
             abort(403);
         }
 
-        $query = MentoringVisit::with(['mentor', 'teacher', 'school']);
+        $query = MentoringVisit::with(['mentor', 'teacher', 'pilotSchool']);
 
         // Filter based on user role
         if ($user->isTeacher()) {
             // Teachers can only see visits where they are the teacher
             $query->where('teacher_id', $user->id);
         } elseif ($user->isMentor()) {
-            // Mentors can see visits for their assigned schools
-            $assignedSchoolIds = $user->assignedSchools()->pluck('pilot_schools.id')->toArray();
+            // Mentors can see visits for their assigned pilot schools
+            $assignedSchoolIds = $user->assignedPilotSchools()->pluck('pilot_schools.id')->toArray();
             if (! empty($assignedSchoolIds)) {
-                $query->whereIn('school_id', $assignedSchoolIds);
+                $query->whereIn('pilot_school_id', $assignedSchoolIds);
             } else {
                 // If no schools assigned, show no visits
                 $query->whereRaw('1 = 0');
@@ -60,15 +60,15 @@ class MentoringVisitController extends Controller
                     ->orWhereHas('mentor', function ($mq) use ($search) {
                         $mq->where('name', 'like', "%{$search}%");
                     })
-                    ->orWhereHas('school', function ($sq) use ($search) {
+                    ->orWhereHas('pilotSchool', function ($sq) use ($search) {
                         $sq->where('school_name', 'like', "%{$search}%");
                     });
             });
         }
 
         // Add filters
-        if ($request->filled('school_id')) {
-            $query->where('school_id', $request->get('school_id'));
+        if ($request->filled('pilot_school_id')) {
+            $query->where('pilot_school_id', $request->get('pilot_school_id'));
         }
 
         if ($request->filled('mentor_id')) {
@@ -111,13 +111,13 @@ class MentoringVisitController extends Controller
             abort(403);
         }
 
-        // Get schools for dropdown
+        // Get pilot schools for dropdown
         $user = $request->user();
         if ($user->isMentor()) {
-            // Mentors can only see their assigned schools
-            $schools = $user->assignedSchools()->orderBy('school_name')->get();
+            // Mentors can only see their assigned pilot schools
+            $schools = $user->assignedPilotSchools()->orderBy('school_name')->get();
         } else {
-            // Admins can see all schools
+            // Admins can see all pilot schools
             $schools = PilotSchool::orderBy('school_name')->get();
         }
 
@@ -127,7 +127,7 @@ class MentoringVisitController extends Controller
         // Get teachers for dropdown
         $teachers = User::where('role', 'teacher')
             ->where('is_active', true)
-            ->with('school')
+            ->with('pilotSchool')
             ->orderBy('name')
             ->get();
 
@@ -199,7 +199,7 @@ class MentoringVisitController extends Controller
 
         // Verify mentor has access to the school
         if ($request->user()->isMentor()) {
-            $assignedSchoolIds = $request->user()->assignedSchools()->pluck('pilot_schools.id')->toArray();
+            $assignedSchoolIds = $request->user()->assignedPilotSchools()->pluck('pilot_schools.id')->toArray();
             if (! in_array($validated['pilot_school_id'], $assignedSchoolIds)) {
                 return back()->withErrors(['pilot_school_id' => __('You are not assigned to this school.')]);
             }
@@ -229,7 +229,7 @@ class MentoringVisitController extends Controller
             abort(403);
         }
 
-        $mentoringVisit->load(['mentor', 'teacher', 'school']);
+        $mentoringVisit->load(['mentor', 'teacher', 'pilotSchool']);
 
         return view('mentoring.show', compact('mentoringVisit'));
     }
@@ -256,10 +256,10 @@ class MentoringVisitController extends Controller
             abort(403);
         }
         if ($user->isMentor()) {
-            // Mentors can only see their assigned schools
-            $schools = $user->assignedSchools()->orderBy('school_name')->get();
+            // Mentors can only see their assigned pilot schools
+            $schools = $user->assignedPilotSchools()->orderBy('school_name')->get();
         } else {
-            // Admins can see all schools
+            // Admins can see all pilot schools
             $schools = PilotSchool::orderBy('school_name')->get();
         }
 
@@ -269,7 +269,7 @@ class MentoringVisitController extends Controller
         // Get teachers for dropdown
         $teachers = User::where('role', 'teacher')
             ->where('is_active', true)
-            ->with('school')
+            ->with('pilotSchool')
             ->orderBy('name')
             ->get();
 

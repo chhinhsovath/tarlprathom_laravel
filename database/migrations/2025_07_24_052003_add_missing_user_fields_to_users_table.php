@@ -12,10 +12,18 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->enum('sex', ['male', 'female'])->nullable()->after('phone');
-            $table->string('telephone')->nullable()->after('sex');
-            $table->text('holding_classes')->nullable()->after('telephone');
-            $table->string('profile_photo')->nullable()->after('holding_classes');
+            if (!Schema::hasColumn('users', 'sex')) {
+                $table->enum('sex', ['male', 'female'])->nullable()->after('phone');
+            }
+            if (!Schema::hasColumn('users', 'telephone')) {
+                $table->string('telephone')->nullable()->after('sex');
+            }
+            if (!Schema::hasColumn('users', 'holding_classes')) {
+                $table->text('holding_classes')->nullable()->after('telephone');
+            }
+            if (!Schema::hasColumn('users', 'profile_photo')) {
+                $table->string('profile_photo')->nullable()->after('holding_classes');
+            }
         });
     }
 

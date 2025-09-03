@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Exports\SchoolTemplateExport;
-use App\Models\PilotSchool;
 use App\Models\Province;
 use App\Models\School;
+use App\Models\Student;
 use App\Models\User;
 use App\Traits\Sortable;
 use Illuminate\Http\Request;
@@ -27,7 +27,7 @@ class SchoolController extends Controller
             abort(403, __('Unauthorized action.'));
         }
 
-        $query = PilotSchool::withCount(['users', 'students']);
+        $query = School::withCount(['users', 'students']);
 
         // Apply access restrictions for mentors
         if ($user->isMentor()) {
@@ -85,13 +85,13 @@ class SchoolController extends Controller
         }
         $validated = $request->validate([
             'school_name' => ['required', 'string', 'max:255'],
-            'school_code' => ['required', 'string', 'max:255', 'unique:pilot_schools,school_code'],
+            'school_code' => ['required', 'string', 'max:255', 'unique:schools,school_code'],
             'province' => ['required', 'string', 'max:255'],
             'district' => ['required', 'string', 'max:255'],
             'cluster' => ['nullable', 'string', 'max:255'],
         ]);
 
-        PilotSchool::create($validated);
+        School::create($validated);
 
         return redirect()->route('schools.index')
             ->with('success', __('School created successfully.'));
@@ -100,7 +100,7 @@ class SchoolController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(PilotSchool $school)
+    public function show(School $school)
     {
         $user = auth()->user();
 
@@ -120,7 +120,7 @@ class SchoolController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(PilotSchool $school)
+    public function edit(School $school)
     {
         // Check if user is admin
         if (! auth()->user()->isAdmin()) {
@@ -139,7 +139,7 @@ class SchoolController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, PilotSchool $school)
+    public function update(Request $request, School $school)
     {
         // Check if user is admin
         if (! auth()->user()->isAdmin()) {
@@ -210,7 +210,7 @@ class SchoolController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(PilotSchool $school)
+    public function destroy(School $school)
     {
         // Check if user is admin
         if (! auth()->user()->isAdmin()) {
@@ -231,7 +231,7 @@ class SchoolController extends Controller
     /**
      * Add teachers to the school.
      */
-    public function addTeacher(Request $request, PilotSchool $school)
+    public function addTeacher(Request $request, School $school)
     {
         // Check if user is admin
         if (! auth()->user()->isAdmin()) {
@@ -255,10 +255,10 @@ class SchoolController extends Controller
     /**
      * Remove a teacher from the school.
      */
-    public function removeTeacher(Request $request, PilotSchool $school)
+    public function removeTeacher(Request $request, School $school)
     {
-        // Check if user is admin
-        if (! auth()->user()->isAdmin()) {
+        // Check if user is admin or coordinator
+        if (!in_array(auth()->user()->role, ['admin', 'coordinator'])) {
             abort(403, __('Unauthorized action.'));
         }
 
@@ -266,18 +266,52 @@ class SchoolController extends Controller
             'teacher_id' => 'required|exists:users,id',
         ]);
 
-        User::where('id', $request->teacher_id)
-            ->where('pilot_school_id', $school->id)
-            ->update(['pilot_school_id' => null]);
-
+        $teacher = User::where('id', $request->teacher_id)
+            ->where('school_id', $school->id)
+            ->first();
+            
+        if ($teacher) {
+            $teacher->update(['school_id' => null]);
+            return redirect()->route('schools.show', $school)
+                ->with('success', __('Teacher removed from school successfully.'));
+        }
+        
         return redirect()->route('schools.show', $school)
-            ->with('success', __('Teacher removed successfully.'));
+            ->with('error', __('Teacher not found in this school.'));
+    }
+    
+    /**
+     * Remove a student from the school
+     */
+    public function removeStudent(Request $request, School $school)
+    {
+        // Check if user is admin or coordinator
+        if (!in_array(auth()->user()->role, ['admin', 'coordinator'])) {
+            abort(403, __('Unauthorized action.'));
+        }
+
+        $request->validate([
+            'student_id' => 'required|exists:students,id',
+        ]);
+
+        $student = Student::where('id', $request->student_id)
+            ->where('school_id', $school->id)
+            ->first();
+            
+        if ($student) {
+            $student->delete();
+            return redirect()->route('schools.show', $school)
+                ->with('success', __('Student removed from school successfully.'));
+        }
+        
+        return redirect()->route('schools.show', $school)
+            ->with('error', __('Student not found in this school.'));
     }
 
     /**
      * Search for available teachers (not assigned to any school).
      */
-    public function searchTeachers(Request $request, PilotSchool $school)
+    public function searchTeachers(Request $request, School $school)
     {
         $query = $request->get('q', '');
 
@@ -304,7 +338,7 @@ class SchoolController extends Controller
     /**
      * Add mentors to the school.
      */
-    public function addMentor(Request $request, PilotSchool $school)
+    public function addMentor(Request $request, School $school)
     {
         // Check if user is admin
         if (! auth()->user()->isAdmin()) {
@@ -335,7 +369,7 @@ class SchoolController extends Controller
     /**
      * Remove a mentor from the school.
      */
-    public function removeMentor(Request $request, PilotSchool $school)
+    public function removeMentor(Request $request, School $school)
     {
         // Check if user is admin
         if (! auth()->user()->isAdmin()) {
@@ -358,7 +392,7 @@ class SchoolController extends Controller
     /**
      * Search for available mentors.
      */
-    public function searchMentors(Request $request, PilotSchool $school)
+    public function searchMentors(Request $request, School $school)
     {
         $query = $request->get('q', '');
 
@@ -430,14 +464,14 @@ class SchoolController extends Controller
         foreach ($request->schools as $index => $schoolData) {
             try {
                 // Check if school code already exists
-                if (PilotSchool::where('school_code', $schoolData['school_code'])->exists()) {
+                if (School::where('school_code', $schoolData['school_code'])->exists()) {
                     $failed++;
                     $errors[] = 'Row '.($index + 1).": School code {$schoolData['school_code']} already exists";
 
                     continue;
                 }
 
-                PilotSchool::create([
+                School::create([
                     'school_name' => $schoolData['school_name'],
                     'school_code' => $schoolData['school_code'],
                     'province' => $schoolData['province'],
@@ -468,7 +502,7 @@ class SchoolController extends Controller
     /**
      * Get teachers for a specific school (API endpoint)
      */
-    public function getTeachers(PilotSchool $school)
+    public function getTeachers(School $school)
     {
         $teachers = $school->users()
             ->where('role', 'teacher')
@@ -535,7 +569,7 @@ class SchoolController extends Controller
             abort(403, __('Unauthorized action.'));
         }
 
-        $schools = PilotSchool::orderBy('school_name')->get();
+        $schools = School::orderBy('school_name')->get();
 
         return view('schools.assessment-dates', compact('schools'));
     }
@@ -576,12 +610,132 @@ class SchoolController extends Controller
         }
 
         // Update selected schools
-        PilotSchool::whereIn('id', $validated['school_ids'])
+        School::whereIn('id', $validated['school_ids'])
             ->update($updateData);
 
         return redirect()->route('schools.assessment-dates')
             ->with('success', __('Assessment dates updated successfully for :count schools.', [
                 'count' => count($validated['school_ids']),
             ]));
+    }
+
+    /**
+     * Download teacher import template
+     */
+    public function downloadTeacherTemplate(School $school)
+    {
+        // Check permissions
+        if (!in_array(auth()->user()->role, ['admin', 'coordinator'])) {
+            abort(403, __('Unauthorized action.'));
+        }
+
+        $export = new \App\Exports\TeacherTemplateExport($school);
+        return Excel::download($export, 'teacher_import_template_' . $school->school_code . '.xlsx');
+    }
+
+    /**
+     * Download student import template
+     */
+    public function downloadStudentTemplate(School $school)
+    {
+        // Check permissions
+        if (!in_array(auth()->user()->role, ['admin', 'coordinator'])) {
+            abort(403, __('Unauthorized action.'));
+        }
+
+        $export = new \App\Exports\StudentTemplateExport($school);
+        return Excel::download($export, 'student_import_template_' . $school->school_code . '.xlsx');
+    }
+
+    /**
+     * Import teachers from Excel file
+     */
+    public function importTeachers(Request $request, School $school)
+    {
+        // Check permissions
+        if (!in_array(auth()->user()->role, ['admin', 'coordinator'])) {
+            abort(403, __('Unauthorized action.'));
+        }
+
+        $request->validate([
+            'file' => 'required|file|mimes:xlsx,xls|max:5120', // 5MB max
+        ]);
+
+        try {
+            $import = new \App\Imports\SchoolTeachersImport($school);
+            Excel::import($import, $request->file('file'));
+            
+            $errors = $import->getErrors();
+            $message = [];
+            
+            if ($import->getRowCount() > 0) {
+                $newCount = $import->getRowCount() - $import->getUpdatedCount();
+                if ($newCount > 0) {
+                    $message[] = __(':count new teachers added.', ['count' => $newCount]);
+                }
+                if ($import->getUpdatedCount() > 0) {
+                    $message[] = __(':count existing teachers updated.', ['count' => $import->getUpdatedCount()]);
+                }
+            }
+            
+            if (!empty($errors)) {
+                return redirect()->route('schools.show', $school)
+                    ->with('warning', implode(' ', $message) . ' ' . __('Some rows had errors: ') . implode('; ', array_slice($errors, 0, 3)));
+            }
+            
+            if (empty($message)) {
+                return redirect()->route('schools.show', $school)
+                    ->with('error', __('No teachers were imported. Please check your file format.'));
+            }
+
+            return redirect()->route('schools.show', $school)
+                ->with('success', implode(' ', $message));
+        } catch (\Exception $e) {
+            return redirect()->route('schools.show', $school)
+                ->with('error', __('Error importing teachers: :message', [
+                    'message' => $e->getMessage()
+                ]));
+        }
+    }
+
+    /**
+     * Import students from Excel file
+     */
+    public function importStudents(Request $request, School $school)
+    {
+        // Check permissions
+        if (!in_array(auth()->user()->role, ['admin', 'coordinator'])) {
+            abort(403, __('Unauthorized action.'));
+        }
+
+        $request->validate([
+            'file' => 'required|file|mimes:xlsx,xls|max:5120', // 5MB max
+        ]);
+
+        try {
+            $import = new \App\Imports\SchoolStudentsImport($school);
+            Excel::import($import, $request->file('file'));
+            
+            $errors = $import->getErrors();
+            
+            if ($import->getRowCount() > 0 && empty($errors)) {
+                return redirect()->route('schools.show', $school)
+                    ->with('success', __(':count students imported successfully.', [
+                        'count' => $import->getRowCount()
+                    ]));
+            } elseif ($import->getRowCount() > 0 && !empty($errors)) {
+                return redirect()->route('schools.show', $school)
+                    ->with('warning', __(':count students imported successfully.', ['count' => $import->getRowCount()]) . ' ' . 
+                           __('Some rows had errors: ') . implode('; ', array_slice($errors, 0, 3)));
+            } else {
+                return redirect()->route('schools.show', $school)
+                    ->with('error', __('No students were imported. ') . (!empty($errors) ? implode('; ', $errors) : __('Please check your file format.')));
+            }
+        } catch (\Exception $e) {
+            return redirect()->route('schools.show', $school)
+                ->with('error', __('Error importing students: :message', [
+                    'message' => $e->getMessage()
+                ]));
+        }
     }
 }

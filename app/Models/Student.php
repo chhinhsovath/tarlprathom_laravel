@@ -94,15 +94,7 @@ class Student extends Model
     ];
 
     /**
-     * Get the school that the student belongs to (from pilot_schools table).
-     */
-    public function school()
-    {
-        return $this->belongsTo(PilotSchool::class, 'school_id');
-    }
-
-    /**
-     * Get the pilot school that the student belongs to.
+     * Get the pilot school that the student belongs to (primary relationship).
      */
     public function pilotSchool()
     {
@@ -110,18 +102,24 @@ class Student extends Model
     }
 
     /**
-     * Get the school name (prioritize pilot school).
+     * Get the legacy school (for backward compatibility only).
+     * @deprecated Use pilotSchool() instead
+     */
+    public function school()
+    {
+        return $this->belongsTo(\App\Models\School::class, 'school_id');
+    }
+
+    /**
+     * Get the school name from pilot school.
      */
     public function getSchoolNameAttribute()
     {
         if ($this->pilotSchool) {
             return $this->pilotSchool->school_name;
         }
-        if ($this->school) {
-            return $this->school->school_name;
-        }
 
-        return null;
+        return 'Unknown School';
     }
 
     /**

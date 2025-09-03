@@ -2,16 +2,16 @@
     <x-slot name="header">
         <div class="flex justify-between items-center">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{ __('Select Students for :type Assessment', ['type' => ucfirst($assessmentType)]) }}
+                {{ trans_db('select_students_for_assessment', ['type' => trans_db($assessmentType)]) }}
             </h2>
             <div class="flex space-x-2">
                 <a href="{{ route('assessments.select-students', ['type' => 'midline']) }}" 
                    class="px-4 py-2 rounded-md text-sm font-medium {{ $assessmentType === 'midline' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300' }}">
-                    {{ __('Midline') }}
+                    {{ trans_db('midline') }}
                 </a>
                 <a href="{{ route('assessments.select-students', ['type' => 'endline']) }}" 
                    class="px-4 py-2 rounded-md text-sm font-medium {{ $assessmentType === 'endline' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300' }}">
-                    {{ __('Endline') }}
+                    {{ trans_db('endline') }}
                 </a>
             </div>
         </div>
@@ -30,7 +30,7 @@
                             <input type="text" 
                                    name="search" 
                                    value="{{ request('search') }}" 
-                                   placeholder="{{ __('Search by name...') }}"
+                                   placeholder="{{ trans_db('search_by_name') }}"
                                    class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                         </div>
 
@@ -38,7 +38,7 @@
                         <!-- School Filter (Admin only) -->
                         <div>
                             <select name="school_id" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                                <option value="">{{ __('All Schools') }}</option>
+                                <option value="">{{ trans_db('all_schools') }}</option>
                                 @foreach($schools as $school)
                                     <option value="{{ $school->id }}" {{ request('school_id') == $school->id ? 'selected' : '' }}>
                                         {{ $school->school_name }}
@@ -51,12 +51,15 @@
                         <!-- Grade Filter -->
                         <div>
                             <select name="grade" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                                <option value="">{{ __('All Grades') }}</option>
+                                <option value="">{{ trans_db('all_grades') }}</option>
                                 <option value="4" {{ request('grade') == '4' ? 'selected' : '' }}>
-                                    {{ __('Grade') }} 4
+                                    {{ trans_db('grade') }} 4
                                 </option>
                                 <option value="5" {{ request('grade') == '5' ? 'selected' : '' }}>
-                                    {{ __('Grade') }} 5
+                                    {{ trans_db('grade') }} 5
+                                </option>
+                                <option value="6" {{ request('grade') == '6' ? 'selected' : '' }}>
+                                    {{ trans_db('grade') }} 6
                                 </option>
                             </select>
                         </div>
@@ -64,21 +67,21 @@
                         <!-- Baseline Khmer Filter -->
                         <div>
                             <select name="baseline_khmer" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                                <option value="">{{ __('Baseline Khmer') }}</option>
+                                <option value="">{{ trans_db('baseline_khmer') }}</option>
                                 <option value="letter" {{ request('baseline_khmer') == 'letter' ? 'selected' : '' }}>
-                                    {{ __('Letter') }}
+                                    {{ trans_db('letter') }}
                                 </option>
                                 <option value="word" {{ request('baseline_khmer') == 'word' ? 'selected' : '' }}>
-                                    {{ __('Word') }}
+                                    {{ trans_db('word') }}
                                 </option>
                                 <option value="sentence" {{ request('baseline_khmer') == 'sentence' ? 'selected' : '' }}>
-                                    {{ __('Sentence') }}
+                                    {{ trans_db('sentence') }}
                                 </option>
                                 <option value="paragraph" {{ request('baseline_khmer') == 'paragraph' ? 'selected' : '' }}>
-                                    {{ __('Paragraph') }}
+                                    {{ trans_db('paragraph') }}
                                 </option>
                                 <option value="not_assessed" {{ request('baseline_khmer') == 'not_assessed' ? 'selected' : '' }}>
-                                    {{ __('Not Assessed') }}
+                                    {{ trans_db('not_assessed') }}
                                 </option>
                             </select>
                         </div>
@@ -86,21 +89,21 @@
                         <!-- Baseline Math Filter -->
                         <div>
                             <select name="baseline_math" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                                <option value="">{{ __('Baseline Math') }}</option>
+                                <option value="">{{ trans_db('baseline_math') }}</option>
                                 <option value="beginner" {{ request('baseline_math') == 'beginner' ? 'selected' : '' }}>
-                                    {{ __('Beginner') }}
+                                    {{ trans_db('beginner') }}
                                 </option>
                                 <option value="basic_operations" {{ request('baseline_math') == 'basic_operations' ? 'selected' : '' }}>
-                                    {{ __('Basic Operations') }}
+                                    {{ trans_db('basic_operations') }}
                                 </option>
                                 <option value="subtraction" {{ request('baseline_math') == 'subtraction' ? 'selected' : '' }}>
-                                    {{ __('Subtraction') }}
+                                    {{ trans_db('subtraction') }}
                                 </option>
                                 <option value="multiplication_division" {{ request('baseline_math') == 'multiplication_division' ? 'selected' : '' }}>
-                                    {{ __('Multiplication/Division') }}
+                                    {{ trans_db('multiplication_division') }}
                                 </option>
                                 <option value="not_assessed" {{ request('baseline_math') == 'not_assessed' ? 'selected' : '' }}>
-                                    {{ __('Not Assessed') }}
+                                    {{ trans_db('not_assessed') }}
                                 </option>
                             </select>
                         </div>
@@ -108,7 +111,7 @@
                         <!-- Submit Button -->
                         <div>
                             <button type="submit" class="w-full bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
-                                {{ __('Filter') }}
+                                {{ trans_db('filter') }}
                             </button>
                         </div>
                     </form>
@@ -126,39 +129,39 @@
                             <div class="flex justify-between items-start">
                                 <div>
                                     <p class="text-sm text-gray-600">
-                                        {{ __('Select which students should be assessed for :type. Only selected students will appear in the assessment list.', ['type' => $assessmentType]) }}
+                                        {{ trans_db('select_students_note', ['type' => $assessmentType]) }}
                                     </p>
                                     <p class="text-sm text-gray-600 mt-2">
-                                        <strong>{{ __('Note') }}:</strong> {{ __('All students are automatically eligible for baseline assessments.') }}
+                                        <strong>{{ trans_db('note') }}:</strong> {{ trans_db('baseline_automatic_note') }}
                                     </p>
                                 </div>
                                 <div>
                                     <button type="button" id="selectAll" class="text-sm text-blue-600 hover:text-blue-800 mr-4">
-                                        {{ __('Select All') }}
+                                        {{ trans_db('select_all') }}
                                     </button>
                                     <button type="button" id="deselectAll" class="text-sm text-blue-600 hover:text-blue-800">
-                                        {{ __('Deselect All') }}
+                                        {{ trans_db('deselect_all') }}
                                     </button>
                                 </div>
                             </div>
                             
                             <!-- Baseline Assessment Legend -->
                             <div class="mt-4 p-3 bg-gray-50 rounded-lg">
-                                <p class="text-xs font-medium text-gray-700 mb-2">{{ __('Baseline Assessment Levels') }}:</p>
+                                <p class="text-xs font-medium text-gray-700 mb-2">{{ trans_db('baseline_assessment_levels') }}:</p>
                                 <div class="flex flex-wrap gap-4 text-xs">
                                     <div class="flex items-center gap-2">
-                                        <span class="font-medium text-gray-600">{{ __('Khmer') }}:</span>
-                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-red-100 text-red-800">{{ __('Letter') }}</span>
-                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-yellow-100 text-yellow-800">{{ __('Word') }}</span>
-                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-blue-100 text-blue-800">{{ __('Sentence') }}</span>
-                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-green-100 text-green-800">{{ __('Paragraph') }}</span>
+                                        <span class="font-medium text-gray-600">{{ trans_db('khmer') }}:</span>
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-red-100 text-red-800">{{ trans_db('letter') }}</span>
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-yellow-100 text-yellow-800">{{ trans_db('word') }}</span>
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-blue-100 text-blue-800">{{ trans_db('sentence') }}</span>
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-green-100 text-green-800">{{ trans_db('paragraph') }}</span>
                                     </div>
                                     <div class="flex items-center gap-2">
-                                        <span class="font-medium text-gray-600">{{ __('Math') }}:</span>
-                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-red-100 text-red-800">{{ __('Beginner') }}</span>
-                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-yellow-100 text-yellow-800">{{ __('Basic Operations') }}</span>
-                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-blue-100 text-blue-800">{{ __('Subtraction') }}</span>
-                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-green-100 text-green-800">{{ __('Multiplication/Division') }}</span>
+                                        <span class="font-medium text-gray-600">{{ trans_db('math') }}:</span>
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-red-100 text-red-800">{{ trans_db('beginner') }}</span>
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-yellow-100 text-yellow-800">{{ trans_db('basic_operations') }}</span>
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-blue-100 text-blue-800">{{ trans_db('subtraction') }}</span>
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-green-100 text-green-800">{{ trans_db('multiplication_division') }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -170,28 +173,28 @@
                                     <thead class="bg-gray-50">
                                         <tr>
                                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                {{ __('Select') }}
+                                                {{ trans_db('select') }}
                                             </th>
                                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                {{ __('Name') }}
+                                                {{ trans_db('name') }}
                                             </th>
                                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                {{ __('Grade') }}
+                                                {{ trans_db('grade') }}
                                             </th>
                                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                {{ __('School') }}
+                                                {{ trans_db('school') }}
                                             </th>
                                             <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider" colspan="2">
-                                                {{ __('Baseline Assessment') }}
+                                                {{ trans_db('baseline_assessment') }}
                                             </th>
                                         </tr>
                                         <tr class="bg-gray-50">
                                             <th colspan="4"></th>
                                             <th class="px-6 py-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                {{ __('Khmer') }}
+                                                {{ trans_db('khmer') }}
                                             </th>
                                             <th class="px-6 py-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                {{ __('Math') }}
+                                                {{ trans_db('math') }}
                                             </th>
                                         </tr>
                                     </thead>
@@ -210,7 +213,7 @@
                                                     <div class="text-sm text-gray-500">{{ $student->student_id }}</div>
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                                    {{ __('Grade') }} {{ $student->grade }}
+                                                    {{ $student->class }}
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                                     {{ $student->school->name }}
@@ -221,15 +224,16 @@
                                                     @endphp
                                                     @if($khmerBaseline)
                                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
-                                                            @if($khmerBaseline->level == 'letter') bg-red-100 text-red-800
-                                                            @elseif($khmerBaseline->level == 'word') bg-yellow-100 text-yellow-800
-                                                            @elseif($khmerBaseline->level == 'sentence') bg-blue-100 text-blue-800
-                                                            @elseif($khmerBaseline->level == 'paragraph') bg-green-100 text-green-800
+                                                            @if($khmerBaseline->level == 'Beginner') bg-gray-100 text-gray-800
+                                                            @elseif($khmerBaseline->level == 'Letter') bg-red-100 text-red-800
+                                                            @elseif($khmerBaseline->level == 'Word') bg-yellow-100 text-yellow-800
+                                                            @elseif($khmerBaseline->level == 'Story') bg-blue-100 text-blue-800
+                                                            @elseif($khmerBaseline->level == 'Paragraph') bg-green-100 text-green-800
                                                             @endif">
-                                                            {{ ucfirst($khmerBaseline->level) }}
+                                                            {{ trans_db(str_replace('-', '-', strtolower($khmerBaseline->level))) }}
                                                         </span>
                                                     @else
-                                                        <span class="text-gray-400">{{ __('Not Assessed') }}</span>
+                                                        <span class="text-gray-400">{{ trans_db('not_assessed') }}</span>
                                                     @endif
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-nowrap text-center">
@@ -238,15 +242,16 @@
                                                     @endphp
                                                     @if($mathBaseline)
                                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
-                                                            @if($mathBaseline->level == 'beginner') bg-red-100 text-red-800
-                                                            @elseif($mathBaseline->level == 'basic_operations') bg-yellow-100 text-yellow-800
-                                                            @elseif($mathBaseline->level == 'subtraction') bg-blue-100 text-blue-800
-                                                            @elseif($mathBaseline->level == 'multiplication_division') bg-green-100 text-green-800
+                                                            @if($mathBaseline->level == 'Beginner') bg-gray-100 text-gray-800
+                                                            @elseif($mathBaseline->level == '1-Digit') bg-red-100 text-red-800
+                                                            @elseif($mathBaseline->level == '2-Digit') bg-yellow-100 text-yellow-800
+                                                            @elseif($mathBaseline->level == 'Subtraction') bg-blue-100 text-blue-800
+                                                            @elseif($mathBaseline->level == 'Division') bg-green-100 text-green-800
                                                             @endif">
-                                                            {{ str_replace('_', ' ', ucfirst($mathBaseline->level)) }}
+                                                            {{ trans_db(strtolower($mathBaseline->level)) }}
                                                         </span>
                                                     @else
-                                                        <span class="text-gray-400">{{ __('Not Assessed') }}</span>
+                                                        <span class="text-gray-400">{{ trans_db('not_assessed') }}</span>
                                                     @endif
                                                 </td>
                                             </tr>
@@ -263,11 +268,11 @@
                             <!-- Submit Button -->
                             <div class="mt-6 flex justify-end">
                                 <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded">
-                                    {{ __('Save Selection') }}
+                                    {{ trans_db('save_selection') }}
                                 </button>
                             </div>
                         @else
-                            <p class="text-gray-500 text-center py-8">{{ __('No students found.') }}</p>
+                            <p class="text-gray-500 text-center py-8">{{ trans_db('no_students_found') }}</p>
                         @endif
                     </div>
                 </div>

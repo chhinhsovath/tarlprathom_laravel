@@ -62,8 +62,9 @@
                             <div>
                                 <select name="grade" class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                                     <option value="">{{ trans_db('all_grades') }}</option>
-                                    <option value="4" {{ request('grade') == 4 ? 'selected' : '' }}>{{ trans_db('grade') }} 4</option>
-                                    <option value="5" {{ request('grade') == 5 ? 'selected' : '' }}>{{ trans_db('grade') }} 5</option>
+                                    <option value="4" {{ request('grade') == '4' ? 'selected' : '' }}>{{ trans_db('grade') }} 4</option>
+                                    <option value="5" {{ request('grade') == '5' ? 'selected' : '' }}>{{ trans_db('grade') }} 5</option>
+                                    <option value="6" {{ request('grade') == '6' ? 'selected' : '' }}>{{ trans_db('grade') }} 6</option>
                                 </select>
                             </div>
                             
