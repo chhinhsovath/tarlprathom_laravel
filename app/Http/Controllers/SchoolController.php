@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exports\SchoolTemplateExport;
 use App\Models\Province;
-use App\Models\School;
+use App\Models\PilotSchool;
 use App\Models\Student;
 use App\Models\User;
 use App\Traits\Sortable;
@@ -27,7 +27,7 @@ class SchoolController extends Controller
             abort(403, __('Unauthorized action.'));
         }
 
-        $query = School::withCount(['users', 'students']);
+        $query = PilotSchool::withCount(['users', 'students']);
 
         // Apply access restrictions for mentors
         if ($user->isMentor()) {

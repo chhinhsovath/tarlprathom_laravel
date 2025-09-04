@@ -216,7 +216,7 @@
                                                     {{ $student->class }}
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                                    {{ $student->school->name }}
+                                                    {{ $student->pilotSchool ? $student->pilotSchool->school_name : 'N/A' }}
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-nowrap text-center">
                                                     @php

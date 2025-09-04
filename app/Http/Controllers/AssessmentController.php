@@ -46,7 +46,7 @@ class AssessmentController extends Controller
             ]);
         }
 
-        $query = Assessment::with(['student', 'student.school']);
+        $query = Assessment::with(['student', 'student.pilotSchool']);
 
         // Apply access restrictions based on user role
         $user = $request->user();
@@ -146,7 +146,7 @@ class AssessmentController extends Controller
         // Get students based on access
         $user = $request->user();
         $accessibleSchoolIds = $user->getAccessibleSchoolIds();
-        $studentsQuery = Student::with('school');
+        $studentsQuery = Student::with('pilotSchool');
 
         // Apply access restrictions
         if (! $user->isAdmin()) {
@@ -251,7 +251,7 @@ class AssessmentController extends Controller
         // Check if assessment period is active for the school (only for non-admins)
         if (! $request->user()->isAdmin()) {
             $student = Student::findOrFail($validated['student_id']);
-            $school = $student->school;
+            $school = $student->pilotSchool;
             if (! $school->isAssessmentPeriodActive($validated['cycle'])) {
                 $status = $school->getAssessmentPeriodStatus($validated['cycle']);
                 $message = match ($status) {
@@ -288,7 +288,7 @@ class AssessmentController extends Controller
             abort(403);
         }
 
-        $assessment->load(['student', 'student.school']);
+        $assessment->load(['student', 'student.pilotSchool']);
 
         return view('assessments.show', compact('assessment'));
     }
@@ -437,7 +437,7 @@ class AssessmentController extends Controller
 
         // Check if assessment period is active for the school (only for non-admins)
         if (! auth()->user()->isAdmin()) {
-            $school = $student->school;
+            $school = $student->pilotSchool;
             if (! $school->isAssessmentPeriodActive($validated['cycle'])) {
                 $status = $school->getAssessmentPeriodStatus($validated['cycle']);
                 $message = match ($status) {

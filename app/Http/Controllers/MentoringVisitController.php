@@ -7,7 +7,6 @@ use App\Http\Requests\StoreMentoringVisitRequest;
 use App\Models\Geographic;
 use App\Models\MentoringVisit;
 use App\Models\PilotSchool;
-use App\Models\Province;
 use App\Models\School;
 use App\Models\User;
 use App\Traits\Sortable;
@@ -129,10 +128,6 @@ class MentoringVisitController extends Controller
             $schools = PilotSchool::orderBy('school_name')->get();
         }
 
-        // Get provinces from cache or database
-        $provinces = Cache::remember('provinces_list', 900, function () {
-            return Province::orderBy('name_kh')->pluck('name_en', 'name_en');
-        });
 
         // Get teachers for dropdown - optimize query
         $teachers = User::select('id', 'name', 'email', 'pilot_school_id')
@@ -166,7 +161,7 @@ class MentoringVisitController extends Controller
         // Get questionnaire configuration
         $questionnaire = config('mentoring.questionnaire');
 
-        return view('mentoring.create', compact('schools', 'provinces', 'teachers', 'mentors', 'students', 'selectedSchoolId', 'selectedTeacherId', 'questionnaire'));
+        return view('mentoring.create', compact('schools', 'teachers', 'mentors', 'students', 'selectedSchoolId', 'selectedTeacherId', 'questionnaire'));
     }
 
     /**
@@ -280,10 +275,6 @@ class MentoringVisitController extends Controller
             $schools = PilotSchool::orderBy('school_name')->get();
         }
 
-        // Get provinces from cache or database
-        $provinces = Cache::remember('provinces_list', 900, function () {
-            return Province::orderBy('name_kh')->pluck('name_en', 'name_en');
-        });
 
         // Get teachers for dropdown - optimize query
         $teachers = User::select('id', 'name', 'email', 'pilot_school_id')
@@ -313,7 +304,7 @@ class MentoringVisitController extends Controller
         // Get questionnaire configuration
         $questionnaire = config('mentoring.questionnaire');
 
-        return view('mentoring.edit', compact('mentoringVisit', 'schools', 'provinces', 'teachers', 'mentors', 'students', 'questionnaire'));
+        return view('mentoring.edit', compact('mentoringVisit', 'schools', 'teachers', 'mentors', 'students', 'questionnaire'));
     }
 
     /**

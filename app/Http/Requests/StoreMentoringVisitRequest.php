@@ -32,11 +32,6 @@ class StoreMentoringVisitRequest extends FormRequest
 
             // New questionnaire fields
             'region' => 'required|string|max:255',
-            'province' => 'required|string|max:255',
-            'district' => 'nullable|string|max:255',
-            'commune' => 'nullable|string|max:255',
-            'village' => 'nullable|string|max:255',
-            'level' => 'nullable|string|max:255',
             'program_type' => 'required|string|max:255',
             'class_in_session' => 'required|in:Yes,No',
             'class_not_in_session_reason' => 'required_if:class_in_session,No|nullable|string',

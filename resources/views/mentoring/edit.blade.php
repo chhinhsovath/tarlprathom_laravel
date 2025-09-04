@@ -22,13 +22,13 @@
 
                         <!-- Section 1: Visit Details -->
                         <div class="questionnaire-section mb-8" data-section="visit_details">
-                            <h4 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b">{{ __('mentoring.Visit Details') }}</h4>
+                            <h4 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b">ព័ត៌មានលម្អិតការចុះអង្កេត</h4>
                             
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <!-- Visit Date -->
+                                <!-- កាលបរិច្ឆេទនៃការចុះ (Visit Date) -->
                                 <div>
                                     <label for="visit_date" class="block text-sm font-medium text-gray-700 mb-2">
-                                        {{ __('mentoring.Visit Date') }} <span class="text-red-500">*</span>
+                                        {{ __('កាលបរិច្ឆេទនៃការចុះ') }} <span class="text-red-500">*</span>
                                     </label>
                                     <input type="date" 
                                            id="visit_date" 
@@ -41,96 +41,34 @@
                                     @enderror
                                 </div>
                                 
-                                <!-- Region -->
+                                <!-- ឈ្មោះទីប្រឹក្សាគរុកោសល្យ (Mentor Name) -->
                                 <div>
-                                    <label for="region" class="block text-sm font-medium text-gray-700 mb-2">
-                                        {{ __('mentoring.Region') }} <span class="text-red-500">*</span>
+                                    <label for="mentor_name" class="block text-sm font-medium text-gray-700 mb-2">
+                                        {{ __('ឈ្មោះទីប្រឹក្សាគរុកោសល្យ') }}
                                     </label>
                                     <input type="text" 
-                                           id="region" 
-                                           name="region" 
-                                           value="{{ old('region', $mentoringVisit->region) }}"
-                                           class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                                           required>
-                                    @error('region')
-                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                    @enderror
-                                </div>
-                                
-                                <!-- Province -->
-                                <div>
-                                    <label for="province" class="block text-sm font-medium text-gray-700 mb-2">
-                                        {{ __('mentoring.Province') }} <span class="text-red-500">*</span>
-                                    </label>
-                                    <select id="province" 
-                                            name="province" 
-                                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                                            required>
-                                        <option value="">{{ __('mentoring.Select Province') }}</option>
-                                        @foreach($provinces as $province)
-                                            <option value="{{ $province }}" {{ old('province', $mentoringVisit->province) == $province ? 'selected' : '' }}>
-                                                {{ $province }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    @error('province')
-                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                    @enderror
-                                </div>
-                                
-                                <!-- Level -->
-                                <div>
-                                    <label for="level" class="block text-sm font-medium text-gray-700 mb-2">
-                                        {{ __('mentoring.Level') }} <span class="text-red-500">*</span>
-                                    </label>
-                                    <input type="text" 
-                                           id="level" 
-                                           name="level" 
-                                           value="{{ old('level', $mentoringVisit->level ?? auth()->user()->level ?? '') }}"
-                                           readonly
+                                           id="mentor_name" 
+                                           name="mentor_name" 
+                                           value="{{ $mentoringVisit->mentor->name ?? auth()->user()->name }}"
                                            class="w-full rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                                           required>
-                                    <small class="text-gray-500">{{ __('Auto-filled based on user account') }}</small>
-                                    @error('level')
-                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                    @enderror
+                                           readonly>
+                                    <small class="text-gray-500">បំពេញដោយស្វ័យប្រវត្តិ - ផ្អែកលើព័ត៌មានលម្អិតនៃគណនីអ្នកប្រើប្រាស់</small>
+                                    <input type="hidden" name="mentor_id" value="{{ $mentoringVisit->mentor_id ?? auth()->user()->id }}">
                                 </div>
                                 
-                                <!-- Mentor (for admin) -->
-                                @if(auth()->user()->isAdmin())
-                                <div>
-                                    <label for="mentor_id" class="block text-sm font-medium text-gray-700 mb-2">
-                                        {{ __('mentoring.Select Mentor') }} <span class="text-red-500">*</span>
-                                    </label>
-                                    <select id="mentor_id" 
-                                            name="mentor_id" 
-                                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                                            required>
-                                        <option value="">{{ __('mentoring.Select Mentor') }}</option>
-                                        @foreach($mentors as $mentor)
-                                            <option value="{{ $mentor->id }}" {{ old('mentor_id', $mentoringVisit->mentor_id) == $mentor->id ? 'selected' : '' }}>
-                                                {{ $mentor->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    @error('mentor_id')
-                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                    @enderror
-                                </div>
-                                @endif
                                 
-                                <!-- School -->
+                                <!-- ឈ្មោះសាលា (School Name) -->
                                 <div>
                                     <label for="school_id" class="block text-sm font-medium text-gray-700 mb-2">
-                                        {{ __('School Name') }} <span class="text-red-500">*</span>
+                                        {{ __('ឈ្មោះសាលា') }} <span class="text-red-500">*</span>
                                     </label>
                                     <select id="school_id" 
                                             name="school_id" 
                                             class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                                             required>
-                                        <option value="">{{ __('Select School') }}</option>
+                                        <option value="">ជ្រើសរើសសាលា</option>
                                         @foreach($schools as $school)
-                                            <option value="{{ $school->id }}" {{ old('school_id', $mentoringVisit->school_id) == $school->id ? 'selected' : '' }}>
+                                            <option value="{{ $school->id }}" {{ old('school_id', $mentoringVisit->pilot_school_id) == $school->id ? 'selected' : '' }}>
                                                 {{ $school->school_name }}
                                             </option>
                                         @endforeach
@@ -140,45 +78,50 @@
                                     @enderror
                                 </div>
                                 
-                                <!-- Program Type -->
+                                <!-- ឈ្មោះគ្រូបង្រៀន (Teacher Name) -->
                                 <div>
-                                    <label for="program_type" class="block text-sm font-medium text-gray-700 mb-2">
-                                        {{ __('Program Type') }} <span class="text-red-500">*</span>
+                                    <label for="teacher_id" class="block text-sm font-medium text-gray-700 mb-2">
+                                        {{ __('ឈ្មោះគ្រូបង្រៀន') }} <span class="text-red-500">*</span>
                                     </label>
-                                    <input type="text" 
-                                           id="program_type" 
-                                           name="program_type" 
-                                           value="{{ old('program_type', $mentoringVisit->program_type ?? 'TaRL') }}"
-                                           class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                                           required>
-                                    @error('program_type')
+                                    <select id="teacher_id" 
+                                            name="teacher_id" 
+                                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                            required>
+                                        <option value="">ជ្រើសរើសគ្រូ</option>
+                                        @foreach($teachers as $teacher)
+                                            <option value="{{ $teacher->id }}" {{ old('teacher_id', $mentoringVisit->teacher_id) == $teacher->id ? 'selected' : '' }}>
+                                                {{ $teacher->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('teacher_id')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
                                 </div>
+                                
                             </div>
                         </div>
 
-                        <!-- Section 2: Program Status -->
-                        <div class="questionnaire-section mb-8" data-section="program_status">
-                            <h4 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b">{{ __('Program Status') }}</h4>
+                        <!-- TaRL Class Status -->
+                        <div class="questionnaire-section mb-8" data-section="class_status">
+                            <h4 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b">ស្ថានភាពថ្នាក់រៀន</h4>
                             
-                            <div class="space-y-6">
-                                <!-- Class Taking Place -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <!-- តើថ្នាក់រៀន TaRL មានដំណើរការនៅថ្ងៃចុះអង្កេតដែរឬទេ? -->
                                 <div>
-                                    <p class="text-sm font-medium text-gray-700 mb-3">
-                                        {{ __('Is the TaRL class taking place on the day of the visit?') }} <span class="text-red-500">*</span>
-                                    </p>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                        {{ __('តើថ្នាក់រៀន TaRL មានដំណើរការនៅថ្ងៃចុះអង្កេតដែរឬទេ?') }} <span class="text-red-500">*</span>
+                                    </label>
                                     <div class="space-y-2">
-                                        <label class="flex items-center">
-                                            <input type="radio" name="class_in_session" value="Yes" 
-                                                   class="mr-2 text-indigo-600 focus:ring-indigo-500"
-                                                   {{ old('class_in_session', $mentoringVisit->class_in_session ? 'Yes' : 'No') == 'Yes' ? 'checked' : '' }}
-                                                   required>
-                                            <span class="text-sm text-gray-700">{{ __('Yes') }}</span>
+                                        <label class="inline-flex items-center">
+                                            <input type="radio" name="class_in_session" value="1" 
+                                                   class="form-radio" required
+                                                   {{ old('class_in_session', $mentoringVisit->class_in_session) == '1' ? 'checked' : '' }}>
+                                            <span class="ml-2">{{ __('បាទ/ចាស') }}</span>
                                         </label>
-                                        <label class="flex items-center">
-                                            <input type="radio" name="class_in_session" value="No" 
-                                                   class="mr-2 text-indigo-600 focus:ring-indigo-500"
+                                        <label class="inline-flex items-center ml-6">
+                                            <input type="radio" name="class_in_session" value="0" 
+                                                   class="form-radio" required
                                                    {{ old('class_in_session', $mentoringVisit->class_in_session ? 'Yes' : 'No') == 'No' ? 'checked' : '' }}
                                                    required>
                                             <span class="text-sm text-gray-700">{{ __('No') }}</span>
@@ -951,7 +894,7 @@
             const observationSection = document.getElementById('observationSection');
             
             function toggleClassSections() {
-                const isInSession = document.querySelector('input[name="class_in_session"]:checked')?.value === 'Yes';
+                const isInSession = document.querySelector('input[name="class_in_session"]:checked')?.value === '1';
                 
                 if (isInSession) {
                     notTakingPlaceReason.classList.add('hidden');
