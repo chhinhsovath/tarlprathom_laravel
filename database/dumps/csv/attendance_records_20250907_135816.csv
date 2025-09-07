@@ -1,0 +1,1 @@
+id,student_id,school_id,class_id,teacher_id,attendance_date,status,arrival_time,departure_time,minutes_late,late_reason,absence_reason,parent_notified,notification_method,notes,period,participated_in_activities,subjects_attended,subjects_missed,recorded_by,recorded_at,verified_by,verified_at,created_at,updated_at

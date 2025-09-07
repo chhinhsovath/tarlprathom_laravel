@@ -12,6 +12,11 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // Disable foreign key checks for MySQL
+        if (DB::connection()->getDriverName() === 'mysql') {
+            DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        }
+        
         // Clear existing schools data
         DB::table('schools')->truncate();
         
@@ -50,7 +55,16 @@ return new class extends Migration
         ]);
         
         // Reset the sequence to match the highest ID
-        DB::statement("SELECT setval('schools_id_seq', 30, true)");
+        if (DB::connection()->getDriverName() === 'pgsql') {
+            DB::statement("SELECT setval('schools_id_seq', 30, true)");
+        } elseif (DB::connection()->getDriverName() === 'mysql') {
+            DB::statement("ALTER TABLE schools AUTO_INCREMENT = 31");
+        }
+        
+        // Re-enable foreign key checks for MySQL
+        if (DB::connection()->getDriverName() === 'mysql') {
+            DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        }
     }
 
     /**

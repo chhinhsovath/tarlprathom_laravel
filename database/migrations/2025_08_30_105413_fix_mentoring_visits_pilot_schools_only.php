@@ -77,13 +77,8 @@ return new class extends Migration
         // Update all visits to remove school_id references
         DB::table('mentoring_visits')->update(['school_id' => null]);
         
-        // Make school_id nullable and pilot_school_id required
-        if (Schema::hasTable('mentoring_visits')) {
-            Schema::table('mentoring_visits', function (Blueprint $table) {
-                // Make pilot_school_id non-nullable since all visits should reference pilot schools
-                $table->unsignedBigInteger('pilot_school_id')->nullable(false)->change();
-            });
-        }
+        // Note: pilot_school_id should be non-nullable but we can't change it without doctrine/dbal
+        // This is handled in the application logic instead
         
         echo "Cleared legacy school references.\n";
     }

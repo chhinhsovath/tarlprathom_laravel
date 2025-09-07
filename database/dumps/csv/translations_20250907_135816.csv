@@ -1,0 +1,481 @@
+id,key,km,en,group,description,is_active,created_at,updated_at
+1,app_name,គម្រោង TaRL,TaRL Project,general,,t,2025-09-04 07:54:31,2025-09-04 07:54:31
+2,welcome,សូមស្វាគមន៍,Welcome,general,,t,2025-09-04 07:54:31,2025-09-04 07:54:31
+4,home,ទំព័រដើម,Home,general,,t,2025-09-04 07:54:31,2025-09-04 07:54:31
+6,save,រក្សាទុក,Save,general,,t,2025-09-04 07:54:31,2025-09-04 07:54:31
+7,cancel,បោះបង់,Cancel,general,,t,2025-09-04 07:54:31,2025-09-04 07:54:31
+8,delete,លុប,Delete,general,,t,2025-09-04 07:54:31,2025-09-04 07:54:31
+9,edit,កែសម្រួល,Edit,general,,t,2025-09-04 07:54:31,2025-09-04 07:54:31
+10,view,មើល,View,general,,t,2025-09-04 07:54:31,2025-09-04 07:54:31
+11,create,បង្កើត,Create,general,,t,2025-09-04 07:54:32,2025-09-04 07:54:32
+12,update,ធ្វើបច្ចុប្បន្នភាព,Update,general,,t,2025-09-04 07:54:32,2025-09-04 07:54:32
+13,search,ស្វែងរក,Search,general,,t,2025-09-04 07:54:32,2025-09-04 07:54:32
+14,filter,ត្រង,Filter,general,,t,2025-09-04 07:54:32,2025-09-04 07:54:32
+15,export,នាំចេញ,Export,general,,t,2025-09-04 07:54:32,2025-09-04 07:54:32
+16,import,នាំចូល,Import,general,,t,2025-09-04 07:54:32,2025-09-04 07:54:32
+17,download,ទាញយក,Download,general,,t,2025-09-04 07:54:32,2025-09-04 07:54:32
+18,upload,ផ្ទុកឡើង,Upload,general,,t,2025-09-04 07:54:32,2025-09-04 07:54:32
+19,submit,ដាក់ស្នើ,Submit,general,,t,2025-09-04 07:54:32,2025-09-04 07:54:32
+20,confirm,បញ្ជាក់,Confirm,general,,t,2025-09-04 07:54:32,2025-09-04 07:54:32
+21,yes,បាទ/ចាស,Yes,general,,t,2025-09-04 07:54:32,2025-09-04 07:54:32
+22,no,ទេ,No,general,,t,2025-09-04 07:54:32,2025-09-04 07:54:32
+23,all,ទាំងអស់,All,general,,t,2025-09-04 07:54:32,2025-09-04 07:54:32
+24,none,គ្មាន,None,general,,t,2025-09-04 07:54:32,2025-09-04 07:54:32
+27,no_data,មិនមានទិន្នន័យ,No data available,general,,t,2025-09-04 07:54:32,2025-09-04 07:54:32
+28,showing,កំពុងបង្ហាញ,Showing,general,,t,2025-09-04 07:54:32,2025-09-04 07:54:32
+29,to,ដល់,to,general,,t,2025-09-04 07:54:32,2025-09-04 07:54:32
+30,of,នៃ,of,general,,t,2025-09-04 07:54:32,2025-09-04 07:54:32
+31,entries,ធាតុ,entries,general,,t,2025-09-04 07:54:32,2025-09-04 07:54:32
+35,teachers,គ្រូបង្រៀន,Teachers,navigation,,t,2025-09-04 07:54:33,2025-09-04 07:54:33
+36,mentors,អ្នកណែនាំ,Mentors,navigation,,t,2025-09-04 07:54:33,2025-09-04 07:54:33
+37,users,អ្នកប្រើប្រាស់,Users,navigation,,t,2025-09-04 07:54:33,2025-09-04 07:54:33
+39,mentoring_visits,ការចុះណែនាំ,Mentoring Visits,navigation,,t,2025-09-04 07:54:33,2025-09-04 07:54:33
+40,reports,របាយការណ៍,Reports,navigation,,t,2025-09-04 07:54:33,2025-09-04 07:54:33
+42,help,ជំនួយ,Help,navigation,,t,2025-09-04 07:54:33,2025-09-04 07:54:33
+43,profile,ប្រវត្តិរូប,Profile,navigation,,t,2025-09-04 07:54:33,2025-09-04 07:54:33
+47,user_management,ការគ្រប់គ្រងអ្នកប្រើប្រាស់,User Management,users,,t,2025-09-04 07:54:33,2025-09-04 07:54:33
+48,add_user,បន្ថែមអ្នកប្រើប្រាស់,Add User,users,,t,2025-09-04 07:54:33,2025-09-04 07:54:33
+49,edit_user,កែសម្រួលអ្នកប្រើប្រាស់,Edit User,users,,t,2025-09-04 07:54:33,2025-09-04 07:54:33
+50,user_details,ព័ត៌មានអ្នកប្រើប្រាស់,User Details,users,,t,2025-09-04 07:54:33,2025-09-04 07:54:33
+53,password,ពាក្យសម្ងាត់,Password,users,,t,2025-09-04 07:54:33,2025-09-04 07:54:33
+54,role,តួនាទី,Role,users,,t,2025-09-04 07:54:33,2025-09-04 07:54:33
+58,inactive,អសកម្ម,Inactive,users,,t,2025-09-04 07:54:34,2025-09-04 07:54:34
+64,school_management,ការគ្រប់គ្រងសាលារៀន,School Management,schools,,t,2025-09-04 07:54:34,2025-09-04 07:54:34
+65,add_school,បន្ថែមសាលារៀន,Add School,schools,,t,2025-09-04 07:54:34,2025-09-04 07:54:34
+66,edit_school,កែសម្រួលសាលារៀន,Edit School,schools,,t,2025-09-04 07:54:34,2025-09-04 07:54:34
+67,school_details,ព័ត៌មានសាលារៀន,School Details,schools,,t,2025-09-04 07:54:34,2025-09-04 07:54:34
+68,school_name,ឈ្មោះសាលា,School Name,schools,,t,2025-09-04 07:54:34,2025-09-04 07:54:34
+69,school_code,លេខកូដសាលា,School Code,schools,,t,2025-09-04 07:54:34,2025-09-04 07:54:34
+59,admin,អ្នកគ្រប់គ្រង,Admin,role,,t,2025-09-04 07:54:34,2025-09-04 07:54:59
+62,teacher,គ្រូបង្រៀន,Teacher,role,,t,2025-09-04 07:54:34,2025-09-04 07:54:59
+61,mentor,អ្នកណែនាំ,Mentor,role,,t,2025-09-04 07:54:34,2025-09-04 07:54:59
+60,coordinator,អ្នកសម្របសម្រួល,Coordinator,role,,t,2025-09-04 07:54:34,2025-09-04 07:54:59
+63,viewer,អ្នកមើល,Viewer,role,,t,2025-09-04 07:54:34,2025-09-04 07:54:59
+5,back,ត្រឡប់,Back,general,,t,2025-09-04 07:54:31,2025-09-04 07:55:00
+41,settings,ការកំណត់,Settings,general,,t,2025-09-04 07:54:33,2025-09-04 07:55:00
+44,logout,ចាកចេញ,Logout,general,,t,2025-09-04 07:54:33,2025-09-04 07:55:00
+45,login,ចូល,Login,general,,t,2025-09-04 07:54:33,2025-09-04 07:55:00
+46,register,ចុះឈ្មោះ,Register,general,,t,2025-09-04 07:54:33,2025-09-04 07:55:00
+26,loading,កំពុងផ្ទុក...,Loading...,status,,t,2025-09-04 07:54:32,2025-09-04 07:55:00
+51,name,ឈ្មោះ,Name,table,,t,2025-09-04 07:54:33,2025-09-04 07:55:00
+52,email,អ៊ីមែល,Email,table,,t,2025-09-04 07:54:33,2025-09-04 07:55:00
+55,phone,ទូរស័ព្ទ,Phone,table,,t,2025-09-04 07:54:34,2025-09-04 07:55:00
+32,actions,សកម្មភាព,Actions,table,,t,2025-09-04 07:54:33,2025-09-04 07:55:00
+25,select,ជ្រើសរើស,Select,form,,t,2025-09-04 07:54:32,2025-09-04 07:55:01
+33,schools,សាលា,Schools,dashboard,,t,2025-09-04 07:54:33,2025-09-04 07:55:02
+38,assessments,ការវាយតម្លៃ,Assessments,assessment,,t,2025-09-04 07:54:33,2025-09-04 07:55:04
+56,status,ស្ថានភាព,Status,general,,t,2025-09-04 07:54:34,2025-09-04 07:55:05
+57,active,សកម្ម,Active,general,,t,2025-09-04 07:54:34,2025-09-04 07:55:05
+34,students,សិស្ស,students,dashboard,,t,2025-09-04 07:54:33,2025-09-04 07:55:09
+75,contact_person,អ្នកទំនាក់ទំនង,Contact Person,schools,,t,2025-09-04 07:54:34,2025-09-04 07:54:34
+77,all_provinces,ខេត្តទាំងអស់,All Provinces,schools,,t,2025-09-04 07:54:34,2025-09-04 07:54:34
+78,all_districts,ស្រុកទាំងអស់,All Districts,schools,,t,2025-09-04 07:54:35,2025-09-04 07:54:35
+79,student_management,ការគ្រប់គ្រងសិស្ស,Student Management,students,,t,2025-09-04 07:54:35,2025-09-04 07:54:35
+80,add_student,បន្ថែមសិស្ស,Add Student,students,,t,2025-09-04 07:54:35,2025-09-04 07:54:35
+81,edit_student,កែសម្រួលសិស្ស,Edit Student,students,,t,2025-09-04 07:54:35,2025-09-04 07:54:35
+82,student_details,ព័ត៌មានសិស្ស,Student Details,students,,t,2025-09-04 07:54:35,2025-09-04 07:54:35
+83,student_code,លេខកូដសិស្ស,Student Code,students,,t,2025-09-04 07:54:35,2025-09-04 07:54:35
+91,age,អាយុ,Age,students,,t,2025-09-04 07:54:35,2025-09-04 07:54:35
+93,class,ថ្នាក់រៀន,Class,students,,t,2025-09-04 07:54:35,2025-09-04 07:54:35
+94,parent_name,ឈ្មោះឪពុកម្តាយ,Parent Name,students,,t,2025-09-04 07:54:36,2025-09-04 07:54:36
+95,parent_phone,ទូរស័ព្ទឪពុកម្តាយ,Parent Phone,students,,t,2025-09-04 07:54:36,2025-09-04 07:54:36
+96,photo,រូបថត,Photo,students,,t,2025-09-04 07:54:36,2025-09-04 07:54:36
+97,assessment_management,ការគ្រប់គ្រងការវាយតម្លៃ,Assessment Management,assessments,,t,2025-09-04 07:54:36,2025-09-04 07:54:36
+98,create_assessment,បង្កើតការវាយតម្លៃ,Create Assessment,assessments,,t,2025-09-04 07:54:36,2025-09-04 07:54:36
+99,edit_assessment,កែសម្រួលការវាយតម្លៃ,Edit Assessment,assessments,,t,2025-09-04 07:54:36,2025-09-04 07:54:36
+100,assessment_details,ព័ត៌មានការវាយតម្លៃ,Assessment Details,assessments,,t,2025-09-04 07:54:36,2025-09-04 07:54:36
+104,assessment_type,ប្រភេទការវាយតម្លៃ,Assessment Type,assessments,,t,2025-09-04 07:54:36,2025-09-04 07:54:36
+111,sentence,ប្រយោគ,Sentence,assessments,,t,2025-09-04 07:54:37,2025-09-04 07:54:37
+114,score,ពិន្ទុ,Score,assessments,,t,2025-09-04 07:54:37,2025-09-04 07:54:37
+115,assessment_date,កាលបរិច្ឆេទវាយតម្លៃ,Assessment Date,assessments,,t,2025-09-04 07:54:37,2025-09-04 07:54:37
+116,assessed_by,វាយតម្លៃដោយ,Assessed By,assessments,,t,2025-09-04 07:54:37,2025-09-04 07:54:37
+118,mentoring_management,ការគ្រប់គ្រងការណែនាំ,Mentoring Management,mentoring,,t,2025-09-04 07:54:37,2025-09-04 07:54:37
+119,create_visit,បង្កើតការចុះមើល,Create Visit,mentoring,,t,2025-09-04 07:54:37,2025-09-04 07:54:37
+120,edit_visit,កែសម្រួលការចុះមើល,Edit Visit,mentoring,,t,2025-09-04 07:54:37,2025-09-04 07:54:37
+121,visit_details,ព័ត៌មានការចុះមើល,Visit Details,mentoring,,t,2025-09-04 07:54:37,2025-09-04 07:54:37
+122,visit_date,កាលបរិច្ឆេទចុះមើល,Visit Date,mentoring,,t,2025-09-04 07:54:37,2025-09-04 07:54:37
+123,observations,ការសង្កេត,Observations,mentoring,,t,2025-09-04 07:54:37,2025-09-04 07:54:37
+124,feedback,មតិយោបល់,Feedback,mentoring,,t,2025-09-04 07:54:37,2025-09-04 07:54:37
+125,action_items,ចំណុចត្រូវអនុវត្ត,Action Items,mentoring,,t,2025-09-04 07:54:37,2025-09-04 07:54:37
+126,follow_up_required,ត្រូវការតាមដាន,Follow-up Required,mentoring,,t,2025-09-04 07:54:37,2025-09-04 07:54:37
+127,report_management,ការគ្រប់គ្រងរបាយការណ៍,Report Management,reports,,t,2025-09-04 07:54:37,2025-09-04 07:54:37
+128,generate_report,បង្កើតរបាយការណ៍,Generate Report,reports,,t,2025-09-04 07:54:37,2025-09-04 07:54:37
+129,performance_report,របាយការណ៍លទ្ធផល,Performance Report,reports,,t,2025-09-04 07:54:37,2025-09-04 07:54:37
+130,progress_report,របាយការណ៍វឌ្ឍនភាព,Progress Report,reports,,t,2025-09-04 07:54:37,2025-09-04 07:54:37
+70,address,អាសយដ្ឋាន,Address,table,,t,2025-09-04 07:54:34,2025-09-04 07:55:00
+86,last_name,នាមត្រកូល,Last Name,form,,t,2025-09-04 07:54:35,2025-09-04 07:55:01
+87,gender,ភេទ,Gender,form,,t,2025-09-04 07:54:35,2025-09-04 07:55:01
+88,male,ប្រុស,Male,form,,t,2025-09-04 07:54:35,2025-09-04 07:55:01
+89,female,ស្រី,Female,form,,t,2025-09-04 07:54:35,2025-09-04 07:55:01
+90,date_of_birth,ថ្ងៃខែឆ្នាំកំណើត,Date of Birth,form,,t,2025-09-04 07:54:35,2025-09-04 07:55:01
+71,province,ខេត្ត,Province,geographic,,t,2025-09-04 07:54:34,2025-09-04 07:55:01
+73,commune,ឃុំ,Commune,geographic,,t,2025-09-04 07:54:34,2025-09-04 07:55:01
+74,village,ភូមិ,Village,geographic,,t,2025-09-04 07:54:34,2025-09-04 07:55:01
+72,district,ស្រុក/ក្រុង,District,geographic,,t,2025-09-04 07:54:34,2025-09-04 07:55:03
+117,select_students,ជ្រើសរើសសិស្ស,Select Students,assessment,,t,2025-09-04 07:54:37,2025-09-04 07:55:04
+76,all_schools,សាលាទាំងអស់,All Schools,assessment,,t,2025-09-04 07:54:34,2025-09-04 07:55:04
+107,khmer,ភាសាខ្មែរ,Khmer,subject,,t,2025-09-04 07:54:37,2025-09-04 07:55:04
+106,math,គណិតវិទ្យា,Math,subject,,t,2025-09-04 07:54:37,2025-09-04 07:55:04
+101,baseline,មូលដ្ឋាន,Baseline,cycle,,t,2025-09-04 07:54:36,2025-09-04 07:55:04
+103,endline,ចុងក្រោយ,Endline,cycle,,t,2025-09-04 07:54:36,2025-09-04 07:55:04
+92,grade,ថ្នាក់,Grade,general,,t,2025-09-04 07:54:35,2025-09-04 07:55:04
+84,student_name,ឈ្មោះសិស្ស,Student Name,assessment,,t,2025-09-04 07:54:35,2025-09-04 07:55:04
+105,subject,មុខវិជ្ជា,Subject,assessment,,t,2025-09-04 07:54:37,2025-09-04 07:55:04
+113,story,រឿង,Story,level,,t,2025-09-04 07:54:37,2025-09-04 07:55:05
+112,paragraph,កថាខណ្ឌ,Paragraph,level,,t,2025-09-04 07:54:37,2025-09-04 07:55:05
+110,word,ពាក្យ,Word,level,,t,2025-09-04 07:54:37,2025-09-04 07:55:05
+109,letter,អក្សរ,Letter,level,,t,2025-09-04 07:54:37,2025-09-04 07:55:05
+102,midline,កណ្តាល,Midline,cycle,,t,2025-09-04 07:54:36,2025-09-04 07:55:06
+307,Comp. 1,យល់ ១,Comp. 1,general,,t,2025-09-04 07:55:10,2025-09-04 07:55:10
+131,summary_report,របាយការណ៍សង្ខេប,Summary Report,reports,,t,2025-09-04 07:54:38,2025-09-04 07:54:38
+132,detailed_report,របាយការណ៍លម្អិត,Detailed Report,reports,,t,2025-09-04 07:54:38,2025-09-04 07:54:38
+133,from_date,ចាប់ពីថ្ងៃ,From Date,reports,,t,2025-09-04 07:54:38,2025-09-04 07:54:38
+134,to_date,ដល់ថ្ងៃ,To Date,reports,,t,2025-09-04 07:54:38,2025-09-04 07:54:38
+135,total_students,សិស្សសរុប,Total Students,reports,,t,2025-09-04 07:54:38,2025-09-04 07:54:38
+136,total_assessments,ការវាយតម្លៃសរុប,Total Assessments,reports,,t,2025-09-04 07:54:38,2025-09-04 07:54:38
+137,average_score,ពិន្ទុមធ្យម,Average Score,reports,,t,2025-09-04 07:54:38,2025-09-04 07:54:38
+138,improvement_rate,អត្រាភាពប្រសើរឡើង,Improvement Rate,reports,,t,2025-09-04 07:54:38,2025-09-04 07:54:38
+143,created_successfully,បានបង្កើតដោយជោគជ័យ,Created successfully,messages,,t,2025-09-04 07:54:38,2025-09-04 07:54:38
+144,updated_successfully,បានធ្វើបច្ចុប្បន្នភាពដោយជោគជ័យ,Updated successfully,messages,,t,2025-09-04 07:54:38,2025-09-04 07:54:38
+145,deleted_successfully,បានលុបដោយជោគជ័យ,Deleted successfully,messages,,t,2025-09-04 07:54:38,2025-09-04 07:54:38
+146,are_you_sure,តើអ្នកប្រាកដទេ?,Are you sure?,messages,,t,2025-09-04 07:54:38,2025-09-04 07:54:38
+147,cannot_be_undone,សកម្មភាពនេះមិនអាចត្រឡប់វិញបានទេ,This action cannot be undone,messages,,t,2025-09-04 07:54:38,2025-09-04 07:54:38
+148,please_wait,សូមរង់ចាំ...,Please wait...,messages,,t,2025-09-04 07:54:38,2025-09-04 07:54:38
+149,required_field,ប្រអប់នេះត្រូវការបំពេញ,This field is required,messages,,t,2025-09-04 07:54:38,2025-09-04 07:54:38
+150,invalid_email,អាសយដ្ឋានអ៊ីមែលមិនត្រឹមត្រូវ,Invalid email address,messages,,t,2025-09-04 07:54:38,2025-09-04 07:54:38
+151,invalid_password,ពាក្យសម្ងាត់មិនត្រឹមត្រូវ,Invalid password,messages,,t,2025-09-04 07:54:38,2025-09-04 07:54:38
+152,login_success,ចូលដោយជោគជ័យ,Login successful,messages,,t,2025-09-04 07:54:38,2025-09-04 07:54:38
+153,logout_success,ចាកចេញដោយជោគជ័យ,Logout successful,messages,,t,2025-09-04 07:54:38,2025-09-04 07:54:38
+154,access_denied,ការចូលត្រូវបានបដិសេធ,Access denied,messages,,t,2025-09-04 07:54:38,2025-09-04 07:54:38
+155,not_found,រកមិនឃើញ,Not found,messages,,t,2025-09-04 07:54:39,2025-09-04 07:54:39
+156,server_error,កំហុសម៉ាស៊ីនមេ,Server error,messages,,t,2025-09-04 07:54:39,2025-09-04 07:54:39
+157,filter_data,ត្រងទិន្នន័យ,Filter Data,dashboard,,t,2025-09-04 07:54:57,2025-09-04 07:54:57
+161,performance_overview,ទិដ្ឋភាពទូទៅនៃលទ្ធផល,Performance Overview,dashboard,,t,2025-09-04 07:54:57,2025-09-04 07:54:57
+162,assessment_progress,វឌ្ឍនភាពនៃការវាយតម្លៃ,Assessment Progress,dashboard,,t,2025-09-04 07:54:57,2025-09-04 07:54:57
+163,recent_activities,សកម្មភាពថ្មីៗ,Recent Activities,dashboard,,t,2025-09-04 07:54:57,2025-09-04 07:54:57
+164,quick_stats,ស្ថិតិរហ័ស,Quick Stats,dashboard,,t,2025-09-04 07:54:57,2025-09-04 07:54:57
+165,apply_filters,អនុវត្តការត្រង,Apply Filters,filters,,t,2025-09-04 07:54:57,2025-09-04 07:54:57
+166,clear_filters,សម្អាតការត្រង,Clear Filters,filters,,t,2025-09-04 07:54:57,2025-09-04 07:54:57
+167,filter_by,ត្រងតាម,Filter by,filters,,t,2025-09-04 07:54:57,2025-09-04 07:54:57
+168,today,ថ្ងៃនេះ,Today,time,,t,2025-09-04 07:54:57,2025-09-04 07:54:57
+169,yesterday,ម្សិលមិញ,Yesterday,time,,t,2025-09-04 07:54:57,2025-09-04 07:54:57
+170,this_week,សប្តាហ៍នេះ,This Week,time,,t,2025-09-04 07:54:57,2025-09-04 07:54:57
+171,last_week,សប្តាហ៍មុន,Last Week,time,,t,2025-09-04 07:54:57,2025-09-04 07:54:57
+172,this_month,ខែនេះ,This Month,time,,t,2025-09-04 07:54:58,2025-09-04 07:54:58
+173,last_month,ខែមុន,Last Month,time,,t,2025-09-04 07:54:58,2025-09-04 07:54:58
+174,this_year,ឆ្នាំនេះ,This Year,time,,t,2025-09-04 07:54:58,2025-09-04 07:54:58
+175,last_year,ឆ្នាំមុន,Last Year,time,,t,2025-09-04 07:54:58,2025-09-04 07:54:58
+176,total,សរុប,Total,general,,t,2025-09-04 07:54:58,2025-09-04 07:54:58
+177,average,មធ្យម,Average,general,,t,2025-09-04 07:54:58,2025-09-04 07:54:58
+178,completed,បានបញ្ចប់,Completed,general,,t,2025-09-04 07:54:58,2025-09-04 07:54:58
+179,pending,កំពុងរង់ចាំ,Pending,general,,t,2025-09-04 07:54:58,2025-09-04 07:54:58
+180,in_progress,កំពុងដំណើរការ,In Progress,general,,t,2025-09-04 07:54:58,2025-09-04 07:54:58
+181,view_all,មើលទាំងអស់,View All,general,,t,2025-09-04 07:54:58,2025-09-04 07:54:58
+182,view_details,មើលព័ត៌មានលម្អិត,View Details,general,,t,2025-09-04 07:54:58,2025-09-04 07:54:58
+183,close,បិទ,Close,general,,t,2025-09-04 07:54:58,2025-09-04 07:54:58
+184,open,បើក,Open,general,,t,2025-09-04 07:54:58,2025-09-04 07:54:58
+185,print,បោះពុម្ព,Print,general,,t,2025-09-04 07:54:58,2025-09-04 07:54:58
+186,reset,កំណត់ឡើងវិញ,Reset,general,,t,2025-09-04 07:54:58,2025-09-04 07:54:58
+187,refresh,ផ្ទុកឡើងវិញ,Refresh,general,,t,2025-09-04 07:54:58,2025-09-04 07:54:58
+188,tarl_project,គម្រោង TaRL,TaRL Project,navigation,,t,2025-09-04 07:54:59,2025-09-04 07:54:59
+189,plp,PLP,PLP,navigation,,t,2025-09-04 07:54:59,2025-09-04 07:54:59
+3,dashboard,ផ្ទាំងគ្រប់គ្រង,Dashboard,navigation,,t,2025-09-04 07:54:31,2025-09-04 07:54:59
+190,mentoring,ការណែនាំ,Mentoring,navigation,,t,2025-09-04 07:54:59,2025-09-04 07:54:59
+140,error,កំហុស,Error,status,,t,2025-09-04 07:54:38,2025-09-04 07:55:00
+142,info,ព័ត៌មាន,Info,status,,t,2025-09-04 07:54:38,2025-09-04 07:55:00
+159,all_clusters,ក្រុមទាំងអស់,All Clusters,geographic,,t,2025-09-04 07:54:57,2025-09-04 07:55:02
+158,cluster,ក្រុម,Cluster,geographic,,t,2025-09-04 07:54:57,2025-09-04 07:55:03
+160,school,សាលារៀន,School,general,,t,2025-09-04 07:54:57,2025-09-04 07:55:04
+191,coordinator_workspace,កន្លែងធ្វើការអ្នកសម្របសម្រួល,Coordinator Workspace,navigation,,t,2025-09-04 07:54:59,2025-09-04 07:54:59
+192,administration,រដ្ឋបាល,Administration,navigation,,t,2025-09-04 07:54:59,2025-09-04 07:54:59
+193,my_profile,ប្រវត្តិរូបរបស់ខ្ញុំ,My Profile,profile,,t,2025-09-04 07:54:59,2025-09-04 07:54:59
+194,change_password,ផ្លាស់ប្តូរពាក្យសម្ងាត់,Change Password,profile,,t,2025-09-04 07:54:59,2025-09-04 07:54:59
+195,help_support,ជំនួយ និងការគាំទ្រ,Help & Support,profile,,t,2025-09-04 07:54:59,2025-09-04 07:54:59
+196,about,អំពី,About,profile,,t,2025-09-04 07:54:59,2025-09-04 07:54:59
+197,sign_out,ចាកចេញ,Sign Out,profile,,t,2025-09-04 07:54:59,2025-09-04 07:54:59
+198,language,ភាសា,Language,profile,,t,2025-09-04 07:54:59,2025-09-04 07:54:59
+199,add,បន្ថែម,Add,general,,t,2025-09-04 07:54:59,2025-09-04 07:54:59
+200,next,បន្ទាប់,Next,general,,t,2025-09-04 07:55:00,2025-09-04 07:55:00
+201,previous,មុន,Previous,general,,t,2025-09-04 07:55:00,2025-09-04 07:55:00
+202,processing,កំពុងដំណើរការ...,Processing...,status,,t,2025-09-04 07:55:00,2025-09-04 07:55:00
+139,success,ជោគជ័យ,Success,status,,t,2025-09-04 07:54:38,2025-09-04 07:55:00
+141,warning,ការព្រមាន,Warning,status,,t,2025-09-04 07:54:38,2025-09-04 07:55:00
+203,created_at,បង្កើតនៅ,Created At,table,,t,2025-09-04 07:55:01,2025-09-04 07:55:01
+204,updated_at,ធ្វើបច្ចុប្បន្នភាពនៅ,Updated At,table,,t,2025-09-04 07:55:01,2025-09-04 07:55:01
+85,first_name,នាមខ្លួន,First Name,form,,t,2025-09-04 07:54:35,2025-09-04 07:55:01
+205,choose,ជ្រើសរើស,Choose,form,,t,2025-09-04 07:55:01,2025-09-04 07:55:01
+206,required,ចាំបាច់,Required,form,,t,2025-09-04 07:55:01,2025-09-04 07:55:01
+207,optional,ស្រេចចិត្ត,Optional,form,,t,2025-09-04 07:55:01,2025-09-04 07:55:01
+208,loading_statistics,កំពុងផ្ទុកស្ថិតិ...,Loading statistics...,dashboard,,t,2025-09-04 07:55:02,2025-09-04 07:55:02
+209,number_of_students,ចំនួនសិស្ស,Number of Students,dashboard,,t,2025-09-04 07:55:02,2025-09-04 07:55:02
+210,percentage,ភាគរយ (%),Percentage (%),dashboard,,t,2025-09-04 07:55:02,2025-09-04 07:55:02
+211,assessment_results,លទ្ធផលវាយតម្លៃ,Assessment Results,dashboard,,t,2025-09-04 07:55:02,2025-09-04 07:55:02
+212,overall_results,លទ្ធផលរួម,Overall Results,dashboard,,t,2025-09-04 07:55:02,2025-09-04 07:55:02
+214,results_by_school,លទ្ធផលតាមសាលា,Results by School,dashboard,,t,2025-09-04 07:55:02,2025-09-04 07:55:02
+215,quick_actions,សកម្មភាពរហ័ស,Quick Actions,dashboard,,t,2025-09-04 07:55:02,2025-09-04 07:55:02
+217,log_visit,កត់ត្រាការទស្សនកិច្ច,Log Visit,dashboard,,t,2025-09-04 07:55:02,2025-09-04 07:55:02
+218,view_reports,មើលរបាយការណ៍,View Reports,dashboard,,t,2025-09-04 07:55:02,2025-09-04 07:55:02
+216,new_assessment,ការវាយតម្លៃថ្មី,New Assessment,assessment,,t,2025-09-04 07:55:02,2025-09-04 07:55:04
+219,search_by_student_name,ស្វែងរកតាមឈ្មោះសិស្ស...,Search by student name...,assessment,,t,2025-09-04 07:55:04,2025-09-04 07:55:04
+220,all_subjects,មុខវិជ្ជាទាំងអស់,All Subjects,assessment,,t,2025-09-04 07:55:04,2025-09-04 07:55:04
+221,all_cycles,វដ្តទាំងអស់,All Cycles,assessment,,t,2025-09-04 07:55:04,2025-09-04 07:55:04
+222,all_grades,ថ្នាក់ទាំងអស់,All Grades,assessment,,t,2025-09-04 07:55:04,2025-09-04 07:55:04
+223,clear,សម្អាត,Clear,general,,t,2025-09-04 07:55:04,2025-09-04 07:55:04
+224,export_to_excel,នាំចេញទៅ Excel,Export to Excel,general,,t,2025-09-04 07:55:04,2025-09-04 07:55:04
+213,test_cycle,វដ្តតេស្ត,Test Cycle,assessment,,t,2025-09-04 07:55:02,2025-09-04 07:55:04
+225,student_level,កម្រិតសិស្ស,Student Level,assessment,,t,2025-09-04 07:55:04,2025-09-04 07:55:04
+226,date,កាលបរិច្ឆេទ,Date,general,,t,2025-09-04 07:55:05,2025-09-04 07:55:05
+227,locked,ជាប់សោ,Locked,general,,t,2025-09-04 07:55:05,2025-09-04 07:55:05
+228,no_assessments_found,រកមិនឃើញការវាយតម្លៃ,No assessments found,assessment,,t,2025-09-04 07:55:05,2025-09-04 07:55:05
+229,comp_1,យល់អត្ថន័យ ១,Comp. 1,level,,t,2025-09-04 07:55:05,2025-09-04 07:55:05
+230,comp_2,យល់អត្ថន័យ ២,Comp. 2,level,,t,2025-09-04 07:55:05,2025-09-04 07:55:05
+231,beginner,ចាប់ផ្តើម,Beginner,level,,t,2025-09-04 07:55:05,2025-09-04 07:55:05
+232,nothing,គ្មាន,Nothing,level,,t,2025-09-04 07:55:05,2025-09-04 07:55:05
+233,Student Performance Report,របាយការណ៍ការអនុវត្តរបស់សិស្ស,Student Performance Report,general,,t,2025-09-04 07:55:05,2025-09-04 07:55:05
+234,School Comparison Report,របាយការណ៍ប្រៀបធៀបសាលា,School Comparison Report,general,,t,2025-09-04 07:55:06,2025-09-04 07:55:06
+235,Mentoring Impact Report,របាយការណ៍ផលប៉ះពាល់ការណែនាំ,Mentoring Impact Report,general,,t,2025-09-04 07:55:06,2025-09-04 07:55:06
+236,Progress Tracking Report,របាយការណ៍តាមដានវឌ្ឍនភាព,Progress Tracking Report,general,,t,2025-09-04 07:55:06,2025-09-04 07:55:06
+237,Performance Calculation Report,របាយការណ៍គណនាការអនុវត្ត,Performance Calculation Report,general,,t,2025-09-04 07:55:06,2025-09-04 07:55:06
+238,Back to Reports,ត្រឡប់ទៅរបាយការណ៍,Back to Reports,general,,t,2025-09-04 07:55:06,2025-09-04 07:55:06
+239,All Schools,សាលាទាំងអស់,All Schools,general,,t,2025-09-04 07:55:06,2025-09-04 07:55:06
+240,All Subjects,មុខវិជ្ជាទាំងអស់,All Subjects,general,,t,2025-09-04 07:55:06,2025-09-04 07:55:06
+241,All Cycles,រៀងរាល់វដ្តទាំងអស់,All Cycles,general,,t,2025-09-04 07:55:06,2025-09-04 07:55:06
+242,Test Cycle,វដ្តតេស្ត,Test Cycle,general,,t,2025-09-04 07:55:06,2025-09-04 07:55:06
+243,Apply Filters,អនុវត្តតម្រង,Apply Filters,general,,t,2025-09-04 07:55:06,2025-09-04 07:55:06
+244,Understanding Student Performance Levels,យល់ដឹងអំពីកម្រិតការអនុវត្តរបស់សិស្ស,Understanding Student Performance Levels,general,,t,2025-09-04 07:55:06,2025-09-04 07:55:06
+308,Comp. 2,យល់ ២,Comp. 2,general,,t,2025-09-04 07:55:10,2025-09-04 07:55:10
+245,This report shows how students are distributed across different skill levels in Khmer and Math subjects. Each level represents a specific learning milestone:,របាយការណ៍នេះបង្ហាញពីរបៀបដែលសិស្សត្រូវបានបែងចែកនៅកម្រិតជំនាញផ្សេងៗគ្នានៅក្នុងមុខវិជ្ជាខ្មែរ និងគណិតវិទ្យា។ កម្រិតនីមួយៗតំណាងឱ្យចំណុចសម្គាល់នៃការរៀនសូត្រជាក់លាក់មួយ៖,This report shows how students are distributed across different skill levels in Khmer and Math subjects. Each level represents a specific learning milestone:,general,,t,2025-09-04 07:55:06,2025-09-04 07:55:06
+246,Khmer Levels,កម្រិតខ្មែរ,Khmer Levels,general,,t,2025-09-04 07:55:06,2025-09-04 07:55:06
+247,Cannot read letters or words,មិនអាចអានអក្សរ ឬពាក្យបាន,Cannot read letters or words,general,,t,2025-09-04 07:55:06,2025-09-04 07:55:06
+248,Can identify individual letters,អាចសម្គាល់អក្សរនីមួយៗបាន,Can identify individual letters,general,,t,2025-09-04 07:55:06,2025-09-04 07:55:06
+249,Can read simple words,អាចអានពាក្យសាមញ្ញបាន,Can read simple words,general,,t,2025-09-04 07:55:06,2025-09-04 07:55:06
+250,Can read simple paragraphs,អាចអានកថាខណ្ឌសាមញ្ញបាន,Can read simple paragraphs,general,,t,2025-09-04 07:55:06,2025-09-04 07:55:06
+251,Can read complete stories,អាចអានរឿងពេញលេញបាន,Can read complete stories,general,,t,2025-09-04 07:55:06,2025-09-04 07:55:06
+252,Basic reading comprehension,ការយល់ដឹងការអានមូលដ្ឋាន,Basic reading comprehension,general,,t,2025-09-04 07:55:06,2025-09-04 07:55:06
+253,Advanced reading comprehension,ការយល់ដឹងការអានកម្រិតខ្ពស់,Advanced reading comprehension,general,,t,2025-09-04 07:55:07,2025-09-04 07:55:07
+254,Math Levels,កម្រិតគណិតវិទ្យា,Math Levels,general,,t,2025-09-04 07:55:07,2025-09-04 07:55:07
+255,Cannot perform basic math operations,មិនអាចធ្វើប្រមាណវិធីគណិតវិទ្យាមូលដ្ឋានបាន,Cannot perform basic math operations,general,,t,2025-09-04 07:55:07,2025-09-04 07:55:07
+256,Can work with single-digit numbers,អាចធ្វើការជាមួយលេខឯកតួបាន,Can work with single-digit numbers,general,,t,2025-09-04 07:55:07,2025-09-04 07:55:07
+257,Can work with two-digit numbers,អាចធ្វើការជាមួយលេខពីរតួបាន,Can work with two-digit numbers,general,,t,2025-09-04 07:55:07,2025-09-04 07:55:07
+258,Can perform subtraction operations,អាចធ្វើប្រមាណវិធីដកបាន,Can perform subtraction operations,general,,t,2025-09-04 07:55:07,2025-09-04 07:55:07
+259,Can perform division operations,អាចធ្វើប្រមាណវិធីចែកបាន,Can perform division operations,general,,t,2025-09-04 07:55:07,2025-09-04 07:55:07
+260,Can solve mathematical word problems,អាចដោះស្រាយបញ្ហាគណិតវិទ្យាជាពាក្យបាន,Can solve mathematical word problems,general,,t,2025-09-04 07:55:07,2025-09-04 07:55:07
+261,Assessment Cycles,វដ្តវាយតម្លៃ,Assessment Cycles,general,,t,2025-09-04 07:55:07,2025-09-04 07:55:07
+262,Initial assessment to determine starting skill levels,ការវាយតម្លៃដំបូងដើម្បីកំណត់កម្រិតជំនាញចាប់ផ្តើម,Initial assessment to determine starting skill levels,general,,t,2025-09-04 07:55:07,2025-09-04 07:55:07
+263,Mid-program assessment to track progress,ការវាយតម្លៃកណ្តាលកម្មវិធីដើម្បីតាមដានវឌ្ឍនភាព,Mid-program assessment to track progress,general,,t,2025-09-04 07:55:07,2025-09-04 07:55:07
+264,Final assessment to measure overall improvement,ការវាយតម្លៃចុងក្រោយដើម្បីវាស់វែងការធ្វើឱ្យប្រសើរឡើងជាទូទៅ,Final assessment to measure overall improvement,general,,t,2025-09-04 07:55:07,2025-09-04 07:55:07
+265,Khmer Performance by Level,ការអនុវត្តខ្មែរតាមកម្រិត,Khmer Performance by Level,general,,t,2025-09-04 07:55:07,2025-09-04 07:55:07
+266,Math Performance by Level,ការអនុវត្តគណិតវិទ្យាតាមកម្រិត,Math Performance by Level,general,,t,2025-09-04 07:55:07,2025-09-04 07:55:07
+267,Performance by Level,ការអនុវត្តតាមកម្រិត,Performance by Level,general,,t,2025-09-04 07:55:07,2025-09-04 07:55:07
+268,What this shows,អ្វីដែលវាបង្ហាញ,What this shows,general,,t,2025-09-04 07:55:08,2025-09-04 07:55:08
+269,Distribution of students across Khmer reading levels. Colors progress from red (lowest) to teal (highest) to visually represent skill progression.,ការបែងចែកសិស្សនៅកម្រិតការអានខ្មែរ។ ពណ៌វិវឌ្ឍនភាពពីក្រហម (ទាបបំផុត) ទៅ teal (ខ្ពស់បំផុត) ដើម្បីបង្ហាញការវិវឌ្ឍនភាពជំនាញដោយមើលឃើញ។,Distribution of students across Khmer reading levels. Colors progress from red (lowest) to teal (highest) to visually represent skill progression.,general,,t,2025-09-04 07:55:08,2025-09-04 07:55:08
+270,Distribution of students across Math skill levels. Colors progress from red (lowest) to emerald (highest) to visually represent skill progression.,ការបែងចែកសិស្សនៅកម្រិតជំនាញគណិតវិទ្យា។ ពណ៌វិវឌ្ឍនភាពពីក្រហម (ទាបបំផុត) ទៅ emerald (ខ្ពស់បំផុត) ដើម្បីបង្ហាញការវិវឌ្ឍនភាពជំនាញដោយមើលឃើញ។,Distribution of students across Math skill levels. Colors progress from red (lowest) to emerald (highest) to visually represent skill progression.,general,,t,2025-09-04 07:55:08,2025-09-04 07:55:08
+271,Distribution of students across Khmer reading levels. Each student is assessed and placed at the level that best matches their reading ability.,ការបែងចែកសិស្សនៅកម្រិតការអានខ្មែរ។ សិស្សនីមួយៗត្រូវបានវាយតម្លៃ និងដាក់នៅកម្រិតដែលត្រូវគ្នានឹងសមត្ថភាពអានរបស់ពួកគេបំផុត។,Distribution of students across Khmer reading levels. Each student is assessed and placed at the level that best matches their reading ability.,general,,t,2025-09-04 07:55:08,2025-09-04 07:55:08
+309,1-Digit,១ តួ,1-Digit,general,,t,2025-09-04 07:55:10,2025-09-04 07:55:10
+310,2-Digit,២ តួ,2-Digit,general,,t,2025-09-04 07:55:10,2025-09-04 07:55:10
+272,Distribution of students across Math skill levels. Each student is assessed and placed at the level that best matches their mathematical ability.,ការបែងចែកសិស្សនៅកម្រិតជំនាញគណិតវិទ្យា។ សិស្សនីមួយៗត្រូវបានវាយតម្លៃ និងដាក់នៅកម្រិតដែលត្រូវគ្នានឹងសមត្ថភាពគណិតវិទ្យារបស់ពួកគេបំផុត។,Distribution of students across Math skill levels. Each student is assessed and placed at the level that best matches their mathematical ability.,general,,t,2025-09-04 07:55:08,2025-09-04 07:55:08
+273,Color coding,កំណត់ពណ៌,Color coding,general,,t,2025-09-04 07:55:08,2025-09-04 07:55:08
+274,Colors progress from red (beginner) to green/teal (advanced) to show skill progression.,ពណ៌វិវឌ្ឍនភាពពីក្រហម (ចាប់ផ្តើម) ទៅបៃតង/teal (កម្រិតខ្ពស់) ដើម្បីបង្ហាញការវិវឌ្ឍនភាពជំនាញ។,Colors progress from red (beginner) to green/teal (advanced) to show skill progression.,general,,t,2025-09-04 07:55:08,2025-09-04 07:55:08
+275,Level,កម្រិត,Level,general,,t,2025-09-04 07:55:08,2025-09-04 07:55:08
+276,Number of Students,ចំនួនសិស្ស,Number of Students,general,,t,2025-09-04 07:55:08,2025-09-04 07:55:08
+277,Percentage,ភាគរយ,Percentage,general,,t,2025-09-04 07:55:08,2025-09-04 07:55:08
+278,Total,សរុប,Total,general,,t,2025-09-04 07:55:08,2025-09-04 07:55:08
+279,Khmer reading skill level,កម្រិតជំនាញអានខ្មែរ,Khmer reading skill level,general,,t,2025-09-04 07:55:08,2025-09-04 07:55:08
+280,Math skill level,កម្រិតជំនាញគណិតវិទ្យា,Math skill level,general,,t,2025-09-04 07:55:08,2025-09-04 07:55:08
+281,Skill level determined by assessment,កម្រិតជំនាញកំណត់ដោយការវាយតម្លៃ,Skill level determined by assessment,general,,t,2025-09-04 07:55:09,2025-09-04 07:55:09
+282,Total students assessed at this level,សិស្សសរុបដែលបានវាយតម្លៃនៅកម្រិតនេះ,Total students assessed at this level,general,,t,2025-09-04 07:55:09,2025-09-04 07:55:09
+283,Percentage of all Khmer assessments,ភាគរយនៃការវាយតម្លៃខ្មែរទាំងអស់,Percentage of all Khmer assessments,general,,t,2025-09-04 07:55:09,2025-09-04 07:55:09
+284,Percentage of all Math assessments,ភាគរយនៃការវាយតម្លៃគណិតវិទ្យាទាំងអស់,Percentage of all Math assessments,general,,t,2025-09-04 07:55:09,2025-09-04 07:55:09
+285,Percentage of all assessments for this subject,ភាគរយនៃការវាយតម្លៃទាំងអស់សម្រាប់មុខវិជ្ជានេះ,Percentage of all assessments for this subject,general,,t,2025-09-04 07:55:09,2025-09-04 07:55:09
+286,How to Interpret This Data,របៀបបកស្រាយទិន្នន័យនេះ,How to Interpret This Data,general,,t,2025-09-04 07:55:09,2025-09-04 07:55:09
+287,Higher level distributions,ការបែងចែកកម្រិតខ្ពស់,Higher level distributions,general,,t,2025-09-04 07:55:09,2025-09-04 07:55:09
+288,More students at advanced levels indicates stronger overall performance,សិស្សច្រើននៅកម្រិតខ្ពស់បង្ហាញពីការអនុវត្តជាទូទៅកាន់តែល្អ,More students at advanced levels indicates stronger overall performance,general,,t,2025-09-04 07:55:09,2025-09-04 07:55:09
+289,Beginner concentrations,ការប្រមូលផ្តុំអ្នកចាប់ផ្តើម,Beginner concentrations,general,,t,2025-09-04 07:55:09,2025-09-04 07:55:09
+290,Large numbers at beginner level may indicate need for foundational support,ចំនួនច្រើននៅកម្រិតចាប់ផ្តើមអាចបង្ហាញពីតម្រូវការសម្រាប់ការគាំទ្រមូលដ្ឋាន,Large numbers at beginner level may indicate need for foundational support,general,,t,2025-09-04 07:55:09,2025-09-04 07:55:09
+291,Even distributions,ការបែងចែកស្មើ,Even distributions,general,,t,2025-09-04 07:55:09,2025-09-04 07:55:09
+292,Students spread across levels suggests mixed abilities requiring differentiated instruction,សិស្សបែកបាក់នៅកម្រិតផ្សេងៗបង្ហាញពីសមត្ថភាពចម្រុះដែលត្រូវការការបង្រៀនខុសៗគ្នា,Students spread across levels suggests mixed abilities requiring differentiated instruction,general,,t,2025-09-04 07:55:09,2025-09-04 07:55:09
+293,Filter usage,ការប្រើប្រាស់តម្រង,Filter usage,general,,t,2025-09-04 07:55:09,2025-09-04 07:55:09
+294,"Use school, subject, and cycle filters to analyze specific groups or track progress over time",ប្រើតម្រងសាលា មុខវិជ្ជា និងវដ្តដើម្បីវិភាគក្រុមជាក់លាក់ ឬតាមដានវឌ្ឍនភាពតាមពេលវេលា,"Use school, subject, and cycle filters to analyze specific groups or track progress over time",general,,t,2025-09-04 07:55:09,2025-09-04 07:55:09
+295,Export Options,ជម្រើសនាំចេញ,Export Options,general,,t,2025-09-04 07:55:09,2025-09-04 07:55:09
+296,"Save charts and data for presentations, reports, or further analysis.",រក្សាទុកតារាង និងទិន្នន័យសម្រាប់ការបង្ហាញ របាយការណ៍ ឬការវិភាគបន្ថែម។,"Save charts and data for presentations, reports, or further analysis.",general,,t,2025-09-04 07:55:09,2025-09-04 07:55:09
+297,Export Charts as Images,នាំចេញតារាងជារូបភាព,Export Charts as Images,general,,t,2025-09-04 07:55:09,2025-09-04 07:55:09
+298,Print Report,បោះពុម្ពរបាយការណ៍,Print Report,general,,t,2025-09-04 07:55:09,2025-09-04 07:55:09
+299,Student Distribution by Level,ការបែងចែកសិស្សតាមកម្រិត,Student Distribution by Level,general,,t,2025-09-04 07:55:09,2025-09-04 07:55:09
+300,Skill Level,កម្រិតជំនាញ,Skill Level,general,,t,2025-09-04 07:55:09,2025-09-04 07:55:09
+301,Beginner to Advanced,ពីចាប់ផ្តើមទៅកម្រិតខ្ពស់,Beginner to Advanced,general,,t,2025-09-04 07:55:09,2025-09-04 07:55:09
+302,Beginner,ចាប់ផ្តើម,Beginner,general,,t,2025-09-04 07:55:10,2025-09-04 07:55:10
+303,Letter,អក្សរ,Letter,general,,t,2025-09-04 07:55:10,2025-09-04 07:55:10
+304,Word,ពាក្យ,Word,general,,t,2025-09-04 07:55:10,2025-09-04 07:55:10
+305,Paragraph,កថាខណ្ឌ,Paragraph,general,,t,2025-09-04 07:55:10,2025-09-04 07:55:10
+306,Story,រឿង,Story,general,,t,2025-09-04 07:55:10,2025-09-04 07:55:10
+311,Subtraction,ដក,Subtraction,general,,t,2025-09-04 07:55:10,2025-09-04 07:55:10
+312,Division,ចែក,Division,general,,t,2025-09-04 07:55:10,2025-09-04 07:55:10
+313,Word Problem,បញ្ហាពាក្យ,Word Problem,general,,t,2025-09-04 07:55:10,2025-09-04 07:55:10
+314,Khmer,ខ្មែរ,Khmer,general,,t,2025-09-04 07:55:10,2025-09-04 07:55:10
+315,Math,គណិតវិទ្យា,Math,general,,t,2025-09-04 07:55:10,2025-09-04 07:55:10
+316,School,សាលា,School,general,,t,2025-09-04 07:55:10,2025-09-04 07:55:10
+317,Subject,មុខវិជ្ជា,Subject,general,,t,2025-09-04 07:55:10,2025-09-04 07:55:10
+318,Understanding School Comparisons,យល់ដឹងអំពីការប្រៀបធៀបសាលា,Understanding School Comparisons,general,,t,2025-09-04 07:55:10,2025-09-04 07:55:10
+319,This report compares student performance across different schools for a specific subject and assessment cycle. It helps identify:,របាយការណ៍នេះប្រៀបធៀបការអនុវត្តរបស់សិស្សទូទាំងសាលាផ្សេងៗគ្នាសម្រាប់មុខវិជ្ជា និងវដ្តវាយតម្លៃជាក់លាក់មួយ។ វាជួយកំណត់អត្តសញ្ញាណ៖,This report compares student performance across different schools for a specific subject and assessment cycle. It helps identify:,general,,t,2025-09-04 07:55:10,2025-09-04 07:55:10
+320,Schools with higher concentrations of advanced students,សាលាដែលមានការប្រមូលផ្តុំខ្ពស់នៅសិស្សកម្រិតខ្ពស់,Schools with higher concentrations of advanced students,general,,t,2025-09-04 07:55:10,2025-09-04 07:55:10
+321,Schools that may need additional support for foundational skills,សាលាដែលអាចត្រូវការការគាំទ្របន្ថែមសម្រាប់ជំនាញមូលដ្ឋាន,Schools that may need additional support for foundational skills,general,,t,2025-09-04 07:55:10,2025-09-04 07:55:10
+322,Distribution patterns that inform resource allocation,លំនាំការបែងចែកដែលផ្តល់ព័ត៌មានការបែងចែកធនធាន,Distribution patterns that inform resource allocation,general,,t,2025-09-04 07:55:10,2025-09-04 07:55:10
+323,Performance variations across the school network,ការប្រែប្រួលការអនុវត្តនៅទូទាំងបណ្តាញសាលា,Performance variations across the school network,general,,t,2025-09-04 07:55:11,2025-09-04 07:55:11
+324,How to Read the Charts and Tables,របៀបអានគំនូសតាង និងតារាង,How to Read the Charts and Tables,general,,t,2025-09-04 07:55:11,2025-09-04 07:55:11
+325,Stacked Bar Chart,គំនូសតាងរបារជង់,Stacked Bar Chart,general,,t,2025-09-04 07:55:11,2025-09-04 07:55:11
+326,Each bar represents one school,របារនីមួយៗតំណាងឱ្យសាលាមួយ,Each bar represents one school,general,,t,2025-09-04 07:55:11,2025-09-04 07:55:11
+327,"Colors show skill levels (red=beginner, green/teal=advanced)","ពណ៌បង្ហាញកម្រិតជំនាញ (ក្រហម=ដំបូង, បៃតង/បៃតងទឹកសមុទ្រ=កម្រិតខ្ពស់)","Colors show skill levels (red=beginner, green/teal=advanced)",general,,t,2025-09-04 07:55:11,2025-09-04 07:55:11
+328,Bar height shows total students assessed,កម្ពស់របារបង្ហាញចំនួនសិស្សដែលបានវាយតម្លៃសរុប,Bar height shows total students assessed,general,,t,2025-09-04 07:55:11,2025-09-04 07:55:11
+329,Color proportions show level distribution,សមាមាត្រពណ៌បង្ហាញការបែងចែកកម្រិត,Color proportions show level distribution,general,,t,2025-09-04 07:55:11,2025-09-04 07:55:11
+330,Comparison Table,តារាងប្រៀបធៀប,Comparison Table,general,,t,2025-09-04 07:55:11,2025-09-04 07:55:11
+331,Numbers show student counts at each level,លេខបង្ហាញចំនួនសិស្សនៅកម្រិតនីមួយៗ,Numbers show student counts at each level,general,,t,2025-09-04 07:55:11,2025-09-04 07:55:11
+332,Percentages show proportion of school total,ភាគរយបង្ហាញសមាមាត្រនៃចំនួនសរុបសាលា,Percentages show proportion of school total,general,,t,2025-09-04 07:55:11,2025-09-04 07:55:11
+333,Compare across rows to see school differences,ប្រៀបធៀបតាមជួរដេកដើម្បីមើលភាពខុសគ្នារបស់សាលា,Compare across rows to see school differences,general,,t,2025-09-04 07:55:11,2025-09-04 07:55:11
+334,Compare within columns to see level concentrations,ប្រៀបធៀបក្នុងជួរឈរដើម្បីមើលការប្រមូលផ្តុំកម្រិត,Compare within columns to see level concentrations,general,,t,2025-09-04 07:55:11,2025-09-04 07:55:11
+335,Student Distribution by School and Level,ការបែងចែកសិស្សតាមសាលា និងកម្រិត,Student Distribution by School and Level,general,,t,2025-09-04 07:55:11,2025-09-04 07:55:11
+336,Chart interpretation,ការបកស្រាយគំនូសតាង,Chart interpretation,general,,t,2025-09-04 07:55:11,2025-09-04 07:55:11
+337,Each school is represented by a stacked bar. Taller bars indicate more students assessed. The color distribution within each bar shows how students are distributed across skill levels.,សាលានីមួយៗត្រូវបានតំណាងដោយរបារជង់។ របារខ្ពស់បង្កើតបង្ហាញថាសិស្សច្រើនជាងត្រូវបានវាយតម្លៃ។ ការបែងចែកពណ៌នៅក្នុងរបារនីមួយៗបង្ហាញពីរបៀបដែលសិស្សត្រូវបានបែងចែកនៅទូទាំងកម្រិតជំនាញ។,Each school is represented by a stacked bar. Taller bars indicate more students assessed. The color distribution within each bar shows how students are distributed across skill levels.,general,,t,2025-09-04 07:55:11,2025-09-04 07:55:11
+338,Look for,មើលរក,Look for,general,,t,2025-09-04 07:55:11,2025-09-04 07:55:11
+339,"Schools with more green/teal (advanced levels) vs red/yellow (beginner levels), and schools with similar total heights but different color distributions.",សាលាដែលមានពណ៌បៃតង/បៃតងទឹកសមុទ្រច្រើនជាង (កម្រិតខ្ពស់) ធៀបនឹងក្រហម/លឿង (កម្រិតដំបូង) និងសាលាដែលមានកម្ពស់សរុបស្រដៀងគ្នាប៉ុន្តែការបែងចែកពណ៌ផ្សេងគ្នា។,"Schools with more green/teal (advanced levels) vs red/yellow (beginner levels), and schools with similar total heights but different color distributions.",general,,t,2025-09-04 07:55:11,2025-09-04 07:55:11
+340,How We Calculate Impact,របៀបដែលយើងគណនាផលប៉ះពាល់,How We Calculate Impact,general,,t,2025-09-04 07:55:11,2025-09-04 07:55:11
+341,Baseline Percentage,ភាគរយមូលដ្ឋាន,Baseline Percentage,general,,t,2025-09-04 07:55:11,2025-09-04 07:55:11
+342,Latest Percentage,ភាគរយចុងក្រោយ,Latest Percentage,general,,t,2025-09-04 07:55:11,2025-09-04 07:55:11
+343,Mentoring Visits vs Performance Improvement,ការចូលរួមណែនាំ ធៀបនឹង ការកែលម្អការអនុវត្ត,Mentoring Visits vs Performance Improvement,general,,t,2025-09-04 07:55:11,2025-09-04 07:55:11
+344,School Impact Summary,សង្ខេបផលប៉ះពាល់សាលា,School Impact Summary,general,,t,2025-09-04 07:55:11,2025-09-04 07:55:11
+345,Understanding the Data:,ការយល់ដឹងទិន្នន័យ៖,Understanding the Data:,general,,t,2025-09-04 07:55:11,2025-09-04 07:55:11
+346,Visit Details by School,លម្អិតការចូលរួមតាមសាលា,Visit Details by School,general,,t,2025-09-04 07:55:12,2025-09-04 07:55:12
+347,Teachers,គ្រូ,Teachers,general,,t,2025-09-04 07:55:12,2025-09-04 07:55:12
+348,Follow-up Required,ត្រូវការតាមដាន,Follow-up Required,general,,t,2025-09-04 07:55:12,2025-09-04 07:55:12
+349,Show Details,បង្ហាញលម្អិត,Show Details,general,,t,2025-09-04 07:55:12,2025-09-04 07:55:12
+350,Hide Details,លាក់លម្អិត,Hide Details,general,,t,2025-09-04 07:55:12,2025-09-04 07:55:12
+351,visits,ការចុះណែនាំ,visits,general,,t,2025-09-04 07:55:12,2025-09-04 07:55:12
+352,improvement,កែលម្អ,improvement,general,,t,2025-09-04 07:55:12,2025-09-04 07:55:12
+353,Correlation between Mentoring Visits and Performance Improvement,ការទាក់ទងគ្នារវាងការចុះណែនាំ និងការកែលម្អដំណើរការ,Correlation between Mentoring Visits and Performance Improvement,general,,t,2025-09-04 07:55:12,2025-09-04 07:55:12
+354,Number of Mentoring Visits,ចំនួនការចុះណែនាំ,Number of Mentoring Visits,general,,t,2025-09-04 07:55:12,2025-09-04 07:55:12
+355,Performance Improvement (Latest - Baseline),ការកែលម្អដំណើរការ (ចុងក្រោយ - មូលដ្ឋាន),Performance Improvement (Latest - Baseline),general,,t,2025-09-04 07:55:12,2025-09-04 07:55:12
+356,Percentage of visits where class was in session,ភាគរយនៃការចុះទស្សនកិច្ចដែលថ្នាក់រៀនកំពុងបើក,Percentage of visits where class was in session,general,,t,2025-09-04 07:55:12,2025-09-04 07:55:12
+357,Percentage of teachers with session plans,ភាគរយនៃគ្រូដែលមានផែនការបង្រៀន,Percentage of teachers with session plans,general,,t,2025-09-04 07:55:12,2025-09-04 07:55:12
+358,Individual visit records during the selected period:,កំណត់ត្រាការចុះទស្សនកិច្ចបុគ្គលក្នុងអំឡុងពេលដែលបានជ្រើសរើស៖,Individual visit records during the selected period:,general,,t,2025-09-04 07:55:12,2025-09-04 07:55:12
+359,Date,កាលបរិច្ឆេទ,Date,general,,t,2025-09-04 07:55:12,2025-09-04 07:55:12
+360,Teacher,គ្រូ,Teacher,general,,t,2025-09-04 07:55:12,2025-09-04 07:55:12
+361,Session,សេស្យុង,Session,general,,t,2025-09-04 07:55:12,2025-09-04 07:55:12
+362,Follow-up,តាមដាន,Follow-up,general,,t,2025-09-04 07:55:12,2025-09-04 07:55:12
+363,Yes,បាទ/ចាស,Yes,general,,t,2025-09-04 07:55:12,2025-09-04 07:55:12
+364,No,ទេ,No,general,,t,2025-09-04 07:55:12,2025-09-04 07:55:12
+365,Start Date,កាលបរិច្ឆេទចាប់ផ្តើម,Start Date,general,,t,2025-09-04 07:55:12,2025-09-04 07:55:12
+366,End Date,កាលបរិច្ឆេទបញ្ចប់,End Date,general,,t,2025-09-04 07:55:12,2025-09-04 07:55:12
+367,Understanding Progress Tracking,យល់ដឹងការតាមដានវឌ្ឍនភាព,Understanding Progress Tracking,general,,t,2025-09-04 07:55:12,2025-09-04 07:55:12
+368,This report tracks individual student learning progress by comparing their baseline assessment with their most recent assessment (midline or endline). It shows:,របាយការណ៍នេះតាមដានវឌ្ឍនភាពការរៀនសូត្រសិស្សបុគ្គលដោយប្រៀបធៀបការវាយតម្លៃមូលដ្ឋានរបស់ពួកគេជាមួយការវាយតម្លៃចុងក្រោយបំផុតរបស់ពួកគេ (មុនពេលកណ្តាល ឬចុងក្រោយ)។ វាបង្ហាញ៖,This report tracks individual student learning progress by comparing their baseline assessment with their most recent assessment (midline or endline). It shows:,general,,t,2025-09-04 07:55:12,2025-09-04 07:55:12
+369,Students who improved to higher skill levels,សិស្សដែលបានកែលម្អទៅកម្រិតជំនាញខ្ពស់,Students who improved to higher skill levels,general,,t,2025-09-04 07:55:12,2025-09-04 07:55:12
+370,Students who maintained their skill level,សិស្សដែលរក្សាបានកម្រិតជំនាញរបស់ពួកគេ,Students who maintained their skill level,general,,t,2025-09-04 07:55:12,2025-09-04 07:55:12
+371,Students whose performance declined,សិស្សដែលការអនុវត្តបានធ្លាក់ចុះ,Students whose performance declined,general,,t,2025-09-04 07:55:13,2025-09-04 07:55:13
+372,Score changes between assessment cycles,ការផ្លាស់ប្តូរពិន្ទុរវាងវដ្តវាយតម្លៃ,Score changes between assessment cycles,general,,t,2025-09-04 07:55:13,2025-09-04 07:55:13
+373,Compares skill levels between baseline and latest assessment,ប្រៀបធៀបកម្រិតជំនាញរវាងការវាយតម្លៃមូលដ្ឋាន និងចុងក្រោយ,Compares skill levels between baseline and latest assessment,general,,t,2025-09-04 07:55:13,2025-09-04 07:55:13
+374,Positive number = moved up levels (improved),លេខវិជ្ជមាន = បានឡើងកម្រិត (កែលម្អ),Positive number = moved up levels (improved),general,,t,2025-09-04 07:55:13,2025-09-04 07:55:13
+375,Zero = stayed at same level (maintained),សូន្យ = នៅតែកម្រិតដដែល (រក្សាបាន),Zero = stayed at same level (maintained),general,,t,2025-09-04 07:55:13,2025-09-04 07:55:13
+376,Negative number = moved down levels (declined),លេខអវិជ្ជមាន = ចុះកម្រិត (ធ្លាក់ចុះ),Negative number = moved down levels (declined),general,,t,2025-09-04 07:55:13,2025-09-04 07:55:13
+410,of total,នៃសរុប,of total,general,,t,2025-09-04 07:55:14,2025-09-04 07:55:14
+377,Difference between latest score and baseline score,ភាពខុសគ្នារវាងពិន្ទុចុងក្រោយ និងពិន្ទុមូលដ្ឋាន,Difference between latest score and baseline score,general,,t,2025-09-04 07:55:13,2025-09-04 07:55:13
+378,Positive = score increased,វិជ្ជមាន = ពិន្ទុកើនឡើង,Positive = score increased,general,,t,2025-09-04 07:55:13,2025-09-04 07:55:13
+379,Zero = score stayed the same,សូន្យ = ពិន្ទុនៅដដែល,Zero = score stayed the same,general,,t,2025-09-04 07:55:13,2025-09-04 07:55:13
+380,Negative = score decreased,អវិជ្ជមាន = ពិន្ទុចុះទាប,Negative = score decreased,general,,t,2025-09-04 07:55:13,2025-09-04 07:55:13
+381,Current View,ទិដ្ឋភាពបច្ចុប្បន្ន,Current View,general,,t,2025-09-04 07:55:13,2025-09-04 07:55:13
+382,Tracking progress in,តាមដានវឌ្ឍនភាពក្នុង,Tracking progress in,general,,t,2025-09-04 07:55:13,2025-09-04 07:55:13
+383,for,សម្រាប់,for,general,,t,2025-09-04 07:55:13,2025-09-04 07:55:13
+384,Selected School,សាលាដែលបានជ្រើសរើស,Selected School,general,,t,2025-09-04 07:55:13,2025-09-04 07:55:13
+385,across all accessible schools,នៅទូទាំងសាលាដែលអាចចូលប្រើបាន,across all accessible schools,general,,t,2025-09-04 07:55:13,2025-09-04 07:55:13
+386,Only students with both baseline and follow-up assessments are included,មានតែសិស្សដែលមានការវាយតម្លៃមូលដ្ឋាន និងតាមដានប៉ុណ្ណោះដែលត្រូវបានរួមបញ្ចូល,Only students with both baseline and follow-up assessments are included,general,,t,2025-09-04 07:55:13,2025-09-04 07:55:13
+387,Individual Student Progress,វឌ្ឍនភាពសិស្សបុគ្គល,Individual Student Progress,general,,t,2025-09-04 07:55:13,2025-09-04 07:55:13
+388,Reading the Progress Table,ការអានតារាងវឌ្ឍនភាព,Reading the Progress Table,general,,t,2025-09-04 07:55:13,2025-09-04 07:55:13
+389,Baseline,មូលដ្ឋាន,Baseline,general,,t,2025-09-04 07:55:13,2025-09-04 07:55:13
+390,Initial skill level and score when first assessed,កម្រិតជំនាញ និងពិន្ទុដំបូងពេលវាយតម្លៃលើកដំបូង,Initial skill level and score when first assessed,general,,t,2025-09-04 07:55:13,2025-09-04 07:55:13
+391,Latest,ចុងក្រោយ,Latest,general,,t,2025-09-04 07:55:13,2025-09-04 07:55:13
+392,Most recent skill level and score (midline or endline),កម្រិតជំនាញ និងពិន្ទុថ្មីបំផុត (កណ្តាល ឬចុងក្រោយ),Most recent skill level and score (midline or endline),general,,t,2025-09-04 07:55:13,2025-09-04 07:55:13
+393,Number of skill levels moved up (+) or down (-),ចំនួនកម្រិតជំនាញឡើង (+) ឬចុះ (-),Number of skill levels moved up (+) or down (-),general,,t,2025-09-04 07:55:13,2025-09-04 07:55:13
+394,Numerical difference between latest and baseline scores,ភាពខុសគ្នាជាលេខរវាងពិន្ទុចុងក្រោយ និងមូលដ្ឋាន,Numerical difference between latest and baseline scores,general,,t,2025-09-04 07:55:13,2025-09-04 07:55:13
+395,"Students are sorted by level improvement (most improved first), then by score change.",សិស្សត្រូវបានតម្រៀបតាមការកែលម្អកម្រិត (អ្នកកែលម្អបំផុតមុន) បន្ទាប់មកតាមការផ្លាស់ប្តូរពិន្ទុ។,"Students are sorted by level improvement (most improved first), then by score change.",general,,t,2025-09-04 07:55:14,2025-09-04 07:55:14
+396,Student Name,ឈ្មោះសិស្ស,Student Name,general,,t,2025-09-04 07:55:14,2025-09-04 07:55:14
+397,Student name,ឈ្មោះសិស្ស,Student name,general,,t,2025-09-04 07:55:14,2025-09-04 07:55:14
+398,School where student is enrolled,សាលាដែលសិស្សចុះឈ្មោះ,School where student is enrolled,general,,t,2025-09-04 07:55:14,2025-09-04 07:55:14
+399,Initial assessment level and score,កម្រិត និងពិន្ទុការវាយតម្លៃដំបូង,Initial assessment level and score,general,,t,2025-09-04 07:55:14,2025-09-04 07:55:14
+400,Cycle,វដ្ត,Cycle,general,,t,2025-09-04 07:55:14,2025-09-04 07:55:14
+401,Most recent assessment level and score,កម្រិត និងពិន្ទុការវាយតម្លៃថ្មីបំផុត,Most recent assessment level and score,general,,t,2025-09-04 07:55:14,2025-09-04 07:55:14
+402,"Change in skill levels (+ improved, - declined, = same)","ការផ្លាស់ប្តូរកម្រិតជំនាញ (+ កែលម្អ, - ធ្លាក់ចុះ, = ដូចគ្នា)","Change in skill levels (+ improved, - declined, = same)",general,,t,2025-09-04 07:55:14,2025-09-04 07:55:14
+403,Numerical score difference (latest - baseline),ភាពខុសគ្នាពិន្ទុជាលេខ (ចុងក្រោយ - មូលដ្ឋាន),Numerical score difference (latest - baseline),general,,t,2025-09-04 07:55:14,2025-09-04 07:55:14
+404,No students with multiple assessments found,រកមិនឃើញសិស្សដែលមានការវាយតម្លៃច្រើនទេ,No students with multiple assessments found,general,,t,2025-09-04 07:55:14,2025-09-04 07:55:14
+405,Students need both baseline and follow-up assessments to appear in this report,សិស្សត្រូវការការវាយតម្លៃមូលដ្ឋាន និងតាមដានទាំងពីរដើម្បីបង្ហាញក្នុងរបាយការណ៍នេះ,Students need both baseline and follow-up assessments to appear in this report,general,,t,2025-09-04 07:55:14,2025-09-04 07:55:14
+108,level,កម្រិត,level,assessments,,t,2025-09-04 07:54:37,2025-09-04 07:55:14
+406,levels,កម្រិត,levels,general,,t,2025-09-04 07:55:14,2025-09-04 07:55:14
+407,Same level,កម្រិតដូចគ្នា,Same level,general,,t,2025-09-04 07:55:14,2025-09-04 07:55:14
+408,Summary Cards,កាតសង្ខេប,Summary Cards,general,,t,2025-09-04 07:55:14,2025-09-04 07:55:14
+409,Each card shows the count and percentage of students in each progress category. The average score change shows the overall trend across all students.,កាតនីមួយៗបង្ហាញចំនួន និងភាគរយសិស្សនៅក្នុងប្រភេទវឌ្ឍនភាពនីមួយៗ។ ការផ្លាស់ប្តូរពិន្ទុជាមធ្យមបង្ហាញទិន្នន័យទូទៅនៅទូទាំងសិស្សទាំងអស់។,Each card shows the count and percentage of students in each progress category. The average score change shows the overall trend across all students.,general,,t,2025-09-04 07:55:14,2025-09-04 07:55:14
+411,Moved to higher skill levels,ផ្លាស់ទីទៅកម្រិតជំនាញខ្ពស់,Moved to higher skill levels,general,,t,2025-09-04 07:55:14,2025-09-04 07:55:14
+412,Stayed at same skill level,នៅតែកម្រិតជំនាញដដែល,Stayed at same skill level,general,,t,2025-09-04 07:55:14,2025-09-04 07:55:14
+413,Moved to lower skill levels,ផ្លាស់ទីទៅកម្រិតជំនាញទាប,Moved to lower skill levels,general,,t,2025-09-04 07:55:14,2025-09-04 07:55:14
+414,Avg Score Change,ការផ្លាស់ប្តូរពិន្ទុជាមធ្យម,Avg Score Change,general,,t,2025-09-04 07:55:14,2025-09-04 07:55:14
+415,Overall improvement trend,ទិន្នន័យកែលម្អទូទៅ,Overall improvement trend,general,,t,2025-09-04 07:55:14,2025-09-04 07:55:14
+416,Overall decline trend,ទិន្នន័យធ្លាក់ចុះទូទៅ,Overall decline trend,general,,t,2025-09-04 07:55:14,2025-09-04 07:55:14
+417,No overall change,គ្មានការផ្លាស់ប្តូរទូទៅ,No overall change,general,,t,2025-09-04 07:55:14,2025-09-04 07:55:14
+418,Progress Distribution Chart,តារាងបែងចែកវឌ្ឍនភាព,Progress Distribution Chart,general,,t,2025-09-04 07:55:15,2025-09-04 07:55:15
+419,"This doughnut chart shows the proportion of students in each progress category. Larger green sections indicate more students improved, while larger red sections may indicate need for intervention.",តារាងដូណាតនេះបង្ហាញសមាមាត្រសិស្សនៅក្នុងប្រភេទវឌ្ឍនភាពនីមួយៗ។ ផ្នែកបៃតងធំជាងបង្ហាញថាសិស្សកាន់តែច្រើនបានកែលម្អ ខណៈផ្នែកក្រហមធំជាងអាចបង្ហាញពីតម្រូវការអន្តរាគមន៍។,"This doughnut chart shows the proportion of students in each progress category. Larger green sections indicate more students improved, while larger red sections may indicate need for intervention.",general,,t,2025-09-04 07:55:15,2025-09-04 07:55:15
+420,Interpreting Progress Data,បកស្រាយទិន្នន័យវឌ្ឍនភាព,Interpreting Progress Data,general,,t,2025-09-04 07:55:15,2025-09-04 07:55:15
+421,High improvement rates,អត្រាកែលម្អខ្ពស់,High improvement rates,general,,t,2025-09-04 07:55:15,2025-09-04 07:55:15
+422,Indicates effective teaching and learning interventions,បង្ហាញពីអន្តរាគមន៍បង្រៀន និងរៀនសូត្រប្រកបដោយប្រសិទ្ធភាព,Indicates effective teaching and learning interventions,general,,t,2025-09-04 07:55:15,2025-09-04 07:55:15
+423,Mixed results,លទ្ធផលចម្រុះ,Mixed results,general,,t,2025-09-04 07:55:15,2025-09-04 07:55:15
+424,Normal variation; consider individual student needs,ការប្រែប្រួលធម្មតា; ពិចារណាតម្រូវការសិស្សបុគ្គល,Normal variation; consider individual student needs,general,,t,2025-09-04 07:55:15,2025-09-04 07:55:15
+425,Low improvement rates,អត្រាកែលម្អទាប,Low improvement rates,general,,t,2025-09-04 07:55:15,2025-09-04 07:55:15
+426,May indicate need for curriculum or teaching method review,អាចបង្ហាញពីតម្រូវការពិនិត្យឡើងវិញកម្មវិធីសិក្សា ឬវិធីសាស្ត្របង្រៀន,May indicate need for curriculum or teaching method review,general,,t,2025-09-04 07:55:15,2025-09-04 07:55:15
+427,Students maintaining levels,សិស្សរក្សាកម្រិត,Students maintaining levels,general,,t,2025-09-04 07:55:15,2025-09-04 07:55:15
+428,Could be at appropriate challenge level or need different support,អាចនៅកម្រិតប្រឈមសមរម្យ ឬត្រូវការការគាំទ្រផ្សេងគ្នា,Could be at appropriate challenge level or need different support,general,,t,2025-09-04 07:55:15,2025-09-04 07:55:15
+429,Students declining,សិស្សធ្លាក់ចុះ,Students declining,general,,t,2025-09-04 07:55:15,2025-09-04 07:55:15
+430,May need immediate attention and individualized intervention,អាចត្រូវការការយកចិត្តទុកដាក់បន្ទាន់ និងអន្តរាគមន៍បុគ្គល,May need immediate attention and individualized intervention,general,,t,2025-09-04 07:55:15,2025-09-04 07:55:15
+431,Consider timeframe,ពិចារណាពេលវេលា,Consider timeframe,general,,t,2025-09-04 07:55:15,2025-09-04 07:55:15
+432,Progress between baseline and midline vs. baseline and endline may differ,វឌ្ឍនភាពរវាងមូលដ្ឋាន និងកណ្តាល ធៀបនឹង មូលដ្ឋាន និងចុងក្រោយ អាចខុសគ្នា,Progress between baseline and midline vs. baseline and endline may differ,general,,t,2025-09-04 07:55:15,2025-09-04 07:55:15
+433,Actions,សកម្មភាព,Actions,general,,t,2025-09-04 07:55:15,2025-09-04 07:55:15
+434,"Use this progress data to identify students who need additional support, recognize successful teaching methods, and plan targeted interventions.",ប្រើទិន្នន័យវឌ្ឍនភាពនេះដើម្បីកំណត់អត្តសញ្ញាណសិស្សដែលត្រូវការការគាំទ្របន្ថែម ស្គាល់វិធីសាស្ត្របង្រៀនប្រកបដោយជោគជ័យ និងរៀបចំផែនការអន្តរាគមន៍គោលដៅ។,"Use this progress data to identify students who need additional support, recognize successful teaching methods, and plan targeted interventions.",general,,t,2025-09-04 07:55:15,2025-09-04 07:55:15
+435,Export Chart,នាំចេញតារាង,Export Chart,general,,t,2025-09-04 07:55:15,2025-09-04 07:55:15
+436,View Overall Performance,មើលការអនុវត្តទូទៅ,View Overall Performance,general,,t,2025-09-04 07:55:15,2025-09-04 07:55:15
+437,Note,ចំណាំ,Note,general,,t,2025-09-04 07:55:16,2025-09-04 07:55:16
+475,Assessment Results,លទ្ធផលការវាយតម្លៃ,Assessment Results,general,,t,2025-09-04 07:55:18,2025-09-04 07:55:18
+476,PLP,PLP,PLP,general,,t,2025-09-04 07:55:18,2025-09-04 07:55:18
+477,Dashboard,ផ្ទាំងព័ត៌មាន,Dashboard,general,,t,2025-09-04 07:55:18,2025-09-04 07:55:18
+478,Log in,ចូលប្រព័ន្ធ,Log in,general,,t,2025-09-04 07:55:18,2025-09-04 07:55:18
+479,Register,ចុះឈ្មោះ,Register,general,,t,2025-09-04 07:55:18,2025-09-04 07:55:18
+480,Total Students Assessed,សិស្សសរុបដែលបានវាយតម្លៃ,Total Students Assessed,general,,t,2025-09-04 07:55:18,2025-09-04 07:55:18
+438,"This table shows students sorted by their level improvement. Students who moved up multiple levels appear first, followed by those with smaller improvements, then those who maintained their level, and finally those who declined.",តារាងនេះបង្ហាញសិស្សដែលតម្រៀបតាមការកែលម្អកម្រិតរបស់ពួកគេ។ សិស្សដែលឡើងកម្រិតច្រើនបង្ហាញមុនបង្អស់ បន្ទាប់មកដោយអ្នកដែលមានការកែលម្អតូច បន្ទាប់មកអ្នកដែលរក្សាកម្រិតរបស់ពួកគេ និងចុងក្រោយអ្នកដែលធ្លាក់ចុះ។,"This table shows students sorted by their level improvement. Students who moved up multiple levels appear first, followed by those with smaller improvements, then those who maintained their level, and finally those who declined.",general,,t,2025-09-04 07:55:16,2025-09-04 07:55:16
+439,How Progress is Calculated,របៀបគណនាវឌ្ឍនភាព,How Progress is Calculated,general,,t,2025-09-04 07:55:16,2025-09-04 07:55:16
+440,Level Change,ការផ្លាស់ប្តូរកម្រិត,Level Change,general,,t,2025-09-04 07:55:16,2025-09-04 07:55:16
+441,Score Change,ការផ្លាស់ប្តូរពិន្ទុ,Score Change,general,,t,2025-09-04 07:55:16,2025-09-04 07:55:16
+442,Progress Summary,សង្ខេបវឌ្ឍនភាព,Progress Summary,general,,t,2025-09-04 07:55:16,2025-09-04 07:55:16
+443,Students Improved,សិស្សបានកែលម្អ,Students Improved,general,,t,2025-09-04 07:55:16,2025-09-04 07:55:16
+444,Students Maintained,សិស្សបានរក្សា,Students Maintained,general,,t,2025-09-04 07:55:16,2025-09-04 07:55:16
+445,Students Declined,សិស្សបានធ្លាក់ចុះ,Students Declined,general,,t,2025-09-04 07:55:16,2025-09-04 07:55:16
+446,Student Progress Distribution,ការបែងចែកវឌ្ឍនភាពសិស្ស,Student Progress Distribution,general,,t,2025-09-04 07:55:16,2025-09-04 07:55:16
+447,Improved,បានកែលម្អ,Improved,general,,t,2025-09-04 07:55:16,2025-09-04 07:55:16
+448,Maintained,បានរក្សា,Maintained,general,,t,2025-09-04 07:55:16,2025-09-04 07:55:16
+449,Declined,បានធ្លាក់ចុះ,Declined,general,,t,2025-09-04 07:55:16,2025-09-04 07:55:16
+450,Analysis of student performance based on reading levels and mathematical operations capability,ការវិភាគការអនុវត្តរបស់សិស្សដោយផ្អែកលើកម្រិតការអាន និងសមត្ថភាពប្រមាណវិធីគណិតវិទ្យា,Analysis of student performance based on reading levels and mathematical operations capability,general,,t,2025-09-04 07:55:16,2025-09-04 07:55:16
+451,Assessment Cycle,វដ្តវាយតម្លៃ,Assessment Cycle,general,,t,2025-09-04 07:55:16,2025-09-04 07:55:16
+452,Filter Results,លទ្ធផលតម្រង,Filter Results,general,,t,2025-09-04 07:55:17,2025-09-04 07:55:17
+453,Calculation of Performance,ការគណនាការអនុវត្ត,Calculation of Performance,general,,t,2025-09-04 07:55:17,2025-09-04 07:55:17
+454,a. Language -,ក. ភាសា -,a. Language -,general,,t,2025-09-04 07:55:17,2025-09-04 07:55:17
+455,Letters = Para + Story + Comp 1 + Comp 2,អ្នកអាន = កថាខណ្ឌ + រឿង + យល់ ១ + យល់ ២,Letters = Para + Story + Comp 1 + Comp 2,general,,t,2025-09-04 07:55:17,2025-09-04 07:55:17
+456,Beginners = Beginner + Letter,អ្នកចាប់ផ្តើម = ចាប់ផ្តើម + អក្សរ,Beginners = Beginner + Letter,general,,t,2025-09-04 07:55:17,2025-09-04 07:55:17
+457,b. Math -,ខ. គណិតវិទ្យា -,b. Math -,general,,t,2025-09-04 07:55:17,2025-09-04 07:55:17
+458,Students who can do operations = Subtraction + Division + Word Problem,សិស្សដែលអាចធ្វើប្រមាណវិធី = ដក + ចែក + បញ្ហាពាក្យ,Students who can do operations = Subtraction + Division + Word Problem,general,,t,2025-09-04 07:55:17,2025-09-04 07:55:17
+459,Beginners = Beginner + 1-Digit,អ្នកចាប់ផ្តើម = ចាប់ផ្តើម + ១ តួ,Beginners = Beginner + 1-Digit,general,,t,2025-09-04 07:55:17,2025-09-04 07:55:17
+460,c. Sample graph,គ. តារាងគំរូ,c. Sample graph,general,,t,2025-09-04 07:55:17,2025-09-04 07:55:17
+461,Children who can read at least a simple paragraph,កុមារដែលអាចអានយ៉ាងតិចកថាខណ្ឌសាមញ្ញ,Children who can read at least a simple paragraph,general,,t,2025-09-04 07:55:17,2025-09-04 07:55:17
+462,Performance Data - ,ទិន្នន័យការអនុវត្ត - ,Performance Data - ,general,,t,2025-09-04 07:55:18,2025-09-04 07:55:18
+463,Language Performance,ការអនុវត្តភាសា,Language Performance,general,,t,2025-09-04 07:55:18,2025-09-04 07:55:18
+464,Math Performance,ការអនុវត្តគណិតវិទ្យា,Math Performance,general,,t,2025-09-04 07:55:18,2025-09-04 07:55:18
+465,Name,ឈ្មោះ,Name,general,,t,2025-09-04 07:55:18,2025-09-04 07:55:18
+466,Letters,អ្នកអាន,Letters,general,,t,2025-09-04 07:55:18,2025-09-04 07:55:18
+467,Operations,ប្រមាណវិធី,Operations,general,,t,2025-09-04 07:55:18,2025-09-04 07:55:18
+468,No Performance Data Available,គ្មានទិន្នន័យការអនុវត្តទេ,No Performance Data Available,general,,t,2025-09-04 07:55:18,2025-09-04 07:55:18
+469,No assessment data found for the selected criteria. Please try different filters or ensure assessments have been completed.,រកមិនឃើញទិន្នន័យវាយតម្លៃសម្រាប់លក្ខណៈវិនិច្ឆ័យដែលបានជ្រើសរើសទេ។ សូមសាកល្បងតម្រងផ្សេងគ្នា ឬធានាថាការវាយតម្លៃត្រូវបានបញ្ចប់។,No assessment data found for the selected criteria. Please try different filters or ensure assessments have been completed.,general,,t,2025-09-04 07:55:18,2025-09-04 07:55:18
+470,Khmer Assessment Results,លទ្ធផលការវាយតម្លៃខ្មែរ,Khmer Assessment Results,general,,t,2025-09-04 07:55:18,2025-09-04 07:55:18
+471,Math Assessment Results,លទ្ធផលការវាយតម្លៃគណិតវិទ្យា,Math Assessment Results,general,,t,2025-09-04 07:55:18,2025-09-04 07:55:18
+472,Reading Level,កម្រិតការអាន,Reading Level,general,,t,2025-09-04 07:55:18,2025-09-04 07:55:18
+473,Error loading assessment data,កំហុសក្នុងការផ្ទុកទិន្នន័យការវាយតម្លៃ,Error loading assessment data,general,,t,2025-09-04 07:55:18,2025-09-04 07:55:18
+474,TaRL Project,គម្រោង TaRL,TaRL Project,general,,t,2025-09-04 07:55:18,2025-09-04 07:55:18

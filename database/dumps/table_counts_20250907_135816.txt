@@ -1,0 +1,9 @@
+ users: 80
+ students: 3335
+ schools: 35
+ pilot_schools: 30
+ assessments: 20007
+ mentoring_visits: 10
+ geographic: 0
+ translations: 480
+
