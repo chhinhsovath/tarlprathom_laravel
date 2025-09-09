@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exports\MentoringVisitsExport;
 use App\Http\Requests\StoreMentoringVisitRequest;
+use App\Http\Requests\UpdateMentoringVisitRequest;
 use App\Models\Geographic;
 use App\Models\MentoringVisit;
 use App\Models\PilotSchool;
@@ -192,15 +193,86 @@ class MentoringVisitController extends Controller
 
         // Process specific fields
         if ($request->has('class_in_session')) {
-            $validated['class_in_session'] = $request->input('class_in_session') === 'Yes';
+            $validated['class_in_session'] = $request->input('class_in_session') == '1';
         }
 
         if ($request->has('full_session_observed')) {
-            $validated['full_session_observed'] = $request->input('full_session_observed') === 'Yes';
+            $validated['full_session_observed'] = $request->input('full_session_observed') == '1';
         }
 
         if ($request->has('follow_up_required')) {
-            $validated['follow_up_required'] = $request->input('follow_up_required') === 'Yes';
+            $validated['follow_up_required'] = $request->input('follow_up_required') == '1';
+        }
+
+        // Process new comprehensive fields
+        if ($request->has('teaching_materials')) {
+            $validated['teaching_materials'] = json_encode($request->input('teaching_materials', []));
+        }
+
+        if ($request->has('students_grouped_by_level')) {
+            $validated['students_grouped_by_level'] = $request->input('students_grouped_by_level') == '1';
+        }
+
+        if ($request->has('students_active_participation')) {
+            $validated['students_active_participation'] = $request->input('students_active_participation') == '1';
+        }
+
+        if ($request->has('teacher_has_lesson_plan')) {
+            $validated['teacher_has_lesson_plan'] = $request->input('teacher_has_lesson_plan') == '1';
+        }
+
+        if ($request->has('followed_lesson_plan')) {
+            $validated['followed_lesson_plan'] = $request->input('followed_lesson_plan') == '1';
+        }
+
+        if ($request->has('plan_appropriate_for_levels')) {
+            $validated['plan_appropriate_for_levels'] = $request->input('plan_appropriate_for_levels') == '1';
+        }
+
+        // Handle activity data
+        $activitiesData = [];
+        $numActivities = $request->input('num_activities_observed', 0);
+        
+        for ($i = 1; $i <= 2; $i++) {
+            if ($i <= $numActivities) {
+                // Determine activity type based on subject
+                $activityType = '';
+                if ($request->input('subject_observed') === 'ភាសាខ្មែរ') {
+                    $activityType = $request->input("activity{$i}_name_language", '');
+                } elseif ($request->input('subject_observed') === 'គណិតវិទ្យា') {
+                    $activityType = $request->input("activity{$i}_name_numeracy", '');
+                }
+                
+                // Store activity in both individual fields and JSON
+                if ($i == 1) {
+                    $validated['activity1_type'] = $activityType;
+                    $validated['activity1_duration'] = $request->input('activity1_duration');
+                    $validated['activity1_clear_instructions'] = $request->input('activity1_clear_instructions') == '1';
+                    $validated['activity1_unclear_reason'] = $request->input('activity1_no_clear_instructions_reason');
+                    $validated['activity1_followed_process'] = $request->input('activity1_followed_process') == '1';
+                    $validated['activity1_not_followed_reason'] = $request->input('activity1_not_followed_reason');
+                } elseif ($i == 2) {
+                    $validated['activity2_type'] = $activityType;
+                    $validated['activity2_duration'] = $request->input('activity2_duration');
+                    $validated['activity2_clear_instructions'] = $request->input('activity2_clear_instructions') == '1';
+                    $validated['activity2_unclear_reason'] = $request->input('activity2_no_clear_instructions_reason');
+                    $validated['activity2_followed_process'] = $request->input('activity2_followed_process') == '1';
+                    $validated['activity2_not_followed_reason'] = $request->input('activity2_not_followed_reason');
+                }
+                
+                $activitiesData[] = [
+                    'type' => $activityType,
+                    'duration' => $request->input("activity{$i}_duration"),
+                    'clear_instructions' => $request->input("activity{$i}_clear_instructions") == '1',
+                    'unclear_reason' => $request->input("activity{$i}_no_clear_instructions_reason"),
+                    'followed_process' => $request->input("activity{$i}_followed_process") == '1',
+                    'not_followed_reason' => $request->input("activity{$i}_not_followed_reason"),
+                ];
+            }
+        }
+        
+        if (!empty($activitiesData)) {
+            $validated['activities_data'] = json_encode($activitiesData);
         }
 
         // Verify the teacher belongs to the selected school
@@ -217,10 +289,28 @@ class MentoringVisitController extends Controller
             }
         }
 
-        $mentoringVisit = MentoringVisit::create($validated);
+        try {
+            // Set school_id based on pilot_school_id if not provided
+            if (!isset($validated['school_id']) && isset($validated['pilot_school_id'])) {
+                $validated['school_id'] = $validated['pilot_school_id'];
+            }
+            
+            $mentoringVisit = MentoringVisit::create($validated);
 
-        return redirect()->route('mentoring.index')
-            ->with('success', __('Mentoring visit recorded successfully.'));
+            return redirect()->route('mentoring.index')
+                ->with('success', 'ទស្សនកិច្ចណែនាំត្រូវបានកត់ត្រាដោយជោគជ័យ។');
+        } catch (\Exception $e) {
+            // Log the error for debugging
+            \Log::error('Mentoring visit creation failed', [
+                'error' => $e->getMessage(),
+                'user_id' => auth()->id(),
+                'data' => $validated
+            ]);
+
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'មានបញ្ហាក្នុងការរក្សាទុកទិន្នន័យ។ សូមព្យាយាមម្តងទៀត ឬទាក់ទងអ្នកគ្រប់គ្រង។');
+        }
     }
 
     /**
@@ -262,9 +352,8 @@ class MentoringVisitController extends Controller
         }
 
         // Check if user can edit this mentoring visit
-        if ($user->isAdmin() || $mentoringVisit->mentor_id === $user->id) {
-            // Admin and the mentor who created it can edit
-        } else {
+        if (!($user->isAdmin() || 
+              ($user->isMentor() && $user->canAccessSchool($mentoringVisit->pilot_school_id)))) {
             abort(403);
         }
         if ($user->isMentor()) {
@@ -310,7 +399,7 @@ class MentoringVisitController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(StoreMentoringVisitRequest $request, MentoringVisit $mentoringVisit)
+    public function update(UpdateMentoringVisitRequest $request, MentoringVisit $mentoringVisit)
     {
         $user = auth()->user();
 
@@ -323,7 +412,8 @@ class MentoringVisitController extends Controller
         }
 
         // Check if user can edit this mentoring visit
-        if (! ($user->isAdmin() || $mentoringVisit->mentor_id === $user->id)) {
+        if (!($user->isAdmin() || 
+              ($user->isMentor() && $user->canAccessSchool($mentoringVisit->pilot_school_id)))) {
             abort(403);
         }
 
@@ -348,15 +438,86 @@ class MentoringVisitController extends Controller
 
         // Process specific fields
         if ($request->has('class_in_session')) {
-            $validated['class_in_session'] = $request->input('class_in_session') === 'Yes';
+            $validated['class_in_session'] = $request->input('class_in_session') == '1';
         }
 
         if ($request->has('full_session_observed')) {
-            $validated['full_session_observed'] = $request->input('full_session_observed') === 'Yes';
+            $validated['full_session_observed'] = $request->input('full_session_observed') == '1';
         }
 
         if ($request->has('follow_up_required')) {
-            $validated['follow_up_required'] = $request->input('follow_up_required') === 'Yes';
+            $validated['follow_up_required'] = $request->input('follow_up_required') == '1';
+        }
+
+        // Process new comprehensive fields
+        if ($request->has('teaching_materials')) {
+            $validated['teaching_materials'] = json_encode($request->input('teaching_materials', []));
+        }
+
+        if ($request->has('students_grouped_by_level')) {
+            $validated['students_grouped_by_level'] = $request->input('students_grouped_by_level') == '1';
+        }
+
+        if ($request->has('students_active_participation')) {
+            $validated['students_active_participation'] = $request->input('students_active_participation') == '1';
+        }
+
+        if ($request->has('teacher_has_lesson_plan')) {
+            $validated['teacher_has_lesson_plan'] = $request->input('teacher_has_lesson_plan') == '1';
+        }
+
+        if ($request->has('followed_lesson_plan')) {
+            $validated['followed_lesson_plan'] = $request->input('followed_lesson_plan') == '1';
+        }
+
+        if ($request->has('plan_appropriate_for_levels')) {
+            $validated['plan_appropriate_for_levels'] = $request->input('plan_appropriate_for_levels') == '1';
+        }
+
+        // Handle activity data
+        $activitiesData = [];
+        $numActivities = $request->input('num_activities_observed', 0);
+        
+        for ($i = 1; $i <= 2; $i++) {
+            if ($i <= $numActivities) {
+                // Determine activity type based on subject
+                $activityType = '';
+                if ($request->input('subject_observed') === 'ភាសាខ្មែរ') {
+                    $activityType = $request->input("activity{$i}_name_language", '');
+                } elseif ($request->input('subject_observed') === 'គណិតវិទ្យា') {
+                    $activityType = $request->input("activity{$i}_name_numeracy", '');
+                }
+                
+                // Store activity in both individual fields and JSON
+                if ($i == 1) {
+                    $validated['activity1_type'] = $activityType;
+                    $validated['activity1_duration'] = $request->input('activity1_duration');
+                    $validated['activity1_clear_instructions'] = $request->input('activity1_clear_instructions') == '1';
+                    $validated['activity1_unclear_reason'] = $request->input('activity1_no_clear_instructions_reason');
+                    $validated['activity1_followed_process'] = $request->input('activity1_followed_process') == '1';
+                    $validated['activity1_not_followed_reason'] = $request->input('activity1_not_followed_reason');
+                } elseif ($i == 2) {
+                    $validated['activity2_type'] = $activityType;
+                    $validated['activity2_duration'] = $request->input('activity2_duration');
+                    $validated['activity2_clear_instructions'] = $request->input('activity2_clear_instructions') == '1';
+                    $validated['activity2_unclear_reason'] = $request->input('activity2_no_clear_instructions_reason');
+                    $validated['activity2_followed_process'] = $request->input('activity2_followed_process') == '1';
+                    $validated['activity2_not_followed_reason'] = $request->input('activity2_not_followed_reason');
+                }
+                
+                $activitiesData[] = [
+                    'type' => $activityType,
+                    'duration' => $request->input("activity{$i}_duration"),
+                    'clear_instructions' => $request->input("activity{$i}_clear_instructions") == '1',
+                    'unclear_reason' => $request->input("activity{$i}_no_clear_instructions_reason"),
+                    'followed_process' => $request->input("activity{$i}_followed_process") == '1',
+                    'not_followed_reason' => $request->input("activity{$i}_not_followed_reason"),
+                ];
+            }
+        }
+        
+        if (!empty($activitiesData)) {
+            $validated['activities_data'] = json_encode($activitiesData);
         }
 
         // Verify the teacher belongs to the selected school

@@ -5,6 +5,29 @@
                 <div class="p-6 bg-white border-b border-gray-200">
                     <h3 class="text-lg font-medium text-gray-900 mb-6">ទម្រង់សង្កេតការណ៍ការចុះណែនាំ</h3>
                     
+                    <!-- Global Error Display -->
+                    @if($errors->any())
+                        <div class="mb-6 p-4 bg-red-50 border-l-4 border-red-500 rounded-lg">
+                            <div class="flex items-center mb-2">
+                                <svg class="w-5 h-5 text-red-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+                                </svg>
+                                <h4 class="text-red-800 font-medium">បញ្ហាក្នុងការបំពេញទម្រង់:</h4>
+                            </div>
+                            <ul class="text-red-700 space-y-1">
+                                @foreach($errors->all() as $error)
+                                    <li class="flex items-start">
+                                        <span class="text-red-500 mr-2">•</span>
+                                        <span>{{ $error }}</span>
+                                    </li>
+                                @endforeach
+                            </ul>
+                            <p class="text-red-600 text-sm mt-3">
+                                <strong>សូមពិនិត្យ និងកែតម្រូវកន្លែងដែលមានបញ្ហា រួចបញ្ជូនម្តងទៀត។</strong>
+                            </p>
+                        </div>
+                    @endif
+                    
                     <form id="mentoringForm" method="POST" action="{{ route('mentoring.store') }}" enctype="multipart/form-data">
                         @csrf
                         
@@ -32,7 +55,7 @@
                                     <input type="date" 
                                            id="visit_date" 
                                            name="visit_date" 
-                                           value="{{ date('Y-m-d') }}"
+                                           value="{{ old('visit_date', date('Y-m-d')) }}"
                                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                                            required>
                                     @error('visit_date')
@@ -50,7 +73,7 @@
                                     <input type="text" 
                                            id="mentor_name" 
                                            name="mentor_name" 
-                                           value="{{ auth()->user()->name }}"
+                                           value="{{ old('mentor_name', auth()->user()->name) }}"
                                            class="w-full rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                                            readonly>
                                     <small class="text-gray-500">បំពេញដោយស្វ័យប្រវត្តិ - ផ្អែកលើព័ត៌មានលម្អិតនៃគណនីអ្នកប្រើប្រាស់</small>
@@ -62,18 +85,18 @@
                                     <label for="school_id" class="block text-sm font-medium text-gray-700 mb-2">
                                         {{ __('ឈ្មោះសាលា') }} <span class="text-red-500">*</span>
                                     </label>
-                                    <select id="school_id" 
-                                            name="school_id" 
+                                    <select id="pilot_school_id" 
+                                            name="pilot_school_id" 
                                             class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                                             required>
                                         <option value="">ជ្រើសរើសសាលា</option>
                                         @foreach($schools as $school)
-                                            <option value="{{ $school->id }}" {{ old('school_id') == $school->id ? 'selected' : '' }}>
+                                            <option value="{{ $school->id }}" {{ old('pilot_school_id', $selectedSchoolId ?? '') == $school->id ? 'selected' : '' }}>
                                                 {{ $school->school_name }}
                                             </option>
                                         @endforeach
                                     </select>
-                                    @error('school_id')
+                                    @error('pilot_school_id')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
                                 </div>
@@ -956,15 +979,15 @@
                             
                             <!-- មតិយោបល់សម្រាប់គ្រូបង្រៀន -->
                             <div>
-                                <label for="feedback_for_teacher" class="block text-sm font-medium text-gray-700 mb-2">
+                                <label for="teacher_feedback" class="block text-sm font-medium text-gray-700 mb-2">
                                     {{ __('មតិយោបល់សម្រាប់គ្រូបង្រៀន (ប្រសិនបើមាន) (១០០-១២០ ពាក្យ)') }}
                                 </label>
-                                <textarea id="feedback_for_teacher" 
-                                          name="feedback_for_teacher" 
+                                <textarea id="teacher_feedback" 
+                                          name="teacher_feedback" 
                                           rows="4"
                                           class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                                          placeholder="សូមបញ្ចូលមតិយោបល់សម្រាប់គ្រូបង្រៀន (១០០-១២០ ពាក្យ)">{{ old('feedback_for_teacher') }}</textarea>
-                                @error('feedback_for_teacher')
+                                          placeholder="សូមបញ្ចូលមតិយោបល់សម្រាប់គ្រូបង្រៀន (១០០-១២០ ពាក្យ)">{{ old('teacher_feedback') }}</textarea>
+                                @error('teacher_feedback')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
@@ -1012,12 +1035,12 @@
             // Dynamic form fields based on conditions
             
             // School-Teacher relationship
-            const schoolSelect = document.getElementById('school_id');
+            const schoolSelect = document.getElementById('pilot_school_id');
             const teacherSelect = document.getElementById('teacher_id');
             
             if (schoolSelect) {
-                schoolSelect.addEventListener('change', function() {
-                    const schoolId = this.value;
+                // Function to populate teachers for a given school
+                function populateTeachers(schoolId, selectedTeacherId = null) {
                     teacherSelect.innerHTML = '<option value="">ជ្រើសរើសគ្រូ</option>';
                     
                     if (schoolId) {
@@ -1028,11 +1051,30 @@
                                     const option = document.createElement('option');
                                     option.value = teacher.id;
                                     option.textContent = teacher.name;
+                                    // Preserve previously selected teacher
+                                    if (selectedTeacherId && teacher.id == selectedTeacherId) {
+                                        option.selected = true;
+                                    }
                                     teacherSelect.appendChild(option);
                                 });
+                                updateProgress();
                             });
                     }
+                }
+                
+                // Handle school change event
+                schoolSelect.addEventListener('change', function() {
+                    populateTeachers(this.value);
                 });
+                
+                // Preserve form state after validation errors
+                const oldSchoolId = '{{ old('pilot_school_id') }}';
+                const oldTeacherId = '{{ old('teacher_id') }}';
+                
+                if (oldSchoolId) {
+                    schoolSelect.value = oldSchoolId;
+                    populateTeachers(oldSchoolId, oldTeacherId);
+                }
             }
             
             // Class in session logic
@@ -1218,10 +1260,22 @@
             // Initial progress update
             updateProgress();
             
-            // Trigger initial state
+            // Trigger initial state for preserved form values
             const checkedClassInSession = document.querySelector('input[name="class_in_session"]:checked');
             if (checkedClassInSession) {
                 checkedClassInSession.dispatchEvent(new Event('change'));
+            }
+            
+            // Trigger subject observed logic for preserved values
+            const subjectObservedSelect = document.getElementById('subject_observed');
+            if (subjectObservedSelect && subjectObservedSelect.value) {
+                subjectObservedSelect.dispatchEvent(new Event('change'));
+            }
+            
+            // Trigger number of activities logic for preserved values
+            const numberOfActivitiesSelect = document.getElementById('number_of_activities');
+            if (numberOfActivitiesSelect && numberOfActivitiesSelect.value) {
+                numberOfActivitiesSelect.dispatchEvent(new Event('change'));
             }
         });
     </script>
