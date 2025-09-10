@@ -147,4 +147,53 @@ return [
     'Observations' => 'ការសង្កេត',
     'Action Plan' => 'ផែនការសកម្មភាព',
     'Additional Questionnaire Responses' => 'ចម្លើយកម្រងសំណួរបន្ថែម',
+
+    // Student Statistics
+    'Student Statistics' => 'ស្ថិតិសិស្ស',
+    'Total Enrolled' => 'ចុះឈ្មោះសរុប',
+    'Present' => 'មានវត្តមាន',
+    'Improved' => 'មានការកើនឡើង',
+
+    // Teaching & Planning
+    'Teaching & Planning' => 'ការបង្រៀន និងផែនការ',
+    'Has Lesson Plan' => 'មានផែនការបង្រៀន',
+    'Teaching Materials' => 'សម្ភារៈបង្រៀន',
+
+    // Class Session Status
+    'Class Session Status' => 'ស្ថានភាពវគ្គបង្រៀន',
+    'Class in Session' => 'ថ្នាក់កំពុងបង្រៀន',
+    'Full Session Observed' => 'សង្កេតពេញមួយវគ្គ',
+    'Classes Conducted Before Visit' => 'ថ្នាក់បានបង្រៀនមុនការទស្សនកិច្ច',
+    'Class Started on Time' => 'ថ្នាក់ចាប់ផ្តើមទាន់ពេលវេលា',
+    'Unknown' => 'មិនដឹង',
+
+    // Classroom Organization
+    'Classroom Organization' => 'ការរៀបចំថ្នាក់រៀន',
+    'Students Grouped by Level' => 'សិស្សត្រូវបានចាត់ក្រុមតាមកម្រិត',
+    'Students Active Participation' => 'សិស្សចូលរួមយ៉ាងសកម្ម',
+    'Materials Present in Classroom' => 'សម្ភារៈដែលមានក្នុងថ្នាក់រៀន',
+
+    // Teacher Session Planning
+    'Teacher Session Planning' => 'ផែនការវគ្គបង្រៀនរបស់គ្រូ',
+    'Has Session Plan' => 'មានផែនការវគ្គបង្រៀន',
+    'Followed Session Plan' => 'បានអនុវត្តតាមផែនការវគ្គបង្រៀន',
+    'Plan Appropriate for Levels' => 'ផែនការសមស្របសម្រាប់កម្រិត',
+    'Reason for No Plan' => 'មូលហេតុដែលគ្មានផែនការ',
+    'Session Plan Feedback' => 'មតិយោបល់ផែនការវគ្គបង្រៀន',
+
+    // Activities
+    'Activities Observed' => 'សកម្មភាពដែលបានសង្កេត',
+    'activities' => 'សកម្មភាព',
+    'Duration' => 'រយៈពេល',
+    'minutes' => 'នាទី',
+    'Clear Instructions' => 'ការណែនាំច្បាស់លាស់',
+    'Followed Process' => 'បានដើរតាមដំណើរការ',
+    'Notes' => 'កំណត់ចំណាំ',
+
+    // Teacher Feedback
+    'Teacher Feedback' => 'មតិយោបល់សម្រាប់គ្រូ',
+
+    // Yes/No translations
+    'Yes' => 'បាទ/ចាស',
+    'No' => 'ទេ',
 ];
