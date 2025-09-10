@@ -146,6 +146,10 @@
                         <!-- Overall Results Chart -->
                         <div class="bg-gray-50 p-4 rounded-lg">
                             <h4 class="text-center font-medium mb-4">{{ trans_db('overall_results') }}</h4>
+                            <!-- Fixed Legend Container -->
+                            <div id="overallChartLegend" class="bg-white border border-gray-200 rounded p-2 mb-2" style="display: none;">
+                                <div class="flex flex-wrap justify-center gap-2"></div>
+                            </div>
                             <div class="relative" style="height: 300px;">
                                 <canvas id="overallResultsChart"></canvas>
                             </div>
@@ -177,18 +181,26 @@
                             <!-- Cycle selector -->
                             <div class="flex justify-center gap-2 mb-4">
                                 <button class="cycle-btn px-3 py-1 text-sm rounded transition-all duration-200 bg-indigo-500 text-white" data-cycle="baseline">
-                                    {{ trans_db('Baseline') }}
+                                    {{ trans_db('baseline') }}
                                 </button>
                                 <button class="cycle-btn px-3 py-1 text-sm rounded transition-all duration-200 bg-gray-200 text-gray-700 hover:bg-gray-300" data-cycle="midline">
-                                    {{ trans_db('Midline') }}
+                                    {{ trans_db('midline') }}
                                 </button>
                                 <button class="cycle-btn px-3 py-1 text-sm rounded transition-all duration-200 bg-gray-200 text-gray-700 hover:bg-gray-300" data-cycle="endline">
-                                    {{ trans_db('Endline') }}
+                                    {{ trans_db('endline') }}
                                 </button>
                             </div>
-                            <div class="relative overflow-y-auto" style="height: 400px;">
-                                <div style="min-height: 300px;">
-                                    <canvas id="schoolResultsChart"></canvas>
+                            <!-- Chart container with fixed legend -->
+                            <div class="relative" style="height: 450px;">
+                                <!-- Fixed Legend at top of container -->
+                                <div id="schoolChartLegend" class="absolute top-0 left-0 right-0 bg-white border-b border-gray-200 p-2 z-20" style="display: none;">
+                                    <div class="flex flex-wrap justify-center gap-2"></div>
+                                </div>
+                                <!-- Scrollable chart area -->
+                                <div class="overflow-y-auto absolute left-0 right-0 bottom-0" style="top: 50px;" id="schoolChartContainer">
+                                    <div id="schoolChartWrapper" style="min-height: 400px;">
+                                        <canvas id="schoolResultsChart"></canvas>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -240,6 +252,58 @@
             </div>
         </div>
     </div>
+
+    @push('styles')
+    <style>
+        /* Consistent styles for both chart legends */
+        #overallChartLegend, #schoolChartLegend {
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            background: linear-gradient(to bottom, #ffffff, #fafafa);
+            border-radius: 6px;
+        }
+        
+        #schoolChartLegend {
+            background: rgba(255,255,255,0.98);
+        }
+        
+        /* Legend items hover effect */
+        #overallChartLegend .flex > div:hover,
+        #schoolChartLegend .flex > div:hover {
+            background-color: #f3f4f6;
+            transform: scale(1.02);
+        }
+        
+        /* Ensure scrollbar is visible */
+        #schoolChartContainer {
+            scrollbar-width: thin;
+            scrollbar-color: #CBD5E0 #F7FAFC;
+        }
+        
+        #schoolChartContainer::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        #schoolChartContainer::-webkit-scrollbar-track {
+            background: #F7FAFC;
+            border-radius: 4px;
+        }
+        
+        #schoolChartContainer::-webkit-scrollbar-thumb {
+            background: #CBD5E0;
+            border-radius: 4px;
+        }
+        
+        #schoolChartContainer::-webkit-scrollbar-thumb:hover {
+            background: #A0AEC0;
+        }
+        
+        /* Ensure canvas maintains aspect ratio */
+        #schoolResultsChart, #overallResultsChart {
+            display: block;
+            width: 100% !important;
+        }
+    </style>
+    @endpush
 
     @push('scripts')
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
@@ -406,7 +470,7 @@
             
             // Load dashboard statistics
             function loadDashboardStats() {
-                showLoading('{{ trans_db("loading_statistics") }}');
+                showLoading('{{ trans_db("Loading...") }}');
                 $.ajax({
                     url: '{{ route("api.dashboard.stats") }}',
                     data: { 
@@ -432,14 +496,17 @@
                 $('#overallResultsChart').parent().addClass('loading');
                 $.ajax({
                     url: '{{ route("api.dashboard.overall-results") }}',
+                    cache: false,
                     data: { 
                         subject: currentSubject,
                         school_id: selectedSchoolId,
                         province: selectedProvince,
                         district: selectedDistrict,
-                        cluster: selectedCluster
+                        cluster: selectedCluster,
+                        _: new Date().getTime() // Cache buster
                     },
                     success: function(response) {
+                        console.log('Overall results response:', response);
                         // Update chart
                         updateOverallChart(response.chartData);
                         
@@ -447,6 +514,12 @@
                         $('#overallBaseline').text(response.totals.baseline || '—');
                         $('#overallMidline').text(response.totals.midline || '—');
                         $('#overallEndline').text(response.totals.endline || '—');
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error loading overall results:', error);
+                        console.error('Response:', xhr.responseText);
+                        const ctx = document.getElementById('overallResultsChart').getContext('2d');
+                        ctx.canvas.parentElement.innerHTML = '<p class="text-center text-gray-500 mt-4">{{ trans_db("Error loading chart data") }}</p>';
                     },
                     complete: function() {
                         $('#overallResultsChart').parent().removeClass('loading');
@@ -460,16 +533,22 @@
                 $('#schoolResultsChart').parent().addClass('loading');
                 $.ajax({
                     url: '{{ route("api.dashboard.results-by-school") }}',
+                    cache: false,
                     data: { 
                         subject: currentSubject,
                         cycle: currentCycle,
                         school_id: selectedSchoolId,
                         province: selectedProvince,
                         district: selectedDistrict,
-                        cluster: selectedCluster
+                        cluster: selectedCluster,
+                        _: new Date().getTime() // Cache buster
                     },
                     success: function(response) {
                         console.log('School results response:', response);
+                        // Debug: Check if counts are present
+                        if (response.chartData && response.chartData.datasets && response.chartData.datasets[0]) {
+                            console.log('First dataset counts:', response.chartData.datasets[0].counts);
+                        }
                         updateSchoolChart(response.chartData);
                     },
                     error: function(xhr, status, error) {
@@ -491,8 +570,22 @@
                     overallChart.destroy();
                 }
                 
-                // Convert data to percentages
+                // Deep copy and ensure numeric values
                 const convertedData = JSON.parse(JSON.stringify(data)); // Deep copy
+                
+                // IMPORTANT: Convert any string values to numbers
+                convertedData.datasets = convertedData.datasets.map(dataset => {
+                    return {
+                        ...dataset,
+                        data: dataset.data.map(value => {
+                            // Ensure value is a number
+                            if (typeof value === 'string') {
+                                return parseInt(value) || 0;
+                            }
+                            return value || 0;
+                        })
+                    };
+                });
                 
                 // Calculate totals for each cycle
                 const cycleTotals = [];
@@ -504,8 +597,10 @@
                     cycleTotals.push(total);
                 }
                 
-                // Convert each dataset to percentages
+                // Convert each dataset to percentages but keep original counts
                 convertedData.datasets.forEach(dataset => {
+                    // Store original counts before converting to percentages
+                    dataset.originalData = [...dataset.data];
                     dataset.data = dataset.data.map((value, index) => {
                         const total = cycleTotals[index];
                         return total > 0 ? (value / total) * 100 : 0;
@@ -539,11 +634,7 @@
                         },
                         plugins: {
                             legend: {
-                                position: 'bottom',
-                                labels: {
-                                    boxWidth: 15,
-                                    padding: 10
-                                }
+                                display: false // Hide built-in legend, we'll create a custom one
                             },
                             datalabels: {
                                 display: function(context) {
@@ -569,7 +660,12 @@
                                             label += ': ';
                                         }
                                         if (context.parsed.y !== null) {
-                                            label += Math.round(context.parsed.y) + '%';
+                                            const percentage = Math.round(context.parsed.y);
+                                            // Get the original count value before percentage conversion
+                                            const originalData = context.chart.data.datasets[context.datasetIndex].originalData;
+                                            const count = originalData ? originalData[context.dataIndex] : context.raw;
+                                            // Show both percentage and count
+                                            label += percentage + '% (' + count + ')';
                                         }
                                         return label;
                                     }
@@ -579,6 +675,54 @@
                     },
                     plugins: [ChartDataLabels]
                 });
+                
+                // Create custom legend for overall chart
+                createOverallChartLegend();
+            }
+            
+            function createOverallChartLegend() {
+                if (!overallChart) return;
+                
+                const legendContainer = document.getElementById('overallChartLegend');
+                const legendItems = legendContainer.querySelector('.flex');
+                
+                // Clear existing items
+                legendItems.innerHTML = '';
+                
+                // Get chart data
+                const datasets = overallChart.data.datasets;
+                
+                // Create legend items
+                datasets.forEach((dataset, index) => {
+                    const legendItem = document.createElement('div');
+                    legendItem.className = 'flex items-center gap-1 px-2 py-1 cursor-pointer hover:bg-gray-100 rounded transition-all';
+                    legendItem.innerHTML = `
+                        <span class="block w-3 h-3 rounded" style="background-color: ${dataset.backgroundColor}"></span>
+                        <span class="text-xs font-medium">${dataset.label}</span>
+                    `;
+                    
+                    // Add click handler to toggle dataset visibility
+                    legendItem.addEventListener('click', function() {
+                        const meta = overallChart.getDatasetMeta(index);
+                        meta.hidden = meta.hidden === null ? !overallChart.data.datasets[index].hidden : null;
+                        
+                        // Update visual state
+                        if (meta.hidden) {
+                            this.style.opacity = '0.4';
+                            this.querySelector('span.text-xs').style.textDecoration = 'line-through';
+                        } else {
+                            this.style.opacity = '1';
+                            this.querySelector('span.text-xs').style.textDecoration = 'none';
+                        }
+                        
+                        overallChart.update();
+                    });
+                    
+                    legendItems.appendChild(legendItem);
+                });
+                
+                // Show the legend container
+                legendContainer.style.display = 'block';
             }
             
             // Update school chart
@@ -590,6 +734,23 @@
                     schoolChart.destroy();
                 }
                 
+                // Deep copy and ensure numeric values for school chart
+                const processedData = JSON.parse(JSON.stringify(data));
+                processedData.datasets = processedData.datasets.map(dataset => {
+                    return {
+                        ...dataset,
+                        data: dataset.data.map(value => {
+                            // Ensure value is a number (percentage)
+                            if (typeof value === 'string') {
+                                return parseFloat(value) || 0;
+                            }
+                            return value || 0;
+                        }),
+                        // Preserve the counts array from the backend
+                        counts: dataset.counts || []
+                    };
+                });
+                
                 // Check if data is present
                 if (!data || !data.labels || data.labels.length === 0) {
                     console.warn('No school data to display');
@@ -599,17 +760,21 @@
                 
                 // Calculate dynamic height based on number of schools
                 const numSchools = data.labels ? data.labels.length : 0;
-                const barHeight = 50; // Height per school bar
-                const minHeight = 300;
+                const barHeight = 40; // Height per school bar
+                const minHeight = 400;
                 const calculatedHeight = Math.max(minHeight, numSchools * barHeight);
                 
-                // Set canvas container height
-                ctx.canvas.parentElement.style.minHeight = calculatedHeight + 'px';
+                // Set the wrapper height to enable scrolling
+                const wrapper = document.getElementById('schoolChartWrapper');
+                if (wrapper) {
+                    wrapper.style.height = calculatedHeight + 'px';
+                    wrapper.style.minHeight = calculatedHeight + 'px';
+                }
                 ctx.canvas.style.height = calculatedHeight + 'px';
                 
                 schoolChart = new Chart(ctx, {
                     type: 'bar',
-                    data: data,
+                    data: processedData,  // Use processed data with numeric values
                     options: {
                         indexAxis: 'y', // This makes it a horizontal bar chart
                         responsive: true,
@@ -670,14 +835,7 @@
                         },
                         plugins: {
                             legend: {
-                                position: 'bottom',
-                                labels: {
-                                    boxWidth: 15,
-                                    padding: 10,
-                                    font: {
-                                        size: 11
-                                    }
-                                }
+                                display: false // Hide built-in legend, we'll create a custom one
                             },
                             datalabels: {
                                 display: function(context) {
@@ -708,7 +866,12 @@
                                             label += ': ';
                                         }
                                         if (context.parsed.x !== null) {
-                                            label += context.parsed.x + '%';
+                                            const percentage = Math.round(context.parsed.x * 10) / 10;
+                                            // Get the actual count from the counts array
+                                            const counts = context.dataset.counts;
+                                            const count = counts ? counts[context.dataIndex] : 0;
+                                            // Show both percentage and count
+                                            label += percentage + '% (' + count + ')';
                                         }
                                         return label;
                                     }
@@ -718,6 +881,59 @@
                     },
                     plugins: [ChartDataLabels]
                 });
+                
+                // Create custom legend in the fixed container
+                createCustomLegend();
+            }
+            
+            function createCustomLegend() {
+                if (!schoolChart) return;
+                
+                const legendContainer = document.getElementById('schoolChartLegend');
+                const legendItems = legendContainer.querySelector('.flex');
+                const chartContainer = document.getElementById('schoolChartContainer');
+                
+                // Clear existing items
+                legendItems.innerHTML = '';
+                
+                // Get chart data
+                const datasets = schoolChart.data.datasets;
+                
+                // Create legend items
+                datasets.forEach((dataset, index) => {
+                    const legendItem = document.createElement('div');
+                    legendItem.className = 'flex items-center gap-1 px-2 py-1 cursor-pointer hover:bg-gray-100 rounded transition-all';
+                    legendItem.innerHTML = `
+                        <span class="block w-3 h-3 rounded" style="background-color: ${dataset.backgroundColor}"></span>
+                        <span class="text-xs font-medium">${dataset.label}</span>
+                    `;
+                    
+                    // Add click handler to toggle dataset visibility
+                    legendItem.addEventListener('click', function() {
+                        const meta = schoolChart.getDatasetMeta(index);
+                        meta.hidden = meta.hidden === null ? !schoolChart.data.datasets[index].hidden : null;
+                        
+                        // Update visual state
+                        if (meta.hidden) {
+                            this.style.opacity = '0.4';
+                            this.querySelector('span.text-xs').style.textDecoration = 'line-through';
+                        } else {
+                            this.style.opacity = '1';
+                            this.querySelector('span.text-xs').style.textDecoration = 'none';
+                        }
+                        
+                        schoolChart.update();
+                    });
+                    
+                    legendItems.appendChild(legendItem);
+                });
+                
+                // Show the legend container
+                legendContainer.style.display = 'block';
+                
+                // Adjust the container top position based on legend height
+                const legendHeight = legendContainer.offsetHeight;
+                chartContainer.style.top = (legendHeight + 5) + 'px';
             }
             @endif
         });
