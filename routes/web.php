@@ -147,6 +147,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/assessments/select-students', [AssessmentController::class, 'selectStudents'])->name('assessments.select-students');
     Route::post('/assessments/select-students', [AssessmentController::class, 'updateSelectedStudents'])->name('assessments.update-selected-students');
     Route::get('/assessments/create', [AssessmentController::class, 'create'])->name('assessments.create');
+    Route::get('/assessments/{assessment}', [AssessmentController::class, 'show'])->name('assessments.show');
     Route::post('/assessments', [AssessmentController::class, 'store'])->name('assessments.store');
     Route::post('/api/assessments/save-student', [AssessmentController::class, 'saveStudentAssessment'])->name('api.assessments.save-student');
     Route::post('/api/assessments/submit-all', [AssessmentController::class, 'submitAllAssessments'])->name('api.assessments.submit-all');

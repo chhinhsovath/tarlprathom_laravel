@@ -64,10 +64,10 @@
                     <div class="mb-6 flex items-center justify-between">
                         <div class="flex items-center space-x-4">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('Subject') }}:</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('assessment.Subject') }}:</label>
                                 <select id="subject" class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                                    <option value="khmer" {{ $subject === 'khmer' ? 'selected' : '' }}>{{ __('Khmer') }}</option>
-                                    <option value="math" {{ $subject === 'math' ? 'selected' : '' }}>{{ __('Math') }}</option>
+                                    <option value="khmer" {{ $subject === 'khmer' ? 'selected' : '' }}>{{ __('assessment.Khmer') }}</option>
+                                    <option value="math" {{ $subject === 'math' ? 'selected' : '' }}>{{ __('assessment.Math') }}</option>
                                 </select>
                             </div>
                             <div>
@@ -80,16 +80,16 @@
                             </div>
                         </div>
                         <div class="text-sm text-gray-600">
-                            <span id="savedCount">0</span> / <span id="totalCount">{{ count($students) }}</span> {{ __('students assessed') }}
+                            <span id="savedCount">0</span> / <span id="totalCount">{{ count($students) }}</span> {{ __('Students') }} {{ __('assessment.assessed') }}
                         </div>
                     </div>
 
                     <!-- Assessment Period Notice -->
                     @php
-                        $school = auth()->user()->pilotSchool ?? auth()->user()->school;
-                        $periodStatus = null;
-                        if($school && !auth()->user()->isAdmin()) {
-                            $periodStatus = method_exists($school, 'getAssessmentPeriodStatus') ? $school->getAssessmentPeriodStatus($cycle) : 'not_set';
+                        // Use periodStatus from controller, don't recalculate
+                        // Map 'ended' to 'expired' for backward compatibility
+                        if (isset($periodStatus) && $periodStatus === 'ended') {
+                            $periodStatus = 'expired';
                         }
                     @endphp
                     
@@ -120,12 +120,24 @@
                                     </div>
                                     <div class="ml-3">
                                         <p class="text-sm text-blue-700">
-                                            @if($cycle === 'baseline' && isset($school->baseline_start_date) && $school->baseline_start_date && !is_array($school->baseline_start_date))
-                                                {{ __('Baseline assessment period starts on') }} {{ is_object($school->baseline_start_date) && method_exists($school->baseline_start_date, 'format') ? $school->baseline_start_date->format('d/m/Y') : $school->baseline_start_date }}.
-                                            @elseif($cycle === 'midline' && isset($school->midline_start_date) && $school->midline_start_date && !is_array($school->midline_start_date))
-                                                {{ __('Midline assessment period starts on') }} {{ is_object($school->midline_start_date) && method_exists($school->midline_start_date, 'format') ? $school->midline_start_date->format('d/m/Y') : $school->midline_start_date }}.
-                                            @elseif($cycle === 'endline' && isset($school->endline_start_date) && $school->endline_start_date && !is_array($school->endline_start_date))
-                                                {{ __('Endline assessment period starts on') }} {{ is_object($school->endline_start_date) && method_exists($school->endline_start_date, 'format') ? $school->endline_start_date->format('d/m/Y') : $school->endline_start_date }}.
+                                            @php
+                                                $dateField = $cycle . '_start_date';
+                                                $startDate = $school->$dateField ?? null;
+                                                $dateString = '';
+                                                if ($startDate) {
+                                                    if (is_object($startDate) && method_exists($startDate, 'format')) {
+                                                        $dateString = $startDate->format('d/m/Y');
+                                                    } elseif (is_array($startDate)) {
+                                                        // Handle array case - shouldn't happen but just in case
+                                                        $dateString = '';
+                                                    } else {
+                                                        // Cast to string for any other type
+                                                        $dateString = (string) $startDate;
+                                                    }
+                                                }
+                                            @endphp
+                                            @if($dateString)
+                                                {{ __('Assessment period starts on') }} {{ (string) $dateString }}.
                                             @else
                                                 {{ __('Assessment period dates not configured.') }}
                                             @endif
@@ -143,12 +155,24 @@
                                     </div>
                                     <div class="ml-3">
                                         <p class="text-sm text-red-700">
-                                            @if($cycle === 'baseline' && isset($school->baseline_end_date) && $school->baseline_end_date && !is_array($school->baseline_end_date))
-                                                {{ __('Baseline assessment period ended on') }} {{ is_object($school->baseline_end_date) && method_exists($school->baseline_end_date, 'format') ? $school->baseline_end_date->format('d/m/Y') : $school->baseline_end_date }}.
-                                            @elseif($cycle === 'midline' && isset($school->midline_end_date) && $school->midline_end_date && !is_array($school->midline_end_date))
-                                                {{ __('Midline assessment period ended on') }} {{ is_object($school->midline_end_date) && method_exists($school->midline_end_date, 'format') ? $school->midline_end_date->format('d/m/Y') : $school->midline_end_date }}.
-                                            @elseif($cycle === 'endline' && isset($school->endline_end_date) && $school->endline_end_date && !is_array($school->endline_end_date))
-                                                {{ __('Endline assessment period ended on') }} {{ is_object($school->endline_end_date) && method_exists($school->endline_end_date, 'format') ? $school->endline_end_date->format('d/m/Y') : $school->endline_end_date }}.
+                                            @php
+                                                $endDateField = $cycle . '_end_date';
+                                                $endDate = $school->$endDateField ?? null;
+                                                $endDateString = '';
+                                                if ($endDate) {
+                                                    if (is_object($endDate) && method_exists($endDate, 'format')) {
+                                                        $endDateString = $endDate->format('d/m/Y');
+                                                    } elseif (is_array($endDate)) {
+                                                        // Handle array case - shouldn't happen but just in case
+                                                        $endDateString = '';
+                                                    } else {
+                                                        // Cast to string for any other type
+                                                        $endDateString = (string) $endDate;
+                                                    }
+                                                }
+                                            @endphp
+                                            @if($endDateString)
+                                                {{ __('Assessment period ended on') }} {{ (string) $endDateString }}.
                                             @else
                                                 {{ __('Assessment period has expired.') }}
                                             @endif
@@ -166,12 +190,24 @@
                                     </div>
                                     <div class="ml-3">
                                         <p class="text-sm text-green-700">
-                                            @if($cycle === 'baseline' && isset($school->baseline_end_date) && $school->baseline_end_date && !is_array($school->baseline_end_date))
-                                                {{ __('Baseline assessment period is active until') }} {{ is_object($school->baseline_end_date) && method_exists($school->baseline_end_date, 'format') ? $school->baseline_end_date->format('d/m/Y') : $school->baseline_end_date }}.
-                                            @elseif($cycle === 'midline' && isset($school->midline_end_date) && $school->midline_end_date && !is_array($school->midline_end_date))
-                                                {{ __('Midline assessment period is active until') }} {{ is_object($school->midline_end_date) && method_exists($school->midline_end_date, 'format') ? $school->midline_end_date->format('d/m/Y') : $school->midline_end_date }}.
-                                            @elseif($cycle === 'endline' && isset($school->endline_end_date) && $school->endline_end_date && !is_array($school->endline_end_date))
-                                                {{ __('Endline assessment period is active until') }} {{ is_object($school->endline_end_date) && method_exists($school->endline_end_date, 'format') ? $school->endline_end_date->format('d/m/Y') : $school->endline_end_date }}.
+                                            @php
+                                                $activeEndDateField = $cycle . '_end_date';
+                                                $activeEndDate = $school->$activeEndDateField ?? null;
+                                                $activeEndDateString = '';
+                                                if ($activeEndDate) {
+                                                    if (is_object($activeEndDate) && method_exists($activeEndDate, 'format')) {
+                                                        $activeEndDateString = $activeEndDate->format('d/m/Y');
+                                                    } elseif (is_array($activeEndDate)) {
+                                                        // Handle array case - shouldn't happen but just in case
+                                                        $activeEndDateString = '';
+                                                    } else {
+                                                        // Cast to string for any other type
+                                                        $activeEndDateString = (string) $activeEndDate;
+                                                    }
+                                                }
+                                            @endphp
+                                            @if($activeEndDateString)
+                                                {{ __('Assessment period is active until') }} {{ (string) $activeEndDateString }}.
                                             @else
                                                 {{ __('Assessment period is currently active.') }}
                                             @endif
@@ -210,7 +246,7 @@
                     <div class="md:hidden fixed bottom-4 left-4 right-4 bg-white rounded-lg shadow-lg p-3 z-50" style="display: none;" id="floatingHeaders">
                         <div class="text-xs text-gray-600 font-medium">
                             <div class="text-center">
-                                <div class="text-gray-500">{{ __('Levels') }}</div>
+                                <div class="text-gray-500">{{ __('assessment.Levels') }}</div>
                                 <div class="text-xs mt-1">
                                     @if($subject === 'khmer')
                                         {{ __('Beg → Let → Wrd → Par → Sto → C1 → C2') }}
@@ -229,33 +265,33 @@
                             <thead class="bg-gray-50">
                                 <tr>
                                     <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sticky left-0 bg-gray-50 z-20">
-                                        {{ __('Student Name') }}
+                                        {{ __('assessment.Student Name') }}
                                     </th>
                                     <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        {{ __('Latest Level') }}
+                                        {{ __('assessment.Latest Level') }}
                                     </th>
                                     <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider" colspan="7">
-                                        {{ __('Student Level') }}
+                                        {{ __('assessment.Student Level') }}
                                     </th>
                                 </tr>
                                 <tr class="sticky top-0 z-10 shadow-sm bg-gray-50">
                                     <th class="px-4 py-2 sticky left-0 bg-gray-50 z-20 border-b-2 border-gray-300"></th>
                                     <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300"></th>
                                     @if($subject === 'khmer')
-                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ __('Beginner') }}</th>
-                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ __('Letter') }}</th>
-                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ __('Word') }}</th>
-                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ __('Paragraph') }}</th>
-                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ __('Story') }}</th>
-                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ __('Comp. 1') }}</th>
-                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ __('Comp. 2') }}</th>
+                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ __('assessment.Beginner') }}</th>
+                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ __('assessment.Letter') }}</th>
+                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ __('assessment.Word') }}</th>
+                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ __('assessment.Paragraph') }}</th>
+                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ __('assessment.Story') }}</th>
+                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ __('assessment.Comp. 1') }}</th>
+                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ __('assessment.Comp. 2') }}</th>
                                     @else
-                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ __('Beginner') }}</th>
-                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ __('1-Digit') }}</th>
-                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ __('2-Digit') }}</th>
-                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ __('Subtraction') }}</th>
-                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ __('Division') }}</th>
-                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ __('Word Problem') }}</th>
+                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ __('assessment.Beginner') }}</th>
+                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ __('assessment.1-Digit') }}</th>
+                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ __('assessment.2-Digit') }}</th>
+                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ __('assessment.Subtraction') }}</th>
+                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ __('assessment.Division') }}</th>
+                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ __('assessment.Word Problem') }}</th>
                                     @endif
                                 </tr>
                             </thead>
@@ -271,11 +307,11 @@
                                                         <svg class="-ml-0.5 mr-1 h-2 w-2" fill="currentColor" viewBox="0 0 8 8">
                                                             <circle cx="4" cy="4" r="3" />
                                                         </svg>
-                                                        {{ __('Locked') }}
+                                                        {{ __('assessment.Locked') }}
                                                     </span>
                                                 @else
                                                     <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800">
-                                                        {{ __('Assessed') }}
+                                                        {{ __('assessment.Assessed') }}
                                                     </span>
                                                 @endif
                                             @endif
@@ -285,9 +321,9 @@
                                     <td class="px-2 py-4 text-center">
                                         <div class="text-sm">
                                             @if($student->previous_assessment)
-                                                <span class="font-medium text-gray-700">{{ $student->previous_assessment->level }}</span>
+                                                <span class="font-medium text-gray-700">{{ __($student->previous_assessment->level) }}</span>
                                                 <br>
-                                                <span class="text-xs text-gray-500">{{ ucfirst($student->previous_assessment->cycle) }}</span>
+                                                <span class="text-xs text-gray-500">{{ __(ucfirst($student->previous_assessment->cycle)) }}</span>
                                             @else
                                                 <span class="text-gray-400">-</span>
                                             @endif
@@ -345,9 +381,8 @@
                     <!-- Submit All Button -->
                     @php
                         $showSubmitButton = true;
-                        $school = auth()->user()->pilotSchool ?? auth()->user()->school;
                         if($school && !auth()->user()->isAdmin()) {
-                            $periodStatus = method_exists($school, 'getAssessmentPeriodStatus') ? $school->getAssessmentPeriodStatus($cycle) : 'active';
+                            // Use existing periodStatus, don't recalculate
                             $showSubmitButton = in_array($periodStatus, ['active', 'not_set']); // Allow if not set or active
                         }
                     @endphp
@@ -358,7 +393,7 @@
                                     id="submitAllBtn"
                                     class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                                     onclick="submitAll()">
-                                {{ __('Submit') }}
+                                {{ __('assessment.Submit') }}
                             </button>
                         </div>
                     @else
@@ -381,21 +416,21 @@
                         <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
                         </svg>
-                        <h3 class="mt-2 text-sm font-medium text-gray-900">{{ __('No eligible students') }}</h3>
+                        <h3 class="mt-2 text-sm font-medium text-gray-900">{{ __('assessment.No eligible students') }}</h3>
                         <p class="mt-1 text-sm text-gray-500">
                             @if($subject === 'khmer' && in_array($cycle, ['midline', 'endline']))
                                 {{ __('No students from baseline assessment (Beginner to Story level) found for this cycle.') }}
                             @elseif($subject === 'math' && in_array($cycle, ['midline', 'endline']))
                                 {{ __('No students from baseline assessment (Beginner to Subtraction level) found for this cycle.') }}
                             @else
-                                {{ __('No students found.') }}
+                                {{ __('assessment.No students found.') }}
                             @endif
                         </p>
                         @if($cycle !== 'baseline')
                         <div class="mt-6">
                             <a href="{{ route('assessments.create', ['subject' => $subject, 'cycle' => 'baseline']) }}" 
                                class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                {{ __('Go to Baseline Assessment') }}
+                                {{ __('assessment.Go to Baseline Assessment') }}
                             </a>
                         </div>
                         @endif
@@ -412,6 +447,21 @@
     <script>
         let savedCount = 0;
         const totalCount = {{ count($students) }};
+        
+        // Loading functions using SweetAlert2
+        function showLoading(message) {
+            Swal.fire({
+                title: message,
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+        }
+        
+        function hideLoading() {
+            Swal.close();
+        }
         
         $(document).ready(function() {
             // Load existing assessments
@@ -490,11 +540,11 @@
             $('.student-row').each(function() {
                 $(this).attr('data-saved', 'false');
                 $(this).removeClass('bg-green-50');
-                $(this).find('.submit-btn').text('{{ __("Submit") }}').removeClass('bg-green-600').addClass('bg-blue-600');
+                $(this).find('.submit-btn').text('{{ __("assessment.Submit") }}').removeClass('bg-green-600').addClass('bg-blue-600');
             });
             
             // Load existing assessments via AJAX
-            showLoading('{{ __("Loading existing assessments...") }}');
+            showLoading('{{ __("assessment.Loading existing assessments...") }}');
             $.ajax({
                 url: '{{ route("assessments.index") }}',
                 data: {
@@ -566,28 +616,28 @@
             if (assessments.length === 0) {
                 Swal.fire({
                     icon: 'warning',
-                    title: '{{ __("Warning") }}',
-                    text: '{{ __("No assessments selected") }}'
+                    title: '{{ __("assessment.Warning") }}',
+                    text: '{{ __("assessment.No assessments selected") }}'
                 });
                 return;
             }
             
             const confirmText = hasUnsavedChanges 
-                ? `{{ __("You have assessed") }} ${assessments.length} {{ __("out of") }} ${totalCount} {{ __("students") }}. {{ __("Do you want to save and submit?") }}`
-                : `{{ __("All assessments are already saved. Do you want to submit?") }}`;
+                ? `{{ __("assessment.You have assessed") }} ${assessments.length} {{ __("assessment.out of") }} ${totalCount} {{ __("assessment.Students") }}. {{ __("assessment.Do you want to save and submit?") }}`
+                : `{{ __("assessment.All assessments are already saved. Do you want to submit?") }}`;
             
             Swal.fire({
-                title: '{{ __("Submit All Assessments?") }}',
+                title: '{{ __("assessment.Submit All Assessments?") }}',
                 text: confirmText,
                 icon: 'question',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: '{{ __("Yes, submit all") }}',
-                cancelButtonText: '{{ __("Cancel") }}'
+                confirmButtonText: '{{ __("assessment.Yes, submit all") }}',
+                cancelButtonText: '{{ __("assessment.Cancel") }}'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    showLoading('{{ __("Submitting assessments...") }}');
+                    showLoading('{{ __("assessment.Submitting assessments...") }}');
                     
                     // Save all assessments
                     const savePromises = assessments.map(assessment => {
@@ -624,9 +674,9 @@
                             if (response.success) {
                                 Swal.fire({
                                     icon: 'success',
-                                    title: '{{ __("Success") }}',
+                                    title: '{{ __("assessment.Success") }}',
                                     text: response.message,
-                                    confirmButtonText: '{{ __("OK") }}'
+                                    confirmButtonText: '{{ __("assessment.OK") }}'
                                 }).then(() => {
                                     window.location.href = response.redirect;
                                 });
@@ -635,8 +685,8 @@
                         .catch(error => {
                             Swal.fire({
                                 icon: 'error',
-                                title: '{{ __("Error") }}',
-                                text: error.responseJSON?.message || '{{ __("Failed to submit assessments") }}'
+                                title: '{{ __("assessment.Error") }}',
+                                text: error.responseJSON?.message || '{{ __("assessment.Failed to submit assessments") }}'
                             });
                         })
                         .finally(() => {

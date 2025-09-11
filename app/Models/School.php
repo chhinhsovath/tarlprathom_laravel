@@ -73,6 +73,12 @@ class School extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime',
+        'baseline_start_date' => 'date',
+        'baseline_end_date' => 'date',
+        'midline_start_date' => 'date',
+        'midline_end_date' => 'date',
+        'endline_start_date' => 'date',
+        'endline_end_date' => 'date',
     ];
 
     /**
@@ -264,51 +270,4 @@ class School extends Model
         return 'active';
     }
 
-    /**
-     * Accessor for baseline_start_date (temporary - returns null)
-     */
-    public function getBaselineStartDateAttribute()
-    {
-        return null;
-    }
-
-    /**
-     * Accessor for baseline_end_date (temporary - returns null)
-     */
-    public function getBaselineEndDateAttribute()
-    {
-        return null;
-    }
-
-    /**
-     * Accessor for midline_start_date (temporary - returns null)
-     */
-    public function getMidlineStartDateAttribute()
-    {
-        return null;
-    }
-
-    /**
-     * Accessor for midline_end_date (temporary - returns null)
-     */
-    public function getMidlineEndDateAttribute()
-    {
-        return null;
-    }
-
-    /**
-     * Accessor for endline_start_date (temporary - returns null)
-     */
-    public function getEndlineStartDateAttribute()
-    {
-        return null;
-    }
-
-    /**
-     * Accessor for endline_end_date (temporary - returns null)
-     */
-    public function getEndlineEndDateAttribute()
-    {
-        return null;
-    }
 }
