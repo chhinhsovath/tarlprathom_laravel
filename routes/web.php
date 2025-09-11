@@ -25,6 +25,11 @@ use Illuminate\Support\Facades\Route;
 // Language switching
 Route::get('/language/{locale}', [LanguageController::class, 'switch'])->name('language.switch');
 
+// CSRF Token endpoint for debugging
+Route::get('/csrf-token', function () {
+    return response()->json(['csrf_token' => csrf_token()]);
+});
+
 // Test translation page
 Route::get('/test-translation', function () {
     return view('test-translation');
@@ -80,8 +85,26 @@ Route::get('/resources/{resource}', [ResourceController::class, 'publicShow'])->
 Route::get('/resources/{resource}/download', [ResourceController::class, 'download'])->name('resources.download');
 Route::post('/api/resources/{resource}/track-view', [ResourceController::class, 'trackView'])->name('api.resources.track-view');
 
+// Test route for debugging
+Route::get('/test-auth', function () {
+    $user = auth()->user();
+    if ($user) {
+        return response()->json([
+            'authenticated' => true,
+            'user' => [
+                'id' => $user->id,
+                'email' => $user->email,
+                'role' => $user->role,
+                'is_active' => $user->is_active,
+                'email_verified_at' => $user->email_verified_at,
+            ]
+        ]);
+    }
+    return response()->json(['authenticated' => false]);
+})->middleware(['auth']);
+
 Route::get('/dashboard', [DashboardController::class, 'index'])
-    ->middleware(['auth', 'verified'])
+    ->middleware(['auth'])
     ->name('dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -118,13 +141,20 @@ Route::middleware('auth')->group(function () {
     // Classes Management
     Route::resource('classes', ClassController::class);
 
-    // Assessment Routes
+    // Assessment Routes (Data Entry)
+    Route::get('/assessments', [AssessmentController::class, 'index'])->name('assessments.index');
     Route::get('/assessments/export', [AssessmentController::class, 'export'])->name('assessments.export');
     Route::get('/assessments/select-students', [AssessmentController::class, 'selectStudents'])->name('assessments.select-students');
     Route::post('/assessments/select-students', [AssessmentController::class, 'updateSelectedStudents'])->name('assessments.update-selected-students');
-    Route::resource('assessments', AssessmentController::class)->only(['index', 'create', 'store', 'show']);
+    Route::get('/assessments/create', [AssessmentController::class, 'create'])->name('assessments.create');
+    Route::post('/assessments', [AssessmentController::class, 'store'])->name('assessments.store');
     Route::post('/api/assessments/save-student', [AssessmentController::class, 'saveStudentAssessment'])->name('api.assessments.save-student');
     Route::post('/api/assessments/submit-all', [AssessmentController::class, 'submitAllAssessments'])->name('api.assessments.submit-all');
+    
+    // Verification Routes (View and Verify Assessments)
+    Route::get('/verification', [AssessmentController::class, 'index'])->name('verification.index');
+    Route::get('/verification/{assessment}', [AssessmentController::class, 'show'])->name('verification.show');
+    Route::patch('/verification/{assessment}', [AssessmentController::class, 'updateVerification'])->name('verification.update');
 
     // Mentoring Visit Routes
     Route::get('/mentoring', [MentoringVisitController::class, 'index'])->name('mentoring.index');
