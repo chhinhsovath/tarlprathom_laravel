@@ -85,11 +85,15 @@
                     </div>
 
                     <!-- Assessment Period Notice -->
-                    @if(auth()->user()->school && !auth()->user()->isAdmin())
-                        @php
-                            $school = auth()->user()->school;
-                            $periodStatus = $school->getAssessmentPeriodStatus($cycle);
-                        @endphp
+                    @php
+                        $school = auth()->user()->pilotSchool ?? auth()->user()->school;
+                        $periodStatus = null;
+                        if($school && !auth()->user()->isAdmin()) {
+                            $periodStatus = method_exists($school, 'getAssessmentPeriodStatus') ? $school->getAssessmentPeriodStatus($cycle) : 'not_set';
+                        }
+                    @endphp
+                    
+                    @if($school && !auth()->user()->isAdmin() && $periodStatus)
                         
                         @if($periodStatus === 'not_set')
                             <div class="mb-4 bg-yellow-50 border-l-4 border-yellow-400 p-4">
@@ -116,12 +120,14 @@
                                     </div>
                                     <div class="ml-3">
                                         <p class="text-sm text-blue-700">
-                                            @if($cycle === 'baseline')
-                                                {{ __('Baseline assessment period starts on') }} {{ $school->baseline_start_date->format('d/m/Y') }}.
-                                            @elseif($cycle === 'midline')
-                                                {{ __('Midline assessment period starts on') }} {{ $school->midline_start_date->format('d/m/Y') }}.
+                                            @if($cycle === 'baseline' && isset($school->baseline_start_date) && $school->baseline_start_date && !is_array($school->baseline_start_date))
+                                                {{ __('Baseline assessment period starts on') }} {{ is_object($school->baseline_start_date) && method_exists($school->baseline_start_date, 'format') ? $school->baseline_start_date->format('d/m/Y') : $school->baseline_start_date }}.
+                                            @elseif($cycle === 'midline' && isset($school->midline_start_date) && $school->midline_start_date && !is_array($school->midline_start_date))
+                                                {{ __('Midline assessment period starts on') }} {{ is_object($school->midline_start_date) && method_exists($school->midline_start_date, 'format') ? $school->midline_start_date->format('d/m/Y') : $school->midline_start_date }}.
+                                            @elseif($cycle === 'endline' && isset($school->endline_start_date) && $school->endline_start_date && !is_array($school->endline_start_date))
+                                                {{ __('Endline assessment period starts on') }} {{ is_object($school->endline_start_date) && method_exists($school->endline_start_date, 'format') ? $school->endline_start_date->format('d/m/Y') : $school->endline_start_date }}.
                                             @else
-                                                {{ __('Endline assessment period starts on') }} {{ $school->endline_start_date->format('d/m/Y') }}.
+                                                {{ __('Assessment period dates not configured.') }}
                                             @endif
                                         </p>
                                     </div>
@@ -137,12 +143,14 @@
                                     </div>
                                     <div class="ml-3">
                                         <p class="text-sm text-red-700">
-                                            @if($cycle === 'baseline')
-                                                {{ __('Baseline assessment period ended on') }} {{ $school->baseline_end_date->format('d/m/Y') }}.
-                                            @elseif($cycle === 'midline')
-                                                {{ __('Midline assessment period ended on') }} {{ $school->midline_end_date->format('d/m/Y') }}.
+                                            @if($cycle === 'baseline' && isset($school->baseline_end_date) && $school->baseline_end_date && !is_array($school->baseline_end_date))
+                                                {{ __('Baseline assessment period ended on') }} {{ is_object($school->baseline_end_date) && method_exists($school->baseline_end_date, 'format') ? $school->baseline_end_date->format('d/m/Y') : $school->baseline_end_date }}.
+                                            @elseif($cycle === 'midline' && isset($school->midline_end_date) && $school->midline_end_date && !is_array($school->midline_end_date))
+                                                {{ __('Midline assessment period ended on') }} {{ is_object($school->midline_end_date) && method_exists($school->midline_end_date, 'format') ? $school->midline_end_date->format('d/m/Y') : $school->midline_end_date }}.
+                                            @elseif($cycle === 'endline' && isset($school->endline_end_date) && $school->endline_end_date && !is_array($school->endline_end_date))
+                                                {{ __('Endline assessment period ended on') }} {{ is_object($school->endline_end_date) && method_exists($school->endline_end_date, 'format') ? $school->endline_end_date->format('d/m/Y') : $school->endline_end_date }}.
                                             @else
-                                                {{ __('Endline assessment period ended on') }} {{ $school->endline_end_date->format('d/m/Y') }}.
+                                                {{ __('Assessment period has expired.') }}
                                             @endif
                                         </p>
                                     </div>
@@ -158,12 +166,14 @@
                                     </div>
                                     <div class="ml-3">
                                         <p class="text-sm text-green-700">
-                                            @if($cycle === 'baseline')
-                                                {{ __('Baseline assessment period is active until') }} {{ $school->baseline_end_date->format('d/m/Y') }}.
-                                            @elseif($cycle === 'midline')
-                                                {{ __('Midline assessment period is active until') }} {{ $school->midline_end_date->format('d/m/Y') }}.
+                                            @if($cycle === 'baseline' && isset($school->baseline_end_date) && $school->baseline_end_date && !is_array($school->baseline_end_date))
+                                                {{ __('Baseline assessment period is active until') }} {{ is_object($school->baseline_end_date) && method_exists($school->baseline_end_date, 'format') ? $school->baseline_end_date->format('d/m/Y') : $school->baseline_end_date }}.
+                                            @elseif($cycle === 'midline' && isset($school->midline_end_date) && $school->midline_end_date && !is_array($school->midline_end_date))
+                                                {{ __('Midline assessment period is active until') }} {{ is_object($school->midline_end_date) && method_exists($school->midline_end_date, 'format') ? $school->midline_end_date->format('d/m/Y') : $school->midline_end_date }}.
+                                            @elseif($cycle === 'endline' && isset($school->endline_end_date) && $school->endline_end_date && !is_array($school->endline_end_date))
+                                                {{ __('Endline assessment period is active until') }} {{ is_object($school->endline_end_date) && method_exists($school->endline_end_date, 'format') ? $school->endline_end_date->format('d/m/Y') : $school->endline_end_date }}.
                                             @else
-                                                {{ __('Endline assessment period is active until') }} {{ $school->endline_end_date->format('d/m/Y') }}.
+                                                {{ __('Assessment period is currently active.') }}
                                             @endif
                                         </p>
                                     </div>
@@ -335,9 +345,10 @@
                     <!-- Submit All Button -->
                     @php
                         $showSubmitButton = true;
-                        if(auth()->user()->school && !auth()->user()->isAdmin()) {
-                            $periodStatus = auth()->user()->school->getAssessmentPeriodStatus($cycle);
-                            $showSubmitButton = in_array($periodStatus, ['active']);
+                        $school = auth()->user()->pilotSchool ?? auth()->user()->school;
+                        if($school && !auth()->user()->isAdmin()) {
+                            $periodStatus = method_exists($school, 'getAssessmentPeriodStatus') ? $school->getAssessmentPeriodStatus($cycle) : 'active';
+                            $showSubmitButton = in_array($periodStatus, ['active', 'not_set']); // Allow if not set or active
                         }
                     @endphp
                     
@@ -353,12 +364,14 @@
                     @else
                         <div class="mt-6 text-center">
                             <p class="text-sm text-gray-500">
-                                @if($periodStatus === 'not_set')
+                                @if(isset($periodStatus) && $periodStatus === 'not_set')
                                     {{ __('Submit button is disabled. Assessment dates have not been set for your school.') }}
-                                @elseif($periodStatus === 'upcoming')
+                                @elseif(isset($periodStatus) && $periodStatus === 'upcoming')
                                     {{ __('Submit button will be enabled when the assessment period begins.') }}
-                                @elseif($periodStatus === 'expired')
+                                @elseif(isset($periodStatus) && $periodStatus === 'expired')
                                     {{ __('Submit button is disabled. The assessment period has ended.') }}
+                                @else
+                                    {{ __('Submit button is currently disabled.') }}
                                 @endif
                             </p>
                         </div>
