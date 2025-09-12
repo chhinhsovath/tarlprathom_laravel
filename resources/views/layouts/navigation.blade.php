@@ -24,18 +24,24 @@
                                  {{ trans_db('plp') }}
                              </a>
                     
-                    <x-nav-link :href="route('showcase')" :active="request()->routeIs('showcase')">
-                        {{ __('showcase.title') }}
-                    </x-nav-link>
+                    <!-- <x-nav-link :href="route('showcase')" :active="request()->routeIs('showcase')">
+                        {{ trans_db('showcase') }}
+                    </x-nav-link> -->
                     @if(auth()->check() && !auth()->user()->isCoordinator())
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ trans_db('dashboard') }}
                     </x-nav-link>
                     @endif
                     
-                    @if(auth()->check() && in_array(auth()->user()->role, ['admin', 'teacher', 'mentor', 'viewer']))
+                    @if(auth()->check() && in_array(auth()->user()->role, ['admin', 'teacher']))
                     <x-nav-link :href="route('assessments.index')" :active="request()->routeIs('assessments.*')">
                         {{ trans_db('assessments') }}
+                    </x-nav-link>
+                    @endif
+                    
+                    @if(auth()->check() && in_array(auth()->user()->role, ['admin', 'mentor']))
+                    <x-nav-link :href="route('verification.index')" :active="request()->routeIs('verification.*')">
+                        {{ trans_db('verification') }}
                     </x-nav-link>
                     @endif
                     
@@ -140,15 +146,7 @@
                         <!-- Sign Out -->
                         <div class="border-t border-gray-100"></div>
                         <div class="px-2 py-2">
-                            <form method="POST" action="{{ route('logout') }}">
-                                @csrf
-                                <button type="submit" class="flex items-center w-full px-3 py-2 text-sm text-gray-700 rounded-md hover:bg-red-50 hover:text-red-600 transition-colors duration-150">
-                                    <svg class="w-4 h-4 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
-                                    </svg>
-                                    {{ trans_db('sign_out') }}
-                                </button>
-                            </form>
+                            <x-logout-button />
                         </div>
                     </x-slot>
                 </x-dropdown>
@@ -169,9 +167,9 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('showcase')" :active="request()->routeIs('showcase')">
+            <!-- <x-responsive-nav-link :href="route('showcase')" :active="request()->routeIs('showcase')">
                 {{ __('showcase.title') }}
-            </x-responsive-nav-link>
+            </x-responsive-nav-link> -->
             
             @if(auth()->check() && !auth()->user()->isCoordinator())
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
@@ -179,9 +177,15 @@
             </x-responsive-nav-link>
             @endif
             
-            @if(auth()->check() && in_array(auth()->user()->role, ['admin', 'teacher', 'mentor', 'viewer']))
+            @if(auth()->check() && in_array(auth()->user()->role, ['admin', 'teacher']))
             <x-responsive-nav-link :href="route('assessments.index')" :active="request()->routeIs('assessments.*')">
                 {{ trans_db('assessments') }}
+            </x-responsive-nav-link>
+            @endif
+            
+            @if(auth()->check() && in_array(auth()->user()->role, ['admin', 'mentor']))
+            <x-responsive-nav-link :href="route('verification.index')" :active="request()->routeIs('verification.*')">
+                {{ trans_db('verification') }}
             </x-responsive-nav-link>
             @endif
             
@@ -254,7 +258,6 @@
                     {{ trans_db('change_password') }}
                 </x-responsive-nav-link>
                 
-                
                 <div class="border-t border-gray-200 my-2"></div>
                 <x-responsive-nav-link :href="route('help.index')">
                     <svg class="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -272,18 +275,9 @@
 
                 <!-- Authentication -->
                 <div class="border-t border-gray-200 my-2"></div>
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <x-responsive-nav-link :href="route('logout')"
-                            onclick="event.preventDefault();
-                                        this.closest('form').submit();" 
-                            class="text-red-600">
-                        <svg class="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
-                        </svg>
-                        {{ trans_db('sign_out') }}
-                    </x-responsive-nav-link>
-                </form>
+                <div class="px-4">
+                    <x-logout-button />
+                </div>
             </div>
         </div>
     </div>

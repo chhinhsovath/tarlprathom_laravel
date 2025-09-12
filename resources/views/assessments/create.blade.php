@@ -64,23 +64,23 @@
                     <div class="mb-6 flex items-center justify-between">
                         <div class="flex items-center space-x-4">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('assessment.Subject') }}:</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">{{ trans_db('assessment.subject') }}:</label>
                                 <select id="subject" class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                                    <option value="khmer" {{ $subject === 'khmer' ? 'selected' : '' }}>{{ __('assessment.Khmer') }}</option>
-                                    <option value="math" {{ $subject === 'math' ? 'selected' : '' }}>{{ __('assessment.Math') }}</option>
+                                    <option value="khmer" {{ $subject === 'khmer' ? 'selected' : '' }}>{{ trans_db('assessment.khmer') }}</option>
+                                    <option value="math" {{ $subject === 'math' ? 'selected' : '' }}>{{ trans_db('assessment.math') }}</option>
                                 </select>
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('Test Cycle') }}:</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">{{ trans_db('test_cycle') }}:</label>
                                 <select id="cycle" class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                                    <option value="baseline" {{ $cycle === 'baseline' ? 'selected' : '' }}>{{ __('Baseline') }}</option>
-                                    <option value="midline" {{ $cycle === 'midline' ? 'selected' : '' }}>{{ __('Midline') }}</option>
-                                    <option value="endline" {{ $cycle === 'endline' ? 'selected' : '' }}>{{ __('Endline') }}</option>
+                                    <option value="baseline" {{ $cycle === 'baseline' ? 'selected' : '' }}>{{ trans_db('baseline') }}</option>
+                                    <option value="midline" {{ $cycle === 'midline' ? 'selected' : '' }}>{{ trans_db('midline') }}</option>
+                                    <option value="endline" {{ $cycle === 'endline' ? 'selected' : '' }}>{{ trans_db('endline') }}</option>
                                 </select>
                             </div>
                         </div>
                         <div class="text-sm text-gray-600">
-                            <span id="savedCount">0</span> / <span id="totalCount">{{ count($students) }}</span> {{ __('Students') }} {{ __('assessment.assessed') }}
+                            <span id="savedCount">0</span> / <span id="totalCount">{{ count($students) }}</span> {{ trans_db('students') }} {{ trans_db('assessment.assessed') }}
                         </div>
                     </div>
 
@@ -105,7 +105,7 @@
                                     </div>
                                     <div class="ml-3">
                                         <p class="text-sm text-yellow-700">
-                                            {{ __('Assessment dates have not been set for your school. Please contact your administrator.') }}
+                                            {{ trans_db('assessment_dates_not_set') }}
                                         </p>
                                     </div>
                                 </div>
@@ -137,9 +137,9 @@
                                                 }
                                             @endphp
                                             @if($dateString)
-                                                {{ __('Assessment period starts on') }} {{ (string) $dateString }}.
+                                                {{ trans_db('assessment_period_starts_on') }} {{ $dateString }}.
                                             @else
-                                                {{ __('Assessment period dates not configured.') }}
+                                                {{ trans_db('assessment_period_dates_not_configured') }}
                                             @endif
                                         </p>
                                     </div>
@@ -172,9 +172,9 @@
                                                 }
                                             @endphp
                                             @if($endDateString)
-                                                {{ __('Assessment period ended on') }} {{ (string) $endDateString }}.
+                                                {{ trans_db('assessment_period_ended_on') }} {{ $endDateString }}.
                                             @else
-                                                {{ __('Assessment period has expired.') }}
+                                                {{ trans_db('assessment_period_has_expired') }}
                                             @endif
                                         </p>
                                     </div>
@@ -207,9 +207,9 @@
                                                 }
                                             @endphp
                                             @if($activeEndDateString)
-                                                {{ __('Assessment period is active until') }} {{ (string) $activeEndDateString }}.
+                                                {{ trans_db('assessment_period_is_active_until') }} {{ $activeEndDateString }}.
                                             @else
-                                                {{ __('Assessment period is currently active.') }}
+                                                {{ trans_db('assessment_period_is_currently_active') }}
                                             @endif
                                         </p>
                                     </div>
@@ -234,8 +234,8 @@
                                 </div>
                                 <div class="ml-3">
                                     <p class="text-sm text-yellow-700">
-                                        {{ __(':count assessment(s) are locked by administrators and cannot be edited.', ['count' => $lockedCount]) }}
-                                        {{ __('You can only view these assessments.') }}
+                                        {{ trans_db('assessments_locked_message', ['count' => $lockedCount]) }}
+                                        {{ trans_db('you_can_only_view') }}
                                     </p>
                                 </div>
                             </div>
@@ -246,12 +246,12 @@
                     <div class="md:hidden fixed bottom-4 left-4 right-4 bg-white rounded-lg shadow-lg p-3 z-50" style="display: none;" id="floatingHeaders">
                         <div class="text-xs text-gray-600 font-medium">
                             <div class="text-center">
-                                <div class="text-gray-500">{{ __('assessment.Levels') }}</div>
+                                <div class="text-gray-500">{{ trans_db('assessment.levels') }}</div>
                                 <div class="text-xs mt-1">
                                     @if($subject === 'khmer')
-                                        {{ __('Beg → Let → Wrd → Par → Sto → C1 → C2') }}
+                                        {{ trans_db('beg_let_wrd_par_sto_c1_c2') }}
                                     @else
-                                        {{ __('Beg → 1D → 2D → Sub → Div → WP') }}
+                                        {{ trans_db('beg_1d_2d_sub_div_wp') }}
                                     @endif
                                 </div>
                             </div>
@@ -265,33 +265,33 @@
                             <thead class="bg-gray-50">
                                 <tr>
                                     <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sticky left-0 bg-gray-50 z-20">
-                                        {{ __('assessment.Student Name') }}
+                                        {{ trans_db('assessment.student_name') }}
                                     </th>
                                     <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        {{ __('assessment.Latest Level') }}
+                                        {{ trans_db('assessment.latest_level') }}
                                     </th>
                                     <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider" colspan="7">
-                                        {{ __('assessment.Student Level') }}
+                                        {{ trans_db('assessment.student_level') }}
                                     </th>
                                 </tr>
                                 <tr class="sticky top-0 z-10 shadow-sm bg-gray-50">
                                     <th class="px-4 py-2 sticky left-0 bg-gray-50 z-20 border-b-2 border-gray-300"></th>
                                     <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300"></th>
                                     @if($subject === 'khmer')
-                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ __('assessment.Beginner') }}</th>
-                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ __('assessment.Letter') }}</th>
-                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ __('assessment.Word') }}</th>
-                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ __('assessment.Paragraph') }}</th>
-                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ __('assessment.Story') }}</th>
-                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ __('assessment.Comp. 1') }}</th>
-                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ __('assessment.Comp. 2') }}</th>
+                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ trans_db('assessment.beginner') }}</th>
+                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ trans_db('assessment.letter') }}</th>
+                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ trans_db('assessment.word') }}</th>
+                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ trans_db('assessment.paragraph') }}</th>
+                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ trans_db('assessment.story') }}</th>
+                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ trans_db('assessment.comp_1') }}</th>
+                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ trans_db('assessment.comp_2') }}</th>
                                     @else
-                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ __('assessment.Beginner') }}</th>
-                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ __('assessment.1-Digit') }}</th>
-                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ __('assessment.2-Digit') }}</th>
-                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ __('assessment.Subtraction') }}</th>
-                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ __('assessment.Division') }}</th>
-                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ __('assessment.Word Problem') }}</th>
+                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ trans_db('assessment.beginner') }}</th>
+                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ trans_db('assessment.1_digit') }}</th>
+                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ trans_db('assessment.2_digit') }}</th>
+                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ trans_db('assessment.subtraction') }}</th>
+                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ trans_db('assessment.division') }}</th>
+                                    <th class="px-2 py-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-b-2 border-gray-300">{{ trans_db('assessment.word_problem') }}</th>
                                     @endif
                                 </tr>
                             </thead>
@@ -307,11 +307,11 @@
                                                         <svg class="-ml-0.5 mr-1 h-2 w-2" fill="currentColor" viewBox="0 0 8 8">
                                                             <circle cx="4" cy="4" r="3" />
                                                         </svg>
-                                                        {{ __('assessment.Locked') }}
+                                                        {{ trans_db('assessment.locked') }}
                                                     </span>
                                                 @else
                                                     <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800">
-                                                        {{ __('assessment.Assessed') }}
+                                                        {{ trans_db('assessment.assessed') }}
                                                     </span>
                                                 @endif
                                             @endif
@@ -321,9 +321,9 @@
                                     <td class="px-2 py-4 text-center">
                                         <div class="text-sm">
                                             @if($student->previous_assessment)
-                                                <span class="font-medium text-gray-700">{{ __($student->previous_assessment->level) }}</span>
+                                                <span class="font-medium text-gray-700">{{ trans_db($student->previous_assessment->level) }}</span>
                                                 <br>
-                                                <span class="text-xs text-gray-500">{{ __(ucfirst($student->previous_assessment->cycle)) }}</span>
+                                                <span class="text-xs text-gray-500">{{ trans_db(ucfirst($student->previous_assessment->cycle)) }}</span>
                                             @else
                                                 <span class="text-gray-400">-</span>
                                             @endif
@@ -393,20 +393,20 @@
                                     id="submitAllBtn"
                                     class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                                     onclick="submitAll()">
-                                {{ __('assessment.Submit') }}
+                                {{ trans_db('assessment.submit') }}
                             </button>
                         </div>
                     @else
                         <div class="mt-6 text-center">
                             <p class="text-sm text-gray-500">
                                 @if(isset($periodStatus) && $periodStatus === 'not_set')
-                                    {{ __('Submit button is disabled. Assessment dates have not been set for your school.') }}
+                                    {{ trans_db('submit_button_disabled_dates_not_set') }}
                                 @elseif(isset($periodStatus) && $periodStatus === 'upcoming')
-                                    {{ __('Submit button will be enabled when the assessment period begins.') }}
+                                    {{ trans_db('submit_button_enabled_when_period_begins') }}
                                 @elseif(isset($periodStatus) && $periodStatus === 'expired')
-                                    {{ __('Submit button is disabled. The assessment period has ended.') }}
+                                    {{ trans_db('submit_button_disabled_period_ended') }}
                                 @else
-                                    {{ __('Submit button is currently disabled.') }}
+                                    {{ trans_db('submit_button_currently_disabled') }}
                                 @endif
                             </p>
                         </div>
@@ -416,21 +416,21 @@
                         <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
                         </svg>
-                        <h3 class="mt-2 text-sm font-medium text-gray-900">{{ __('assessment.No eligible students') }}</h3>
+                        <h3 class="mt-2 text-sm font-medium text-gray-900">{{ trans_db('assessment.no_eligible_students') }}</h3>
                         <p class="mt-1 text-sm text-gray-500">
                             @if($subject === 'khmer' && in_array($cycle, ['midline', 'endline']))
-                                {{ __('No students from baseline assessment (Beginner to Story level) found for this cycle.') }}
+                                {{ trans_db('no_students_baseline_khmer') }}
                             @elseif($subject === 'math' && in_array($cycle, ['midline', 'endline']))
-                                {{ __('No students from baseline assessment (Beginner to Subtraction level) found for this cycle.') }}
+                                {{ trans_db('no_students_baseline_math') }}
                             @else
-                                {{ __('assessment.No students found.') }}
+                                {{ trans_db('assessment.no_students_found') }}
                             @endif
                         </p>
                         @if($cycle !== 'baseline')
                         <div class="mt-6">
                             <a href="{{ route('assessments.create', ['subject' => $subject, 'cycle' => 'baseline']) }}" 
                                class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                {{ __('assessment.Go to Baseline Assessment') }}
+                                {{ trans_db('assessment.go_to_baseline_assessment') }}
                             </a>
                         </div>
                         @endif
@@ -540,11 +540,11 @@
             $('.student-row').each(function() {
                 $(this).attr('data-saved', 'false');
                 $(this).removeClass('bg-green-50');
-                $(this).find('.submit-btn').text('{{ __("assessment.Submit") }}').removeClass('bg-green-600').addClass('bg-blue-600');
+                $(this).find('.submit-btn').text('{{ trans_db("assessment.Submit") }}').removeClass('bg-green-600').addClass('bg-blue-600');
             });
             
             // Load existing assessments via AJAX
-            showLoading('{{ __("assessment.Loading existing assessments...") }}');
+            showLoading('{{ trans_db("assessment.loading_existing_assessments") }}');
             $.ajax({
                 url: '{{ route("assessments.index") }}',
                 data: {
@@ -616,28 +616,28 @@
             if (assessments.length === 0) {
                 Swal.fire({
                     icon: 'warning',
-                    title: '{{ __("assessment.Warning") }}',
-                    text: '{{ __("assessment.No assessments selected") }}'
+                    title: '{{ trans_db("assessment.warning") }}',
+                    text: '{{ trans_db("assessment.no_assessments_selected") }}'
                 });
                 return;
             }
             
             const confirmText = hasUnsavedChanges 
-                ? `{{ __("assessment.You have assessed") }} ${assessments.length} {{ __("assessment.out of") }} ${totalCount} {{ __("assessment.Students") }}. {{ __("assessment.Do you want to save and submit?") }}`
-                : `{{ __("assessment.All assessments are already saved. Do you want to submit?") }}`;
+                ? `{{ trans_db("assessment.you_have_assessed") }} ${assessments.length} {{ trans_db("assessment.out_of") }} ${totalCount} {{ trans_db("students") }}. {{ trans_db("assessment.do_you_want_to_save_and_submit") }}`
+                : `{{ trans_db("assessment.all_assessments_are_already_saved") }}`;
             
             Swal.fire({
-                title: '{{ __("assessment.Submit All Assessments?") }}',
+                title: '{{ trans_db("assessment.submit_all_assessments") }}',
                 text: confirmText,
                 icon: 'question',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: '{{ __("assessment.Yes, submit all") }}',
-                cancelButtonText: '{{ __("assessment.Cancel") }}'
+                confirmButtonText: '{{ trans_db("assessment.yes_submit_all") }}',
+                cancelButtonText: '{{ trans_db("assessment.cancel") }}'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    showLoading('{{ __("assessment.Submitting assessments...") }}');
+                    showLoading('{{ trans_db("assessment.submitting_assessments") }}');
                     
                     // Save all assessments
                     const savePromises = assessments.map(assessment => {
@@ -674,9 +674,9 @@
                             if (response.success) {
                                 Swal.fire({
                                     icon: 'success',
-                                    title: '{{ __("assessment.Success") }}',
+                                    title: '{{ trans_db("assessment.success") }}',
                                     text: response.message,
-                                    confirmButtonText: '{{ __("assessment.OK") }}'
+                                    confirmButtonText: '{{ trans_db("assessment.ok") }}'
                                 }).then(() => {
                                     window.location.href = response.redirect;
                                 });
@@ -685,8 +685,8 @@
                         .catch(error => {
                             Swal.fire({
                                 icon: 'error',
-                                title: '{{ __("assessment.Error") }}',
-                                text: error.responseJSON?.message || '{{ __("assessment.Failed to submit assessments") }}'
+                                title: '{{ trans_db("assessment.error") }}',
+                                text: error.responseJSON?.message || '{{ trans_db("assessment.failed_to_submit_assessments") }}'
                             });
                         })
                         .finally(() => {
