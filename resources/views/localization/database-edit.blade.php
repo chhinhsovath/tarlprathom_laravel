@@ -4,12 +4,6 @@
 <div class="py-6">
     <div class="w-full px-4 sm:px-6 lg:px-8">
         <h2 class="text-3xl font-bold text-gray-900 mb-6">{{ __('Translation Manager') }}</h2>
-        
-        @if(session('success'))
-            <div class="mb-6 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
-                {{ session('success') }}
-            </div>
-        @endif
 
         <!-- Simple table without any complex escaping -->
         <div class="bg-white rounded-lg shadow-sm overflow-hidden">

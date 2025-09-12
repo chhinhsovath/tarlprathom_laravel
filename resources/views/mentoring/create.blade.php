@@ -352,7 +352,7 @@
                                 <!-- ហេតុអ្វីបានជាថ្នាក់រៀនមិនចាប់ផ្តើមទាន់ពេល? -->
                                 <div id="late_start_reason_container" style="display: none;">
                                     <label for="late_start_reason" class="block text-sm font-medium text-gray-700 mb-2">
-                                        {{ __('ហេតុអ្វីបានជាថ្នាក់រៀនមិនចាប់ផ្តើមទាន់ពេល?') }}
+                                        {{ __('ហេតុអ្វីបានជាថ្នាក់រៀនមិនចាប់ផ្តើមទាន់ពេល?') }} <span class="text-red-500">*</span>
                                     </label>
                                     <textarea id="late_start_reason" 
                                               name="late_start_reason" 
@@ -572,6 +572,8 @@
                                     <option value="1" {{ old('number_of_activities') == 1 ? 'selected' : '' }}>1</option>
                                     <option value="2" {{ old('number_of_activities') == 2 ? 'selected' : '' }}>2</option>
                                     <option value="3" {{ old('number_of_activities') == 3 ? 'selected' : '' }}>3</option>
+                                    <option value="4" {{ old('number_of_activities') == 4 ? 'selected' : '' }}>4</option>
+                                    <option value="5" {{ old('number_of_activities') == 5 ? 'selected' : '' }}>5</option>
                                 </select>
                             </div>
                             
@@ -1136,9 +1138,23 @@
             
             classStartedOnTimeRadios.forEach(radio => {
                 radio.addEventListener('change', function() {
-                    lateStartReasonContainer.style.display = this.value === '0' ? 'block' : 'none';
+                    const lateStartReasonTextarea = document.getElementById('late_start_reason');
+                    if (this.value === '0') {
+                        lateStartReasonContainer.style.display = 'block';
+                        lateStartReasonTextarea.required = true;
+                    } else {
+                        lateStartReasonContainer.style.display = 'none';
+                        lateStartReasonTextarea.required = false;
+                    }
                 });
             });
+            
+            // Initialize late start reason visibility on page load
+            const checkedClassStartedOnTime = document.querySelector('input[name="class_started_on_time"]:checked');
+            if (checkedClassStartedOnTime && checkedClassStartedOnTime.value === '0') {
+                lateStartReasonContainer.style.display = 'block';
+                document.getElementById('late_start_reason').required = true;
+            }
             
             // Has session plan logic
             const hasSessionPlanRadios = document.querySelectorAll('input[name="has_session_plan"]');
@@ -1169,19 +1185,33 @@
             
             // Number of activities logic
             const numberOfActivities = document.getElementById('number_of_activities');
+            console.log('Found numberOfActivities element:', numberOfActivities);
             
             if (numberOfActivities) {
+                console.log('Adding event listener to numberOfActivities');
                 numberOfActivities.addEventListener('change', function() {
                     const num = parseInt(this.value);
+                    console.log('Selected number of activities:', num);
                     
-                    // Show/hide activity sections
+                    // Show/hide activity sections (max 3 activities even if user selects 4 or 5)
+                    const maxSections = Math.min(num, 3); // Cap at 3 sections
                     for (let i = 1; i <= 3; i++) {
                         const section = document.getElementById(`activity${i}_section`);
+                        console.log(`Looking for activity${i}_section:`, section);
                         if (section) {
-                            section.style.display = i <= num ? 'block' : 'none';
+                            const shouldShow = i <= maxSections;
+                            section.style.display = shouldShow ? 'block' : 'none';
+                            console.log(`Activity ${i} display set to:`, shouldShow ? 'block' : 'none');
                         }
                     }
                 });
+                
+                // Trigger on page load if there's already a value (from old() after validation error)
+                if (numberOfActivities.value) {
+                    numberOfActivities.dispatchEvent(new Event('change'));
+                }
+            } else {
+                console.error('numberOfActivities element not found!');
             }
             
             // Activity clear instructions logic
@@ -1275,6 +1305,7 @@
             // Trigger number of activities logic for preserved values
             const numberOfActivitiesSelect = document.getElementById('number_of_activities');
             if (numberOfActivitiesSelect && numberOfActivitiesSelect.value) {
+                console.log('Triggering numberOfActivities from initialization with value:', numberOfActivitiesSelect.value);
                 numberOfActivitiesSelect.dispatchEvent(new Event('change'));
             }
         });

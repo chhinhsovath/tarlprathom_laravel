@@ -3,7 +3,7 @@
         <div class="w-full px-4 sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
-                    <h3 class="text-lg font-medium text-gray-900 mb-6">ទម្រង់សង្កេតការណ៍ការចុះណែនាំ</h3>
+                    <h3 class="text-lg font-medium text-gray-900 mb-6">{{ __('mentoring.Edit Mentoring Visit') }}</h3>
                     
                     <form id="mentoringForm" method="POST" action="{{ route('mentoring.update', $mentoringVisit) }}" enctype="multipart/form-data">
                         @csrf
@@ -33,7 +33,7 @@
                                     <input type="date" 
                                            id="visit_date" 
                                            name="visit_date" 
-                                           value="{{ old('visit_date', $mentoringVisit->visit_date ? $mentoringVisit->visit_date->format('Y-m-d') : date('Y-m-d')) }}"
+                                           value="{{ date('Y-m-d') }}"
                                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                                            required>
                                     @error('visit_date')
@@ -51,11 +51,11 @@
                                     <input type="text" 
                                            id="mentor_name" 
                                            name="mentor_name" 
-                                           value="{{ $mentoringVisit->mentor ? $mentoringVisit->mentor->name : auth()->user()->name }}"
+                                           value="{{ auth()->user()->name }}"
                                            class="w-full rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                                            readonly>
                                     <small class="text-gray-500">បំពេញដោយស្វ័យប្រវត្តិ - ផ្អែកលើព័ត៌មានលម្អិតនៃគណនីអ្នកប្រើប្រាស់</small>
-                                    <input type="hidden" name="mentor_id" value="{{ old('mentor_id', $mentoringVisit->mentor_id ?? auth()->user()->id) }}">
+                                    <input type="hidden" name="mentor_id" value="{{ auth()->user()->id }}">
                                 </div>
                                 
                                 <!-- ឈ្មោះសាលា (School Name) -->
@@ -69,7 +69,7 @@
                                             required>
                                         <option value="">ជ្រើសរើសសាលា</option>
                                         @foreach($schools as $school)
-                                            <option value="{{ $school->id }}" {{ old('pilot_school_id', $mentoringVisit->pilot_school_id) == $school->id ? 'selected' : '' }}>
+                                            <option value="{{ $school->id }}" {{ old('pilot_school_id', $selectedSchoolId ?? '') == $school->id ? 'selected' : '' }}>
                                                 {{ $school->school_name }}
                                             </option>
                                         @endforeach
@@ -89,13 +89,6 @@
                                             class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                                             required>
                                         <option value="">ជ្រើសរើសគ្រូ</option>
-                                        @foreach($teachers as $teacher)
-                                            <option value="{{ $teacher->id }}" 
-                                                    data-school="{{ $teacher->pilot_school_id }}"
-                                                    {{ old('teacher_id', $mentoringVisit->teacher_id) == $teacher->id ? 'selected' : '' }}>
-                                                {{ $teacher->name }}{{ $teacher->pilotSchool ? ' - ' . $teacher->pilotSchool->school_name : '' }}
-                                            </option>
-                                        @endforeach
                                     </select>
                                     @error('teacher_id')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -118,13 +111,13 @@
                                         <label class="inline-flex items-center">
                                             <input type="radio" name="class_in_session" value="1" 
                                                    class="form-radio" required
-                                                   {{ old('class_in_session', $mentoringVisit->class_in_session) == '1' ? 'checked' : '' }}>
+                                                   {{ old('class_in_session') == '1' ? 'checked' : '' }}>
                                             <span class="ml-2">{{ __('បាទ/ចាស') }}</span>
                                         </label>
                                         <label class="inline-flex items-center ml-6">
                                             <input type="radio" name="class_in_session" value="0" 
                                                    class="form-radio" required
-                                                   {{ old('class_in_session', $mentoringVisit->class_in_session) == '0' ? 'checked' : '' }}>
+                                                   {{ old('class_in_session') == '0' ? 'checked' : '' }}>
                                             <span class="ml-2">{{ __('ទេ') }}</span>
                                         </label>
                                     </div>
@@ -141,7 +134,7 @@
                                     <textarea id="class_not_in_session_reason" 
                                               name="class_not_in_session_reason" 
                                               rows="3"
-                                              class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">{{ old('class_not_in_session_reason', $mentoringVisit->class_not_in_session_reason) }}</textarea>
+                                              class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">{{ old('class_not_in_session_reason') }}</textarea>
                                     @error('class_not_in_session_reason')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
@@ -158,13 +151,13 @@
                                         <label class="inline-flex items-center">
                                             <input type="radio" name="full_session_observed" value="1" 
                                                    class="form-radio"
-                                                   {{ old('full_session_observed', $mentoringVisit->full_session_observed) == '1' ? 'checked' : '' }}>
+                                                   {{ old('full_session_observed') == '1' ? 'checked' : '' }}>
                                             <span class="ml-2">{{ __('បាទ/ចាស') }}</span>
                                         </label>
                                         <label class="inline-flex items-center ml-6">
                                             <input type="radio" name="full_session_observed" value="0" 
                                                    class="form-radio"
-                                                   {{ old('full_session_observed', $mentoringVisit->full_session_observed) == '0' ? 'checked' : '' }}>
+                                                   {{ old('full_session_observed') == '0' ? 'checked' : '' }}>
                                             <span class="ml-2">{{ __('ទេ') }}</span>
                                         </label>
                                     </div>
@@ -183,10 +176,7 @@
                                         <label class="inline-flex items-center mr-4">
                                             <input type="checkbox" name="grades_observed[]" value="{{ $grade }}" 
                                                    class="form-checkbox"
-                                                   @php
-                                                       $existingGrades = is_string($mentoringVisit->grades_observed) ? json_decode($mentoringVisit->grades_observed, true) : $mentoringVisit->grades_observed;
-                                                   @endphp
-                                                   {{ in_array($grade, old('grades_observed', $existingGrades ?? [])) ? 'checked' : '' }}>
+                                                   {{ in_array($grade, old('grades_observed', [])) ? 'checked' : '' }}>
                                             <span class="ml-2">{{ $grade }}</span>
                                         </label>
                                         @endforeach
@@ -205,8 +195,8 @@
                                             name="subject_observed" 
                                             class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                                         <option value="">ជ្រើសរើសមុខវិជ្ជា</option>
-                                        <option value="ភាសាខ្មែរ" {{ old('subject_observed', $mentoringVisit->subject_observed) == 'ភាសាខ្មែរ' ? 'selected' : '' }}>{{ __('ភាសាខ្មែរ') }}</option>
-                                        <option value="គណិតវិទ្យា" {{ old('subject_observed', $mentoringVisit->subject_observed) == 'គណិតវិទ្យា' ? 'selected' : '' }}>{{ __('គណិតវិទ្យា') }}</option>
+                                        <option value="ភាសាខ្មែរ" {{ old('subject_observed') == 'ភាសាខ្មែរ' ? 'selected' : '' }}>{{ __('ភាសាខ្មែរ') }}</option>
+                                        <option value="គណិតវិទ្យា" {{ old('subject_observed') == 'គណិតវិទ្យា' ? 'selected' : '' }}>{{ __('គណិតវិទ្យា') }}</option>
                                     </select>
                                     @error('subject_observed')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -257,7 +247,7 @@
                                     <input type="number" 
                                            id="total_students_enrolled" 
                                            name="total_students_enrolled" 
-                                           value="{{ old('total_students_enrolled', $mentoringVisit->total_students_enrolled) }}"
+                                           value="{{ old('total_students_enrolled') }}"
                                            max="20"
                                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                                     @error('total_students_enrolled')
@@ -273,7 +263,7 @@
                                     <input type="number" 
                                            id="students_present" 
                                            name="students_present" 
-                                           value="{{ old('students_present', $mentoringVisit->students_present) }}"
+                                           value="{{ old('students_present') }}"
                                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                                     @error('students_present')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -282,15 +272,15 @@
                                 
                                 <!-- ចំនួនសិស្សដែលមានការកើនឡើងសមត្ថភាពធៀបនឹងសប្តាហ៍មុន -->
                                 <div>
-                                    <label for="students_improved" class="block text-sm font-medium text-gray-700 mb-2">
+                                    <label for="students_improved_from_last_week" class="block text-sm font-medium text-gray-700 mb-2">
                                         {{ __('ចំនួនសិស្សដែលមានការកើនឡើងសមត្ថភាពធៀបនឹងសប្តាហ៍មុន') }}
                                     </label>
                                     <input type="number" 
-                                           id="students_improved" 
-                                           name="students_improved" 
-                                           value="{{ old('students_improved', $mentoringVisit->students_improved) }}"
+                                           id="students_improved_from_last_week" 
+                                           name="students_improved_from_last_week" 
+                                           value="{{ old('students_improved_from_last_week') }}"
                                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                                    @error('students_improved')
+                                    @error('students_improved_from_last_week')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
                                 </div>
@@ -303,7 +293,7 @@
                                     <input type="number" 
                                            id="classes_conducted_before_visit" 
                                            name="classes_conducted_before_visit" 
-                                           value="{{ old('classes_conducted_before_visit', $mentoringVisit->classes_conducted_before_visit) }}"
+                                           value="{{ old('classes_conducted_before_visit') }}"
                                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                                     @error('classes_conducted_before_visit')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -327,7 +317,7 @@
                                         <label class="inline-flex items-center mr-4">
                                             <input type="radio" name="class_started_on_time" value="{{ $value }}" 
                                                    class="form-radio"
-                                                   {{ old('class_started_on_time', $mentoringVisit->class_started_on_time) == $value ? 'checked' : '' }}>
+                                                   {{ old('class_started_on_time') == $value ? 'checked' : '' }}>
                                             <span class="ml-2">{{ __($label) }}</span>
                                         </label>
                                         @endforeach
@@ -345,7 +335,7 @@
                                     <textarea id="late_start_reason" 
                                               name="late_start_reason" 
                                               rows="3"
-                                              class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">{{ old('late_start_reason', $mentoringVisit->late_start_reason) }}</textarea>
+                                              class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">{{ old('late_start_reason') }}</textarea>
                                     @error('late_start_reason')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
@@ -388,10 +378,7 @@
                                         <label class="inline-flex items-center">
                                             <input type="checkbox" name="materials_present[]" value="{{ $material }}" 
                                                    class="form-checkbox"
-                                                   @php
-                                                       $existingMaterials = is_string($mentoringVisit->materials_present) ? json_decode($mentoringVisit->materials_present, true) : $mentoringVisit->materials_present;
-                                                   @endphp
-                                                   {{ in_array($material, old('materials_present', $existingMaterials ?? [])) ? 'checked' : '' }}>
+                                                   {{ in_array($material, old('materials_present', [])) ? 'checked' : '' }}>
                                             <span class="ml-2 text-sm">{{ $material }}</span>
                                         </label>
                                         @endforeach
@@ -407,13 +394,13 @@
                                         <label class="inline-flex items-center">
                                             <input type="radio" name="children_grouped_appropriately" value="1" 
                                                    class="form-radio"
-                                                   {{ old('children_grouped_appropriately', $mentoringVisit->children_grouped_appropriately) == '1' ? 'checked' : '' }}>
+                                                   {{ old('children_grouped_appropriately') == '1' ? 'checked' : '' }}>
                                             <span class="ml-2">{{ __('បាទ/ចាស') }}</span>
                                         </label>
                                         <label class="inline-flex items-center ml-6">
                                             <input type="radio" name="children_grouped_appropriately" value="0" 
                                                    class="form-radio"
-                                                   {{ old('children_grouped_appropriately', $mentoringVisit->children_grouped_appropriately) == '0' ? 'checked' : '' }}>
+                                                   {{ old('children_grouped_appropriately') == '0' ? 'checked' : '' }}>
                                             <span class="ml-2">{{ __('ទេ') }}</span>
                                         </label>
                                     </div>
@@ -428,13 +415,13 @@
                                         <label class="inline-flex items-center">
                                             <input type="radio" name="students_fully_involved" value="1" 
                                                    class="form-radio"
-                                                   {{ old('students_fully_involved', $mentoringVisit->students_fully_involved) == '1' ? 'checked' : '' }}>
+                                                   {{ old('students_fully_involved') == '1' ? 'checked' : '' }}>
                                             <span class="ml-2">{{ __('បាទ/ចាស') }}</span>
                                         </label>
                                         <label class="inline-flex items-center ml-6">
                                             <input type="radio" name="students_fully_involved" value="0" 
                                                    class="form-radio"
-                                                   {{ old('students_fully_involved', $mentoringVisit->students_fully_involved) == '0' ? 'checked' : '' }}>
+                                                   {{ old('students_fully_involved') == '0' ? 'checked' : '' }}>
                                             <span class="ml-2">{{ __('ទេ') }}</span>
                                         </label>
                                     </div>
@@ -456,13 +443,13 @@
                                         <label class="inline-flex items-center">
                                             <input type="radio" name="has_session_plan" value="1" 
                                                    class="form-radio"
-                                                   {{ old('has_session_plan', $mentoringVisit->has_session_plan) == '1' ? 'checked' : '' }}>
+                                                   {{ old('has_session_plan') == '1' ? 'checked' : '' }}>
                                             <span class="ml-2">{{ __('បាទ/ចាស') }}</span>
                                         </label>
                                         <label class="inline-flex items-center ml-6">
                                             <input type="radio" name="has_session_plan" value="0" 
                                                    class="form-radio"
-                                                   {{ old('has_session_plan', $mentoringVisit->has_session_plan) == '0' ? 'checked' : '' }}>
+                                                   {{ old('has_session_plan') == '0' ? 'checked' : '' }}>
                                             <span class="ml-2">{{ __('ទេ') }}</span>
                                         </label>
                                     </div>
@@ -476,7 +463,7 @@
                                     <textarea id="no_session_plan_reason" 
                                               name="no_session_plan_reason" 
                                               rows="3"
-                                              class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">{{ old('no_session_plan_reason', $mentoringVisit->no_session_plan_reason) }}</textarea>
+                                              class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">{{ old('no_session_plan_reason') }}</textarea>
                                 </div>
                             </div>
                             
@@ -490,13 +477,13 @@
                                         <label class="inline-flex items-center">
                                             <input type="radio" name="followed_session_plan" value="1" 
                                                    class="form-radio"
-                                                   {{ old('followed_session_plan', $mentoringVisit->followed_session_plan) == '1' ? 'checked' : '' }}>
+                                                   {{ old('followed_session_plan') == '1' ? 'checked' : '' }}>
                                             <span class="ml-2">{{ __('បាទ/ចាស') }}</span>
                                         </label>
                                         <label class="inline-flex items-center ml-6">
                                             <input type="radio" name="followed_session_plan" value="0" 
                                                    class="form-radio"
-                                                   {{ old('followed_session_plan', $mentoringVisit->followed_session_plan) == '0' ? 'checked' : '' }}>
+                                                   {{ old('followed_session_plan') == '0' ? 'checked' : '' }}>
                                             <span class="ml-2">{{ __('ទេ') }}</span>
                                         </label>
                                     </div>
@@ -510,7 +497,7 @@
                                     <textarea id="no_follow_plan_reason" 
                                               name="no_follow_plan_reason" 
                                               rows="3"
-                                              class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">{{ old('no_follow_plan_reason', $mentoringVisit->no_follow_plan_reason) }}</textarea>
+                                              class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">{{ old('no_follow_plan_reason') }}</textarea>
                                 </div>
                                 
                                 <!-- តើកិច្ចតែងការបង្រៀនសមស្របនឹងកម្រិតសមត្ថភាពរបស់សិស្សដែរឬទេ? -->
@@ -522,13 +509,13 @@
                                         <label class="inline-flex items-center">
                                             <input type="radio" name="session_plan_appropriate" value="1" 
                                                    class="form-radio"
-                                                   {{ old('session_plan_appropriate', $mentoringVisit->session_plan_appropriate) == '1' ? 'checked' : '' }}>
+                                                   {{ old('session_plan_appropriate') == '1' ? 'checked' : '' }}>
                                             <span class="ml-2">{{ __('បាទ/ចាស') }}</span>
                                         </label>
                                         <label class="inline-flex items-center ml-6">
                                             <input type="radio" name="session_plan_appropriate" value="0" 
                                                    class="form-radio"
-                                                   {{ old('session_plan_appropriate', $mentoringVisit->session_plan_appropriate) == '0' ? 'checked' : '' }}>
+                                                   {{ old('session_plan_appropriate') == '0' ? 'checked' : '' }}>
                                             <span class="ml-2">{{ __('ទេ') }}</span>
                                         </label>
                                     </div>
@@ -542,7 +529,7 @@
                                     <textarea id="session_plan_notes" 
                                               name="session_plan_notes" 
                                               rows="3"
-                                              class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">{{ old('session_plan_notes', $mentoringVisit->session_plan_notes) }}</textarea>
+                                              class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">{{ old('session_plan_notes') }}</textarea>
                                 </div>
                             </div>
                         </div>
@@ -559,12 +546,10 @@
                                 <select id="number_of_activities" 
                                         name="number_of_activities" 
                                         class="w-full md:w-1/3 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                                    <option value="0" {{ old('number_of_activities', $mentoringVisit->number_of_activities) == 0 ? 'selected' : '' }}>0</option>
-                                    <option value="1" {{ old('number_of_activities', $mentoringVisit->number_of_activities) == 1 ? 'selected' : '' }}>1</option>
-                                    <option value="2" {{ old('number_of_activities', $mentoringVisit->number_of_activities) == 2 ? 'selected' : '' }}>2</option>
-                                    <option value="3" {{ old('number_of_activities', $mentoringVisit->number_of_activities) == 3 ? 'selected' : '' }}>3</option>
-                                    <option value="4" {{ old('number_of_activities', $mentoringVisit->number_of_activities) == 4 ? 'selected' : '' }}>4</option>
-                                    <option value="5" {{ old('number_of_activities', $mentoringVisit->number_of_activities) == 5 ? 'selected' : '' }}>5</option>
+                                    <option value="0">0</option>
+                                    <option value="1" {{ old('number_of_activities') == 1 ? 'selected' : '' }}>1</option>
+                                    <option value="2" {{ old('number_of_activities') == 2 ? 'selected' : '' }}>2</option>
+                                    <option value="3" {{ old('number_of_activities') == 3 ? 'selected' : '' }}>3</option>
                                 </select>
                             </div>
                             
@@ -960,7 +945,7 @@
                                         <textarea id="activity3_not_followed_reason" 
                                                   name="activity3_not_followed_reason" 
                                                   rows="2"
-                                                  class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">{{ old('activity3_not_followed_reason', $mentoringVisit->activity3_not_followed_reason) }}</textarea>
+                                                  class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">{{ old('activity3_not_followed_reason') }}</textarea>
                                     </div>
                                 </div>
                             </div>
@@ -1049,27 +1034,6 @@
                             });
                     }
                 });
-                
-                // Load existing teacher on page load
-                @if($mentoringVisit->teacher_id)
-                    const existingTeacherId = {{ $mentoringVisit->teacher_id }};
-                    const existingSchoolId = {{ $mentoringVisit->pilot_school_id ?? 'null' }};
-                    if (existingSchoolId) {
-                        fetch(`/api/school/${existingSchoolId}/teachers`)
-                            .then(response => response.json())
-                            .then(data => {
-                                data.forEach(teacher => {
-                                    const option = document.createElement('option');
-                                    option.value = teacher.id;
-                                    option.textContent = teacher.name;
-                                    if (teacher.id == existingTeacherId) {
-                                        option.selected = true;
-                                    }
-                                    teacherSelect.appendChild(option);
-                                });
-                            });
-                    }
-                @endif
             }
             
             // Class in session logic
@@ -1107,13 +1071,13 @@
                     if (this.value === 'ភាសាខ្មែរ') {
                         languageLevelsContainer.style.display = 'block';
                         numeracyLevelsContainer.style.display = 'none';
-                        // Show/hide activity fields for activities 1-5
+                        // Show/hide activity fields for activities 1-3
                         document.querySelectorAll('[id*="_khmer_container"]').forEach(el => el.style.display = 'block');
                         document.querySelectorAll('[id*="_math_container"]').forEach(el => el.style.display = 'none');
                     } else if (this.value === 'គណិតវិទ្យា') {
                         languageLevelsContainer.style.display = 'none';
                         numeracyLevelsContainer.style.display = 'block';
-                        // Show/hide activity fields for activities 1-5
+                        // Show/hide activity fields for activities 1-3
                         document.querySelectorAll('[id*="_khmer_container"]').forEach(el => el.style.display = 'none');
                         document.querySelectorAll('[id*="_math_container"]').forEach(el => el.style.display = 'block');
                     } else {
@@ -1169,20 +1133,14 @@
                 numberOfActivities.addEventListener('change', function() {
                     const num = parseInt(this.value);
                     
-                    // Show/hide activity sections (max 3 activities even if user selects 4 or 5)
-                    const maxSections = Math.min(num, 3); // Cap at 3 sections
+                    // Show/hide activity sections
                     for (let i = 1; i <= 3; i++) {
                         const section = document.getElementById(`activity${i}_section`);
                         if (section) {
-                            section.style.display = i <= maxSections ? 'block' : 'none';
+                            section.style.display = i <= num ? 'block' : 'none';
                         }
                     }
                 });
-                
-                // Trigger on page load if there's already a value
-                if (numberOfActivities.value) {
-                    numberOfActivities.dispatchEvent(new Event('change'));
-                }
             }
             
             // Activity clear instructions logic
@@ -1265,23 +1223,6 @@
             const checkedClassInSession = document.querySelector('input[name="class_in_session"]:checked');
             if (checkedClassInSession) {
                 checkedClassInSession.dispatchEvent(new Event('change'));
-            }
-            
-            // Trigger subject observed initial state
-            if (subjectObserved && subjectObserved.value) {
-                subjectObserved.dispatchEvent(new Event('change'));
-            }
-            
-            // Trigger has_session_plan initial state
-            const checkedHasSessionPlan = document.querySelector('input[name="has_session_plan"]:checked');
-            if (checkedHasSessionPlan) {
-                checkedHasSessionPlan.dispatchEvent(new Event('change'));
-            }
-            
-            // Trigger class_started_on_time initial state
-            const checkedClassStartedOnTime = document.querySelector('input[name="class_started_on_time"]:checked');
-            if (checkedClassStartedOnTime) {
-                checkedClassStartedOnTime.dispatchEvent(new Event('change'));
             }
         });
     </script>

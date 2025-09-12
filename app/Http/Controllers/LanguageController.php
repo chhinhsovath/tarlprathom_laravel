@@ -15,9 +15,13 @@ class LanguageController extends Controller
             Session::put('locale', $locale);
 
             // Also set a cookie as a fallback
-            return redirect()->back()->withCookie(cookie('locale', $locale, 60 * 24 * 30)); // 30 days
+            $message = $locale === 'km' ? 'ភាសាត្រូវបានប្តូរទៅខ្មែរដោយជោគជ័យ។' : 'Language changed to English successfully.';
+            return redirect()->back()
+                ->withCookie(cookie('locale', $locale, 60 * 24 * 30)) // 30 days
+                ->with('success', $message);
         }
 
-        return redirect()->back();
+        return redirect()->back()
+            ->with('error', 'Invalid language selected.');
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Exports\SchoolTemplateExport;
 use App\Models\Province;
 use App\Models\PilotSchool;
+use App\Models\School;
 use App\Models\Student;
 use App\Models\User;
 use App\Traits\Sortable;
@@ -502,11 +503,13 @@ class SchoolController extends Controller
     /**
      * Get teachers for a specific school (API endpoint)
      */
-    public function getTeachers(School $school)
+    public function getTeachers($schoolId)
     {
-        $teachers = $school->users()
+        // Get teachers for the pilot school
+        $teachers = User::where('pilot_school_id', $schoolId)
             ->where('role', 'teacher')
-            ->select('id', 'name')
+            ->where('is_active', true)
+            ->select('id', 'name', 'email')
             ->orderBy('name')
             ->get();
 
@@ -586,7 +589,7 @@ class SchoolController extends Controller
 
         $validated = $request->validate([
             'school_ids' => 'required|array',
-            'school_ids.*' => 'exists:pilot_schools,id',
+            'school_ids.*' => 'exists:schools,id',
             'baseline_start_date' => 'nullable|date',
             'baseline_end_date' => 'nullable|date|after_or_equal:baseline_start_date',
             'midline_start_date' => 'nullable|date',

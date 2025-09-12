@@ -63,7 +63,7 @@ class StoreMentoringVisitRequest extends FormRequest
             'session_plan_appropriate' => 'required_if:has_session_plan,1|nullable|in:0,1',
 
             // Activity overview
-            'number_of_activities' => 'required_if:class_in_session,1|nullable|in:0,1,2,3',
+            'number_of_activities' => 'required_if:class_in_session,1|nullable|in:0,1,2,3,4,5',
 
             // Activity 1
             'activity1_name_language' => 'required_if:subject_observed,ភាសាខ្មែរ,number_of_activities,1|required_if:subject_observed,ភាសាខ្មែរ,number_of_activities,2|required_if:subject_observed,ភាសាខ្មែរ,number_of_activities,3|nullable|string',
@@ -117,6 +117,10 @@ class StoreMentoringVisitRequest extends FormRequest
             'visit_date.date' => 'The visit date must be a valid date.',
             'score.min' => 'The score must be at least 0.',
             'score.max' => 'The score must not exceed 100.',
+            'late_start_reason.required_if' => 'មូលហេតុចាប់ផ្តើមយឺត ត្រូវតែបំពេញនៅពេល ថ្នាក់ចាប់ផ្តើមទាន់ពេលវេលា គឺ 0។',
+            'class_not_in_session_reason.required_if' => 'មូលហេតុដែលថ្នាក់រៀនមិនដំណើរការ ត្រូវតែបំពេញនៅពេល ថ្នាក់រៀនកំពុងដំណើរការ គឺ 0។',
+            'no_session_plan_reason.required_if' => 'មូលហេតុដែលមិនមានផែនការបង្រៀន ត្រូវតែបំពេញនៅពេល មានផែនការបង្រៀន គឺ 0។',
+            'no_follow_plan_reason.required_if' => 'មូលហេតុដែលមិនធ្វើតាមផែនការ ត្រូវតែបំពេញនៅពេល ធ្វើតាមផែនការ គឺ 0។',
         ];
     }
 }

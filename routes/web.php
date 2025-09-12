@@ -76,6 +76,8 @@ Route::get('/debug-locale', function () {
     ];
 });
 
+Route::get('/assessments/{assessment}', [AssessmentController::class, 'show'])->name('assessments.show');
+
 // Public routes
 Route::get('/', [AssessmentController::class, 'publicResults'])->name('public.assessment-results');
 Route::get('/showcase', [ShowcaseController::class, 'index'])->name('showcase');

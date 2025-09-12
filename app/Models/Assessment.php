@@ -18,6 +18,8 @@ class Assessment extends Model
     protected $fillable = [
         'student_id',
         'assessor_id',
+        'pilot_school_id',
+        'school_id',
         'cycle',
         'subject',
         'level',
@@ -26,6 +28,21 @@ class Assessment extends Model
         'is_locked',
         'locked_by',
         'locked_at',
+        'verification_status',
+        'verified_by',
+        'verified_at',
+        'verification_notes',
+        'mentor_assessed_level',
+        'mentor_assessed_score',
+        'level_discrepancy_notes',
+        'academic_year',
+        'term',
+        'assessment_method',
+        'total_questions',
+        'correct_answers',
+        'percentage_score',
+        'completed_assessment',
+        'assessor_comments',
     ];
 
     /**
@@ -38,6 +55,7 @@ class Assessment extends Model
         'score' => 'float',
         'is_locked' => 'boolean',
         'locked_at' => 'datetime',
+        'verified_at' => 'datetime',
     ];
 
     /**
@@ -67,6 +85,22 @@ class Assessment extends Model
     public function lockedBy()
     {
         return $this->belongsTo(User::class, 'locked_by');
+    }
+
+    /**
+     * Get the mentor who verified this assessment.
+     */
+    public function verifiedBy()
+    {
+        return $this->belongsTo(User::class, 'verified_by');
+    }
+
+    /**
+     * Get the school that owns the assessment.
+     */
+    public function school()
+    {
+        return $this->belongsTo(School::class);
     }
 
     /**

@@ -17,6 +17,21 @@ class PilotSchool extends Model
         'cluster',
         'school_name',
         'school_code',
+        'baseline_start_date',
+        'baseline_end_date',
+        'midline_start_date',
+        'midline_end_date',
+        'endline_start_date',
+        'endline_end_date',
+    ];
+
+    protected $casts = [
+        'baseline_start_date' => 'date',
+        'baseline_end_date' => 'date',
+        'midline_start_date' => 'date',
+        'midline_end_date' => 'date',
+        'endline_start_date' => 'date',
+        'endline_end_date' => 'date',
     ];
 
     /**
@@ -185,5 +200,76 @@ class PilotSchool extends Model
     public function getSclClusterNameAttribute()
     {
         return $this->cluster;
+    }
+
+    /**
+     * Check if assessment period is active for a given cycle
+     */
+    public function isAssessmentPeriodActive($cycle)
+    {
+        $now = now();
+        
+        switch ($cycle) {
+            case 'baseline':
+                return $this->baseline_start_date && $this->baseline_end_date &&
+                       $now->between($this->baseline_start_date, $this->baseline_end_date);
+            case 'midline':
+                return $this->midline_start_date && $this->midline_end_date &&
+                       $now->between($this->midline_start_date, $this->midline_end_date);
+            case 'endline':
+                return $this->endline_start_date && $this->endline_end_date &&
+                       $now->between($this->endline_start_date, $this->endline_end_date);
+            default:
+                return false;
+        }
+    }
+
+    /**
+     * Get assessment period status for a given cycle
+     */
+    public function getAssessmentPeriodStatus($cycle)
+    {
+        $now = now();
+        
+        switch ($cycle) {
+            case 'baseline':
+                if (!$this->baseline_start_date || !$this->baseline_end_date) {
+                    return 'not_set';
+                }
+                if ($now->lt($this->baseline_start_date)) {
+                    return 'upcoming';
+                }
+                if ($now->gt($this->baseline_end_date)) {
+                    return 'ended';
+                }
+                return 'active';
+                
+            case 'midline':
+                if (!$this->midline_start_date || !$this->midline_end_date) {
+                    return 'not_set';
+                }
+                if ($now->lt($this->midline_start_date)) {
+                    return 'upcoming';
+                }
+                if ($now->gt($this->midline_end_date)) {
+                    return 'ended';
+                }
+                return 'active';
+                
+            case 'endline':
+                if (!$this->endline_start_date || !$this->endline_end_date) {
+                    return 'not_set';
+                }
+                if ($now->lt($this->endline_start_date)) {
+                    return 'upcoming';
+                }
+                if ($now->gt($this->endline_end_date)) {
+                    return 'ended';
+                }
+                return 'active';
+                
+            default:
+                return 'not_set';
+        }
     }
 }

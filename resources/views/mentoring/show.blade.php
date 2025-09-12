@@ -142,7 +142,7 @@
                     </div>
 
                     <!-- Student Statistics Section -->
-                    @if($mentoringVisit->total_students_enrolled || $mentoringVisit->students_present || $mentoringVisit->students_improved)
+                    @if($mentoringVisit->total_students_enrolled || $mentoringVisit->students_present || $mentoringVisit->students_improved_from_last_week)
                     <div class="mt-4 bg-gray-50 rounded-lg p-3">
                         <h4 class="font-semibold text-gray-900 mb-2 text-sm">{{ __('mentoring.Student Statistics') }}</h4>
                         <div class="grid grid-cols-3 gap-4">
@@ -156,7 +156,7 @@
                             </div>
                             <div>
                                 <dt class="text-xs font-medium text-gray-500">{{ __('mentoring.Improved') }}</dt>
-                                <dd class="text-lg font-semibold text-gray-900">{{ $mentoringVisit->students_improved ?? '-' }}</dd>
+                                <dd class="text-lg font-semibold text-gray-900">{{ $mentoringVisit->students_improved_from_last_week ?? '-' }}</dd>
                             </div>
                         </div>
                     </div>

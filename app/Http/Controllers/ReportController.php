@@ -2,1140 +2,575 @@
 
 namespace App\Http\Controllers;
 
-use App\Exports\AssessmentsExport;
-use App\Exports\MentoringVisitsExport;
-use App\Models\Assessment;
-use App\Models\MentoringVisit;
-use App\Models\PilotSchool;
-use App\Models\School;
 use App\Models\Student;
+use App\Models\Assessment;
+use App\Models\School;
+use App\Models\MentoringVisit;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
-use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Auth;
 
 class ReportController extends Controller
 {
-    /**
-     * Display a listing of available reports.
-     */
-    public function index(Request $request)
+    public function index()
     {
-        $user = $request->user();
-
-        // Check if user can view reports
-        if (! in_array($user->role, ['admin', 'mentor', 'teacher', 'viewer'])) {
-            abort(403);
+        $user = Auth::user();
+        
+        // Base query for statistics based on user role
+        $studentQuery = Student::query();
+        $assessmentQuery = Assessment::query();
+        $schoolQuery = School::query();
+        $mentoringQuery = MentoringVisit::query();
+        
+        // Apply role-based filters
+        if ($user->role === 'teacher') {
+            $studentQuery->where('teacher_id', $user->id);
+            $assessmentQuery->whereHas('student', function($q) use ($user) {
+                $q->where('teacher_id', $user->id);
+            });
+            $schoolQuery->where('id', $user->school_id);
+            $mentoringQuery->where('school_id', $user->school_id);
+        } elseif ($user->role === 'mentor') {
+            $schoolIds = $user->schools->pluck('id');
+            $studentQuery->whereIn('school_id', $schoolIds);
+            $assessmentQuery->whereIn('school_id', $schoolIds);
+            $schoolQuery->whereIn('id', $schoolIds);
+            $mentoringQuery->whereIn('school_id', $schoolIds);
         }
+        
+        // Get summary statistics
+        $totalStudents = $studentQuery->count();
+        $totalSchools = $schoolQuery->count();
+        $totalAssessments = $assessmentQuery->count();
+        $totalMentoringVisits = $mentoringQuery->count();
 
-        // Get summary statistics based on user role
-        $stats = $this->getStatistics($user);
+        // Get assessment statistics by cycle
+        $assessmentStats = $assessmentQuery->select('cycle', DB::raw('count(*) as count'))
+            ->groupBy('cycle')
+            ->get();
 
-        // Get available report types based on user role
+        // Get recent assessments
+        $recentAssessments = $assessmentQuery->with(['student', 'school'])
+            ->orderBy('created_at', 'desc')
+            ->limit(10)
+            ->get();
+
+        // Define available reports based on user role
         $availableReports = $this->getAvailableReports($user);
 
-        return view('reports.index', compact('stats', 'availableReports'));
+        // Prepare stats array for the view
+        $stats = [
+            'total_students' => $totalStudents,
+            'total_schools' => $totalSchools,
+            'total_assessments' => $totalAssessments,
+            'total_mentoring_visits' => $totalMentoringVisits,
+        ];
+
+        return view('reports.index', compact(
+            'stats',
+            'assessmentStats',
+            'recentAssessments',
+            'availableReports'
+        ));
     }
 
-    /**
-     * Get statistics based on user role.
-     */
-    private function getStatistics($user)
-    {
-        $stats = [];
-
-        if ($user->isAdmin() || $user->isViewer()) {
-            // Admin and Viewer can see all statistics
-            $stats['total_students'] = Student::count();
-            $stats['total_assessments'] = Assessment::count();
-            $stats['total_schools'] = PilotSchool::count();
-            $stats['total_mentoring_visits'] = MentoringVisit::count();
-            $stats['total_teachers'] = User::where('role', 'teacher')->count();
-            $stats['total_mentors'] = User::where('role', 'mentor')->count();
-
-            // Assessment levels by subject (TaRL uses levels, not scores)
-            $stats['levels_by_subject'] = Assessment::select('subject', 'level', DB::raw('COUNT(*) as count'))
-                ->groupBy('subject', 'level')
-                ->get();
-
-            // Recent assessments
-            $stats['recent_assessments'] = Assessment::with(['student', 'student.school'])
-                ->orderBy('assessed_at', 'desc')
-                ->limit(10)
-                ->get();
-
-            // Recent mentoring visits
-            $stats['recent_visits'] = MentoringVisit::with(['mentor', 'teacher', 'school'])
-                ->orderBy('visit_date', 'desc')
-                ->limit(10)
-                ->get();
-
-        } elseif ($user->isTeacher()) {
-            // Teachers can see statistics for their school
-            $stats['total_students'] = Student::where('pilot_school_id', $user->pilot_school_id)->count();
-            $stats['total_assessments'] = Assessment::whereHas('student', function ($q) use ($user) {
-                $q->where('pilot_school_id', $user->pilot_school_id);
-            })->count();
-
-            // Assessment levels by subject for their school (TaRL uses levels, not scores)
-            $stats['levels_by_subject'] = Assessment::select('subject', 'level', DB::raw('COUNT(*) as count'))
-                ->whereHas('student', function ($q) use ($user) {
-                    $q->where('pilot_school_id', $user->pilot_school_id);
-                })
-                ->groupBy('subject', 'level')
-                ->get();
-
-            // Recent assessments for their school
-            $stats['recent_assessments'] = Assessment::with(['student'])
-                ->whereHas('student', function ($q) use ($user) {
-                    $q->where('pilot_school_id', $user->pilot_school_id);
-                })
-                ->orderBy('assessed_at', 'desc')
-                ->limit(10)
-                ->get();
-
-            // Mentoring visits at the teacher's school
-            $stats['my_mentoring_visits'] = MentoringVisit::where('pilot_school_id', $user->pilot_school_id)
-                ->with(['mentor', 'school'])
-                ->orderBy('visit_date', 'desc')
-                ->limit(5)
-                ->get();
-
-        } elseif ($user->isMentor()) {
-            // Mentors can see statistics for their assigned schools
-            $accessibleSchoolIds = $user->getAccessibleSchoolIds();
-
-            if (! empty($accessibleSchoolIds)) {
-                $stats['total_students'] = Student::whereIn('pilot_school_id', $accessibleSchoolIds)->count();
-                $stats['total_assessments'] = Assessment::whereHas('student', function ($q) use ($accessibleSchoolIds) {
-                    $q->whereIn('pilot_school_id', $accessibleSchoolIds);
-                })->count();
-                $stats['total_schools'] = count($accessibleSchoolIds);
-                $stats['total_visits'] = MentoringVisit::whereIn('pilot_school_id', $accessibleSchoolIds)->count();
-                $stats['schools_visited'] = MentoringVisit::whereIn('pilot_school_id', $accessibleSchoolIds)
-                    ->distinct('pilot_school_id')
-                    ->count('pilot_school_id');
-                $stats['mentoring_visits'] = MentoringVisit::whereIn('pilot_school_id', $accessibleSchoolIds)
-                    ->count();
-
-                // Assessment levels by subject for their schools (TaRL uses levels, not scores)
-                $stats['levels_by_subject'] = Assessment::select('subject', 'level', DB::raw('COUNT(*) as count'))
-                    ->whereHas('student', function ($q) use ($accessibleSchoolIds) {
-                        $q->whereIn('pilot_school_id', $accessibleSchoolIds);
-                    })
-                    ->groupBy('subject', 'level')
-                    ->get();
-
-                // Recent assessments for their schools
-                $stats['recent_assessments'] = Assessment::with(['student', 'student.school'])
-                    ->whereHas('student', function ($q) use ($accessibleSchoolIds) {
-                        $q->whereIn('pilot_school_id', $accessibleSchoolIds);
-                    })
-                    ->orderBy('assessed_at', 'desc')
-                    ->limit(10)
-                    ->get();
-
-                // Recent mentoring visits for their schools
-                $stats['recent_visits'] = MentoringVisit::whereIn('pilot_school_id', $accessibleSchoolIds)
-                    ->with(['teacher', 'school', 'mentor'])
-                    ->orderBy('visit_date', 'desc')
-                    ->limit(10)
-                    ->get();
-
-                // Average mentoring scores for their schools
-                $stats['avg_mentoring_score'] = 0; // Score column not available
-            } else {
-                // No schools assigned, show empty stats
-                $stats['total_students'] = 0;
-                $stats['total_assessments'] = 0;
-                $stats['total_schools'] = 0;
-                $stats['total_visits'] = 0;
-                $stats['schools_visited'] = 0;
-                $stats['teachers_mentored'] = 0;
-                $stats['avg_scores_by_subject'] = collect();
-                $stats['recent_assessments'] = collect();
-                $stats['recent_visits'] = collect();
-                $stats['avg_mentoring_score'] = 0;
-            }
-        }
-
-        return $stats;
-    }
-
-    /**
-     * Get available report types based on user role.
-     */
-    private function getAvailableReports($user)
-    {
-        $reports = [];
-
-        if ($user->isAdmin() || $user->isViewer()) {
-            $reports = [
-                [
-                    'name' => 'Student Performance Report',
-                    'description' => 'Comprehensive analysis using Assessment Dataset (student_id, cycle, subject, level, score). Formula: Performance Distribution = COUNT(level) GROUP BY subject, cycle. Expected Result: Visual breakdown of student performance levels across Khmer (Beginner→Comp.2) and Math (Beginner→Word Problem) subjects by assessment cycles.',
-                    'route' => 'reports.student-performance',
-                ],
-                [
-                    'name' => 'School Comparison Report',
-                    'description' => 'Cross-school performance analysis using aggregated Assessment data. Formula: School Performance = AVG(score) + COUNT(level) WHERE school_id GROUP BY school, subject, cycle. Expected Result: Comparative charts showing average scores and level distribution across schools, enabling identification of high-performing institutions.',
-                    'route' => 'reports.school-comparison',
-                ],
-                [
-                    'name' => 'Mentoring Impact Report',
-                    'description' => 'Correlation analysis between Mentoring Visits and Student Performance datasets. Formula: Impact Score = ΔAVG(assessment_score) / COUNT(mentoring_visits) WHERE visit_date BETWEEN baseline_date AND endline_date. Expected Result: Statistical evidence of mentoring effectiveness on student learning outcomes.',
-                    'route' => 'reports.mentoring-impact',
-                ],
-                [
-                    'name' => 'Progress Tracking Report',
-                    'description' => 'Longitudinal student progress analysis across assessment cycles. Formula: Progress = (Latest_Level_Index - Baseline_Level_Index) + (Latest_Score - Baseline_Score). Expected Result: Individual student progression trajectories showing improvements from baseline through midline to endline assessments.',
-                    'route' => 'reports.progress-tracking',
-                ],
-                [
-                    'name' => 'Performance Calculation Report',
-                    'description' => 'TaRL methodology performance indicators using level aggregation. Formula: Language_Readers_% = (Para+Story+Comp1+Comp2)/Total_Students×100, Math_Operations_% = (Subtraction+Division+WordProblem)/Total_Students×100. Expected Result: Standardized performance percentages enabling comparison with national TaRL benchmarks.',
-                    'route' => 'reports.performance-calculation',
-                ],
-            ];
-        } elseif ($user->isTeacher()) {
-            $reports = [
-                [
-                    'name' => 'My Students Performance',
-                    'description' => 'School-specific assessment analysis filtered by teacher\'s school_id. Formula: School Performance = COUNT(level) WHERE school_id = teacher.school_id GROUP BY subject, cycle, class. Expected Result: Detailed breakdown of student performance levels within your school, showing distribution across classes and subjects for targeted teaching interventions.',
-                    'route' => 'reports.my-students',
-                ],
-                [
-                    'name' => 'Class Progress Report',
-                    'description' => 'Class-level longitudinal analysis using Student-Assessment relationships. Formula: Class Progress = Σ(student_progress) / COUNT(students) WHERE class_id GROUP BY assessment_cycle. Expected Result: Class-wise progress trajectories showing average improvements, helping identify which classes need additional support.',
-                    'route' => 'reports.class-progress',
-                ],
-            ];
-        } elseif ($user->isMentor()) {
-            $reports = [
-                [
-                    'name' => 'Student Performance Report',
-                    'description' => 'Assessment analysis filtered by mentor\'s assigned schools. Formula: Mentor Performance = COUNT(level) WHERE school_id IN (mentor.assigned_schools) GROUP BY school, subject, cycle. Expected Result: Performance overview across your assigned schools, enabling targeted mentoring focus on schools with lower performance levels.',
-                    'route' => 'reports.student-performance',
-                ],
-                [
-                    'name' => 'School Comparison Report',
-                    'description' => 'Comparative analysis within mentor\'s school portfolio. Formula: School Ranking = RANK() OVER (ORDER BY AVG(score) DESC) WHERE school_id IN (mentor.assigned_schools). Expected Result: Ranked comparison of assigned schools showing which institutions are excelling and which need intensive mentoring support.',
-                    'route' => 'reports.school-comparison',
-                ],
-                [
-                    'name' => 'My Mentoring Summary',
-                    'description' => 'Personal mentoring activity analysis using MentoringVisit dataset. Formula: Mentoring Effectiveness = COUNT(visits) × AVG(mentoring_score) × COUNT(teachers_mentored) WHERE mentor_id = current_user. Expected Result: Comprehensive dashboard showing visit frequency, quality scores, and coverage metrics for performance evaluation.',
-                    'route' => 'reports.my-mentoring',
-                ],
-                [
-                    'name' => 'Progress Tracking Report',
-                    'description' => 'Student progress analysis within mentor\'s assigned schools portfolio. Formula: Mentored Schools Progress = Σ(school_progress) WHERE school_id IN (mentor.assigned_schools) GROUP BY school. Expected Result: Progress trajectories showing impact of mentoring interventions on student learning outcomes across assigned schools.',
-                    'route' => 'reports.progress-tracking',
-                ],
-                [
-                    'name' => 'Performance Calculation Report',
-                    'description' => 'TaRL performance indicators for mentor\'s school portfolio. Formula: Portfolio Performance = Σ(Language_Readers_% + Math_Operations_%) / COUNT(assigned_schools). Expected Result: Aggregated TaRL performance metrics across assigned schools for strategic mentoring planning and resource allocation.',
-                    'route' => 'reports.performance-calculation',
-                ],
-            ];
-        }
-
-        return $reports;
-    }
-
-    /**
-     * Student Performance Report
-     */
     public function studentPerformance(Request $request)
     {
-        $user = $request->user();
-        if (! in_array($user->role, ['admin', 'viewer', 'mentor'])) {
-            abort(403);
+        $user = Auth::user();
+        $query = Student::with(['assessments', 'school', 'schoolClass']);
+
+        // Apply role-based filters
+        if ($user->role === 'teacher') {
+            $query->where('teacher_id', $user->id);
+        } elseif ($user->role === 'mentor') {
+            $query->whereIn('school_id', $user->schools->pluck('id'));
         }
 
-        // Get filters
+        // Apply filters
+        if ($request->filled('school_id')) {
+            $query->where('school_id', $request->school_id);
+        }
+
+        if ($request->filled('class_id')) {
+            $query->where('class_id', $request->class_id);
+        }
+
+        if ($request->filled('class')) {
+            $query->where('class', $request->class);
+        }
+
+        $students = $query->paginate(20);
+        $schools = School::all();
+        
+        // Get filter values for the view
         $schoolId = $request->get('school_id');
+        $classId = $request->get('class_id');
+        $grade = $request->get('class');
         $subject = $request->get('subject', 'all');
         $cycle = $request->get('cycle', 'all');
-
-        // Get schools for filter based on user access
-        $accessibleSchoolIds = $user->getAccessibleSchoolIds();
-        if ($user->isAdmin()) {
-            $schools = PilotSchool::orderBy('school_name')->get();
+        
+        // Get classes if needed
+        $classes = [];
+        if ($user->role === 'teacher') {
+            $classes = \App\Models\SchoolClass::where('teacher_id', $user->id)->get();
         } else {
-            $schools = PilotSchool::whereIn('id', $accessibleSchoolIds)->orderBy('school_name')->get();
+            $classes = \App\Models\SchoolClass::all();
         }
-
-        // Build query
-        $query = Assessment::with(['student', 'student.school']);
-
-        // Apply access restrictions for mentors
-        if (! $user->isAdmin()) {
-            if (empty($accessibleSchoolIds)) {
-                // If no schools are accessible, return no results
-                $query->whereRaw('1 = 0');
-            } else {
-                $query->whereHas('student', function ($q) use ($accessibleSchoolIds) {
-                    $q->whereIn('pilot_school_id', $accessibleSchoolIds);
-                });
-            }
+        
+        // Define assessment levels
+        $khmerLevels = ['Beginner', 'Letter', 'Word', 'Paragraph', 'Story', 'Comp. 1', 'Comp. 2'];
+        $mathLevels = ['Beginner', '1-Digit', '2-Digit', 'Subtraction', 'Division', 'Word Problem'];
+        
+        // Calculate performance by level
+        $performanceByLevel = collect();
+        $performanceByLevelAndSubject = [
+            'khmer' => collect(),
+            'math' => collect()
+        ];
+        
+        // Get assessments for performance calculation
+        $assessmentQuery = Assessment::query();
+        
+        // Apply same filters as students
+        if ($user->role === 'teacher') {
+            $assessmentQuery->whereHas('student', function($q) use ($user) {
+                $q->where('teacher_id', $user->id);
+            });
+        } elseif ($user->role === 'mentor') {
+            $assessmentQuery->whereIn('school_id', $user->schools->pluck('id'));
         }
-
-        if ($schoolId) {
-            // Verify user has access to this school
-            if ($user->isAdmin() || $user->canAccessSchool($schoolId)) {
-                $query->whereHas('student', function ($q) use ($schoolId) {
-                    $q->where('pilot_school_id', $schoolId);
-                });
-            }
+        
+        if ($request->filled('school_id')) {
+            $assessmentQuery->where('school_id', $request->school_id);
         }
-
+        
         if ($subject !== 'all') {
-            $query->where('subject', $subject);
-        }
-
-        if ($cycle !== 'all') {
-            $query->where('cycle', $cycle);
-        }
-
-        // Get performance by level and subject
-        $performanceByLevelAndSubject = [];
-
-        if ($subject === 'all') {
-            // Get data for both subjects
-            $subjects = ['khmer', 'math'];
-            foreach ($subjects as $subj) {
-                // Build a fresh query for each subject
-                $subjectQuery = Assessment::with(['student', 'student.school']);
-
-                // Apply access restrictions for mentors
-                if (! $user->isAdmin()) {
-                    if (empty($accessibleSchoolIds)) {
-                        $subjectQuery->whereRaw('1 = 0');
-                    } else {
-                        $subjectQuery->whereHas('student', function ($q) use ($accessibleSchoolIds) {
-                            $q->whereIn('pilot_school_id', $accessibleSchoolIds);
-                        });
-                    }
-                }
-
-                if ($schoolId) {
-                    if ($user->isAdmin() || $user->canAccessSchool($schoolId)) {
-                        $subjectQuery->whereHas('student', function ($q) use ($schoolId) {
-                            $q->where('pilot_school_id', $schoolId);
-                        });
-                    }
-                }
-
-                if ($cycle !== 'all') {
-                    $subjectQuery->where('cycle', $cycle);
-                }
-
-                $performanceByLevelAndSubject[$subj] = $subjectQuery
-                    ->where('subject', $subj)
-                    ->select('level', DB::raw('count(*) as count'))
-                    ->groupBy('level')
-                    ->get();
-            }
-
-            // Get overall performance by level (for all subjects combined)
-            $performanceByLevel = collect();
-            foreach ($performanceByLevelAndSubject as $subjectData) {
-                foreach ($subjectData as $levelData) {
-                    $existing = $performanceByLevel->firstWhere('level', $levelData->level);
-                    if ($existing) {
-                        $existing->count += $levelData->count;
-                    } else {
-                        $performanceByLevel->push((object) [
-                            'level' => $levelData->level,
-                            'count' => $levelData->count,
-                        ]);
-                    }
-                }
-            }
+            $assessmentQuery->where('subject', $subject);
+            $performanceByLevel = $assessmentQuery->select('level', DB::raw('count(*) as count'))
+                ->groupBy('level')
+                ->get();
         } else {
-            // Get data for selected subject only
-            $performanceByLevel = $query
+            // Get performance for both subjects
+            $performanceByLevelAndSubject['khmer'] = Assessment::where('subject', 'khmer')
+                ->when($user->role === 'teacher', function($q) use ($user) {
+                    $q->whereHas('student', function($q) use ($user) {
+                        $q->where('teacher_id', $user->id);
+                    });
+                })
                 ->select('level', DB::raw('count(*) as count'))
                 ->groupBy('level')
                 ->get();
-            $performanceByLevelAndSubject[$subject] = $performanceByLevel;
-        }
-
-        // Get performance trends
-        $performanceTrends = Assessment::select(
-            'cycle',
-            'subject',
-            'level',
-            DB::raw('count(*) as count')
-        )
-            ->when($schoolId, function ($q) use ($schoolId, $user) {
-                // Verify user has access to this school
-                if ($user->isAdmin() || $user->canAccessSchool($schoolId)) {
-                    $q->whereHas('student', function ($sq) use ($schoolId) {
-                        $sq->where('pilot_school_id', $schoolId);
+                
+            $performanceByLevelAndSubject['math'] = Assessment::where('subject', 'math')
+                ->when($user->role === 'teacher', function($q) use ($user) {
+                    $q->whereHas('student', function($q) use ($user) {
+                        $q->where('teacher_id', $user->id);
                     });
-                }
-            })
-            ->when($subject !== 'all', function ($q) use ($subject) {
-                $q->where('subject', $subject);
-            })
-            ->when($cycle !== 'all', function ($q) use ($cycle) {
-                $q->where('cycle', $cycle);
-            })
-            ->groupBy('cycle', 'subject', 'level')
-            ->get();
-
-        // Get level ordering for proper chart display
-        $khmerLevels = ['Beginner', 'Letter', 'Word', 'Paragraph', 'Story', 'Comp. 1', 'Comp. 2'];
-        $mathLevels = ['Beginner', '1-Digit', '2-Digit', 'Subtraction', 'Division', 'Word Problem'];
+                })
+                ->select('level', DB::raw('count(*) as count'))
+                ->groupBy('level')
+                ->get();
+        }
+        
+        // Total students by subject
+        $totalBySubject = [
+            'khmer' => 0,
+            'math' => 0
+        ];
 
         return view('reports.student-performance-localized', compact(
-            'schools',
-            'schoolId',
+            'students', 
+            'schools', 
+            'schoolId', 
+            'classId', 
+            'grade',
             'subject',
             'cycle',
+            'classes',
+            'khmerLevels',
+            'mathLevels',
             'performanceByLevel',
             'performanceByLevelAndSubject',
-            'performanceTrends',
-            'khmerLevels',
-            'mathLevels'
+            'totalBySubject'
         ));
     }
 
-    /**
-     * School Comparison Report
-     */
     public function schoolComparison(Request $request)
     {
-        $user = $request->user();
-        if (! in_array($user->role, ['admin', 'viewer', 'mentor'])) {
-            abort(403);
-        }
-
-        $subject = $request->get('subject', 'khmer');
-        $cycle = $request->get('cycle', 'baseline');
-
-        // Get schools based on user access
-        $accessibleSchoolIds = $user->getAccessibleSchoolIds();
-        $schoolsQuery = PilotSchool::with(['students.assessments' => function ($q) use ($subject, $cycle) {
-            $q->where('subject', $subject)->where('cycle', $cycle);
-        }]);
-
-        if (! $user->isAdmin()) {
-            if (empty($accessibleSchoolIds)) {
-                // If no schools are accessible, return no results
-                $schoolsQuery->whereRaw('1 = 0');
-            } else {
-                $schoolsQuery->whereIn('id', $accessibleSchoolIds);
-            }
-        }
-
-        $schools = $schoolsQuery->get();
-
-        $comparisonData = [];
-
-        foreach ($schools as $school) {
-            $assessments = $school->students->pluck('assessments')->flatten();
-            $total = $assessments->count();
-
-            if ($total > 0) {
-                $levelCounts = $assessments->groupBy('level')->map->count();
-
-                $comparisonData[] = [
-                    'school' => $school->school_name,
-                    'total_assessed' => $total,
-                    'levels' => $levelCounts,
-                ];
-            }
-        }
-
-        return view('reports.school-comparison-localized', compact('comparisonData', 'subject', 'cycle'));
-    }
-
-    /**
-     * Export report data
-     */
-    public function export(Request $request, $type)
-    {
-        $user = $request->user();
-
-        // Check permissions
-        if (! in_array($user->role, ['admin', 'viewer', 'mentor', 'teacher'])) {
-            abort(403);
-        }
-
-        // Always use XLSX format for user-readable exports
-        $format = 'xlsx';
-
-        switch ($type) {
-            case 'assessments':
-                return $this->exportAssessments($request, $format);
-            case 'mentoring':
-                return $this->exportMentoringVisits($request, $format);
-            default:
-                abort(404);
-        }
-    }
-
-    /**
-     * Export assessments data
-     */
-    private function exportAssessments(Request $request, $format)
-    {
-        if ($format === 'xlsx') {
-            // Use the existing AssessmentsExport class with Hanuman font
-            return Excel::download(new AssessmentsExport($request), 'assessments_'.date('Y-m-d_H-i-s').'.xlsx');
-        }
-
-        // Fallback to JSON if needed
-        $query = Assessment::with(['student', 'student.school']);
-
-        // Apply filters based on user role
-        $user = $request->user();
-        $accessibleSchoolIds = $user->getAccessibleSchoolIds();
-
-        if (! $user->isAdmin()) {
-            if (empty($accessibleSchoolIds)) {
-                // If no schools are accessible, return no results
-                $query->whereRaw('1 = 0');
-            } else {
-                $query->whereHas('student', function ($q) use ($accessibleSchoolIds) {
-                    $q->whereIn('pilot_school_id', $accessibleSchoolIds);
-                });
-            }
-        }
-
-        $assessments = $query->get();
-
-        return response()->json($assessments);
-    }
-
-    /**
-     * Export mentoring visits data
-     */
-    private function exportMentoringVisits(Request $request, $format)
-    {
-        if ($format === 'xlsx') {
-            // Use the existing MentoringVisitsExport class with Hanuman font
-            return Excel::download(new MentoringVisitsExport($request), 'mentoring_visits_'.date('Y-m-d_H-i-s').'.xlsx');
-        }
-
-        // Fallback to JSON if needed
-        $query = MentoringVisit::with(['mentor', 'teacher', 'school']);
-
-        // Apply filters based on user role
-        $user = $request->user();
-        $accessibleSchoolIds = $user->getAccessibleSchoolIds();
-
-        if (! $user->isAdmin()) {
-            if (empty($accessibleSchoolIds)) {
-                // If no schools are accessible, return no results
-                $query->whereRaw('1 = 0');
-            } else {
-                $query->whereIn('pilot_school_id', $accessibleSchoolIds);
-            }
-        }
-
-        if ($user->isTeacher() && $user->pilot_school_id) {
-            $query->where('pilot_school_id', $user->pilot_school_id);
-        }
-
-        $visits = $query->get();
-
-        return response()->json($visits);
-    }
-
-    /**
-     * Mentoring Impact Report
-     */
-    public function mentoringImpact(Request $request)
-    {
-        $user = $request->user();
-        if (! in_array($user->role, ['admin', 'viewer'])) {
-            abort(403);
-        }
-
-        // Get date range filters
-        $startDate = $request->get('start_date', now()->subMonths(3)->startOfDay());
-        $endDate = $request->get('end_date', now()->endOfDay());
-
-        // Get mentoring visits with related data
-        $visits = MentoringVisit::with(['mentor', 'teacher', 'school'])
-            ->whereBetween('visit_date', [$startDate, $endDate])
+        $schools = School::with(['students', 'assessments'])
+            ->withCount('students')
             ->get();
 
-        // Calculate impact metrics
-        $visitsBySchool = $visits->groupBy('pilot_school_id')->map(function ($schoolVisits) {
-            return [
-                'school' => $schoolVisits->first()->school,
-                'total_visits' => $schoolVisits->count(),
-                'unique_teachers' => $schoolVisits->pluck('teacher_id')->unique()->count(),
-                'unique_mentors' => $schoolVisits->pluck('mentor_id')->unique()->count(),
-                'follow_up_required' => $schoolVisits->where('follow_up_required', true)->count(),
-                'visits' => $schoolVisits,
-                'avg_students_enrolled' => $schoolVisits->avg('total_students_enrolled') ?? 0,
-                'avg_students_present' => $schoolVisits->avg('students_present') ?? 0,
-                'classes_in_session_rate' => $schoolVisits->count() > 0 ? ($schoolVisits->where('class_in_session', true)->count() / $schoolVisits->count()) * 100 : 0,
-                'has_session_plan_rate' => $schoolVisits->count() > 0 ? ($schoolVisits->where('has_session_plan', true)->count() / $schoolVisits->count()) * 100 : 0,
-            ];
-        });
+        return view('reports.school-comparison-localized', compact('schools'));
+    }
 
-        // Get assessment improvement data
-        $schoolsWithImprovements = [];
-        foreach ($visitsBySchool as $schoolId => $data) {
-            $school = $data['school'];
+    public function mentoringImpact(Request $request)
+    {
+        $query = MentoringVisit::with(['school', 'user']);
 
-            // Get baseline and latest assessment data (TaRL level-based)
-            $baselineTotal = Assessment::whereHas('student', function ($q) use ($schoolId) {
-                $q->where('pilot_school_id', $schoolId);
+        if ($request->filled('school_id')) {
+            $query->where('school_id', $request->school_id);
+        }
+
+        if ($request->filled('mentor_id')) {
+            $query->where('user_id', $request->mentor_id);
+        }
+
+        $visits = $query->orderBy('visit_date', 'desc')->paginate(20);
+        $schools = School::all();
+        $mentors = User::where('role', 'mentor')->get();
+
+        return view('reports.mentoring-impact-localized', compact('visits', 'schools', 'mentors'));
+    }
+
+    public function progressTracking(Request $request)
+    {
+        $user = Auth::user();
+        $query = Assessment::with(['student', 'school']);
+
+        // Apply role-based filters
+        if ($user->role === 'teacher') {
+            $query->whereHas('student', function($q) use ($user) {
+                $q->where('teacher_id', $user->id);
+            });
+        } elseif ($user->role === 'mentor') {
+            $query->whereIn('school_id', $user->schools->pluck('id'));
+        }
+
+        if ($request->filled('cycle')) {
+            $query->where('cycle', $request->cycle);
+        }
+        
+        if ($request->filled('subject')) {
+            $query->where('subject', $request->subject);
+        }
+        
+        if ($request->filled('school_id')) {
+            $query->where('school_id', $request->school_id);
+        }
+
+        $assessments = $query->paginate(20);
+        
+        // Get schools for filter dropdown
+        $schools = School::all();
+        
+        // Get filter values for the view
+        $cycle = $request->get('cycle', 'all');
+        $subject = $request->get('subject', 'all');
+        $schoolId = $request->get('school_id');
+        
+        // Calculate progress data
+        $progressData = [];
+        
+        // Get students with assessments for progress tracking
+        $studentsWithAssessments = Student::whereHas('assessments')
+            ->when($user->role === 'teacher', function($q) use ($user) {
+                $q->where('teacher_id', $user->id);
             })
-                ->where('cycle', 'baseline')
-                ->count();
-
-            $baselineAdvanced = Assessment::whereHas('student', function ($q) use ($schoolId) {
-                $q->where('pilot_school_id', $schoolId);
+            ->when($request->filled('school_id'), function($q) use ($request) {
+                $q->where('school_id', $request->school_id);
             })
-                ->where('cycle', 'baseline')
-                ->whereNotIn('level', ['Beginner', 'Letter', '1-Digit'])
-                ->count();
-
-            $latestCycle = Assessment::whereHas('student', function ($q) use ($schoolId) {
-                $q->where('pilot_school_id', $schoolId);
-            })
-                ->whereIn('cycle', ['midline', 'endline'])
-                ->orderBy('assessed_at', 'desc')
-                ->first();
-
-            if ($latestCycle) {
-                $latestTotal = Assessment::whereHas('student', function ($q) use ($schoolId) {
-                    $q->where('pilot_school_id', $schoolId);
-                })
-                    ->where('cycle', $latestCycle->cycle)
-                    ->count();
-
-                $latestAdvanced = Assessment::whereHas('student', function ($q) use ($schoolId) {
-                    $q->where('pilot_school_id', $schoolId);
-                })
-                    ->where('cycle', $latestCycle->cycle)
-                    ->whereNotIn('level', ['Beginner', 'Letter', '1-Digit'])
-                    ->count();
-
-                $baselinePercentage = $baselineTotal > 0 ? ($baselineAdvanced / $baselineTotal) * 100 : 0;
-                $latestPercentage = $latestTotal > 0 ? ($latestAdvanced / $latestTotal) * 100 : 0;
-
-                $schoolsWithImprovements[] = [
-                    'school' => $school,
-                    'baseline_percentage' => round($baselinePercentage, 1),
-                    'latest_percentage' => round($latestPercentage, 1),
-                    'improvement' => round($latestPercentage - $baselinePercentage, 1),
-                    'total_visits' => $data['total_visits'],
-                    'avg_mentoring_score' => 0, // Score column not available
+            ->with(['assessments' => function($q) use ($subject, $cycle) {
+                if ($subject !== 'all') {
+                    $q->where('subject', $subject);
+                }
+                if ($cycle !== 'all') {
+                    $q->where('cycle', $cycle);
+                }
+                $q->orderBy('assessed_at', 'desc');
+            }])
+            ->get();
+        
+        // Calculate progress for each student
+        foreach ($studentsWithAssessments as $student) {
+            if ($student->assessments->count() >= 2) {
+                $latest = $student->assessments->first();
+                $baseline = $student->assessments->last(); // Get the earliest assessment as baseline
+                
+                // Map levels to numeric values for comparison
+                $levelValues = [
+                    'Beginner' => 1,
+                    'Letter' => 2, '1-Digit' => 2,
+                    'Word' => 3, '2-Digit' => 3,
+                    'Paragraph' => 4, 'Subtraction' => 4,
+                    'Story' => 5, 'Division' => 5,
+                    'Comp. 1' => 6, 'Word Problem' => 6,
+                    'Comp. 2' => 7
+                ];
+                
+                $latestValue = $levelValues[$latest->level] ?? 0;
+                $baselineValue = $levelValues[$baseline->level] ?? 0;
+                
+                // Calculate score change (assuming scores exist, otherwise use level values)
+                $scoreChange = ($latest->score ?? 0) - ($baseline->score ?? 0);
+                
+                $progressData[] = [
+                    'student' => $student, // Pass the entire student object
+                    'baseline_level' => $baseline->level,
+                    'latest_level' => $latest->level,
+                    'latest_cycle' => $latest->cycle,
+                    'level_improved' => $latestValue - $baselineValue,
+                    'score_change' => $scoreChange,
+                    'baseline_date' => $baseline->assessed_at,
+                    'latest_date' => $latest->assessed_at
                 ];
             }
         }
-
-        // Sort by improvement
-        usort($schoolsWithImprovements, function ($a, $b) {
-            return $b['improvement'] <=> $a['improvement'];
-        });
-
-        return view('reports.mentoring-impact-localized', compact(
-            'visitsBySchool',
-            'schoolsWithImprovements',
-            'startDate',
-            'endDate'
-        ));
-    }
-
-    /**
-     * Progress Tracking Report
-     */
-    public function progressTracking(Request $request)
-    {
-        $user = $request->user();
-        if (! in_array($user->role, ['admin', 'viewer', 'mentor'])) {
-            abort(403);
+        
+        // Calculate average score change
+        $avgScoreChange = 0;
+        if (count($progressData) > 0) {
+            $avgScoreChange = collect($progressData)->avg('level_improved');
         }
-
-        // Get filters
-        $schoolId = $request->get('pilot_school_id');
-        $subject = $request->get('subject', 'khmer');
-
-        // Get schools for filter based on user access
-        $accessibleSchoolIds = $user->getAccessibleSchoolIds();
-        if ($user->isAdmin()) {
-            $schools = PilotSchool::orderBy('school_name')->get();
-        } else {
-            $schools = PilotSchool::whereIn('id', $accessibleSchoolIds)->orderBy('school_name')->get();
-        }
-
-        // Build query for students with multiple assessments
-        $studentsQuery = Student::with(['assessments' => function ($q) use ($subject) {
-            $q->where('subject', $subject)
-                ->orderBy('cycle');
-        }])
-            ->whereHas('assessments', function ($q) use ($subject) {
-                $q->where('subject', $subject);
-            }, '>', 1); // Only students with more than 1 assessment
-
-        // Apply access restrictions for mentors
-        if (! $user->isAdmin()) {
-            if (empty($accessibleSchoolIds)) {
-                // If no schools are accessible, return no results
-                $studentsQuery->whereRaw('1 = 0');
-            } else {
-                $studentsQuery->whereIn('pilot_school_id', $accessibleSchoolIds);
-            }
-        }
-
-        if ($schoolId) {
-            // Verify user has access to this school
-            if ($user->isAdmin() || $user->canAccessSchool($schoolId)) {
-                $studentsQuery->where('pilot_school_id', $schoolId);
-            }
-        }
-
-        $students = $studentsQuery->get();
-
-        // Process progress data
-        $progressData = [];
-        foreach ($students as $student) {
-            $assessments = $student->assessments;
-            if ($assessments->count() > 1) {
-                $baseline = $assessments->where('cycle', 'baseline')->first();
-                $latest = $assessments->whereIn('cycle', ['midline', 'endline'])->last();
-
-                if ($baseline && $latest) {
-                    $progressData[] = [
-                        'student' => $student,
-                        'baseline_level' => $baseline->level,
-                        'latest_cycle' => $latest->cycle,
-                        'latest_level' => $latest->level,
-                        'level_improved' => $this->calculateLevelImprovement($baseline->level, $latest->level, $subject),
-                    ];
-                }
-            }
-        }
-
-        // Sort by level improvement
-        usort($progressData, function ($a, $b) {
-            return $b['level_improved'] <=> $a['level_improved'];
-        });
-
-        // Calculate average score change (using level improvement as score change for now)
-        $avgScoreChange = ! empty($progressData) ? collect($progressData)->avg('level_improved') : 0;
 
         return view('reports.progress-tracking-localized', compact(
-            'schools',
+            'assessments', 
+            'schools', 
+            'cycle', 
+            'subject', 
             'schoolId',
-            'subject',
             'progressData',
             'avgScoreChange'
         ));
     }
 
-    /**
-     * My Mentoring Summary Report (for mentors)
-     */
-    public function myMentoring(Request $request)
+    public function performanceCalculation(Request $request)
     {
-        $user = $request->user();
-        if (! $user->isMentor()) {
-            abort(403);
-        }
-
-        // Get date range filters
-        $startDate = $request->get('start_date', now()->subMonths(6)->startOfDay());
-        $endDate = $request->get('end_date', now()->endOfDay());
-
-        // Get mentor's visits from assigned schools
-        $accessibleSchoolIds = $user->getAccessibleSchoolIds();
-        $visitsQuery = MentoringVisit::with(['teacher', 'school'])
-            ->whereBetween('visit_date', [$startDate, $endDate]);
-
-        if (empty($accessibleSchoolIds)) {
-            // If no schools are accessible, return no results
-            $visitsQuery->whereRaw('1 = 0');
-        } else {
-            $visitsQuery->whereIn('pilot_school_id', $accessibleSchoolIds);
-        }
-
-        $visits = $visitsQuery->orderBy('visit_date', 'desc')->get();
-
-        // Calculate summary statistics
-        $stats = [
-            'total_visits' => $visits->count(),
-            'schools_visited' => $visits->pluck('pilot_school_id')->unique()->count(),
-            'teachers_mentored' => $visits->pluck('teacher_id')->unique()->count(),
-            'average_score' => $visits->avg('score') ?? 0,
-            'follow_up_required' => $visits->where('follow_up_required', true)->count(),
-            'classes_in_session' => $visits->where('class_in_session', true)->count(),
-            'full_sessions_observed' => $visits->where('full_session_observed', true)->count(),
-        ];
-
-        // Group visits by school
-        $visitsBySchool = $visits->groupBy('pilot_school_id')->map(function ($schoolVisits) {
-            return [
-                'school' => $schoolVisits->first()->school,
-                'visits' => $schoolVisits,
-                'total_visits' => $schoolVisits->count(),
-                'teachers' => $schoolVisits->pluck('teacher')->unique(),
-                'average_score' => $schoolVisits->avg('score') ?? 0,
-                'follow_up_required' => $schoolVisits->where('follow_up_required', true)->count(),
-                'avg_students_present' => $schoolVisits->avg('students_present') ?? 0,
-                'avg_students_improved' => $schoolVisits->avg('students_improved_from_last_week') ?? 0,
-            ];
-        });
-
-        // Group visits by month
-        $visitsByMonth = $visits->groupBy(function ($visit) {
-            return $visit->visit_date->format('Y-m');
-        })->map(function ($monthVisits, $month) {
-            return [
-                'month' => $month,
-                'count' => $monthVisits->count(),
-                'average_score' => $monthVisits->avg('score') ?? 0,
-                'follow_up_required' => $monthVisits->where('follow_up_required', true)->count(),
-                'classes_in_session' => $monthVisits->where('class_in_session', true)->count(),
-            ];
-        })->sortKeys();
-
-        return view('reports.my-mentoring', compact(
-            'visits',
-            'stats',
-            'visitsBySchool',
-            'visitsByMonth',
-            'startDate',
-            'endDate'
-        ));
+        // Performance calculation logic
+        $data = [];
+        
+        return view('reports.performance-calculation-localized', compact('data'));
     }
 
-    /**
-     * My Students Performance Report (for teachers)
-     */
     public function myStudents(Request $request)
     {
-        $user = $request->user();
-        if (! $user->isTeacher()) {
-            abort(403);
+        $user = Auth::user();
+        
+        // Build query
+        $query = Student::where('teacher_id', $user->id)
+            ->with(['assessments', 'school', 'schoolClass']);
+        
+        // Apply filters
+        if ($request->filled('class_id')) {
+            $query->where('class_id', $request->class_id);
         }
-
-        // Determine the subject to display based on teacher's assigned subject
-        $teacherSubject = $user->assigned_subject ?? 'both';
-        $subject = $teacherSubject;
-
-        // If teacher is assigned to both subjects, use the filter
-        if ($teacherSubject === 'both') {
-            $subject = $request->get('subject', 'khmer'); // Default to khmer if both
+        
+        if ($request->filled('class')) {
+            $query->where('class', $request->class);
         }
-
-        // Get filters
-        $cycle = $request->get('cycle', 'all');
+        
+        $students = $query->paginate(20);
+        
+        // Get classes for this teacher
+        $classes = \App\Models\SchoolClass::where('teacher_id', $user->id)->get();
+        
+        // Get filter values for the view
         $classId = $request->get('class_id');
+        $grade = $request->get('class');
+        $subject = $request->get('subject', 'all');
+        $cycle = $request->get('cycle', 'all');
+        
+        // Get unique class/grade values from students
+        $grades = Student::where('teacher_id', $user->id)
+            ->distinct()
+            ->pluck('class')
+            ->filter()
+            ->sort();
+        
+        // Get assessments for the teacher's students
+        $assessments = Assessment::whereHas('student', function($q) use ($user) {
+            $q->where('teacher_id', $user->id);
+        })
+        ->when($subject !== 'all', function($q) use ($subject) {
+            $q->where('subject', $subject);
+        })
+        ->when($cycle !== 'all', function($q) use ($cycle) {
+            $q->where('cycle', $cycle);
+        })
+        ->when($request->filled('class_id'), function($q) use ($request) {
+            $q->whereHas('student', function($sq) use ($request) {
+                $sq->where('class_id', $request->class_id);
+            });
+        })
+        ->get();
 
-        // Get teacher's students
-        $studentsQuery = Student::where('pilot_school_id', $user->pilot_school_id)
-            ->with(['assessments', 'schoolClass']);
-
-        if ($classId) {
-            $studentsQuery->where('class_id', $classId);
-        }
-
-        $students = $studentsQuery->get();
-
-        // Get assessment data filtered by the teacher's subject
-        $assessmentsQuery = Assessment::whereIn('student_id', $students->pluck('id'));
-
-        // Always filter by subject (either assigned or selected)
-        if ($teacherSubject === 'both' && $subject !== 'all') {
-            $assessmentsQuery->where('subject', $subject);
-        } elseif ($teacherSubject !== 'both') {
-            $assessmentsQuery->where('subject', $teacherSubject);
-        }
-
-        if ($cycle !== 'all') {
-            $assessmentsQuery->where('cycle', $cycle);
-        }
-
-        $assessments = $assessmentsQuery->get();
-
-        // Calculate performance metrics and sort by count in descending order
-        $performanceByLevel = $assessments->groupBy('level')
-            ->map->count()
-            ->sortDesc();
-
-        $performanceBySubject = $assessments->groupBy('subject')->map(function ($subjectAssessments) {
-            return [
-                'count' => $subjectAssessments->count(),
-                'levels' => $subjectAssessments->groupBy('level')->map->count()->sortDesc(),
-            ];
-        });
-
-        // Get classes for filter
-        $classes = \App\Models\SchoolClass::where('pilot_school_id', $user->pilot_school_id)
-            ->orderBy('grade')
-            ->orderBy('name')
+        // Calculate performance by level
+        $performanceByLevel = collect();
+        if ($subject !== 'all') {
+            $performanceByLevel = Assessment::whereHas('student', function($q) use ($user) {
+                $q->where('teacher_id', $user->id);
+            })
+            ->where('subject', $subject)
+            ->when($cycle !== 'all', function($q) use ($cycle) {
+                $q->where('cycle', $cycle);
+            })
+            ->when($request->filled('class_id'), function($q) use ($request) {
+                $q->whereHas('student', function($sq) use ($request) {
+                    $sq->where('class_id', $request->class_id);
+                });
+            })
+            ->select('level', DB::raw('count(*) as count'))
+            ->groupBy('level')
             ->get();
+        }
 
         return view('reports.my-students', compact(
             'students',
-            'assessments',
-            'performanceByLevel',
-            'performanceBySubject',
+            'classes',
+            'classId',
+            'grade',
+            'grades',
             'subject',
             'cycle',
-            'classId',
-            'classes',
-            'teacherSubject'
+            'assessments',
+            'performanceByLevel'
         ));
     }
 
-    /**
-     * Class Progress Report (for teachers)
-     */
     public function classProgress(Request $request)
     {
-        $user = $request->user();
-        if (! $user->isTeacher()) {
-            abort(403);
-        }
-
-        // Get class filter
+        $user = Auth::user();
+        $classes = [];
         $classId = $request->get('class_id');
-        $subject = $request->get('subject', 'khmer');
-
-        // Get classes
-        $classes = \App\Models\SchoolClass::where('pilot_school_id', $user->pilot_school_id)
-            ->orderBy('grade')
-            ->orderBy('name')
-            ->get();
-
-        $progressData = [];
-
-        if ($classId) {
-            // Get students in the class with their assessments
-            $students = Student::where('class_id', $classId)
-                ->with(['assessments' => function ($q) use ($subject) {
-                    $q->where('subject', $subject)
-                        ->orderBy('cycle');
-                }])
+        
+        if ($user->role === 'teacher') {
+            // Get classes for this teacher
+            $classes = DB::table('classes')
+                ->where('teacher_id', $user->id)
                 ->get();
-
-            foreach ($students as $student) {
-                $assessments = $student->assessments;
-                if ($assessments->count() > 0) {
-                    $baseline = $assessments->where('cycle', 'baseline')->first();
-                    $midline = $assessments->where('cycle', 'midline')->first();
-                    $endline = $assessments->where('cycle', 'endline')->first();
-
-                    $progressData[] = [
-                        'student' => $student,
-                        'baseline' => $baseline,
-                        'midline' => $midline,
-                        'endline' => $endline,
-                        'latest' => $endline ?? $midline ?? $baseline,
-                    ];
-                }
-            }
         }
 
-        return view('reports.class-progress', compact(
-            'classes',
-            'classId',
-            'subject',
-            'progressData'
-        ));
+        return view('reports.class-progress', compact('classes', 'classId'));
     }
 
-    /**
-     * School Visit Report (for mentors)
-     */
+    public function myMentoring(Request $request)
+    {
+        $user = Auth::user();
+        $visits = MentoringVisit::where('user_id', $user->id)
+            ->with(['school'])
+            ->orderBy('visit_date', 'desc')
+            ->paginate(20);
+
+        return view('reports.my-mentoring', compact('visits'));
+    }
+
     public function schoolVisits(Request $request)
     {
-        $user = $request->user();
-        if (! $user->isMentor()) {
-            abort(403);
+        $query = MentoringVisit::with(['school', 'user']);
+
+        if ($request->filled('school_id')) {
+            $query->where('school_id', $request->school_id);
         }
 
-        // Get school filter
-        $schoolId = $request->get('pilot_school_id');
+        $visits = $query->orderBy('visit_date', 'desc')->paginate(20);
+        $schools = School::all();
 
-        // Get schools visited by this mentor
-        $schoolIds = MentoringVisit::where('mentor_id', $user->id)
-            ->distinct()
-            ->pluck('pilot_school_id');
+        return view('reports.school-visits', compact('visits', 'schools'));
+    }
 
-        $schools = PilotSchool::whereIn('id', $schoolIds)
-            ->orderBy('school_name')
-            ->get();
+    public function export(Request $request, $type)
+    {
+        // Export functionality based on report type
+        return back()->with('info', 'Export functionality will be implemented soon.');
+    }
 
-        $visitData = null;
+    /**
+     * Get available reports based on user role
+     */
+    private function getAvailableReports($user)
+    {
+        $reports = [];
 
-        if ($schoolId) {
-            // Get all visits to this school by this mentor
-            $visits = MentoringVisit::where('mentor_id', $user->id)
-                ->where('pilot_school_id', $schoolId)
-                ->with(['teacher', 'school'])
-                ->orderBy('visit_date', 'desc')
-                ->get();
+        // Common reports for all roles
+        $commonReports = [
+            [
+                'name' => 'Student Performance',
+                'description' => 'Track individual student progress and performance',
+                'route' => 'reports.student-performance',
+                'icon' => 'chart-bar',
+                'color' => 'blue',
+            ],
+            [
+                'name' => 'Progress Tracking',
+                'description' => 'Monitor assessment progress over time',
+                'route' => 'reports.progress-tracking',
+                'icon' => 'trending-up',
+                'color' => 'green',
+            ],
+        ];
 
-            // Get unique teachers mentored at this school
-            $mentors = $visits->pluck('mentor')->unique();
+        // Add common reports
+        $reports = array_merge($reports, $commonReports);
 
-            // Calculate trends
-            $visitTrends = $visits->groupBy(function ($visit) {
-                return $visit->visit_date->format('Y-m');
-            })->map(function ($monthVisits) {
-                return [
-                    'count' => $monthVisits->count(),
-                    'follow_up_required' => $monthVisits->where('follow_up_required', true)->count(),
-                ];
-            });
-
-            $visitData = [
-                'school' => PilotSchool::find($schoolId),
-                'visits' => $visits,
-                'mentors' => $mentors,
-                'total_visits' => $visits->count(),
-                'follow_up_required' => $visits->where('follow_up_required', true)->count(),
-                'visit_trends' => $visitTrends,
+        // Role-specific reports
+        if ($user->role === 'admin' || $user->role === 'coordinator') {
+            $adminReports = [
+                [
+                    'name' => 'School Comparison',
+                    'description' => 'Compare performance across schools',
+                    'route' => 'reports.school-comparison',
+                    'icon' => 'office-building',
+                    'color' => 'purple',
+                ],
+                [
+                    'name' => 'Mentoring Impact',
+                    'description' => 'Analyze the impact of mentoring visits',
+                    'route' => 'reports.mentoring-impact',
+                    'icon' => 'user-group',
+                    'color' => 'indigo',
+                ],
+                [
+                    'name' => 'Performance Calculation',
+                    'description' => 'Calculate overall performance metrics',
+                    'route' => 'reports.performance-calculation',
+                    'icon' => 'calculator',
+                    'color' => 'yellow',
+                ],
             ];
+            $reports = array_merge($reports, $adminReports);
         }
 
-        return view('reports.school-visits', compact(
-            'schools',
-            'schoolId',
-            'visitData'
-        ));
-    }
-
-    /**
-     * Performance Calculation Report
-     */
-    public function performanceCalculation(Request $request)
-    {
-        $user = $request->user();
-        if (! in_array($user->role, ['admin', 'viewer', 'mentor'])) {
-            abort(403);
+        if ($user->role === 'teacher') {
+            $teacherReports = [
+                [
+                    'name' => 'My Students',
+                    'description' => 'View your students and their progress',
+                    'route' => 'reports.my-students',
+                    'icon' => 'users',
+                    'color' => 'pink',
+                ],
+                [
+                    'name' => 'Class Progress',
+                    'description' => 'Track progress by class',
+                    'route' => 'reports.class-progress',
+                    'icon' => 'academic-cap',
+                    'color' => 'teal',
+                ],
+            ];
+            $reports = array_merge($reports, $teacherReports);
         }
 
-        // Get filters
-        $schoolId = $request->get('pilot_school_id');
-        $cycle = $request->get('cycle', 'baseline');
-
-        // Get schools for filter based on user access
-        $accessibleSchoolIds = $user->getAccessibleSchoolIds();
-        if ($user->isAdmin()) {
-            $schools = PilotSchool::orderBy('school_name')->get();
-        } else {
-            $schools = PilotSchool::whereIn('id', $accessibleSchoolIds)->orderBy('school_name')->get();
+        if ($user->role === 'mentor') {
+            $mentorReports = [
+                [
+                    'name' => 'My Mentoring',
+                    'description' => 'View your mentoring visits and feedback',
+                    'route' => 'reports.my-mentoring',
+                    'icon' => 'clipboard-list',
+                    'color' => 'orange',
+                ],
+                [
+                    'name' => 'School Visits',
+                    'description' => 'Track visits to assigned schools',
+                    'route' => 'reports.school-visits',
+                    'icon' => 'location-marker',
+                    'color' => 'red',
+                ],
+            ];
+            $reports = array_merge($reports, $mentorReports);
         }
 
-        // Build base query for assessments
-        $assessmentsQuery = Assessment::with(['student', 'student.school'])
-            ->where('cycle', $cycle);
-
-        // Apply access restrictions for mentors
-        if (! $user->isAdmin()) {
-            if (empty($accessibleSchoolIds)) {
-                $assessmentsQuery->whereRaw('1 = 0');
-            } else {
-                $assessmentsQuery->whereHas('student', function ($q) use ($accessibleSchoolIds) {
-                    $q->whereIn('pilot_school_id', $accessibleSchoolIds);
-                });
-            }
-        }
-
-        if ($schoolId) {
-            if ($user->isAdmin() || $user->canAccessSchool($schoolId)) {
-                $assessmentsQuery->whereHas('student', function ($q) use ($schoolId) {
-                    $q->where('pilot_school_id', $schoolId);
-                });
-            }
-        }
-
-        // Get performance data by school with caching
-        $cacheKey = 'performance_calculation_'.md5(json_encode([
-            'user_id' => $user->id,
-            'school_id' => $schoolId,
-            'cycle' => $cycle,
-            'accessible_schools' => $accessibleSchoolIds,
-        ]));
-
-        $schoolPerformanceData = Cache::remember($cacheKey, 3600, function () use ($schoolId, $schools, $user, $cycle) {
-            $performanceData = [];
-            $targetSchools = $schoolId ? PilotSchool::where('id', $schoolId)->get() : $schools;
-
-            foreach ($targetSchools as $school) {
-                if (! $user->isAdmin() && ! $user->canAccessSchool($school->id)) {
-                    continue;
-                }
-
-                $schoolAssessments = Assessment::with(['student'])
-                    ->where('cycle', $cycle)
-                    ->whereHas('student', function ($q) use ($school) {
-                        $q->where('pilot_school_id', $school->id);
-                    })
-                    ->get();
-
-                // Language Performance Calculation
-                $khmerAssessments = $schoolAssessments->where('subject', 'khmer');
-                $totalKhmerStudents = $khmerAssessments->count();
-
-                $languageReaders = $khmerAssessments->whereIn('level', ['Paragraph', 'Story', 'Comp. 1', 'Comp. 2'])->count();
-                $languageBeginners = $khmerAssessments->whereIn('level', ['Beginner', 'Letter'])->count();
-
-                // Math Performance Calculation
-                $mathAssessments = $schoolAssessments->where('subject', 'math');
-                $totalMathStudents = $mathAssessments->count();
-
-                $mathOperations = $mathAssessments->whereIn('level', ['Subtraction', 'Division', 'Word Problem'])->count();
-                $mathBeginners = $mathAssessments->whereIn('level', ['Beginner', '1-Digit'])->count();
-
-                $performanceData[] = [
-                    'school' => $school,
-                    'language' => [
-                        'total_students' => $totalKhmerStudents,
-                        'readers' => $languageReaders,
-                        'beginners' => $languageBeginners,
-                        'readers_percentage' => $totalKhmerStudents > 0 ? round(($languageReaders / $totalKhmerStudents) * 100, 1) : 0,
-                        'beginners_percentage' => $totalKhmerStudents > 0 ? round(($languageBeginners / $totalKhmerStudents) * 100, 1) : 0,
-                    ],
-                    'math' => [
-                        'total_students' => $totalMathStudents,
-                        'operations' => $mathOperations,
-                        'beginners' => $mathBeginners,
-                        'operations_percentage' => $totalMathStudents > 0 ? round(($mathOperations / $totalMathStudents) * 100, 1) : 0,
-                        'beginners_percentage' => $totalMathStudents > 0 ? round(($mathBeginners / $totalMathStudents) * 100, 1) : 0,
-                    ],
-                ];
-            }
-
-            return $performanceData;
-        });
-
-        return view('reports.performance-calculation-localized', compact(
-            'schools',
-            'schoolId',
-            'cycle',
-            'schoolPerformanceData'
-        ));
-    }
-
-    /**
-     * Calculate level improvement
-     */
-    private function calculateLevelImprovement($baselineLevel, $currentLevel, $subject)
-    {
-        $levels = $subject === 'khmer'
-            ? ['Beginner' => 0, 'Letter' => 1, 'Word' => 2, 'Paragraph' => 3, 'Story' => 4, 'Comp. 1' => 5, 'Comp. 2' => 6]
-            : ['Beginner' => 0, '1-Digit' => 1, '2-Digit' => 2, 'Subtraction' => 3, 'Division' => 4, 'Word Problem' => 5];
-
-        $baselineIndex = $levels[$baselineLevel] ?? 0;
-        $currentIndex = $levels[$currentLevel] ?? 0;
-
-        return $currentIndex - $baselineIndex;
+        return $reports;
     }
 }

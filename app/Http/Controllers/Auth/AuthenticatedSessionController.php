@@ -28,7 +28,12 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        $welcomeMessage = app()->getLocale() === 'km' 
+            ? 'សូមស្វាគមន៍! អ្នកបានចូលប្រព័ន្ធដោយជោគជ័យ។' 
+            : 'Welcome! You have successfully logged in.';
+
+        return redirect()->intended(route('dashboard', absolute: false))
+            ->with('success', $welcomeMessage);
     }
 
     /**
@@ -42,6 +47,11 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        $logoutMessage = app()->getLocale() === 'km' 
+            ? 'អ្នកបានចាកចេញពីប្រព័ន្ធដោយជោគជ័យ។' 
+            : 'You have been successfully logged out.';
+
+        return redirect('/')
+            ->with('info', $logoutMessage);
     }
 }

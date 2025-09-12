@@ -3,12 +3,6 @@
         <div class="w-full px-4 sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm rounded-lg">
                 <div class="p-4 sm:p-6 lg:p-8 text-gray-900">
-                    
-                    @if (session('success'))
-                        <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
-                            <span class="block sm:inline">{{ session('success') }}</span>
-                        </div>
-                    @endif
 
                     <!-- Search Form -->
                     <form method="GET" action="{{ route('students.index') }}" class="mb-6">

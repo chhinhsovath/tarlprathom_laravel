@@ -14,6 +14,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
+use Exception;
 
 class AssessmentController extends Controller
 {
@@ -46,7 +47,7 @@ class AssessmentController extends Controller
             ]);
         }
 
-        $query = Assessment::with(['student', 'student.pilotSchool']);
+        $query = Assessment::with(['student', 'student.pilotSchool', 'assessor']);
 
         // Apply access restrictions based on user role
         $user = $request->user();
@@ -138,9 +139,9 @@ class AssessmentController extends Controller
      */
     public function create(Request $request)
     {
-        // Check authorization
-        if (! in_array($request->user()->role, ['admin', 'teacher', 'mentor'])) {
-            abort(403);
+        // Check authorization - only teachers and admins can create assessments
+        if (! in_array($request->user()->role, ['admin', 'teacher'])) {
+            abort(403, 'Only teachers can conduct assessments');
         }
 
         // Get students based on access
@@ -158,9 +159,9 @@ class AssessmentController extends Controller
             }
         }
 
-        // Get the subject and cycle
-        $subject = $request->get('subject', 'khmer');
-        $cycle = $request->get('cycle', 'baseline');
+        // Get the subject and cycle - ensure they are strings
+        $subject = (string) $request->get('subject', 'khmer');
+        $cycle = (string) $request->get('cycle', 'baseline');
 
         // For Midline or Endline cycles, filter students based on eligibility
         if (in_array($cycle, ['midline', 'endline'])) {
@@ -230,7 +231,32 @@ class AssessmentController extends Controller
             return $student;
         });
 
-        return view('assessments.create', compact('students', 'subject', 'cycle'));
+        // Get the school and period status for the current user
+        $school = null;
+        $periodStatus = 'not_set'; // Default value
+        
+        try {
+            if ($user->isTeacher() && $user->pilot_school_id) {
+                $school = PilotSchool::find($user->pilot_school_id);
+                if ($school && method_exists($school, 'getAssessmentPeriodStatus')) {
+                    $periodStatus = $school->getAssessmentPeriodStatus($cycle);
+                }
+            } elseif ($students->isNotEmpty()) {
+                // For non-teachers, get the first student's school
+                $firstStudent = $students->first();
+                if ($firstStudent && $firstStudent->pilot_school_id) {
+                    $school = PilotSchool::find($firstStudent->pilot_school_id);
+                    if ($school && method_exists($school, 'getAssessmentPeriodStatus')) {
+                        $periodStatus = $school->getAssessmentPeriodStatus($cycle);
+                    }
+                }
+            }
+        } catch (Exception $e) {
+            // Log the error but continue with defaults
+            \Log::warning('Error getting school assessment period status: ' . $e->getMessage());
+        }
+        
+        return view('assessments.create', compact('students', 'subject', 'cycle', 'school', 'periodStatus'));
     }
 
     /**
@@ -265,9 +291,12 @@ class AssessmentController extends Controller
             }
         }
 
+        // Add the assessor_id (teacher who conducted the assessment)
+        $validated['assessor_id'] = $user->id;
+        
         $assessment = Assessment::create($validated);
 
-        return redirect()->route('assessments.index')
+        return redirect()->route('assessments.create')
             ->with('success', 'Assessment created successfully.');
     }
 
@@ -664,5 +693,87 @@ class AssessmentController extends Controller
 
         return redirect()->route('assessments.select-students', ['type' => $assessmentType])
             ->with('success', __('Students selected for :type assessment successfully.', ['type' => ucfirst($assessmentType)]));
+    }
+
+    /**
+     * Update the verification status of an assessment.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Assessment  $assessment
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function updateVerification(Request $request, Assessment $assessment)
+    {
+        // Check if user is mentor or admin
+        if (!in_array(auth()->user()->role, ['mentor', 'admin'])) {
+            return redirect()->back()->with('error', 'អ្នកមិនមានសិទ្ធិធ្វើសកម្មភាពនេះទេ។');
+        }
+
+        // Determine valid levels based on subject
+        $validLevels = $assessment->subject === 'khmer' 
+            ? 'Beginner,Letter,Word,Paragraph,Story,Comp. 1,Comp. 2'
+            : 'Beginner,1-Digit,2-Digit,Subtraction,Division,Word Problem';
+
+        try {
+            $request->validate([
+                'verification_status' => 'required|in:pending,verified,needs_correction',
+                'verification_notes' => 'nullable|string|max:1000',
+                'mentor_assessed_level' => 'nullable|in:' . $validLevels,
+                'level_discrepancy_notes' => 'nullable|string|max:1000',
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return redirect()->back()
+                ->withErrors($e->errors())
+                ->withInput()
+                ->with('error', 'មានកំហុសក្នុងការបញ្ជូនទម្រង់។ សូមពិនិត្យមើលទិន្នន័យរបស់អ្នកហើយព្យាយាមម្តងទៀត។');
+        }
+
+        $assessment->verification_status = $request->verification_status;
+        $assessment->verification_notes = $request->verification_notes;
+        
+        // Save mentor's assessment level
+        if ($request->has('mentor_assessed_level')) {
+            $assessment->mentor_assessed_level = $request->mentor_assessed_level;
+            
+            // Calculate a score based on the level (similar to teacher assessment)
+            $levels = $assessment->subject === 'khmer' 
+                ? ['Beginner', 'Letter', 'Word', 'Paragraph', 'Story', 'Comp. 1', 'Comp. 2']
+                : ['Beginner', '1-Digit', '2-Digit', 'Subtraction', 'Division', 'Word Problem'];
+            
+            $levelIndex = array_search($request->mentor_assessed_level, $levels);
+            $maxIndex = count($levels) - 1;
+            $assessment->mentor_assessed_score = round(($levelIndex / $maxIndex) * 100);
+            
+            // Save discrepancy notes if levels differ
+            if ($request->mentor_assessed_level !== $assessment->level) {
+                $assessment->level_discrepancy_notes = $request->level_discrepancy_notes;
+            } else {
+                $assessment->level_discrepancy_notes = null;
+            }
+        }
+        
+        if ($request->verification_status === 'pending') {
+            $assessment->verified_by = null;
+            $assessment->verified_at = null;
+        } else {
+            $assessment->verified_by = auth()->id();
+            $assessment->verified_at = now();
+        }
+        
+        $assessment->save();
+
+        $statusMessage = match($request->verification_status) {
+            'verified' => 'ការវាយតម្លៃត្រូវបានផ្ទៀងផ្ទាត់ដោយជោគជ័យ។',
+            'needs_correction' => 'ការវាយតម្លៃត្រូវបានសម្គាល់ថាត្រូវការកែតម្រូវ។',
+            'pending' => 'ការវាយតម្លៃត្រូវបានកំណត់ឡើងវិញទៅស្ថានភាពកំពុងរង់ចាំ។',
+            default => 'ស្ថានភាពផ្ទៀងផ្ទាត់ត្រូវបានធ្វើបច្ចុប្បន្នភាព។',
+        };
+        
+        // Add note about level discrepancy if exists
+        if ($assessment->mentor_assessed_level && $assessment->mentor_assessed_level !== $assessment->level) {
+            $statusMessage .= ' ចំណាំ៖ កម្រិតវាយតម្លៃរបស់អ្នកខុសពីការវាយតម្លៃរបស់គ្រូ។';
+        }
+
+        return redirect()->back()->with('success', $statusMessage);
     }
 }

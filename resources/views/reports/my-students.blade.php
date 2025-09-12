@@ -1,12 +1,12 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('My Students Performance Report') }}
+            {{ trans_db('My Students Performance Report') }}
         </h2>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+    <div class="py-6">
+        <div class="w-full px-4 sm:px-6 lg:px-8">
             <!-- Filters -->
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
                 <div class="p-6">
@@ -14,10 +14,10 @@
                         <!-- Class Filter -->
                         <div>
                             <label for="class_id" class="block text-sm font-medium text-gray-700 mb-2">
-                                {{ __('Class') }}
+                                {{ trans_db('Class') }}
                             </label>
                             <select name="class_id" id="class_id" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                                <option value="">{{ __('All Classes') }}</option>
+                                <option value="">{{ trans_db('All Classes') }}</option>
                                 @foreach($classes as $class)
                                     <option value="{{ $class->id }}" {{ request('class_id') == $class->id ? 'selected' : '' }}>
                                         {{ $class->full_name }}
@@ -30,21 +30,21 @@
                         @if(($teacherSubject ?? 'both') === 'both')
                         <div>
                             <label for="subject" class="block text-sm font-medium text-gray-700 mb-2">
-                                {{ __('Subject') }}
+                                {{ trans_db('Subject') }}
                             </label>
                             <select name="subject" id="subject" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                                 <option value="khmer" {{ $subject == 'khmer' ? 'selected' : '' }}>
-                                    {{ __('Khmer') }}
+                                    {{ trans_db('Khmer') }}
                                 </option>
                                 <option value="math" {{ $subject == 'math' ? 'selected' : '' }}>
-                                    {{ __('Math') }}
+                                    {{ trans_db('Math') }}
                                 </option>
                             </select>
                         </div>
                         @else
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">
-                                {{ __('Subject') }}
+                                {{ trans_db('Subject') }}
                             </label>
                             <div class="w-full px-3 py-2 bg-gray-100 rounded-md text-gray-700">
                                 {{ ucfirst($teacherSubject ?? 'both') }}
@@ -55,20 +55,20 @@
                         <!-- Cycle Filter -->
                         <div>
                             <label for="cycle" class="block text-sm font-medium text-gray-700 mb-2">
-                                {{ __('Assessment Cycle') }}
+                                {{ trans_db('Assessment Cycle') }}
                             </label>
                             <select name="cycle" id="cycle" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                                 <option value="all" {{ request('cycle', 'all') == 'all' ? 'selected' : '' }}>
-                                    {{ __('All Cycles') }}
+                                    {{ trans_db('All Cycles') }}
                                 </option>
                                 <option value="baseline" {{ request('cycle') == 'baseline' ? 'selected' : '' }}>
-                                    {{ __('Baseline') }}
+                                    {{ trans_db('Baseline') }}
                                 </option>
                                 <option value="midline" {{ request('cycle') == 'midline' ? 'selected' : '' }}>
-                                    {{ __('Midline') }}
+                                    {{ trans_db('Midline') }}
                                 </option>
                                 <option value="endline" {{ request('cycle') == 'endline' ? 'selected' : '' }}>
-                                    {{ __('Endline') }}
+                                    {{ trans_db('Endline') }}
                                 </option>
                             </select>
                         </div>
@@ -76,7 +76,7 @@
                         <!-- Apply Filters Button -->
                         <div class="flex items-end">
                             <button type="submit" class="w-full bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition duration-150 ease-in-out">
-                                {{ __('Apply Filters') }}
+                                {{ trans_db('Apply Filters') }}
                             </button>
                         </div>
                     </form>
@@ -88,28 +88,28 @@
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-6">
                         <div class="text-3xl font-bold text-blue-600">{{ $students->count() }}</div>
-                        <div class="text-sm text-gray-600 mt-2">{{ __('Total Students') }}</div>
+                        <div class="text-sm text-gray-600 mt-2">{{ trans_db('Total Students') }}</div>
                     </div>
                 </div>
 
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-6">
                         <div class="text-3xl font-bold text-green-600">{{ $assessments->count() }}</div>
-                        <div class="text-sm text-gray-600 mt-2">{{ __('Total Assessments') }}</div>
+                        <div class="text-sm text-gray-600 mt-2">{{ trans_db('Total Assessments') }}</div>
                     </div>
                 </div>
 
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-6">
                         <div class="text-3xl font-bold text-purple-600">{{ $performanceByLevel->count() }}</div>
-                        <div class="text-sm text-gray-600 mt-2">{{ __('Performance Levels') }}</div>
+                        <div class="text-sm text-gray-600 mt-2">{{ trans_db('Performance Levels') }}</div>
                     </div>
                 </div>
 
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-6">
                         <div class="text-3xl font-bold text-orange-600">{{ round($assessments->avg('score') ?? 0) }}%</div>
-                        <div class="text-sm text-gray-600 mt-2">{{ __('Average Score') }}</div>
+                        <div class="text-sm text-gray-600 mt-2">{{ trans_db('Average Score') }}</div>
                     </div>
                 </div>
             </div>
@@ -118,7 +118,7 @@
             @if($performanceByLevel->count() > 0)
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
                 <div class="p-6">
-                    <h3 class="text-lg font-medium text-gray-900 mb-4">{{ __('Performance by Level') }}</h3>
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">{{ trans_db('Performance by Level') }}</h3>
                     <div class="relative" style="height: 300px;">
                         <canvas id="levelChart"></canvas>
                     </div>
@@ -129,7 +129,7 @@
             <!-- Students Table -->
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6">
-                    <h3 class="text-lg font-medium text-gray-900 mb-4">{{ __('Student List') }}</h3>
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">{{ trans_db('Student List') }}</h3>
                     
                     @if($students->count() > 0)
                         <div class="overflow-x-auto">
@@ -137,25 +137,25 @@
                                 <thead class="bg-gray-50">
                                     <tr>
                                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            {{ __('Student Code') }}
+                                            {{ trans_db('Student Code') }}
                                         </th>
                                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            {{ __('Name') }}
+                                            {{ trans_db('Name') }}
                                         </th>
                                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            {{ __('Class') }}
+                                            {{ trans_db('Class') }}
                                         </th>
                                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            {{ __('Grade') }}
+                                            {{ trans_db('Grade') }}
                                         </th>
                                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            {{ __('Assessments') }}
+                                            {{ trans_db('Assessments') }}
                                         </th>
                                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            {{ __('Latest Level') }}
+                                            {{ trans_db('Latest Level') }}
                                         </th>
                                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            {{ __('Actions') }}
+                                            {{ trans_db('Actions') }}
                                         </th>
                                     </tr>
                                 </thead>
@@ -198,12 +198,12 @@
                                                         {{ $latestAssessment->level }}
                                                     </span>
                                                 @else
-                                                    <span class="text-gray-400">{{ __('No Assessment') }}</span>
+                                                    <span class="text-gray-400">{{ trans_db('No Assessment') }}</span>
                                                 @endif
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                                 <a href="{{ route('students.show', $student) }}" class="text-indigo-600 hover:text-indigo-900">
-                                                    {{ __('View') }}
+                                                    {{ trans_db('View') }}
                                                 </a>
                                             </td>
                                         </tr>
@@ -212,7 +212,7 @@
                             </table>
                         </div>
                     @else
-                        <p class="text-gray-500 text-center py-8">{{ __('No students found') }}</p>
+                        <p class="text-gray-500 text-center py-8">{{ trans_db('No students found') }}</p>
                     @endif
                 </div>
             </div>
@@ -280,7 +280,7 @@
             data: {
                 labels: labels,
                 datasets: [{
-                    label: '{{ __("Number of Students") }}',
+                    label: '{{ trans_db("Number of Students") }}',
                     data: values,
                     backgroundColor: backgroundColors,
                     borderColor: backgroundColors.map(color => color + 'DD'),

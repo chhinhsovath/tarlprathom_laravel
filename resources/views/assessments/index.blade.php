@@ -2,11 +2,53 @@
 
     <div class="py-6">
         <div class="w-full px-4 sm:px-6 lg:px-8">
+            <!-- Statistics Summary for Mentors -->
+            @if(auth()->user()->role === 'mentor' || auth()->user()->role === 'admin')
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                    <div class="p-4">
+                        <div class="text-sm font-medium text-gray-500">{{ __('assessment.Total Assessments') }}</div>
+                        <div class="mt-1 text-2xl font-semibold text-gray-900">{{ $assessments->total() }}</div>
+                    </div>
+                </div>
+                <div class="bg-yellow-50 overflow-hidden shadow-sm sm:rounded-lg">
+                    <div class="p-4">
+                        <div class="text-sm font-medium text-yellow-800">{{ __('assessment.Pending Verification') }}</div>
+                        <div class="mt-1 text-2xl font-semibold text-yellow-900">
+                            {{ \App\Models\Assessment::where('verification_status', 'pending')->count() }}
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-green-50 overflow-hidden shadow-sm sm:rounded-lg">
+                    <div class="p-4">
+                        <div class="text-sm font-medium text-green-800">{{ __('assessment.Verified') }}</div>
+                        <div class="mt-1 text-2xl font-semibold text-green-900">
+                            {{ \App\Models\Assessment::where('verification_status', 'verified')->count() }}
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-red-50 overflow-hidden shadow-sm sm:rounded-lg">
+                    <div class="p-4">
+                        <div class="text-sm font-medium text-red-800">{{ __('assessment.Needs Correction') }}</div>
+                        <div class="mt-1 text-2xl font-semibold text-red-900">
+                            {{ \App\Models\Assessment::where('verification_status', 'needs_correction')->count() }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endif
+
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
                     <!-- Header with Action Button -->
                     <div class="flex justify-between items-center mb-6">
-                        <h3 class="text-lg font-medium text-gray-900">{{ trans_db('assessments') }}</h3>
+                        <h3 class="text-lg font-medium text-gray-900">
+                            @if(auth()->user()->role === 'mentor')
+                                {{ trans_db('assessment_verification') }}
+                            @else
+                                {{ trans_db('assessments') }}
+                            @endif
+                        </h3>
                         <div class="flex space-x-2">
                             @if(in_array(auth()->user()->role, ['admin', 'teacher']))
                             <a href="{{ route('assessments.select-students') }}" class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700">
@@ -22,7 +64,7 @@
                     </div>
 
                     <!-- Search and Filters -->
-                    <form method="GET" action="{{ route('assessments.index') }}" class="mb-6">
+                    <form method="GET" action="{{ route('verification.index') }}" class="mb-6">
                         <div class="flex flex-wrap gap-4">
                             <div class="flex-1 min-w-[200px]">
                                 <input type="text" name="search" value="{{ request('search') }}" 
@@ -73,7 +115,7 @@
                                     {{ trans_db('search') }}
                                 </button>
                                 @if(request('search') || request('subject') || request('cycle') || request('school_id') || request('grade'))
-                                    <a href="{{ route('assessments.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-300 border border-transparent rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest hover:bg-gray-400 focus:bg-gray-400 active:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                    <a href="{{ route('verification.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-300 border border-transparent rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest hover:bg-gray-400 focus:bg-gray-400 active:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition ease-in-out duration-150">
                                         {{ trans_db('clear') }}
                                     </a>
                                 @endif
@@ -99,6 +141,9 @@
                                         {{ trans_db('school') }}
                                     </th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        {{ trans_db('teacher') }}
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         <x-sortable-header column="subject" :current-sort="$sortField" :current-order="$sortOrder">
                                             {{ trans_db('subject') }}
                                         </x-sortable-header>
@@ -118,21 +163,24 @@
                                             {{ trans_db('date') }}
                                         </x-sortable-header>
                                     </th>
-                                    @if(\Schema::hasColumn('assessments', 'is_locked'))
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        {{ trans_db('status') }}
+                                        {{ trans_db('verification_status') }}
                                     </th>
-                                    @endif
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
                                 @forelse($assessments as $assessment)
-                                <tr>
+                                <tr class="hover:bg-gray-50 cursor-pointer" onclick="window.location.href='{{ route('verification.show', $assessment->id) }}'">
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                        {{ $assessment->student->name }}
+                                        <a href="{{ route('verification.show', $assessment->id) }}" class="text-indigo-600 hover:text-indigo-900">
+                                            {{ $assessment->student->name }}
+                                        </a>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         {{ $assessment->student->pilotSchool ? $assessment->student->pilotSchool->school_name : 'N/A' }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        {{ $assessment->assessor ? $assessment->assessor->name : 'N/A' }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         {{ trans_db($assessment->subject === 'khmer' ? 'khmer' : 'math') }}
@@ -155,26 +203,34 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         {{ $assessment->assessed_at->format('Y-m-d') }}
                                     </td>
-                                    @if(\Schema::hasColumn('assessments', 'is_locked'))
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        @if($assessment->is_locked ?? false)
+                                        @if($assessment->verification_status === 'verified')
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                <svg class="-ml-0.5 mr-1.5 h-2 w-2" fill="currentColor" viewBox="0 0 8 8">
+                                                    <circle cx="4" cy="4" r="3" />
+                                                </svg>
+                                                {{ trans_db('verified') }}
+                                            </span>
+                                        @elseif($assessment->verification_status === 'needs_correction')
                                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
                                                 <svg class="-ml-0.5 mr-1.5 h-2 w-2" fill="currentColor" viewBox="0 0 8 8">
                                                     <circle cx="4" cy="4" r="3" />
                                                 </svg>
-                                                {{ trans_db('locked') }}
+                                                {{ trans_db('needs_correction') }}
                                             </span>
                                         @else
-                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                                {{ trans_db('active') }}
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                                <svg class="-ml-0.5 mr-1.5 h-2 w-2" fill="currentColor" viewBox="0 0 8 8">
+                                                    <circle cx="4" cy="4" r="3" />
+                                                </svg>
+                                                {{ trans_db('pending') }}
                                             </span>
                                         @endif
                                     </td>
-                                    @endif
                                 </tr>
                                 @empty
                                 <tr>
-                                    <td colspan="{{ \Schema::hasColumn('assessments', 'is_locked') ? '7' : '6' }}" class="px-6 py-4 text-center text-sm text-gray-500">
+                                    <td colspan="7" class="px-6 py-4 text-center text-sm text-gray-500">
                                         {{ trans_db('no_assessments_found') }}
                                     </td>
                                 </tr>

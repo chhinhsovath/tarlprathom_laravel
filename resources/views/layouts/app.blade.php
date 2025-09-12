@@ -148,8 +148,11 @@
                 transition: opacity 0.3s ease-in-out;
             }
         </style>
+        
+        @stack('styles')
     </head>
     <body class="font-sans antialiased">
+        <x-toast-notifications />
         <div class="min-h-screen bg-gray-100">
             @include('layouts.navigation')
 
@@ -187,21 +190,33 @@
         <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script>
+            // COMPLETELY DISABLE ALL ALERTS
+            window.alert = function() { console.log('Alert blocked:', arguments); };
+            window.confirm = function() { console.log('Confirm blocked:', arguments); return true; };
+            window.prompt = function() { console.log('Prompt blocked:', arguments); return null; };
+        </script>
+        <script>
             // Global loading functions
             window.showLoading = function(text) {
                 const overlay = document.getElementById('globalLoadingOverlay');
                 const loadingText = document.getElementById('loadingText');
-                if (text) {
-                    loadingText.textContent = text;
+                if (overlay && loadingText) {
+                    if (text) {
+                        loadingText.textContent = text;
+                    } else {
+                        loadingText.textContent = '{{ __("Loading...") }}';
+                    }
+                    overlay.style.display = 'flex';
                 } else {
-                    loadingText.textContent = '{{ __("Loading...") }}';
+                    console.log('Loading:', text || 'Loading...');
                 }
-                overlay.style.display = 'flex';
             };
             
             window.hideLoading = function() {
                 const overlay = document.getElementById('globalLoadingOverlay');
-                overlay.style.display = 'none';
+                if (overlay) {
+                    overlay.style.display = 'none';
+                }
             };
             
             // Button loading helper

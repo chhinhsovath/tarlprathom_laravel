@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('My Mentoring Summary') }}
+            {{ trans_db('My Mentoring Summary') }}
         </h2>
     </x-slot>
 
@@ -12,17 +12,17 @@
                 <div class="p-6 bg-white border-b border-gray-200">
                     <form method="GET" action="{{ route('reports.my-mentoring') }}" class="flex gap-4 items-end">
                         <div>
-                            <label for="start_date" class="block text-sm font-medium text-gray-700">{{ __('Start Date') }}</label>
+                            <label for="start_date" class="block text-sm font-medium text-gray-700">{{ trans_db('Start Date') }}</label>
                             <input type="date" id="start_date" name="start_date" value="{{ $startDate->format('Y-m-d') }}" 
                                 class="mt-1 block w-full h-11 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                         </div>
                         <div>
-                            <label for="end_date" class="block text-sm font-medium text-gray-700">{{ __('End Date') }}</label>
+                            <label for="end_date" class="block text-sm font-medium text-gray-700">{{ trans_db('End Date') }}</label>
                             <input type="date" id="end_date" name="end_date" value="{{ $endDate->format('Y-m-d') }}" 
                                 class="mt-1 block w-full h-11 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                         </div>
                         <button type="submit" class="h-11 inline-flex items-center px-4 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                            {{ __('Filter') }}
+                            {{ trans_db('Filter') }}
                         </button>
                     </form>
                 </div>
@@ -32,37 +32,37 @@
             <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-4">
-                        <dt class="text-sm font-medium text-gray-500 truncate">{{ __('Total Visits') }}</dt>
+                        <dt class="text-sm font-medium text-gray-500 truncate">{{ trans_db('Total Visits') }}</dt>
                         <dd class="mt-1 text-2xl font-semibold text-gray-900">{{ $stats['total_visits'] }}</dd>
                     </div>
                 </div>
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-4">
-                        <dt class="text-sm font-medium text-gray-500 truncate">{{ __('Schools Visited') }}</dt>
+                        <dt class="text-sm font-medium text-gray-500 truncate">{{ trans_db('Schools Visited') }}</dt>
                         <dd class="mt-1 text-2xl font-semibold text-gray-900">{{ $stats['schools_visited'] }}</dd>
                     </div>
                 </div>
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-4">
-                        <dt class="text-sm font-medium text-gray-500 truncate">{{ __('Teachers Mentored') }}</dt>
+                        <dt class="text-sm font-medium text-gray-500 truncate">{{ trans_db('Teachers Mentored') }}</dt>
                         <dd class="mt-1 text-2xl font-semibold text-gray-900">{{ $stats['teachers_mentored'] }}</dd>
                     </div>
                 </div>
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-4">
-                        <dt class="text-sm font-medium text-gray-500 truncate">{{ __('Classes in Session') }}</dt>
+                        <dt class="text-sm font-medium text-gray-500 truncate">{{ trans_db('Classes in Session') }}</dt>
                         <dd class="mt-1 text-2xl font-semibold text-green-600">{{ $stats['classes_in_session'] }}</dd>
                     </div>
                 </div>
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-4">
-                        <dt class="text-sm font-medium text-gray-500 truncate">{{ __('Full Sessions') }}</dt>
+                        <dt class="text-sm font-medium text-gray-500 truncate">{{ trans_db('Full Sessions') }}</dt>
                         <dd class="mt-1 text-2xl font-semibold text-blue-600">{{ $stats['full_sessions_observed'] }}</dd>
                     </div>
                 </div>
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-4">
-                        <dt class="text-sm font-medium text-gray-500 truncate">{{ __('Follow-up Required') }}</dt>
+                        <dt class="text-sm font-medium text-gray-500 truncate">{{ trans_db('Follow-up Required') }}</dt>
                         <dd class="mt-1 text-2xl font-semibold text-red-600">{{ $stats['follow_up_required'] }}</dd>
                     </div>
                 </div>
@@ -71,7 +71,7 @@
             <!-- Visits by Month Chart -->
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
                 <div class="p-6">
-                    <h3 class="text-lg font-medium text-gray-900 mb-4">{{ __('Visits by Month') }}</h3>
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">{{ trans_db('Visits by Month') }}</h3>
                     <div style="position: relative; height:300px;">
                         <canvas id="visitsByMonthChart"></canvas>
                     </div>
@@ -81,28 +81,28 @@
             <!-- Visits by School -->
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
                 <div class="p-6">
-                    <h3 class="text-lg font-medium text-gray-900 mb-4">{{ __('Visits by School') }}</h3>
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">{{ trans_db('Visits by School') }}</h3>
                     <div class="overflow-x-auto">
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">
                                 <tr>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        {{ __('School') }}
+                                        {{ trans_db('School') }}
                                     </th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        {{ __('Visits') }}
+                                        {{ trans_db('Visits') }}
                                     </th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        {{ __('Teachers') }}
+                                        {{ trans_db('Teachers') }}
                                     </th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        {{ __('Avg Students') }}
+                                        {{ trans_db('Avg Students') }}
                                     </th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        {{ __('Improved') }}
+                                        {{ trans_db('Improved') }}
                                     </th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        {{ __('Actions') }}
+                                        {{ trans_db('Actions') }}
                                     </th>
                                 </tr>
                             </thead>
@@ -131,7 +131,7 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                         <a href="{{ route('reports.school-visits', ['school_id' => $schoolData['school']->id]) }}" 
                                            class="text-indigo-600 hover:text-indigo-900">
-                                            {{ __('View Details') }}
+                                            {{ trans_db('View Details') }}
                                         </a>
                                     </td>
                                 </tr>
@@ -145,31 +145,31 @@
             <!-- Recent Visits -->
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6">
-                    <h3 class="text-lg font-medium text-gray-900 mb-4">{{ __('Recent Visits') }}</h3>
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">{{ trans_db('Recent Visits') }}</h3>
                     <div class="overflow-x-auto">
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">
                                 <tr>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        {{ __('Date') }}
+                                        {{ trans_db('Date') }}
                                     </th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        {{ __('School') }}
+                                        {{ trans_db('School') }}
                                     </th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        {{ __('Teacher') }}
+                                        {{ trans_db('Teacher') }}
                                     </th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        {{ __('Subject') }}
+                                        {{ trans_db('Subject') }}
                                     </th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        {{ __('Students') }}
+                                        {{ trans_db('Students') }}
                                     </th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        {{ __('Follow-up') }}
+                                        {{ trans_db('Follow-up') }}
                                     </th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        {{ __('Actions') }}
+                                        {{ trans_db('Actions') }}
                                     </th>
                                 </tr>
                             </thead>
@@ -198,17 +198,17 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                         @if($visit->follow_up_required)
                                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                                                {{ __('Yes') }}
+                                                {{ trans_db('Yes') }}
                                             </span>
                                         @else
                                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                                                {{ __('No') }}
+                                                {{ trans_db('No') }}
                                             </span>
                                         @endif
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                         <a href="{{ route('mentoring.show', $visit) }}" class="text-indigo-600 hover:text-indigo-900">
-                                            {{ __('View') }}
+                                            {{ trans_db('View') }}
                                         </a>
                                     </td>
                                 </tr>
@@ -260,7 +260,7 @@
                     data: {
                         labels: labels,
                         datasets: [{
-                            label: '{{ __("Number of Visits") }}',
+                            label: '{{ trans_db("Number of Visits") }}',
                             data: data,
                             borderColor: 'rgb(79, 70, 229)',
                             backgroundColor: 'rgba(79, 70, 229, 0.1)',
@@ -305,7 +305,7 @@
                                 display: true,
                                 title: {
                                     display: true,
-                                    text: '{{ __("Month") }}'
+                                    text: '{{ trans_db("Month") }}'
                                 }
                             },
                             y: {
@@ -313,7 +313,7 @@
                                 beginAtZero: true,
                                 title: {
                                     display: true,
-                                    text: '{{ __("Number of Visits") }}'
+                                    text: '{{ trans_db("Number of Visits") }}'
                                 },
                                 ticks: {
                                     stepSize: 1,
@@ -326,7 +326,7 @@
                 });
             } else {
                 // Display no data message
-                ctx.parentElement.innerHTML = '<p class="text-gray-500 text-center py-8">{{ __("No visit data available for the selected period") }}</p>';
+                ctx.parentElement.innerHTML = '<p class="text-gray-500 text-center py-8">{{ trans_db("No visit data available for the selected period") }}</p>';
             }
         });
     </script>

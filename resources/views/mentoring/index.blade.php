@@ -89,6 +89,9 @@
                                         </x-sortable-header>
                                     </th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        {{ __('Students') }}
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         <x-sortable-header column="score" :current-sort="$sortField" :current-order="$sortOrder">
                                             {{ __('mentoring.Score') }}
                                         </x-sortable-header>
@@ -117,6 +120,13 @@
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         {{ $visit->mentor->name ?? 'N/A' }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        @if($visit->students_present && $visit->total_students_enrolled)
+                                            <span class="text-xs">{{ $visit->students_present }}/{{ $visit->total_students_enrolled }}</span>
+                                        @else
+                                            <span class="text-xs text-gray-400">-</span>
+                                        @endif
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 

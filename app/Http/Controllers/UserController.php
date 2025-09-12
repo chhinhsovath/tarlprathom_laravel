@@ -122,6 +122,7 @@ class UserController extends Controller
         User::create($validated);
 
         return redirect()->route('users.index')
+            ->with('success', 'អ្នកប្រើប្រាស់ត្រូវបានបង្កើតដោយជោគជ័យ។')
             ->with('success', __('User created successfully.'));
     }
 
@@ -203,6 +204,7 @@ class UserController extends Controller
         $user->update($validated);
 
         return redirect()->route('users.index')
+            ->with('success', 'អ្នកប្រើប្រាស់ត្រូវបានធ្វើបច្ចុប្បន្នភាពដោយជោគជ័យ។')
             ->with('success', __('User updated successfully.'));
     }
 
@@ -218,6 +220,7 @@ class UserController extends Controller
         // Prevent deleting yourself
         if ($user->id === auth()->id()) {
             return redirect()->route('users.index')
+                ->with('error', 'អ្នកមិនអាចលុបគណនីរបស់អ្នកផ្ទាល់បានទេ។')
                 ->with('error', __('You cannot delete your own account.'));
         }
 
@@ -229,6 +232,7 @@ class UserController extends Controller
         $user->delete();
 
         return redirect()->route('users.index')
+            ->with('success', 'អ្នកប្រើប្រាស់ត្រូវបានលុបដោយជោគជ័យ។')
             ->with('success', __('User deleted successfully.'));
     }
 
@@ -523,6 +527,7 @@ class UserController extends Controller
         // Ensure the user is a mentor
         if ($user->role !== 'mentor') {
             return redirect()->route('users.index')
+                ->with('error', 'អ្នកប្រើប្រាស់នេះមិនមែនជាគ្រូណែនាំទេ។')
                 ->with('error', __('Schools can only be assigned to mentors.'));
         }
 
@@ -545,6 +550,7 @@ class UserController extends Controller
         // Ensure the user is a mentor
         if ($user->role !== 'mentor') {
             return redirect()->route('users.index')
+                ->with('error', 'អ្នកប្រើប្រាស់នេះមិនមែនជាគ្រូណែនាំទេ។')
                 ->with('error', __('Schools can only be assigned to mentors.'));
         }
 

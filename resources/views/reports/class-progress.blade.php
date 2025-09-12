@@ -1,12 +1,12 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Class Progress Report') }}
+            {{ trans_db('Class Progress Report') }}
         </h2>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+    <div class="py-6">
+        <div class="w-full px-4 sm:px-6 lg:px-8">
             <!-- Filters -->
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
                 <div class="p-6">
@@ -14,10 +14,10 @@
                         <!-- Class Selection -->
                         <div>
                             <label for="class_id" class="block text-sm font-medium text-gray-700 mb-2">
-                                {{ __('Select Class') }}
+                                {{ trans_db('Select Class') }}
                             </label>
                             <select name="class_id" id="class_id" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
-                                <option value="">{{ __('Choose a class...') }}</option>
+                                <option value="">{{ trans_db('Choose a class...') }}</option>
                                 @foreach($classes as $class)
                                     <option value="{{ $class->id }}" {{ request('class_id') == $class->id ? 'selected' : '' }}>
                                         {{ $class->full_name }}
@@ -29,14 +29,14 @@
                         <!-- Subject Selection -->
                         <div>
                             <label for="subject" class="block text-sm font-medium text-gray-700 mb-2">
-                                {{ __('Subject') }}
+                                {{ trans_db('Subject') }}
                             </label>
                             <select name="subject" id="subject" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                                 <option value="khmer" {{ request('subject', 'khmer') == 'khmer' ? 'selected' : '' }}>
-                                    {{ __('Khmer') }}
+                                    {{ trans_db('Khmer') }}
                                 </option>
                                 <option value="math" {{ request('subject') == 'math' ? 'selected' : '' }}>
-                                    {{ __('Math') }}
+                                    {{ trans_db('Math') }}
                                 </option>
                             </select>
                         </div>
@@ -44,7 +44,7 @@
                         <!-- Submit Button -->
                         <div class="flex items-end">
                             <button type="submit" class="w-full bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition duration-150 ease-in-out">
-                                {{ __('View Progress') }}
+                                {{ trans_db('View Progress') }}
                             </button>
                         </div>
                     </form>
@@ -84,21 +84,21 @@
                     <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <div class="p-6">
                             <div class="text-3xl font-bold text-blue-600">{{ $hasBaseline }}/{{ $totalStudents }}</div>
-                            <div class="text-sm text-gray-600 mt-2">{{ __('Baseline Completed') }}</div>
+                            <div class="text-sm text-gray-600 mt-2">{{ trans_db('Baseline Completed') }}</div>
                         </div>
                     </div>
 
                     <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <div class="p-6">
                             <div class="text-3xl font-bold text-green-600">{{ $hasMidline }}/{{ $totalStudents }}</div>
-                            <div class="text-sm text-gray-600 mt-2">{{ __('Midline Completed') }}</div>
+                            <div class="text-sm text-gray-600 mt-2">{{ trans_db('Midline Completed') }}</div>
                         </div>
                     </div>
 
                     <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <div class="p-6">
                             <div class="text-3xl font-bold text-purple-600">{{ $hasEndline }}/{{ $totalStudents }}</div>
-                            <div class="text-sm text-gray-600 mt-2">{{ __('Endline Completed') }}</div>
+                            <div class="text-sm text-gray-600 mt-2">{{ trans_db('Endline Completed') }}</div>
                         </div>
                     </div>
                 </div>
@@ -106,7 +106,7 @@
                 <!-- Progress Visualization -->
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
                     <div class="p-6">
-                        <h3 class="text-lg font-medium text-gray-900 mb-4">{{ __('Class Progress Overview') }}</h3>
+                        <h3 class="text-lg font-medium text-gray-900 mb-4">{{ trans_db('Class Progress Overview') }}</h3>
                         <div class="relative" style="height: 400px;">
                             <canvas id="progressChart"></canvas>
                         </div>
@@ -116,26 +116,26 @@
                 <!-- Student Progress Table -->
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-6">
-                        <h3 class="text-lg font-medium text-gray-900 mb-4">{{ __('Individual Student Progress') }}</h3>
+                        <h3 class="text-lg font-medium text-gray-900 mb-4">{{ trans_db('Individual Student Progress') }}</h3>
                         
                         <div class="overflow-x-auto">
                             <table class="min-w-full divide-y divide-gray-200">
                                 <thead class="bg-gray-50">
                                     <tr>
                                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            {{ __('Student') }}
+                                            {{ trans_db('Student') }}
                                         </th>
                                         <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            {{ __('Baseline') }}
+                                            {{ trans_db('Baseline') }}
                                         </th>
                                         <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            {{ __('Midline') }}
+                                            {{ trans_db('Midline') }}
                                         </th>
                                         <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            {{ __('Endline') }}
+                                            {{ trans_db('Endline') }}
                                         </th>
                                         <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            {{ __('Progress') }}
+                                            {{ trans_db('Progress') }}
                                         </th>
                                     </tr>
                                 </thead>
@@ -212,7 +212,7 @@
                         <svg class="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                         </svg>
-                        <p class="text-gray-500">{{ __('No assessment data found for this class') }}</p>
+                        <p class="text-gray-500">{{ trans_db('No assessment data found for this class') }}</p>
                     </div>
                 </div>
             @else
@@ -222,8 +222,8 @@
                         <svg class="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
                         </svg>
-                        <h3 class="text-lg font-medium text-gray-900 mb-2">{{ __('Select a Class to View Progress') }}</h3>
-                        <p class="text-gray-500">{{ __('Choose a class from the dropdown above to see student progress data') }}</p>
+                        <h3 class="text-lg font-medium text-gray-900 mb-2">{{ trans_db('Select a Class to View Progress') }}</h3>
+                        <p class="text-gray-500">{{ trans_db('Choose a class from the dropdown above to see student progress data') }}</p>
                     </div>
                 </div>
             @endif
@@ -275,21 +275,21 @@
                 labels: students,
                 datasets: [
                     {
-                        label: '{{ __("Baseline") }}',
+                        label: '{{ trans_db("Baseline") }}',
                         data: baselineData,
                         borderColor: 'rgb(59, 130, 246)',
                         backgroundColor: 'rgba(59, 130, 246, 0.1)',
                         tension: 0.1
                     },
                     {
-                        label: '{{ __("Midline") }}',
+                        label: '{{ trans_db("Midline") }}',
                         data: midlineData,
                         borderColor: 'rgb(234, 179, 8)',
                         backgroundColor: 'rgba(234, 179, 8, 0.1)',
                         tension: 0.1
                     },
                     {
-                        label: '{{ __("Endline") }}',
+                        label: '{{ trans_db("Endline") }}',
                         data: endlineData,
                         borderColor: 'rgb(16, 185, 129)',
                         backgroundColor: 'rgba(16, 185, 129, 0.1)',
@@ -328,13 +328,13 @@
                         },
                         title: {
                             display: true,
-                            text: '{{ __("Performance Level") }}'
+                            text: '{{ trans_db("Performance Level") }}'
                         }
                     },
                     x: {
                         title: {
                             display: true,
-                            text: '{{ __("Students") }}'
+                            text: '{{ trans_db("Students") }}'
                         }
                     }
                 }
