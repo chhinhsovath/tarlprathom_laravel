@@ -26,9 +26,11 @@ class SetLocale
             App::setLocale($locale);
             Session::put('locale', $locale);
         }
-        // Default to config locale
+        // Default to Khmer (km) for first-time users
         else {
-            App::setLocale(config('app.locale'));
+            $defaultLocale = 'km'; // Force Khmer as default
+            App::setLocale($defaultLocale);
+            Session::put('locale', $defaultLocale);
         }
 
         return $next($request);
