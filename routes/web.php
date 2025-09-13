@@ -30,6 +30,13 @@ Route::post('/cache-clear', [CacheClearController::class, 'clear'])->name('cache
 // Language switching
 Route::get('/language/{locale}', [LanguageController::class, 'switch'])->name('language.switch');
 
+// Quick Khmer switch for testing
+Route::get('/set-khmer', function () {
+    session(['locale' => 'km']);
+    app()->setLocale('km');
+    return redirect()->route('teacher.profile.setup')->with('success', 'ភាសាបានប្តូរទៅខ្មែរ');
+})->middleware('auth');
+
 // CSRF Token endpoint for debugging
 Route::get('/csrf-token', function () {
     return response()->json(['csrf_token' => csrf_token()]);

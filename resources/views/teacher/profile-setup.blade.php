@@ -3,11 +3,6 @@
 @section('content')
 <div class="py-12">
     <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
-        <!-- Language Switcher -->
-        <div class="flex justify-end mb-4">
-            <x-language-switcher />
-        </div>
-        
         <!-- Welcome Banner -->
         <div class="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-lg shadow-lg p-6 mb-6 text-white">
             <h1 class="text-3xl font-bold mb-2">{{ __('Welcome') }}, {{ $user->name }}!</h1>
