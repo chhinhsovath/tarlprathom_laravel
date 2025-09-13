@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Offline - TaRL System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Battambang', 'Khmer', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .offline-container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px 30px;
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: slideUp 0.5s ease;
+        }
+        
+        @keyframes slideUp {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .offline-icon {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 30px;
+            position: relative;
+        }
+        
+        .offline-icon svg {
+            width: 100%;
+            height: 100%;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 18px;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+        
+        .status {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-size: 16px;
+            margin-bottom: 25px;
+            display: inline-block;
+        }
+        
+        .features {
+            text-align: left;
+            margin: 30px 0;
+            padding: 20px;
+            background: #f9fafb;
+            border-radius: 10px;
+        }
+        
+        .features h3 {
+            color: #4f46e5;
+            font-size: 18px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .features ul {
+            list-style: none;
+        }
+        
+        .features li {
+            padding: 8px 0;
+            padding-left: 30px;
+            position: relative;
+            color: #4b5563;
+            font-size: 16px;
+        }
+        
+        .features li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #10b981;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .retry-button {
+            background: #4f46e5;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+        
+        .retry-button:hover {
+            background: #4338ca;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(79, 70, 229, 0.3);
+        }
+        
+        .retry-button:active {
+            transform: translateY(0);
+        }
+        
+        @media (max-width: 480px) {
+            .offline-container {
+                padding: 30px 20px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            .subtitle {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="offline-container">
+        <div class="offline-icon">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M8.91003 19.92L15.43 13.4C15.68 13.15 15.68 12.74 15.43 12.49L8.91003 5.96997" stroke="#6366f1" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M3 10C3 5 5 3 10 3H14C19 3 21 5 21 10V14C21 19 19 21 14 21H10C5 21 3 19 3 14" stroke="#a78bfa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="12" cy="12" r="3" fill="#fbbf24" opacity="0.5">
+                    <animate attributeName="r" values="3;5;3" dur="2s" repeatCount="indefinite"/>
+                </circle>
+            </svg>
+        </div>
+        
+        <h1>អ្នកកំពុងស្ថិតក្រៅបណ្តាញ</h1>
+        <p class="subtitle">You are currently offline</p>
+        
+        <div class="status">
+            📡 កំពុងរង់ចាំការតភ្ជាប់...
+        </div>
+        
+        <div class="features">
+            <h3>មុខងារដែលអាចប្រើបាន៖</h3>
+            <ul>
+                <li>មើលទិន្នន័យដែលបានរក្សាទុក</li>
+                <li>បញ្ចូលការវាយតម្លៃថ្មី</li>
+                <li>កែសម្រួលព័ត៌មានសិស្ស</li>
+                <li>ទិន្នន័យនឹងធ្វើសមកាលកម្មស្វ័យប្រវត្តិ</li>
+            </ul>
+        </div>
+        
+        <button class="retry-button" onclick="checkConnection()">
+            ព្យាយាមម្តងទៀត
+        </button>
+    </div>
+    
+    <script>
+        function checkConnection() {
+            fetch('/api/ping')
+                .then(() => {
+                    window.location.reload();
+                })
+                .catch(() => {
+                    const button = document.querySelector('.retry-button');
+                    button.textContent = 'នៅតែគ្មានអ៊ីនធឺណិត...';
+                    setTimeout(() => {
+                        button.textContent = 'ព្យាយាមម្តងទៀត';
+                    }, 2000);
+                });
+        }
+        
+        // Auto-retry every 30 seconds
+        setInterval(checkConnection, 30000);
+        
+        // Listen for online event
+        window.addEventListener('online', () => {
+            window.location.reload();
+        });
+    </script>
+</body>
+</html>

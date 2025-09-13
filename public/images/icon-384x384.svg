@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="384" height="384" viewBox="0 0 384 384" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4f46e5;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#7c3aed;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background Circle -->
+  <circle cx="192" cy="192" r="192" fill="url(#bg)"/>
+  
+  <!-- TaRL Letter "T" -->
+  <text x="192" y="240" 
+        text-anchor="middle" 
+        fill="white" 
+        font-family="Arial, sans-serif" 
+        font-weight="bold" 
+        font-size="230.4"
+        dominant-baseline="middle">T</text>
+        
+  <!-- Education Icon -->
+  <g transform="translate(57.6,57.6) scale(0.576)">
+    <path d="M12 3L1 9L12 15L21 12.09V17H23V9M5 13.18V17.18L12 21L19 17.18V13.18L12 17L5 13.18Z" 
+          fill="white" opacity="0.3"/>
+  </g>
+</svg>
