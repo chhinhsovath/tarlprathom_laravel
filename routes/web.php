@@ -118,6 +118,16 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    
+    // Teacher Profile and Student Management Routes
+    Route::prefix('teacher')->name('teacher.')->group(function () {
+        Route::get('/profile/setup', [App\Http\Controllers\TeacherProfileController::class, 'setup'])->name('profile.setup');
+        Route::post('/profile/update', [App\Http\Controllers\TeacherProfileController::class, 'updateProfile'])->name('profile.update');
+        Route::get('/dashboard', [App\Http\Controllers\TeacherProfileController::class, 'dashboard'])->name('dashboard');
+        Route::get('/students/manage', [App\Http\Controllers\TeacherProfileController::class, 'manageStudents'])->name('students.manage');
+        Route::post('/students/quick-add', [App\Http\Controllers\TeacherProfileController::class, 'quickAddStudent'])->name('students.quick-add');
+        Route::post('/students/bulk-add', [App\Http\Controllers\TeacherProfileController::class, 'bulkAddStudents'])->name('students.bulk-add');
+    });
 
     // Dashboard API endpoints
     Route::get('/api/dashboard/stats', [DashboardController::class, 'getStats'])->name('api.dashboard.stats');

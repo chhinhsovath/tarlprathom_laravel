@@ -69,5 +69,6 @@ class Kernel extends HttpKernel
         'role' => \App\Http\Middleware\CheckRole::class,
         'admin' => \App\Http\Middleware\AdminMiddleware::class,
         'iframe' => \App\Http\Middleware\AllowIframeEmbedding::class,
+        'teacher.profile' => \App\Http\Middleware\EnsureTeacherProfile::class,
     ];
 }

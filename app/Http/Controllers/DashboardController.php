@@ -22,6 +22,14 @@ class DashboardController extends Controller
         if ($user->isCoordinator()) {
             return redirect()->route('coordinator.workspace');
         }
+        
+        // Check if teacher needs to complete profile setup
+        if ($user->role === 'teacher') {
+            if (!$user->school_id || !$user->assigned_subject || !$user->holding_classes) {
+                return redirect()->route('teacher.profile.setup')
+                    ->with('info', 'Please complete your profile setup to continue.');
+            }
+        }
 
         // Get schools for mentors/admins (optimized with PilotSchool)
         $schools = [];
