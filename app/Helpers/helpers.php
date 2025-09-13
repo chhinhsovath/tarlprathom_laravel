@@ -29,7 +29,22 @@ if (! function_exists('trans_db')) {
             }
         }
 
-        // Get translation from database
+        // Try to get translation from JSON file directly (bypass database for now)
+        $locale = $locale ?: app()->getLocale();
+        $jsonPath = resource_path('lang/' . $locale . '.json');
+        if (file_exists($jsonPath)) {
+            $translations = json_decode(file_get_contents($jsonPath), true);
+            if ($translations && isset($translations[$key])) {
+                $translation = $translations[$key];
+                // Apply replacements if needed
+                foreach ($replace as $placeholder => $value) {
+                    $translation = str_replace(':'.$placeholder, $value, $translation);
+                }
+                return $translation;
+            }
+        }
+
+        // Get translation from database as fallback
         $translation = Translation::getTranslation($key, $locale);
 
         // If translation not found and we're not in English, try English as fallback

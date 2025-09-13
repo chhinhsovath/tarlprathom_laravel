@@ -9,9 +9,10 @@ class TranslationHelper
     
     public static function loadTranslations()
     {
-        if (self::$loaded) {
-            return;
-        }
+        // Temporarily disable caching to force reload
+        // if (self::$loaded) {
+        //     return;
+        // }
         
         $locale = app()->getLocale();
         $paths = [
@@ -41,5 +42,14 @@ class TranslationHelper
         $locale = $locale ?: app()->getLocale();
         
         return self::$translations[$locale][$key] ?? $key;
+    }
+    
+    /**
+     * Clear the static cache and force reload translations
+     */
+    public static function clearCache()
+    {
+        self::$translations = [];
+        self::$loaded = false;
     }
 }

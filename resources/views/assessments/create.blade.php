@@ -68,26 +68,32 @@
                 <div class="p-6 bg-white border-b border-gray-200">
                     
                     <!-- Subject and Cycle Selection -->
-                    <div class="mb-6 flex items-center justify-between">
-                        <div class="flex items-center space-x-4">
-                            <div>
+                    <div class="mb-6 space-y-4 sm:space-y-0 sm:flex sm:items-center sm:justify-between">
+                        <div class="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4">
+                            <div class="flex-1 sm:flex-none">
                                 <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('assessment.Subject') }}:</label>
-                                <select id="subject" class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                <select id="subject" class="w-full sm:w-auto rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                                     <option value="khmer" {{ $subject === 'khmer' ? 'selected' : '' }}>{{ __('assessment.Khmer') }}</option>
                                     <option value="math" {{ $subject === 'math' ? 'selected' : '' }}>{{ __('assessment.Math') }}</option>
                                 </select>
                             </div>
-                            <div>
+                            <div class="flex-1 sm:flex-none">
                                 <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('Test Cycle') }}:</label>
-                                <select id="cycle" class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                <select id="cycle" class="w-full sm:w-auto rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                                     <option value="baseline" {{ $cycle === 'baseline' ? 'selected' : '' }}>{{ __('Baseline') }}</option>
                                     <option value="midline" {{ $cycle === 'midline' ? 'selected' : '' }}>{{ __('Midline') }}</option>
                                     <option value="endline" {{ $cycle === 'endline' ? 'selected' : '' }}>{{ __('Endline') }}</option>
                                 </select>
                             </div>
                         </div>
-                        <div class="text-sm text-gray-600">
-                            <span id="savedCount">0</span> / <span id="totalCount">{{ count($students) }}</span> {{ __('students.Students') }} {{ __('assessment.assessed') }}
+                        <div class="text-center sm:text-right">
+                            <div class="text-sm text-gray-600">
+                                <span class="font-semibold text-lg text-indigo-600" id="savedCount">0</span> 
+                                <span class="text-gray-500">/ </span>
+                                <span class="font-semibold" id="totalCount">{{ count($students) }}</span> 
+                                <span class="hidden sm:inline">{{ __('students.Students') }} {{ __('assessment.assessed') }}</span>
+                                <span class="sm:hidden">{{ __('assessment.assessed') }}</span>
+                            </div>
                         </div>
                     </div>
 
@@ -257,25 +263,10 @@
                         </div>
                     @endif
 
-                    <!-- Floating Column Headers (Mobile) -->
-                    <div class="md:hidden fixed bottom-4 left-4 right-4 bg-white rounded-lg shadow-lg p-3 z-50" style="display: none;" id="floatingHeaders">
-                        <div class="text-xs text-gray-600 font-medium">
-                            <div class="text-center">
-                                <div class="text-gray-500">{{ __('assessment.Levels') }}</div>
-                                <div class="text-xs mt-1">
-                                    @if($subject === 'khmer')
-                                        {{ __('Beg → Let → Wrd → Par → Sto → C1 → C2') }}
-                                    @else
-                                        {{ __('Beg → 1D → 2D → Sub → Div → WP') }}
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Assessment Table -->
+                    <!-- Assessment Interface -->
                     @if(count($students) > 0)
-                    <div class="relative table-container" style="height: calc(100vh - 250px); overflow: auto;">
+                    <!-- Desktop Table View -->
+                    <div class="hidden lg:block relative table-container" style="height: calc(100vh - 250px); overflow: auto;">
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">
                                 <tr>
@@ -400,6 +391,13 @@
                         </table>
                     </div>
 
+                    <!-- Mobile Card View -->
+                    <div class="block lg:hidden space-y-4">
+                        @foreach($students as $student)
+                            <x-mobile-assessment-card :student="$student" :subject="$subject" />
+                        @endforeach
+                    </div>
+
                     <!-- Submit All Button -->
                     @php
                         $showSubmitButton = true;
@@ -413,14 +411,17 @@
                         <div class="mt-6 flex justify-center">
                             <button type="button" 
                                     id="submitAllBtn"
-                                    class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                    class="w-full sm:w-auto inline-flex justify-center items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 touch-manipulation"
                                     onclick="submitAll()">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
                                 {{ __('assessment.Submit') }}
                             </button>
                         </div>
                     @else
                         <div class="mt-6 text-center">
-                            <p class="text-sm text-gray-500">
+                            <p class="text-sm text-gray-500 px-4">
                                 @if(isset($periodStatus) && $periodStatus === 'not_set')
                                     {{ __('Submit button is disabled. Assessment dates have not been set for your school.') }}
                                 @elseif(isset($periodStatus) && $periodStatus === 'upcoming')
@@ -489,9 +490,9 @@
             // Load existing assessments
             loadExistingAssessments();
             
-            // Check if table is scrollable
+            // Check if table is scrollable (desktop only)
             const tableContainer = $('.table-container')[0];
-            if (tableContainer) {
+            if (tableContainer && window.innerWidth >= 1024) {
                 const checkScrollable = () => {
                     if (tableContainer.scrollHeight > tableContainer.clientHeight) {
                         $(tableContainer).addClass('scrollable');
@@ -502,44 +503,96 @@
                 
                 checkScrollable();
                 $(window).on('resize', checkScrollable);
-                
-                // Show floating headers on scroll (mobile)
-                let scrollTimer = null;
-                $(tableContainer).on('scroll', function() {
-                    if (window.innerWidth < 768) {
-                        $('#floatingHeaders').fadeIn(200);
-                        
-                        clearTimeout(scrollTimer);
-                        scrollTimer = setTimeout(() => {
-                            $('#floatingHeaders').fadeOut(200);
-                        }, 3000);
-                    }
-                });
             }
             
-            // Track changes when level is selected
-            $('.level-radio').change(function() {
-                const row = $(this).closest('tr');
-                const studentId = row.data('student-id');
+            // Mobile card interactions
+            $(document).on('click', '.save-student-btn', function() {
+                const studentId = $(this).data('student-id');
+                const card = $(this).closest('.mobile-assessment-card');
+                const selectedLevel = card.find(`input[name="level_${studentId}"]:checked`).val();
+                const studentGender = card.find('[data-student-gender]').data('student-gender') || 'unknown';
+                
+                if (!selectedLevel) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: '{{ __('assessment.Warning') }}',
+                        text: '{{ __('assessment.Please select a level first') }}'
+                    });
+                    return;
+                }
+                
+                showLoading('{{ __('assessment.Saving...') }}');
+                
+                $.ajax({
+                    url: '{{ route('api.assessments.save-student') }}',
+                    method: 'POST',
+                    data: {
+                        student_id: studentId,
+                        gender: studentGender,
+                        level: selectedLevel,
+                        subject: $('#subject').val(),
+                        cycle: $('#cycle').val(),
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            // Update card appearance
+                            card.addClass('border-green-500 bg-green-50');
+                            
+                            // Update counter
+                            updateSavedCount();
+                            
+                            Swal.fire({
+                                icon: 'success',
+                                title: '{{ __('assessment.Success') }}',
+                                text: response.message,
+                                timer: 2000,
+                                showConfirmButton: false
+                            });
+                        }
+                    },
+                    error: function(xhr) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: '{{ __('assessment.Error') }}',
+                            text: xhr.responseJSON?.message || '{{ __('assessment.Failed to save assessment') }}'
+                        });
+                    },
+                    complete: function() {
+                        hideLoading();
+                    }
+                });
+            });
+            
+            // Track changes when level is selected (both desktop table and mobile cards)
+            $(document).on('change', '.level-radio', function() {
+                const container = $(this).closest('tr, .mobile-assessment-card');
+                const studentId = container.data('student-id') || container.find('[data-student-id]').data('student-id');
                 
                 // Skip if locked
-                if (row.attr('data-locked') === 'true') {
+                if (container.attr('data-locked') === 'true' || container.find('[data-locked="true"]').length > 0) {
                     return;
                 }
                 
                 const hasLevel = $(`input[name="level_${studentId}"]:checked`).length > 0;
                 const selectedLevel = $(`input[name="level_${studentId}"]:checked`).val();
-                const currentLevel = row.attr('data-current-level');
+                const currentLevel = container.attr('data-current-level');
                 
                 if (hasLevel) {
-                    // Mark row as having unsaved changes
-                    row.addClass('bg-yellow-50');
-                    
-                    // If this is an update and level changed, add visual indicator
-                    if (currentLevel && selectedLevel !== currentLevel) {
-                        row.addClass('border-l-4 border-orange-500');
-                    } else if (currentLevel) {
-                        row.removeClass('border-l-4 border-orange-500');
+                    // Mark as having unsaved changes
+                    if (container.is('tr')) {
+                        // Desktop table styling
+                        container.addClass('bg-yellow-50');
+                        
+                        // If this is an update and level changed, add visual indicator
+                        if (currentLevel && selectedLevel !== currentLevel) {
+                            container.addClass('border-l-4 border-orange-500');
+                        } else if (currentLevel) {
+                            container.removeClass('border-l-4 border-orange-500');
+                        }
+                    } else {
+                        // Mobile card styling
+                        container.addClass('border-yellow-500 bg-yellow-50').removeClass('border-green-500 bg-green-50');
                     }
                 }
             });

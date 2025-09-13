@@ -4,6 +4,9 @@ if (!function_exists('trans_km')) {
     function trans_km($key) {
         static $translations = null;
         
+        // Temporarily disable caching to force reload
+        // if ($translations === null) {
+        $translations = null; // Force reload every time
         if ($translations === null) {
             $locale = app()->getLocale();
             
