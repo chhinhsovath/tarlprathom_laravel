@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdministrationController;
 use App\Http\Controllers\AssessmentController;
+use App\Http\Controllers\CacheClearController;
 use App\Http\Controllers\ClassController;
 use App\Http\Controllers\CoordinatorController;
 use App\Http\Controllers\DashboardController;
@@ -21,6 +22,10 @@ use App\Http\Controllers\ShowcaseController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
+
+// Cache Clear Utility (protected with token)
+Route::get('/cache-clear', [CacheClearController::class, 'index'])->name('cache.index');
+Route::post('/cache-clear', [CacheClearController::class, 'clear'])->name('cache.clear');
 
 // Language switching
 Route::get('/language/{locale}', [LanguageController::class, 'switch'])->name('language.switch');
