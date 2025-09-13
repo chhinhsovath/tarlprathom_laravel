@@ -13,6 +13,13 @@ Route::middleware('guest')->group(function () {
         ->name('login');
 
     Route::post('login', [AuthenticatedSessionController::class, 'store']);
+    
+    // Quick login for internal users
+    Route::get('quick-login', [AuthenticatedSessionController::class, 'quickLogin'])
+        ->name('quick-login');
+    
+    Route::post('quick-login', [AuthenticatedSessionController::class, 'quickLoginStore'])
+        ->name('quick-login.store');
 });
 
 Route::middleware('auth')->group(function () {
