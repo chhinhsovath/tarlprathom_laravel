@@ -34,9 +34,13 @@
         </div>
 
         <div class="flex items-center justify-between mt-4">
-            <a href="{{ route('quick-login') }}" class="text-sm text-indigo-600 hover:text-indigo-900 font-medium">
-                {{ __('Quick Login for Teachers/Mentors') }} →
-            </a>
+            @if(Route::has('quick-login'))
+                <a href="{{ route('quick-login') }}" class="text-sm text-indigo-600 hover:text-indigo-900 font-medium">
+                    {{ __('Quick Login for Teachers/Mentors') }} →
+                </a>
+            @else
+                <div></div>
+            @endif
             
             <x-primary-button>
                 {{ __('Log in') }}
@@ -45,9 +49,11 @@
     </form>
     
     <!-- Additional Help Section -->
-    <div class="mt-6 pt-6 border-t border-gray-200 text-center">
-        <p class="text-sm text-gray-600">
-            {{ __('Teachers and Mentors can use Quick Login for easier access') }}
-        </p>
-    </div>
+    @if(Route::has('quick-login'))
+        <div class="mt-6 pt-6 border-t border-gray-200 text-center">
+            <p class="text-sm text-gray-600">
+                {{ __('Teachers and Mentors can use Quick Login for easier access') }}
+            </p>
+        </div>
+    @endif
 </x-guest-layout>
