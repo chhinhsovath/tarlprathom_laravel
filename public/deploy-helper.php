@@ -99,6 +99,7 @@ $response = $kernel->handle(
             <button class="btn" onclick="runAction('all')">🎯 Run Complete Deployment</button>
             <button class="btn" onclick="runAction('cache')">🧹 Clear Caches Only</button>
             <button class="btn" onclick="runAction('migrate')">📊 Run Migrations Only</button>
+            <button class="btn" onclick="runAction('autoload')">📦 Dump Autoload</button>
         </div>
         
         <div id="output" class="output" style="display:none;"></div>
@@ -274,6 +275,33 @@ if (isset($_GET['action']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
                 echo $output;
                 
                 echo "\n🎉 Success! Migrations completed!\n";
+                break;
+                
+            case 'autoload':
+                echo "📦 DUMPING AUTOLOAD\n";
+                echo "=====================================\n\n";
+                
+                // Run composer dump-autoload
+                $composerPath = base_path('composer.phar');
+                if (file_exists($composerPath)) {
+                    $cmd = "cd " . base_path() . " && php composer.phar dump-autoload -o 2>&1";
+                } else {
+                    $cmd = "cd " . base_path() . " && composer dump-autoload -o 2>&1";
+                }
+                
+                $output = shell_exec($cmd);
+                echo $output;
+                
+                // Clear compiled
+                Artisan::call('clear-compiled');
+                echo "\n✅ Compiled classes cleared\n";
+                
+                // Clear cache to ensure new autoload is used
+                Artisan::call('cache:clear');
+                echo "✅ Application cache cleared\n";
+                
+                echo "\n🎉 Success! Autoload files regenerated!\n";
+                echo "This is important after adding new helper files.\n";
                 break;
                 
             default:

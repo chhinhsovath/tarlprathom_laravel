@@ -43,7 +43,7 @@
                     <div>
                         <p class="text-sm text-gray-600">{{ __('Grade') }} {{ $grade }}</p>
                         <p class="text-2xl font-bold text-gray-900">
-                            {{ $students->where('grade', $grade)->count() }}
+                            {{ $students->where('class', $grade)->count() }}
                         </p>
                         <p class="text-xs text-gray-500">{{ __('Students') }}</p>
                     </div>
@@ -79,7 +79,7 @@
                 <h2 class="text-lg font-semibold text-gray-900">{{ __('Grade') }} {{ $grade }} {{ __('Students') }}</h2>
             </div>
             
-            @php $gradeStudents = $students->where('grade', $grade) @endphp
+            @php $gradeStudents = $students->where('class', $grade) @endphp
             
             @if($gradeStudents->count() > 0)
             <div class="overflow-x-auto">

@@ -37,6 +37,11 @@ Route::get('/set-khmer', function () {
     return redirect()->route('teacher.profile.setup')->with('success', 'ភាសាបានប្តូរទៅខ្មែរ');
 })->middleware('auth');
 
+// Language test page
+Route::get('/test-lang', function () {
+    return view('test-language');
+})->middleware('auth');
+
 // CSRF Token endpoint for debugging
 Route::get('/csrf-token', function () {
     return response()->json(['csrf_token' => csrf_token()]);
@@ -87,8 +92,6 @@ Route::get('/debug-locale', function () {
         'translator_locale' => app('translator')->getLocale(),
     ];
 });
-
-Route::get('/assessments/{assessment}', [AssessmentController::class, 'show'])->name('assessments.show');
 
 // Public routes
 Route::get('/', [AssessmentController::class, 'publicResults'])->name('public.assessment-results');
@@ -157,6 +160,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/students/download-template', [StudentController::class, 'downloadTemplate'])->name('students.download-template');
     Route::get('/students/bulk-import', [StudentController::class, 'bulkImportForm'])->name('students.bulk-import-form');
     Route::post('/students/bulk-import', [StudentController::class, 'bulkImport'])->name('students.bulk-import');
+    Route::get('/students/bulk-add', [StudentController::class, 'bulkAddForm'])->name('students.bulk-add-form');
+    Route::post('/students/bulk-add', [StudentController::class, 'bulkAdd'])->name('students.bulk-add');
     Route::resource('students', StudentController::class);
     Route::get('/students/import', function () {
         return view('students.import');

@@ -186,7 +186,14 @@
                                         {{ trans_db($assessment->subject === 'khmer' ? 'khmer' : 'math') }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {{ trans_db($assessment->cycle) }}
+                                        @php
+                                            $cycleTranslations = [
+                                                'baseline' => 'មូលដ្ឋាន',
+                                                'midline' => 'ពាក់កណ្តាល',
+                                                'endline' => 'ចុងក្រោយ'
+                                            ];
+                                        @endphp
+                                        {{ $cycleTranslations[$assessment->cycle] ?? $assessment->cycle }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
@@ -197,7 +204,24 @@
                                             @else
                                                 bg-red-100 text-red-800
                                             @endif">
-                                            {{ trans_db(strtolower(str_replace([' ', '.'], ['_', ''], $assessment->level))) }}
+                                            @php
+                                                $levelTranslations = [
+                                                    'beginner' => 'កម្រិតដំបូង',
+                                                    'letter' => 'អក្សរ',
+                                                    'word' => 'ពាក្យ',
+                                                    'paragraph' => 'កថាខណ្ឌ',
+                                                    'story' => 'រឿង',
+                                                    '1-digit' => 'លេខ១ខ្ទង់',
+                                                    '2-digit' => 'លេខ២ខ្ទង់',
+                                                    'subtraction' => 'ដក',
+                                                    'division' => 'ចែក',
+                                                    'word_problem' => 'បញ្ហាពាក្យ',
+                                                    'comp_1' => 'អានយល់ ១',
+                                                    'comp_2' => 'អានយល់ ២'
+                                                ];
+                                                $levelKey = strtolower(str_replace([' ', '.'], ['_', ''], $assessment->level));
+                                            @endphp
+                                            {{ $levelTranslations[$levelKey] ?? $assessment->level }}
                                         </span>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">

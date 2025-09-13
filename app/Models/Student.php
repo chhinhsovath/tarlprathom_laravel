@@ -25,6 +25,7 @@ class Student extends Model
         'pilot_school_id',
         'teacher_id',
         'class_id',
+        'added_by',
         'photo',
         'student_code',
         'date_of_birth',

@@ -75,36 +75,52 @@
                                 </div>
                             @else
                                 <input type="hidden" name="school_id" value="{{ $schools->first()->id }}">
+                                <input type="hidden" name="pilot_school_id" value="{{ $schools->first()->id }}">
                                 <div>
                                     <x-input-label :value="__('students.School')" class="text-sm font-medium" />
-                                    <div class="mt-1 px-3 py-2 text-sm bg-gray-50 border border-gray-300 rounded-md text-gray-700">
-                                        {{ $schools->first()->name }}
+                                    <div class="mt-1 px-3 py-2 text-sm bg-gray-100 border border-gray-300 rounded-md text-gray-700">
+                                        {{ $schools->first()->school_name }}
+                                        @if(auth()->user()->isTeacher())
+                                            <span class="text-xs text-green-600 ml-2">({{ __('students.Your School') }})</span>
+                                        @endif
                                     </div>
                                 </div>
                             @endif
 
                             <!-- Teacher (appears after school selection) -->
-                            <div id="teacherDiv" style="{{ old('school_id') || $schools->count() == 1 ? '' : 'display: none;' }}">
-                                <x-input-label for="teacher_id" :value="__('students.Teacher')" class="text-sm font-medium" />
-                                <select id="teacher_id" name="teacher_id" class="mt-1 block w-full text-sm rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                                    <option value="">{{ __('students.Select Teacher') }} ({{ __('students.Optional') }})</option>
-                                    @if(old('school_id') || $schools->count() == 1)
-                                        @php
-                                            $selectedSchoolId = old('school_id') ?? $schools->first()->id;
-                                            $teachers = \App\Models\User::where('school_id', $selectedSchoolId)
-                                                ->where('role', 'teacher')
-                                                ->orderBy('name')
-                                                ->get();
-                                        @endphp
-                                        @foreach($teachers as $teacher)
-                                            <option value="{{ $teacher->id }}" {{ old('teacher_id') == $teacher->id ? 'selected' : '' }}>
-                                                {{ $teacher->name }}
-                                            </option>
-                                        @endforeach
-                                    @endif
-                                </select>
-                                <x-input-error class="mt-1" :messages="$errors->get('teacher_id')" />
-                            </div>
+                            @if(!auth()->user()->isTeacher())
+                                <div id="teacherDiv" style="{{ old('school_id') || $schools->count() == 1 ? '' : 'display: none;' }}">
+                                    <x-input-label for="teacher_id" :value="__('students.Teacher')" class="text-sm font-medium" />
+                                    <select id="teacher_id" name="teacher_id" class="mt-1 block w-full text-sm rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                        <option value="">{{ __('students.Select Teacher') }} ({{ __('students.Optional') }})</option>
+                                        @if(old('school_id') || $schools->count() == 1)
+                                            @php
+                                                $selectedSchoolId = old('school_id') ?? $schools->first()->id;
+                                                $teachers = \App\Models\User::where('school_id', $selectedSchoolId)
+                                                    ->where('role', 'teacher')
+                                                    ->orderBy('name')
+                                                    ->get();
+                                            @endphp
+                                            @foreach($teachers as $teacher)
+                                                <option value="{{ $teacher->id }}" {{ old('teacher_id') == $teacher->id ? 'selected' : '' }}>
+                                                    {{ $teacher->name }}
+                                                </option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                    <x-input-error class="mt-1" :messages="$errors->get('teacher_id')" />
+                                </div>
+                            @else
+                                <!-- For teachers, show their name as assigned teacher -->
+                                <div>
+                                    <x-input-label :value="__('students.Teacher')" class="text-sm font-medium" />
+                                    <div class="mt-1 px-3 py-2 text-sm bg-green-50 border border-green-300 rounded-md text-gray-700">
+                                        {{ auth()->user()->name }} 
+                                        <span class="text-xs text-green-600 ml-2">({{ __('students.You') }})</span>
+                                    </div>
+                                    <input type="hidden" name="teacher_id" value="{{ auth()->user()->id }}">
+                                </div>
+                            @endif
                         </div>
 
                         <!-- Important Note -->

@@ -17,15 +17,13 @@ class TeacherProfileController extends Controller
     {
         $user = auth()->user();
         
-        // If profile is already complete, redirect to dashboard
-        if ($user->school_id && $user->assigned_subject && $user->holding_classes) {
-            return redirect()->route('dashboard');
-        }
-        
         // Get all schools for dropdown
         $schools = School::orderBy('name')->get();
         
-        return view('teacher.profile-setup', compact('user', 'schools'));
+        // Determine if this is first-time setup or editing
+        $isFirstTime = !($user->school_id && $user->assigned_subject && $user->holding_classes);
+        
+        return view('teacher.profile-setup', compact('user', 'schools', 'isFirstTime'));
     }
     
     /**
@@ -61,8 +59,18 @@ class TeacherProfileController extends Controller
             ]);
         }
         
-        return redirect()->route('teacher.students.manage')
-            ->with('success', 'Profile updated successfully! Now you can add students to your class.');
+        // Check if this was first-time setup (profile was incomplete before)
+        $wasFirstTime = !($user->getOriginal('school_id') && $user->getOriginal('assigned_subject') && $user->getOriginal('holding_classes'));
+        
+        if ($wasFirstTime) {
+            // First-time setup - redirect to student management 
+            return redirect()->route('teacher.students.manage')
+                ->with('success', 'Profile completed successfully! Now you can add students to your class.');
+        } else {
+            // Profile update - redirect back to dashboard
+            return redirect()->route('teacher.dashboard')
+                ->with('success', 'Profile updated successfully!');
+        }
     }
     
     /**
@@ -90,12 +98,13 @@ class TeacherProfileController extends Controller
         
         // Get students for this teacher's school and grades
         $students = Student::where('school_id', $user->school_id)
-            ->whereIn('grade', $grades)
-            ->orderBy('grade')
+            ->whereIn('class', $grades)
+            ->orderBy('class')
             ->orderBy('name')
             ->get();
         
-        return view('teacher.manage-students', compact('user', 'students', 'grades'));
+        // Use fixed version to avoid htmlspecialchars error
+        return view('teacher.manage-students-fixed', compact('user', 'students', 'grades'));
     }
     
     /**
@@ -129,7 +138,7 @@ class TeacherProfileController extends Controller
         $student = Student::create([
             'name' => $request->name,
             'school_id' => $user->school_id,
-            'grade' => $request->grade,
+            'class' => $request->grade,  // Database column is 'class', not 'grade'
             'gender' => $request->gender,
             'age' => $request->age,
             'added_by' => $user->id,
@@ -174,7 +183,7 @@ class TeacherProfileController extends Controller
                 Student::create([
                     'name' => $name,
                     'school_id' => $user->school_id,
-                    'grade' => $request->grade,
+                    'class' => $request->grade,  // Database column is 'class', not 'grade'
                     'gender' => $gender,
                     'age' => (int)$age,
                     'added_by' => $user->id,
@@ -217,19 +226,19 @@ class TeacherProfileController extends Controller
             }
             
             $studentCount = Student::where('school_id', $user->school_id)
-                ->whereIn('grade', $grades)
+                ->whereIn('class', $grades)  // Database column is 'class', not 'grade'
                 ->count();
         }
         
-        // Get assessment statistics
+        // Get assessment statistics - using 'cycle' column instead of 'assessment_type'
         $assessmentStats = DB::table('assessments')
-            ->select('assessment_type', 'status', DB::raw('count(*) as count'))
+            ->select('cycle', DB::raw('count(*) as count'))
             ->join('students', 'assessments.student_id', '=', 'students.id')
             ->where('students.school_id', $user->school_id)
-            ->groupBy('assessment_type', 'status')
+            ->groupBy('cycle')
             ->get();
         
-        // Process stats
+        // Process stats - count assessments by cycle
         $stats = [
             'baseline' => ['completed' => 0, 'in_progress' => 0, 'not_started' => $studentCount],
             'midline' => ['completed' => 0, 'in_progress' => 0, 'not_started' => $studentCount],
@@ -237,11 +246,10 @@ class TeacherProfileController extends Controller
         ];
         
         foreach ($assessmentStats as $stat) {
-            if (isset($stats[$stat->assessment_type])) {
-                $stats[$stat->assessment_type][$stat->status] = $stat->count;
-                $stats[$stat->assessment_type]['not_started'] = $studentCount - 
-                    $stats[$stat->assessment_type]['completed'] - 
-                    $stats[$stat->assessment_type]['in_progress'];
+            if (isset($stats[$stat->cycle])) {
+                // Assuming each assessment record means completed
+                $stats[$stat->cycle]['completed'] = $stat->count;
+                $stats[$stat->cycle]['not_started'] = $studentCount - $stat->count;
             }
         }
         

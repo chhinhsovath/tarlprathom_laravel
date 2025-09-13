@@ -32,7 +32,8 @@
         },
         "files": [
             "app/Helpers/StorageHelper.php",
-            "app/Helpers/helpers.php"
+            "app/Helpers/helpers.php",
+            "app/helpers.php"
         ]
     },
     "autoload-dev": {

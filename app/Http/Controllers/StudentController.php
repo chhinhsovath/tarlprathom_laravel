@@ -61,9 +61,9 @@ class StudentController extends Controller
             }
         }
 
-        // Add grade/class filter
+        // Add grade/class filter (database column is 'class')
         if ($request->filled('grade')) {
-            $query->where('grade', $request->get('grade'));
+            $query->where('class', $request->get('grade'));  // 'grade' param maps to 'class' column
         }
         if ($request->filled('class')) {
             $query->where('class', $request->get('class'));
@@ -100,7 +100,8 @@ class StudentController extends Controller
             $schools = collect();
         }
 
-        return view('students.index', compact('students', 'schools', 'sortField', 'sortOrder'));
+        // Use mobile-optimized view
+        return view('students.index-mobile', compact('students', 'schools', 'sortField', 'sortOrder'));
     }
 
     /**
@@ -111,13 +112,18 @@ class StudentController extends Controller
         $this->authorize('create', Student::class);
         $user = auth()->user();
 
-        // Get schools for dropdown based on access
-        $accessibleSchoolIds = $user->getAccessibleSchoolIds();
-
-        if (! empty($accessibleSchoolIds)) {
-            $schools = PilotSchool::whereIn('id', $accessibleSchoolIds)->orderBy('school_name')->get();
+        // For teachers, only show their assigned school
+        if ($user->isTeacher() && $user->school_id) {
+            $schools = PilotSchool::where('id', $user->school_id)->get();
         } else {
-            $schools = collect();
+            // For admins and mentors, get schools based on access
+            $accessibleSchoolIds = $user->getAccessibleSchoolIds();
+
+            if (! empty($accessibleSchoolIds)) {
+                $schools = PilotSchool::whereIn('id', $accessibleSchoolIds)->orderBy('school_name')->get();
+            } else {
+                $schools = collect();
+            }
         }
 
         return view('students.create', compact('schools'));
@@ -131,21 +137,28 @@ class StudentController extends Controller
         $validated = $request->validated();
         $user = $request->user();
 
-        // Ensure user can only add students to accessible pilot schools
-        if (! $user->isAdmin() && ! $user->canAccessSchool($validated['pilot_school_id'])) {
-            return back()->withErrors(['pilot_school_id' => 'You do not have access to this pilot school.']);
-        }
-
-        // If teacher, ensure they assign students to themselves
+        // For teachers, auto-assign their school and themselves
         if ($user->isTeacher()) {
+            $validated['school_id'] = $user->school_id;
+            $validated['pilot_school_id'] = $user->pilot_school_id;
             $validated['teacher_id'] = $user->id;
-        }
+        } else {
+            // For non-teachers, ensure they can only add students to accessible pilot schools
+            if (! $user->isAdmin() && ! $user->canAccessSchool($validated['pilot_school_id'])) {
+                return back()->withErrors(['pilot_school_id' => 'You do not have access to this pilot school.']);
+            }
 
-        // Verify teacher belongs to the selected school if provided
-        if (isset($validated['teacher_id']) && $validated['teacher_id']) {
-            $teacher = \App\Models\User::find($validated['teacher_id']);
-            if (! $teacher || $teacher->pilot_school_id != $validated['pilot_school_id']) {
-                return back()->withErrors(['teacher_id' => 'The selected teacher does not belong to the selected pilot school.']);
+            // Set school_id to match pilot_school_id if not provided
+            if (!isset($validated['school_id']) && isset($validated['pilot_school_id'])) {
+                $validated['school_id'] = $validated['pilot_school_id'];
+            }
+
+            // Verify teacher belongs to the selected school if provided
+            if (isset($validated['teacher_id']) && $validated['teacher_id']) {
+                $teacher = \App\Models\User::find($validated['teacher_id']);
+                if (! $teacher || $teacher->pilot_school_id != $validated['pilot_school_id']) {
+                    return back()->withErrors(['teacher_id' => 'The selected teacher does not belong to the selected pilot school.']);
+                }
             }
         }
 
@@ -291,6 +304,88 @@ class StudentController extends Controller
         $this->authorize('create', Student::class);
 
         return Excel::download(new \App\Exports\StudentTemplateExport, 'student_import_template.xlsx');
+    }
+
+    /**
+     * Show bulk add form for manual entry
+     */
+    public function bulkAddForm()
+    {
+        $this->authorize('create', Student::class);
+        
+        // Use mobile-optimized view
+        return view('students.bulk-add-mobile');
+    }
+    
+    /**
+     * Process bulk add of students from manual form
+     */
+    public function bulkAdd(Request $request)
+    {
+        $this->authorize('create', Student::class);
+        
+        $user = auth()->user();
+        $successCount = 0;
+        $errors = [];
+        
+        // Filter out empty entries
+        $students = collect($request->students)->filter(function ($student) {
+            return !empty($student['name']);
+        });
+        
+        if ($students->isEmpty()) {
+            return back()->withErrors(['students' => 'Please add at least one student.']);
+        }
+        
+        foreach ($students as $index => $studentData) {
+            try {
+                // Validate individual student data
+                $validator = \Validator::make($studentData, [
+                    'name' => 'required|string|max:255',
+                    'grade' => 'required|in:4,5',
+                    'gender' => 'required|in:male,female',
+                    'age' => 'required|integer|min:3|max:18',
+                ]);
+                
+                if ($validator->fails()) {
+                    $errors[] = "Row " . ($index + 1) . ": " . implode(', ', $validator->errors()->all());
+                    continue;
+                }
+                
+                // For teachers, auto-assign their school
+                if ($user->isTeacher()) {
+                    $studentData['school_id'] = $user->school_id;
+                    $studentData['pilot_school_id'] = $user->pilot_school_id;
+                    $studentData['teacher_id'] = $user->id;
+                } else {
+                    // For non-teachers, use the selected school
+                    $studentData['school_id'] = $request->school_id;
+                    $studentData['pilot_school_id'] = $request->school_id;
+                }
+                
+                // Map grade to class column
+                $studentData['class'] = $studentData['grade'];
+                unset($studentData['grade']);
+                
+                Student::create($studentData);
+                $successCount++;
+                
+            } catch (\Exception $e) {
+                $errors[] = "Row " . ($index + 1) . ": Failed to save student";
+            }
+        }
+        
+        if ($successCount > 0) {
+            $message = "Successfully added {$successCount} student(s).";
+            if (!empty($errors)) {
+                return redirect()->route('students.index')
+                    ->with('success', $message)
+                    ->withErrors($errors);
+            }
+            return redirect()->route('students.index')->with('success', $message);
+        }
+        
+        return back()->withErrors($errors)->withInput();
     }
 
     /**

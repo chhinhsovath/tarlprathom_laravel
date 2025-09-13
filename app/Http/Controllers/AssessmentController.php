@@ -162,6 +162,22 @@ class AssessmentController extends Controller
         // Get the subject and cycle - ensure they are strings
         $subject = (string) $request->get('subject', 'khmer');
         $cycle = (string) $request->get('cycle', 'baseline');
+        
+        // Check if a specific student is requested
+        $selectedStudentId = $request->get('student_id');
+        // Ensure it's not an array and is a valid value
+        if (is_array($selectedStudentId)) {
+            $selectedStudentId = reset($selectedStudentId); // Get first element if array
+        }
+        // Convert to null if empty string
+        if ($selectedStudentId === '') {
+            $selectedStudentId = null;
+        }
+        
+        // If a specific student is requested, filter for just that student
+        if ($selectedStudentId) {
+            $studentsQuery->where('id', $selectedStudentId);
+        }
 
         // For Midline or Endline cycles, filter students based on eligibility
         if (in_array($cycle, ['midline', 'endline'])) {
@@ -215,8 +231,10 @@ class AssessmentController extends Controller
             ->get()
             ->groupBy('student_id')
             ->map(function ($assessments) {
+                // Ensure we return a single assessment, not a collection
                 return $assessments->first(); // Get the most recent assessment
-            });
+            })
+            ->filter(); // Remove any null values
 
         // Add assessment status to each student
         $students->transform(function ($student) use ($existingAssessments, $latestAssessments) {
@@ -256,7 +274,7 @@ class AssessmentController extends Controller
             \Log::warning('Error getting school assessment period status: ' . $e->getMessage());
         }
         
-        return view('assessments.create', compact('students', 'subject', 'cycle', 'school', 'periodStatus'));
+        return view('assessments.create', compact('students', 'subject', 'cycle', 'school', 'periodStatus', 'selectedStudentId'));
     }
 
     /**

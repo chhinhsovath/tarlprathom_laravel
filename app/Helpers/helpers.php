@@ -17,6 +17,18 @@ if (! function_exists('trans_db')) {
             $locale = app()->getLocale();
         }
 
+        // First, try our custom JSON translations
+        if (function_exists('trans_km')) {
+            $jsonTranslation = trans_km($key);
+            if ($jsonTranslation !== $key) {
+                // Apply replacements if needed
+                foreach ($replace as $placeholder => $value) {
+                    $jsonTranslation = str_replace(':'.$placeholder, $value, $jsonTranslation);
+                }
+                return $jsonTranslation;
+            }
+        }
+
         // Get translation from database
         $translation = Translation::getTranslation($key, $locale);
 

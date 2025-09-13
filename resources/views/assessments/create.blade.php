@@ -1,4 +1,11 @@
 <x-app-layout>
+    @php
+        // Ensure all variables are the correct type to prevent htmlspecialchars errors
+        $subject = is_array($subject ?? null) ? reset($subject) : (string)($subject ?? 'khmer');
+        $cycle = is_array($cycle ?? null) ? reset($cycle) : (string)($cycle ?? 'baseline');
+        $periodStatus = is_array($periodStatus ?? null) ? reset($periodStatus) : (string)($periodStatus ?? 'not_set');
+        $selectedStudentId = is_array($selectedStudentId ?? null) ? reset($selectedStudentId) : $selectedStudentId;
+    @endphp
     <style>
         /* Sticky table styles */
         .sticky {
@@ -80,7 +87,7 @@
                             </div>
                         </div>
                         <div class="text-sm text-gray-600">
-                            <span id="savedCount">0</span> / <span id="totalCount">{{ count($students) }}</span> {{ __('Students') }} {{ __('assessment.assessed') }}
+                            <span id="savedCount">0</span> / <span id="totalCount">{{ count($students) }}</span> {{ __('students.Students') }} {{ __('assessment.assessed') }}
                         </div>
                     </div>
 
@@ -234,7 +241,15 @@
                                 </div>
                                 <div class="ml-3">
                                     <p class="text-sm text-yellow-700">
-                                        {{ __(':count assessment(s) are locked by administrators and cannot be edited.', ['count' => $lockedCount]) }}
+                                        @php
+                                            $translationKey = ':count assessment(s) are locked by administrators and cannot be edited.';
+                                            $translationParams = ['count' => $lockedCount];
+                                            $translatedText = __($translationKey, $translationParams);
+                                            if (is_array($translatedText)) {
+                                                $translatedText = json_encode($translatedText);
+                                            }
+                                        @endphp
+                                        {{ $translatedText }}
                                         {{ __('You can only view these assessments.') }}
                                     </p>
                                 </div>
@@ -320,10 +335,17 @@
                                     <!-- Previous Assessment -->
                                     <td class="px-2 py-4 text-center">
                                         <div class="text-sm">
-                                            @if($student->previous_assessment)
-                                                <span class="font-medium text-gray-700">{{ __($student->previous_assessment->level) }}</span>
+                                            @if($student->previous_assessment && is_object($student->previous_assessment))
+                                                @php
+                                                    $prevLevel = $student->previous_assessment->level ?? '';
+                                                    $prevCycle = $student->previous_assessment->cycle ?? '';
+                                                    // Ensure they are strings
+                                                    $prevLevel = is_array($prevLevel) ? json_encode($prevLevel) : (string)$prevLevel;
+                                                    $prevCycle = is_array($prevCycle) ? json_encode($prevCycle) : (string)$prevCycle;
+                                                @endphp
+                                                <span class="font-medium text-gray-700">{{ __($prevLevel) }}</span>
                                                 <br>
-                                                <span class="text-xs text-gray-500">{{ __(ucfirst($student->previous_assessment->cycle)) }}</span>
+                                                <span class="text-xs text-gray-500">{{ __(ucfirst($prevCycle)) }}</span>
                                             @else
                                                 <span class="text-gray-400">-</span>
                                             @endif

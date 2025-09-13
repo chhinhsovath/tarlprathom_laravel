@@ -189,4 +189,17 @@ return [
     'Generate Report' => 'បង្កើតរបាយការណ៍',
     'Print Report' => 'បោះពុម្ពរបាយការណ៍',
     'Download Report' => 'ទាញយករបាយការណ៍',
+    
+    // Additional translations
+    'Assess' => 'វាយតម្លៃ',
+    'Add Multiple Students' => 'បន្ថែមសិស្សច្រើន',
+    'Add Multiple' => 'បន្ថែមច្រើន',
+    'Add One' => 'បន្ថែមម្នាក់',
+    'Bulk Add' => 'បន្ថែមច្រើន',
+    'Showing' => 'បង្ហាញ',
+    'of' => 'នៃ',
+    'students' => 'សិស្ស',
+    'M' => 'ប',
+    'F' => 'ស',
+    'Are you sure?' => 'តើអ្នកប្រាកដទេ?',
 ];

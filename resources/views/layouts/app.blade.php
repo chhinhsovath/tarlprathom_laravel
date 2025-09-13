@@ -317,19 +317,20 @@
                 });
                 
                 // Page transition handler
-                let pageTransitionTimeout;
+                // Move variable to window scope to prevent undefined errors
+                window.pageTransitionTimeout = window.pageTransitionTimeout || null;
                 
                 function showPageTransition() {
                     $('body').addClass('page-transitioning');
                     $('#pageTransitionOverlay').addClass('active');
                     
                     // Clear any existing timeout
-                    if (pageTransitionTimeout) {
-                        clearTimeout(pageTransitionTimeout);
+                    if (window.pageTransitionTimeout) {
+                        clearTimeout(window.pageTransitionTimeout);
                     }
                     
                     // Set a timeout to hide the overlay after 10 seconds
-                    pageTransitionTimeout = setTimeout(() => {
+                    window.pageTransitionTimeout = setTimeout(() => {
                         console.warn('Page transition timeout - hiding overlay');
                         hidePageTransition();
                     }, 10000);
@@ -340,9 +341,9 @@
                     $('#pageTransitionOverlay').removeClass('active');
                     
                     // Clear the timeout if it exists
-                    if (pageTransitionTimeout) {
-                        clearTimeout(pageTransitionTimeout);
-                        pageTransitionTimeout = null;
+                    if (window.pageTransitionTimeout) {
+                        clearTimeout(window.pageTransitionTimeout);
+                        window.pageTransitionTimeout = null;
                     }
                 }
                 
